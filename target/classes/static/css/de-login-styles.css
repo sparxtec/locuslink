@@ -1,0 +1,35 @@
+.dropzone {z-index:1;position:relative;max-height: calc(100vh - 46rem);display: block;overflow: auto;}
+.dropzone .dz-preview .dz-details .dz-filename:hover {
+	    white-space: normal;
+	        position: absolute;
+}
+.dropzone {
+	border: 0;
+    box-shadow: #cecece 1px 1px 6px;
+    transition: .5s all;
+    margin: 2rem 0;
+}
+.dropzone.dz-drag-hover {
+    box-shadow: #cecece 1px 1px 1px;
+}
+table.dataTable thead tr th:last-of-type,
+table.dataTable tbody tr td:last-of-type {text-align: right;}
+table.dataTable tr td:first-child {width:15rem;}
+.datatable-toolbar ~ div:not(.datatable-pagination) {height: calc(100vh - 432px);overflow: auto;display: inline-block;width: 100%;}
+table.dataTable tbody tr td .error {border-color: #860e04;border: 0;color: #fff;background-color: rgba(139, 14, 4, 0.5);}
+
+
+.button--previous {
+	background-color: #fff;
+}
+
+.alert-blocker .modal-body {
+	text-align: left;
+}
+.failure-text {
+	color: #9e1b32;
+}
+
+.success-text {
+	color: #00853f;
+}

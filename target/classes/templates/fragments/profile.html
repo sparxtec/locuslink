@@ -1,0 +1,79 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<script>
+
+
+		$(document).ready(function() {
+
+			hideSpinner();
+
+/* 			// Only ADMIN should run Loader utilities
+			if (isUserAuthorized("SUPERADMIN")) {
+				$('#dbUtility').show();
+			} */
+
+		});
+
+		function initCommonResponse(returnData) {
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+
+	</script>
+
+  </head>
+
+  <body id="white">
+
+	<!-- Sparks 4-7-2022 added this for the form margins -->
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>User Profile</span></h3>
+	</div>
+
+
+
+ <form id="profileId"  th:objects="${dashboardFormDTO}">
+
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+
+			<div class="de-component__footer">
+
+				<div class="card">
+<!-- 					<div class="card-header"><i class="fas fa-user mr-2"></i> User Account: <span th:text="${userTrace.getFirstName()+' '+userTrace.getLastName()}"></span></div> -->
+
+					<div class="card-header"><i class="fas fa-user mr-2"></i> User Account:
+				<!-- 	<span>Clayton Sparks</span> -->
+					</div>
+
+
+					<div class="card-body p-0">
+						<div class="de-table border-0 w-100 m-0 p-0 mw-100">
+					  		<table class="w-100">
+							    <tr>
+							    	<td class="py-3 px-4" colspan="2">
+							      		<div class="d-flex justify-content-between">
+								      		<div class="d-flex flex-column"><span>User Id:</span><span sec:authentication="principal">Principal</span></div>
+								      		<div class="d-flex flex-column"><span>Role:</span> <span sec:authentication="credentials">credentials</span></div>
+								      		<div class="d-flex flex-column"><span>Company:</span> <Strong></strong></div>
+								      	</div>
+							      	</td>
+							    </tr>
+					  		</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+
+
+	</form>
+</div>
+  </body>
+
+</html>

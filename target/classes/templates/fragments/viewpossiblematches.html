@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script type="text/javascript">
+$(document).ready(function() {
+	var possibleMatchDataTable= $('#possibleMatchTable').DataTable({
+		ajax: {
+			url: 'getPossibleMatchDataTableList',
+     		type: 'POST',
+      		contentType: 'application/json',
+      		data: function ( data ) {
+      			showSpinner();
+
+      			//var pageCode=$('#pageListCode').val();
+      			var myData = {version:"1.0", clientId:"gim"};
+
+      			var innerData = {};
+      			//innerData["designId"] = "123";
+      			//innerData["pageCode"] = pageCode;
+      			myData["data"] = innerData;
+          		return JSON.stringify( myData );
+	        },
+	        error: function(xhr, error, code) {
+	        	hideSpinner();
+	        	//console.log('xhr: ' + JSON.stringify(xhr));
+	        	//console.log('error: ' + JSON.stringify(error));
+	        	//console.log('code: ' + JSON.stringify(code));
+	        },
+	        "dataSrc": function (json) {
+	        	var possibleMatchList = json.data.possibleMatchList;
+	        	//console.log('data returned: ' + JSON.stringify(possibleMatchList));
+	        	hideSpinner();
+	        	return possibleMatchList;
+	        }
+  		},
+  		"columnDefs": [
+			{
+				"targets": [ 0, 2, 5, 6],
+                "orderable": true
+            },
+			{
+				"targets": [ 1, 3, 4, 7, 8, 9, 10],
+                "orderable": false
+            },
+			{
+				"targets": [ 0, 2, 3, 5, 6, 7, 9],
+                "searchable": true
+            }
+        ],
+	    "columns": [
+			{ "data": "loadId" },
+	        { "data": "providerType" },
+	        { "data": "providerName" },
+	        { "data": "providerIdentifier" },
+	        { "data": "dob" },
+	        { "data": "cityAddr" },
+	        { "data": "stateAddr" },
+	        { "data": "zipAddr" },
+	        { "data": "npiId" },
+	        { "data": "matchCount" },
+	        { "data": "action", "render": function(data, type, row) {
+	        		return '<input id="btnBrowse_' + row.loadId +'" type="button" value="Browse" /> <input id="btnEdit_' + row.loadId +'" type="button" value="Edit" />';
+	            }
+          	}
+	    ]
+	});
+
+	// browse each record in datatable
+	$('#possibleMatchTable tbody').on( 'click', 'input[value="Browse"]', function () {
+		showSpinner();
+      	submitFormAjaxHTML('browsePossibleMatch', possibleMatchDataTable.row( $(this).parents('tr') ).data(), "initCommonResponse");
+	});
+
+	// edit each record in datatable
+	$('#possibleMatchTable tbody').on( 'click', 'input[value="Edit"]', function () {
+      	var data = possibleMatchDataTable.row( $(this).parents('tr') ).data();
+    	showSpinner();
+      	submitFormAjaxHTML('editPossibleMatch', data, "initCommonResponse");
+   	});
+});
+
+function reloadDataTable(){
+	//console.log("inline edit success");
+	possibleMatchDataTable.ajax.reload();
+}
+</script>
+</head>
+
+<body bgcolor="white">
+
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>Possible Match</span></h3>
+	</div>
+
+	<br>User ->:
+	<span sec:authentication="principal">Principal</span>
+	<br>Role ->:
+	<span sec:authentication="credentials">credentials</span>
+
+	<br />
+
+	<div id="pageContent">  <!-- start page content -->
+	   	<table id="possibleMatchTable" class="display" style="width:100%">
+	      	<thead >
+	        	<tr>
+		            <th scope="col">Load ID</th>
+		            <th scope="col">Provider Type</th>
+		            <th scope="col">Provider Name</th>
+		            <th scope="col">Provider Identifier</th>
+		            <th scope="col">Date of Birth</th>
+		            <th scope="col">City</th>
+		            <th scope="col">State</th>
+		            <th scope="col">Zip</th>
+		            <th scope="col">NPI</th>
+		            <th scope="col">Match Count</th>
+		            <th scope="col">Action</th>
+	         	</tr>
+	      	</thead>
+	   	</table>
+	</div> <!-- end page content -->
+
+</body>
+</html>

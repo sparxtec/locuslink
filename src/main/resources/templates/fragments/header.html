@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+  </head>
+
+<body>
+
+<!-- Import Spinner Modal -->
+<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+
+ <!-- Header -->
+    <div th:fragment="header" th:remove="tag">
+
+	<header class="de-header de-header--external">
+
+        <div class="de-header-bar"></div>
+        <div class="de-header-main">
+            <button class="de-header-hamburger"  type="button" data-toggle="collapse" data-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+            </button>
+
+            <div class="de-header-logo">
+       		<div ><img  src="images/banner-text.jpg" alt="badge check header"  >     </div>
+            </div>
+
+            <nav class="de-header-nav" id="mobileNav">
+                <ul class="de-header-nav__group">
+
+					<li class="de-header-nav__item">
+                        <a id="buttonHeaderHomeId" class="de-header-nav__link is-current" href="#"><span>Home</span></a>
+                    </li>
+
+                    <li class="de-header-nav__item" >
+                        <a id="buttonHeaderProviderId" class="de-header-nav__link" href="#"><span>Provider</span></a>
+                    </li>
+
+                    <li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')" class="de-header-nav__item" >
+                        <a id="buttonHeaderOigErrorCorrectionId" class="de-header-nav__link" href="#"><span>OIG Error Correction</span></a>
+                    </li>
+
+                    <li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"  class="de-header-nav__item" >
+                        <a id="buttonHeaderPossibleMatchId" class="de-header-nav__link" href="#"><span>Possible Match</span></a>
+                    </li>
+
+                    <li  class="de-header-nav__item" >
+                        <a id="buttonHeaderDistributionId" class="de-header-nav__link" href="#"><span>Distribution</span></a>
+                    </li>
+
+                     <li  sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"   class="de-header-nav__item" >
+                         <a id="buttonHeaderBatchId" class="de-header-nav__link" href="#"><span>Batch</span></a>
+                    </li>
+
+
+			      <li  class="de-header-nav__item d-flex flex-row-reverse">
+			          <a class="de-header-nav__link de-header-nav__link--arrow js-trigger-header-nav-dropdown" href="#" id="buttonHeaderAdminId"><i class="fas fa-user pr-2 de-icon"></i> <span>Admin</span></a>
+			          <ul class="de-header-nav__child-group">
+			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminSanctionCodesId" href="#" oncontextmenu="return false;">Sanction Codes</a>
+			              </li>
+			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminErrorCodesId" href="#" oncontextmenu="return false;">Error Codes</a>
+			              </li>
+			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminStateCodesId" href="#" oncontextmenu="return false;">State Codes</a>
+			              </li>
+			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminGeneralSpecialtyCodesId" href="#" oncontextmenu="return false;">General Specialty Codes</a>
+			              </li>
+			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminSubSpecialtyCodesId" href="#" oncontextmenu="return false;">Sub-Specialty Codes</a>
+			              </li>
+<!-- 			              <li class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminUpinCodesId" href="#" oncontextmenu="return false;">UPIN Codes</a>
+			              </li> -->
+
+			              <li sec:authorize="hasAnyRole('MED-ADMIN')"  class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminMedAuditsId" href="#" oncontextmenu="return false;">MED Audits</a>
+			              </li>
+
+			              <li sec:authorize="hasAnyRole('MED-ADMIN')"  class="de-header-nav__child-item">
+			                  <a class="de-header-nav__child-link" id="adminMedUsersId" href="#" oncontextmenu="return false;">MED User</a>
+			              </li>
+			          </ul>
+			      </li>
+
+
+
+					<li class="de-header-nav__item d-flex flex-row-reverse">
+                        <a class="de-header-nav__link de-header-nav__link--arrow js-trigger-header-nav-dropdown" href="#" id="buttonHeaderAccountId"><i class="fas fa-user pr-2 de-icon"></i> <span>Account</span></a>
+                        <ul class="de-header-nav__child-group">
+<!--                             <li class="de-header-nav__child-item">
+                                <a class="de-header-nav__child-link" id="accountHelpId" href="#" oncontextmenu="return false;">Help</a>
+                            </li> -->
+                            <li class="de-header-nav__child-item">
+                                <a class="de-header-nav__child-link" id="accountProfileId" href="#" oncontextmenu="return false;">Profile</a>
+                            </li>
+                            <li class="de-header-nav__child-item">
+                                <a class="de-header-nav__child-link" id="accountLogout" href="#" oncontextmenu="return false;">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <button type="button" class="close bg-transparent border-0 ml-2 mt-2" data-toggle="collapse" data-target="#mobileNav" aria-controls="mobileNav" aria-expanded="true" aria-label="Toggle navigation">
+                    <span class="icon icon-md icon-close-white"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+
+
+</div>
+</body>
+</html>

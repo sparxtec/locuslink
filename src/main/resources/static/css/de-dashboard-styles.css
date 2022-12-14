@@ -1,0 +1,13 @@
+/**page**/
+.de-component-header__form--inline {
+	flex-direction: row;
+	justify-content: space-between;
+	flex: 1 1 auto;
+}
+.de-component-header__form--inline .form-control {
+	width: 100%;
+}
+.de-component-header__form--inline .form-group:not(:last-child) {
+	width: 40%;
+}
+

@@ -1,0 +1,64 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org"   lang="en">
+  <head >
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>login</title>
+
+    <link href="css/fontawesome-all-5.4.2.css"  rel="stylesheet">
+    <link href="css/de-styles.css" rel="stylesheet">
+    <link href="css/de-login-styles.css" rel="stylesheet">
+    <script src="js/jquery-3.3.1.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/gim.common.js"></script>
+
+
+  	<script>
+		$(document).ready(function() {
+
+
+		});
+
+		</script>
+  </head>
+
+  <body class="de-body de-trace">
+
+	<header class="de-header de-header--external">
+
+        <div class="de-header-bar"></div>
+        <div class="de-header-main">
+            <div class="de-header-logo m-auto">
+                <img class="de-component-header__icon" src="images/electron/icons/icon-badge-check.svg" alt="badge check login">
+            </div>
+
+        </div>
+    </header>
+
+    <div class="de-content de-component--gray ">
+
+	        <main id="mainBody" role = "main" class="de-content__main">
+
+	            <section class="de-component">
+
+	                <div class="de-component__container">
+
+	                  	<header class="de-component-header">
+	                        <h1 class="de-component-header__title">You have been logged out of MED</h1>
+	                    </header>
+
+                				<h3>You can click the X in the upper right hand corner to close the browser.</h3>
+					</div>
+	            </section>
+	        </main>
+
+    </div>
+
+	<div th:replace="fragments/footer :: footer"></div>
+  </body>
+
+</html>

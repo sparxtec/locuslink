@@ -1,0 +1,14 @@
+/*for pdf viewer*/
+.popover{
+    max-width: 90vw; /* Max Width of the popover (depending on the container!) */
+}
+
+/*for barcode print*/
+.card .form-control[type="number"] {
+    max-width: 7rem;
+}
+
+/* fix IE */
+.card-title-wrapper .text-nowrap {
+	display:inline-block;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>States Codes</title>
+
+	<script type="text/javascript">
+
+	var editor;
+ 	var secRole;
+
+	$(document).ready(function() {
+		editor = new $.fn.dataTable.Editor( {
+			ajax: {
+	      		url: 'editAdminStateCode',
+	      		type: 'POST',
+	       		contentType: 'application/json',
+	       		data: function ( data ) {
+	       			showSpinner();
+	       			var myData = {version:"1.0", clientId:"gim"};
+	       			var innerData = {};
+	       			innerData = data;
+	       			myData["data"] = innerData;
+	           		return JSON.stringify( myData );
+	 	        },
+	  	        "dataSrc": function (json) {
+	  	        	stateList = json.data.stateList;
+		        	secRole = json.data.secRole;
+	  	        	hideSpinner();
+	  	        	return stateList;
+	  	         },
+	  	        "success" : reloadDataTable
+	     		},
+	        table: "#statesTable",
+	        idSrc: 'medRefPk',
+	        fields: [ {
+	                label: "State CD",
+	                name: "medRefPk.lookupId"
+	            }, {
+	                label: "Type Name",
+	                name: "medRefPk.lookupTypeNm"
+	            }, {
+	                label: "Description:",
+	                name: "lookupResult"
+	            }
+	        ]
+	    } );
+
+
+		var statesTable = $('#statesTable').DataTable( {
+		 	searchHighlight: true,
+			ordering: false,
+			searching: true,
+			//dom: "lrtip",
+	 	    ajax: {
+	      		url: 'getStateList',
+	      		type: 'POST',
+	       		contentType: 'application/json',
+	       		data: function ( data ) {
+	       			showSpinner();
+	       			var myData = {version:"1.0", clientId:"gim"};
+	       			var innerData = {};
+	       			myData["data"] = innerData;
+	           		return JSON.stringify( myData );
+	 	        },
+	  	        "dataSrc": function (json) {
+	  	        	stateList = json.data.stateList;
+		        	secRole = json.data.secRole;
+	  	        	hideSpinner();
+	  	        	return stateList;
+	  	         }
+	     		},
+	     		"columnDefs": [
+	                {
+	                    //"targets": [ 1 ],
+	                    //"visible": false,
+	                    //"searchable": false
+	                },
+	            ],
+		        "columns": [
+		            { data: "medRefPk.lookupTypeNm" },
+		            { data: "lookupResult" },
+
+		            { "data": "", "render": function(data, type, row){
+ 		            	if(secRole == "MED-ADMIN" ){
+ 		            	    return '<i class="fas fa-pencil-alt"  value="AdminEdit" />';
+		            	} else {
+		            		   return '<i class="fasxxx faxx-pencil-alt"/>';
+		            	}
+		              }
+	            	}
+
+		        ],
+		     	// row selected by first cell
+		        select: {
+		            style:    'os',
+		            selector: 'td:first-child'
+		        },
+		    });
+
+
+	     $('#statesTable tbody').on( 'click', 'i[value="AdminEdit"]', function () {
+	        editor.inline( statesTable.cells(this.parentNode, '*').nodes(), {
+	            submitTrigger: -1,
+	            submitHtml: '<i class="fa fa-play"/>',
+	            submit:'all'
+	        } );
+
+		 });
+
+
+		function reloadDataTable(){
+			statesTable.ajax.reload();
+		}
+	})
+
+</script>
+</head>
+
+<body bgcolor="white">
+
+	<!-- Sparks 4-7-2022 added this for the form margins -->
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>State Codes</span></h3>
+	</div>
+
+	<form id="ST01">
+	<br>
+	<table id="statesTable" class="display" style="width:100%">
+	   <thead >
+	      <tr>
+	         <th scope="col">State Code</th>
+	         <th scope="col">Description</th>
+	         <th scope="col">Action</th>
+	      </tr>
+	   </thead>
+	</table>
+
+</form>
+</div>
+</body>
+</html>

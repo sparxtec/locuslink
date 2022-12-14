@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div th:fragment="adminheader" th:remove="tag">
+<script>
+	//  Admin HEADER
+		$('#sanCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewSanctions', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("sancCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#errorCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewErrors', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("errorCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#stateCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewStates', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("stateCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#generalSpecialtyCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewGeneralSpecialties', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("generalSpecialtyCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#subSpecialtyCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewSubSpecialties', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("subSpecialtyCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#upinCodeNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewUPINs', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("upinCodeLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#auditNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewAudits', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("auditLinkId").classList.add('selected');
+		});
+		
+		//  Admin HEADER
+		$('#userNavId').click(function() {
+			//alert ("todo");
+			showSpinner();
+			submitFormAjaxHTML('viewUsers', $( "#dashboardFormDTO" ).serialize(), "initAdminCommonResponse");
+			//clearAllAdminSelectedLinks();
+			//document.getElementById("userLinkId").classList.add('selected');
+		});
+		
+		function clearAllAdminSelectedLinks() {
+			document.getElementById("sancCodeLinkId").classList.remove('selected');
+			document.getElementById("errorCodeLinkId").classList.remove('selected');
+			document.getElementById("stateCodeLinkId").classList.remove('selected');
+			document.getElementById("generalSpecialtyCodeLinkId").classList.remove('selected');
+			document.getElementById("subSpecialtyCodeLinkId").classList.remove('selected');
+			document.getElementById("upinCodeLinkId").classList.remove('selected');
+			document.getElementById("auditLinkId").classList.remove('selected');
+			document.getElementById("userLinkId").classList.remove('selected');
+		}
+
+		function initAdminCommonResponse(returnData) {
+			hideSpinner();
+			$('#adminBody').html( returnData);
+		}
+</script>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>
+
+		<tr>
+			<td align="left">
+				<ul id="support-toolbar">
+					<li id="sancCodeLinkId"   class="selected">
+
+<!-- 						<h:commandLink id="sanctionLink" title="Sanction Codes" action="#{administration.viewSanctions}">
+							<h:outputText value="Sanction Codes" />
+						</h:commandLink> -->
+
+					<a id="sanCodeNavId"  href="#"><span>Sanction Codes</span></a>
+
+					</li>
+
+<!-- 					<t:htmlTag value="li" rendered="#{visitor.administrator}">
+						<h:commandLink id="errorLink" title="Error Codes" action="#{administration.viewErrors}">
+							<h:outputText value="Error Codes" />
+						</h:commandLink>
+					</t:htmlTag> -->
+					<li id="errorCodeLinkId">
+						 <a id="errorCodeNavId"  href="#"><span>Error Codes</span></a>
+					</li>
+
+
+
+					<li id="stateCodeLinkId" >
+<!-- 						<h:commandLink id="stateLink" title="State Codes" action="#{administration.viewStates}">
+							<h:outputText value="State Codes" />
+						</h:commandLink> -->
+
+						<a id="stateCodeNavId"  href="#"><span>State Codes</span></a>
+
+					</li>
+
+
+					<li id="generalSpecialtyCodeLinkId">
+<!-- 						<h:commandLink id="generalSpecialtyLink" title="General Specialty Codes" action="#{administration.viewGeneralSpecialties}">
+							<h:outputText value="General Specialty Codes" />
+						</h:commandLink> -->
+						<a id="generalSpecialtyCodeNavId"  href="#"><span>General Specialty Codes</span></a>
+					</li>
+
+
+					<li id="subSpecialtyCodeLinkId">
+<!-- 						<h:commandLink id="subSpecialtyLink" title="Sub-Specialty Codes" action="#{administration.viewSubSpecialties}">
+							<h:outputText value="Sub-Specialty Codes" />
+						</h:commandLink> -->
+						<a id="subSpecialtyCodeNavId"  href="#"><span>Sub-Specialty Codes</span></a>
+					</li>
+
+
+					<li id="upinCodeLinkId">
+<!-- 						<h:commandLink id="upinLink" title="UPIN Codes" action="#{administration.viewUpinCds}">
+							<h:outputText value="UPIN Codes" />
+						</h:commandLink> -->
+						<a id="upinCodeNavId"  href="#"><span>UPIN Codes</span></a>
+					</li>
+
+					<li id="auditLinkId">
+	<!-- 				<t:htmlTag value="li" rendered="#{visitor.administrator}">
+							<h:commandLink id="auditLink" title="MED Audits" action="#{administration.viewAudits}">
+								<h:outputText value="MED Audits" />
+							</h:commandLink>
+						</t:htmlTag>-->
+						<a id="auditNavId"  href="#"><span>MED Audits</span></a>
+					</li>
+					
+					<li id="userLinkId">
+	<!-- 				<t:htmlTag value="li" rendered="#{visitor.administrator}">
+						<h:commandLink id="userLink" title="MED User" action="#{administration.viewUsers}">
+							<h:outputText value="MED User" />
+						</h:commandLink>
+						</t:htmlTag> -->
+						<a id="userNavId"  href="#"><span>Users</span></a>
+					</li>
+
+				</ul>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+</body>
+</html>

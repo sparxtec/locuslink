@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script type="text/javascript">
+
+// whether to turn on debug.
+var pmDebugMode = false;
+
+/**
+ * set cancel button click action.
+ */
+$(document).ready(function(){
+		$('#cancelMatch').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('cancelPossibleMatch', "", "initCommonResponse");
+		});
+	}
+)
+
+/**
+ * retrieve the data for the specified possible match provider.
+ */
+function showMatch(position) {
+	showSpinner();
+	$.ajax({
+		url: 'showMatch',
+ 		type: 'POST',
+  		contentType: 'application/json',
+  		data: JSON.stringify({
+  			'medRecIdList':$("#medRecIdListString").val().split(','),
+		  	'position':position
+  		}),
+        success: function(respData) {
+        	//console.log('returned data: ' + JSON.stringify(respData))
+        	processMatchData(respData.data);
+        },
+        error: function(xhr, error, code) {
+        	//console.log('xhr: ' + JSON.stringify(xhr));
+        	//console.log('error: ' + JSON.stringify(error));
+        	//console.log('code: ' + JSON.stringify(code));
+        },
+        always: function() {
+        	hideSpinner();
+        }
+	});
+	return false;
+}
+
+/**
+ * call back to process data returned from ajax call.
+ */
+function processMatchData(providerData) {
+	if (pmDebugMode) {
+		console.log('prev: ' + providerData.prev);
+		console.log('next: ' + providerData.next);
+		console.log('position: ' + providerData.position);
+		console.log('count: ' + providerData.count);
+		console.log('medRecIdListString: ' + providerData.medRecIdListString);
+		console.log('providerName: ' + providerData.rightProviderName);
+		console.log('providerType: ' + providerData.rightProviderType);
+		console.log('providerAddress: ' + providerData.rightProviderAddress);
+		console.log('provider address history: ' + JSON.stringify(providerData.rightProviderAddressHistory));
+		console.log('provider address history count: ' + providerData.rightProviderAddressHistory.length);
+		console.log('providerSsnEid: ' + providerData.rightProviderSsnEid);
+		console.log('provider SSN/EIN history: ' + JSON.stringify(providerData.rightProviderSsnHistory));
+		console.log('provider SSN/EIN history count: ' + providerData.rightProviderSsnHistory.length);
+
+		console.log('lastUpdateTm: ' + providerData.rightProvider.lastUpdateTm);
+		console.log('Id: ' + providerData.rightProvider.medRecId);
+		console.log('DOB: ' + providerData.rightProvider.birthDate);
+		console.log('general description: ' + providerData.rightProvider.genSpcyTxt);
+		console.log('sub-specialty description: ' + providerData.rightProvider.spcyTxt);
+		console.log('sanctionList: ' + JSON.stringify(providerData.rightProviderSanction));
+		console.log('sanctionList count: ' + providerData.rightProviderSanction.length);
+	}
+
+	// show hide prev button.
+	if (Number(providerData.prev) > 0) {
+		$('#prevMatch').show();
+	} else {
+		$('#prevMatch').hide();
+	}
+
+	// show hide next button.
+	if (Number(providerData.next) > 0) {
+		$('#nextMatch').show();
+	} else {
+		$('#nextMatch').hide();
+	}
+
+	// update navigation buttons.
+	$('#prev').val(providerData.prev);
+	$('#next').val(providerData.next);
+	$('#position').text(providerData.position);
+
+	// update the possible match values.
+	$('#rightProviderLastUpdateTm').text(providerData.rightProviderLastUpdateOn);
+	$('#rightProviderMedRecId').text(providerData.rightProvider.medRecId);
+	$('#rightProviderType').text(providerData.rightProviderType);
+	$('#rightProviderName').text(providerData.rightProviderName);
+	$('#rightProviderSsnEid').text(providerData.rightProviderSsnEid);
+
+	var classRowEven = 'RowBody';
+	var classRowOdd = 'RowBody RowAlternate';
+
+	var tbodyHtml = '';
+	var item;
+
+	// show hide update the ssn history table
+	if (providerData.rightProviderSsnHistory != null && providerData.rightProviderSsnHistory.length  > 0) {
+		// udpate table
+		tbodyHtml = '';
+		for (i = 0; i < providerData.rightProviderSsnHistory.length; i ++) {
+			item = providerData.rightProviderSsnHistory[i];
+			var classToUse = item.oddEntry ? classRowOdd : classRowEven;
+			tbodyHtml += '<tr class="' + classToUse + '"> <td>' + item.ssn + '</td></tr>';
+		}
+		$('#rightProviderSsnEidHistoryTable tbody').html(tbodyHtml);
+		$('#rightProviderSsnEidHistoryTable').show();
+	} else {
+		// hide the table
+		$('#rightProviderSsnEidHistoryTable').hide();
+	}
+
+	$('#rightProviderBirthDate').text(providerData.rightProvider.birthDate);
+	$('#rightProviderAddressLine1').text(providerData.rightProvider.street);
+	$('#rightProviderAddressLine2City').text(providerData.rightProvider.city);
+	$('#rightProviderAddressLine2State').text(providerData.rightProvider.state);
+	$('#rightProviderAddressLine2ZipCode').text(providerData.rightProvider.zipCode);
+
+	// show hide update the address history table
+	if (providerData.rightProviderAddressHistory != null && providerData.rightProviderAddressHistory.length > 0) {
+		// udpate table
+		tbodyHtml = '';
+		for (i = 0; i < providerData.rightProviderAddressHistory.length; i ++) {
+			item = providerData.rightProviderAddressHistory[i];
+			var classToUse = item.oddEntry ? classRowOdd : classRowEven;
+			tbodyHtml += '<tr class="' + classToUse + '"><td><span>' + item.addressLine1 + '</span><br><span>' + item.addressLine2 + '</span></td></tr>';
+		}
+		$('#rightProviderAddressHistoryTable tbody').html(tbodyHtml);
+		$('#rightProviderAddressHistoryTable').show();
+	} else {
+		// hide the table
+		$('#rightProviderAddressHistoryTable').hide();
+	}
+
+
+	$('#rightProviderGeneralDescription').text(providerData.rightProvider.genSpcyTxt);
+	$('#rightProviderSubSpecialty').text(providerData.rightProvider.spcyTxt);
+
+	// show hide update the saction table
+	if (providerData.rightProviderSanction != null) {
+		// udpate table
+		tbodyHtml = '';
+		for (i = 0; i < providerData.rightProviderSanction.length; i ++) {
+			item = providerData.rightProviderSanction[i];
+			var classToUse = item.oddEntry ? classRowOdd : classRowEven;
+			tbodyHtml += '<tr class="' + classToUse + '"><td>' + item.type + '</td><td>' + item.sanctionDate + '</td><td>' + item.reinstatementDate + '</td><td>' + item.updatedOn + '</td></tr>';
+		}
+		$('#rightProviderSanctionTable tbody').html(tbodyHtml);
+		$('#rightProviderSanctionTable').show();
+	} else {
+		// hide the table
+		$('#rightProviderSanctionTable').hide();
+	}
+
+}
+</script>
+</head>
+<body>
+	<table border='0' cellspacing='1' cellpadding='1' width="100%" th:object="${leftOig}">
+		<input type='hidden' id='prev' th:value='${prev}' />
+		<input type='hidden' id='next' th:value='${next}' />
+		<input type='hidden' id='medRecIdListString' th:value='${medRecIdListString}' />
+
+		<tbody>
+			<!-- top row -->
+			<tr>
+				<td style="width: 10px" />
+				<td />
+				<td align="center" class="Heading">OIG</td>
+				<td style="width: 15px" />
+				<td align="center" class="Heading">MED</td>
+			</tr>
+			<!-- match navigation row -->
+			<tr>
+				<td/>
+				<td />
+				<td/>
+				<td />
+				<td align="Center">
+					<input type='button' th:style="${prev > 0} ? 'display: inline' : 'display: none'" id='prevMatch' name='prevMatch' value='Prev' onclick='showMatch($("#prev").val())' />
+					Match <span id='position' th:text="${position}"></span> of <span id='count' th:text="${count}"></span> Possible Matches
+					<input type='button' th:style="${next > 0} ? 'display: inline' : 'display: none'" id='nextMatch' name='nextMatch' value='Next' onclick='showMatch($("#next").val())' />
+				</td>
+			</tr>
+			<!-- last updated on row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Last Updated on</label>
+				</td>
+				<td align='left' th:text="*{lastUpdatedOn}" />
+				<td />
+				<td id='rightProviderLastUpdateTm' align="left" th:text="${rightProviderLastUpdateOn}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- ID row -->
+			<tr>
+				<td/>
+				<td>
+					<label>ID</label>
+				</td>
+				<td align='left' th:text="*{id}" />
+				<td />
+				<td id='rightProviderMedRecId' align="left" th:text="${rightProvider?.medRecId}" />
+
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- provider type row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Provider Type</label>
+				</td>
+				<td align='left' th:text="*{providerType}" />
+				<td />
+				<td id='rightProviderType' align="left" th:text="${rightProviderType}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- provider name row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Provider Name</label>
+				</td>
+				<td align='left' th:text="*{providerName}" />
+				<td />
+				<td id='rightProviderName' align="left" th:text="${rightProviderName}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- SSN/EIN row -->
+			<tr>
+				<td/>
+				<td>
+					<label>SSN/EIN</label>
+				</td>
+				<td align='left' th:text="*{ssn}" />
+				<td />
+				<td id='rightProviderSsnEid' align="left" th:text="${rightProviderSsnEid}" />
+			</tr>
+			<!-- SSN History row -->
+			<tr>
+				<td/>
+				<td />
+				<td/>
+				<td />
+				<td>
+					<table id='rightProviderSsnEidHistoryTable' th:style="${#lists.size(rightProviderSsnHistory) > 0} ? 'display: block' : 'display: none'" cellpadding="4" cellspacing="0" width="100px;">
+						<thead>
+							<tr>
+								<th class="TableHeader">SSN History</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="ssnHistory: ${rightProviderSsnHistory}" th:class="${ssnHistory?.oddEntry} ? 'RowBody RowAlternate' : 'RowBody'">
+								<td th:text=${ssnHistory.ssn}></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- DOB row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Date Of Birth</label>
+				</td>
+				<td align='left' th:text="*{dob}" />
+				<td />
+				<td id='rightProviderBirthDate' align="left" th:text="${rightProvider?.birthDate}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- street address row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Street Address</label>
+				</td>
+				<td align='left' th:text="*{addressLine1}" />
+				<td />
+				<td id='rightProviderAddressLine1' align="left" th:text="${rightProvider?.street}" />
+			</tr>
+			<tr>
+				<td/>
+				<td/>
+				<td align='left' th:text="*{addressLine2}" />
+				<td />
+				<td id='rightProviderAddressLine2' align="left">
+					<span id='rightProviderAddressLine2City' th:text="${rightProvider?.city}"></span>,
+					<span id='rightProviderAddressLine2State' th:text="${rightProvider?.state}"></span> &nbsp;
+					<span id='rightProviderAddressLine2ZipCode' th:text="${rightProvider?.zipCode}"></span>
+				</td>
+			</tr>
+			<!-- Address History row -->
+			<tr>
+				<td/>
+				<td />
+				<td/>
+				<td />
+				<td>
+					<table id='rightProviderAddressHistoryTable' th:if="${#lists.size(rightProviderAddressHistory) &gt; 0}" cellpadding="4" cellspacing="0" width="200px;">
+						<thead>
+							<tr>
+								<th class="TableHeader">Address History</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="addrHistory: ${rightProviderAddressHistory}" th:class="${addrHistory?.oddEntry} ? 'RowBody RowAlternate' : 'RowBody'">
+								<td>
+									<span th:text="${addrHistory?.addressLine1}"></span>
+									<br />
+									<span th:text="${addrHistory?.addressLine2}"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- General Description row -->
+			<tr>
+				<td/>
+				<td>
+					<label>General Description</label>
+				</td>
+				<td align='left' th:text="*{generalDescription}" />
+				<td />
+				<td id='rightProviderGeneralDescription' align="left" th:text="${rightProvider?.genSpcyTxt}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- Sub-Specialty row -->
+			<tr>
+				<td/>
+				<td>
+					<label>Sub-Specialty</label>
+				</td>
+				<td align='left' th:text="*{subSpecialty}" />
+				<td />
+				<td id='rightProviderSubSpecialty' align="left"th:text="${rightProvider?.spcyTxt}" />
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- Sanction row -->
+			<tr valign='top'>
+				<td/>
+				<td>
+					<label>Sanction</label>
+				</td>
+				<td>
+					<table cellpadding="4" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th class="TableHeader">Sanction</th>
+								<th class="TableHeader">Sanction Date</th>
+								<th class="TableHeader">Reinstatement Date</th>
+								<th class="TableHeader">Updated On</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="RowBopdy RowAlternate">
+								<td th:text="*{sanctionDto.type}" />
+								<td th:text="*{sanctionDto.sanctionDate}" />
+								<td th:text="*{sanctionDto.reinstatementDate}" />
+								<td th:text="*{sanctionDto.updatedOn}" />
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td />
+				<td>
+					<table id='rightProviderSanctionTable' th:if="${#lists.size(rightProviderSanction) &gt; 0}" cellpadding="4" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th class="TableHeader">Sanction</th>
+								<th class="TableHeader">Sanction Date</th>
+								<th class="TableHeader">Reinstatement Date</th>
+								<th class="TableHeader">Updated On</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="rightSanctionDto: ${rightProviderSanction}" th:class="${rightSanctionDto?.oddEntry} ? 'RowBody RowAlternate' : 'RowBody'">
+								<td th:text="${rightSanctionDto?.type}" />
+								<td th:text="${rightSanctionDto?.sanctionDate}" />
+								<td th:text="${rightSanctionDto?.reinstatementDate}" />
+								<td th:text="${rightSanctionDto?.updatedOn}" />
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<!-- separator row -->
+			<tr>
+				<td />
+				<td colspan="4"><hr/></td>
+			</tr>
+			<!-- cancel row -->
+			<tr>
+				<td/><td/><td/><td/>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td/>
+				<td />
+				<td/>
+				<td />
+				<td align="right">
+					<input type='button' id='cancelMatch' name='cancelMatch' value='Cancel' />
+				</td>
+			</tr>
+  	</table>
+  	<br />
+  	<br />
+
+</body>
+</html>

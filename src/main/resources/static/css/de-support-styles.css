@@ -1,0 +1,26 @@
+.custom-file-label:after {
+    text-transform: uppercase;
+    color: #00789e;
+    color: #fff;
+    background: #dfe4e4;
+    background: #999999;
+    border: 0;    
+    right: -.5px;
+    right: 0;
+}
+
+video {
+	width:50vw; 
+	height:50vh;
+	width: 75rem;
+	height: 42rem;
+	overflow: hidden; 
+	background-repeat: no-repeat; 
+	background-size: cover; 
+	background-position: center center
+}
+.pdfobject {
+    background-color: white;
+    max-width: 1200px;
+    width: calc(100vw - 20rem);
+}

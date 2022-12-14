@@ -1,0 +1,367 @@
+
+/* C.Sparks 8-20-2019 This is the NEW Master CSS file for everything related to Data Tables*/
+/* This top portion is stuff mugrated over from general.css, that we are going to delete */
+
+/*btns*/
+.datatable-toolbar .btn, .datatable-tb .btn {padding:.375rem .75rem;letter-spacing: 0.2px;transition: all .5s;/*border-radius: 2px;*/font-size:11px;text-transform: uppercase; /*height:44px;padding: 0 27px;*/} 
+.datatable-toolbar .btn[disabled], .datatable-tb .btn[disabled] {opacity:.5}
+.datatable-toolbar .btn[disabled]:hover, .datatable-tb .btn[disabled]:hover {cursor: not-allowed;}
+
+.datatable-tb .btn-group-sm>.btn, 
+.datatable-tb .btn-sm {padding: .25rem .5rem;font-size: .65rem;line-height: 1.5;/*border-radius: 2px;*/}
+
+.datatable-tb .btn-primary:hover, 
+.datatable-tb .btn-secondary:hover {box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.25);text-decoration: none;}
+
+.datatable-tb .btn-primary {color: white;fill: white;background-color: #007Faa;border-color: #007Faa;}
+.datatable-tb .btn-primary:hover,
+.datatable-tb .btn-primary:active {background-color: #005985 !important}
+.datatable-tb .btn-primary[disabled],
+.datatable-tb .btn-primary.disabled, 
+.datatable-tb .btn-primary:disabled {background-color:  #007Faa;border-color:  #007Faa;opacity:.65; }
+.datatable-tb .btn-primary.progress {background-color: #00799e;}
+
+
+.datatable-tb .btn-link, 
+.datatable-tb .btn-link:hover, 
+.datatable-tb .btn-link:focus, 
+.datatable-tb .btn-link:active {color: #00789e;fill: #00789e;text-decoration: none;font-weight: 500;background-color: transparent;box-shadow: 0px -3px 0px #a7e1ea inset;/*border-radius: 0;*/border:0;padding: 0 0 2px 0;transition: all .25s; background-color: transparent;}
+.datatable-tb .btn-link:hover {box-shadow: 0px -3px 0px rgba(167, 225, 234, 0) inset;}
+
+.datatable-tb .btn-link-table, 
+.datatable-tb .btn-link-table:hover, 
+.datatable-tb .btn-link-table:focus, 
+.datatable-tb .btn-link-table:active {color: #00789e;fill: #00789e;text-decoration: none;font-weight: 500;background-color: transparent;box-shadow: 0px -1px 0px #00789e inset;/*border-radius: 0;*/border:0;padding: 0 0 2px 0;transition: all .25s; background-color: transparent;}
+.datatable-tb .btn-link-table:hover {box-shadow: 0px -1px 0px rgba(0, 120, 158, 0) inset;}
+
+
+
+
+/*datatable*/
+table.dataTable {width:100%;font-size: .75rem;margin: 0 !important;}
+table.dataTable thead th {color: #696969;font-weight: 400;font-size: .65rem;text-transform: uppercase;border-top: 1px solid #dee2e6;white-space: nowrap;}
+table.dataTable thead th,
+table.dataTable tbody td {padding: .5rem 1rem;}
+table.dataTable tbody td {border-top: 1px solid #dee2e6;}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before {box-shadow: none;background-color: transparent;color: #0056b3;top: calc(50% - 8px);border: 0;}
+table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th:first-child:before {background-color:  transparent;}
+
+table.dataTable.dtr-inline tbody td {white-space: nowrap;}
+
+table.dataTable tbody .child {background-color: #dfe4e4 !important;}
+table.dataTable>tbody>tr.child ul.dtr-details {width: 100%;}
+table.dataTable>tbody>tr.child ul.dtr-details span.dtr-data {display: inline-block;}
+table.dataTable[id^="bomv2_"] > tbody > tr.child ul.dtr-details > li {display: flex;flex-direction: column;white-space: normal;word-break: break-all;}
+
+table.dataTable tr:nth-of-type(odd) {background-color: #f3fbfd;}
+table.dataTable tbody tr.urgent {background-color: #8b0e04;background: transparent;}
+table.dataTable tbody tr.de-alert-urgent td {color: rgba(139, 14, 4,1);background: transparent;}
+table.dataTable tbody tr .error {border-color: #860e04;border: 0;color: #fff;background-color: rgba(139, 14, 4,.5);}
+table.dataTable.dtr-inline.collapsed>tbody>tr.de-alert-urgent>td:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr.de-alert-urgent>th:first-child:before {color: rgba(139, 14, 4,1);}
+table.dataTable tbody>tr.selected .btn-ghost, 
+table.dataTable tbody>tr>.selected .btn-ghost {color: white;}
+
+table.dataTable tbody tr td {border-color: #dfe4e4}
+
+.datatable-toolbar {background-color: #005984;color: #fff !important;padding: 1rem 1rem !important;}	
+.datatable-toolbar strong {font-weight: 700;}
+.datatable-toolbar .button {height: 3rem;line-height: 3rem;padding: 0 3rem;width: auto;}
+.datatable-toolbar label,
+.datatable-pagination label {margin: 0;}	
+.datatable-pagination select.form-control-sm {padding: .25rem 1.25rem .25rem .5rem;}
+.datatable-toolbar .datatable-toolbar-group [class^="dataTables_info"] {padding: 0;font-weight: normal;}
+
+.datatable-pagination .page-item .page-link {position: relative;display: block;padding: .5rem .75rem;margin-left: -1px;line-height: 1.25;color: #00799e;background-color: #fff;border: 1px solid #00799e;height: 26px;padding-top: 4px;padding-bottom: 4px;}
+.datatable-pagination .page-item .page-link:hover {box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.25);background-color: #f3fbfd;text-decoration: none;}
+.datatable-pagination .page-item:last-child .page-link {border-top-right-radius: 2px;border-bottom-right-radius: 2px;}
+.datatable-pagination .page-item:first-child .page-link {border-top-left-radius: 2px;border-bottom-left-radius: 2px;}
+.datatable-pagination .page-item.disabled .page-link {opacity: .5;}
+.datatable-pagination .page-item.disabled .page-link {color: #00799e;background-color: #fff;border-color: #00799e;opacity: .5rem;}
+.datatable-pagination .page-item.disabled .page-link:hover {cursor: not-allowed;}
+.datatable-pagination .page-item.active .page-link {color: #fff;background-color: #00799e;border-color: #00799e;}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, 
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {border: 1px solid transparent;background: transparent;color: #6c757d !important;}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {border: 1px solid transparent;box-shadow: none;background: gray;}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {background:#005984; color: white !important;}
+
+
+.datatable-pagination .dataTables_paginate,
+.dataTables_wrapper .dataTables_paginate > span,
+.dataTables_wrapper .datatable-pagination {
+	display:flex;
+}
+.dataTables_wrapper div.datatable-pagination-group > div[class] {
+	padding: 0;
+}
+.dataTables_wrapper .datatable-pagination .paginate_button {
+    display: inline;
+    float: left;
+}	
+
+@media (max-width: 768px) {
+	.dataTables_wrapper .datatable-pagination {
+		flex-direction: column;
+	}
+	.dataTables_wrapper .datatable-pagination .datatable-pagination-group {
+		margin-bottom: .25rem;
+	}
+}
+		
+
+
+
+table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before,
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+	content: '' !important;
+}
+
+
+
+/*********************************************************************************************/
+/* C.Sparks 8-20-2019 This is the NEW Master CSS file for everything related to Data Tables  */
+/*         These things came from the test harness page 5, for the bomv2 table               */
+/*********************************************************************************************/
+
+		
+
+/*TOOLBAR*/
+.datatable-toolbar {
+    padding: .5rem !important;
+}		
+.datatable-toolbar-group,
+.datatable-toolbar-group label,
+.dataTables_wrapper .dataTables_filter {
+    color: white;
+}	
+/*DATA TABLE*/
+.datatable-toolbar + div > div:first-child {
+  		/* max-height: calc(100vh - 323px);
+  		    max-height: calc(100vh - 400px); */
+  		display: inline-block;
+  		overflow-x: hidden;
+  		width: 100%;
+}
+.datatable-toolbar + div > div:first-child table {
+	width: 100% !important;
+}
+@media (max-width: 768px) {
+	.datatable-toolbar + div > div:first-child {
+/* 	    max-height: calc(100vh - 390px);
+	    max-height: calc(100vh - 415px);
+ */	}		
+}
+table.dataTable tr.group td {			      
+    background-color: #ffffff; 
+    color: #005984;
+   	font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1.25px;
+    padding: .75rem .5rem .1rem;
+}	
+
+
+div.dtk-focus-alt table.dataTable tbody th.focus, 
+div.dtk-focus-alt table.dataTable tbody td.focus {
+    box-shadow: inset 0 0 1px 2px #ff8b33;
+    box-shadow: none;
+}
+/*closed*/
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before {
+	background: #005984 !important;
+    top: 3px !important;	
+    color: white !important;		
+}
+/*open*/
+table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th:first-child:before {
+	background: #007Faa !important;
+    top: 3px !important;
+    color: white !important;
+}
+
+table.dataTable thead th, 
+table.dataTable thead td,
+  	table.dataTable tbody th, 
+table.dataTable tbody td {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.editable.focus .DTE_Inline select,
+.editable.focus .DTE_Inline input{
+    font-size: 12px;
+    line-height: 1;
+    padding: 5px;
+    border: 1px soild gray !important;
+}
+	
+
+/* C.Sparks - this is used to control the column widths for certain fields */		
+.minwidth-340 {
+	min-width: 340px;
+	display:inline-block;
+}
+.minwidth-220 {
+	min-width: 220px;
+	display:inline-block;
+}
+.minwidth-160 {
+	min-width: 160px;
+	display:inline-block;
+}
+.minwidth-80 {
+	min-width: 80px;
+	display:inline-block;
+}
+
+
+/*SPECIAL COLUMNS*/
+.details-control {
+    max-width: 1rem;
+    padding: 0 .75rem !important;
+    width: 1%;
+}
+.actions-control {
+    max-width: 4rem;
+    padding: 0 .5rem 0 .5rem !important;
+    width: 1%;
+}
+.actions-control .btn {
+    padding: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 11px;
+}
+.qty-column-control {
+    max-width: 3rem;
+    padding: 0 1.25rem !important;
+    width: 1%; 
+}
+
+
+/*FIX FOR DRAG-ABLE TABLE HEADER*/
+	#bomv2 {
+	display:block!important;
+	width: 100% !important;
+}
+#bomv2.DTCR_clonedTable {
+	padding: 0 !important;
+	width:auto !important;
+	max-width:10rem !important;
+	overflow: hidden;
+}
+
+
+
+/* Check Box Delete Formatting */
+.DTED_Lightbox_Background {
+    opacity: 1;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    top: 0;
+    left: 0;
+    z-index: 9;
+}
+.DTED_Lightbox_Wrapper {
+	display:flex;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+	justify-content: center;
+	align-items: center;
+    z-index: 10;
+}
+div.DTE div.DTE_Header, div.DTE div.DTE_Footer {
+    background: transparent;		    
+}
+		
+div.DTED_Lightbox_Wrapper div.DTED_Lightbox_Container div.DTED_Lightbox_Content_Wrapper div.DTED_Lightbox_Content div.DTED_Lightbox_Close,
+div.DTED_Lightbox_Wrapper div.DTED_Lightbox_Container div.DTED_Lightbox_Content_Wrapper div.DTED_Lightbox_Content div.DTED_Lightbox_Close:hover {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 22px;
+    height: 22px;
+    border: 2px solid white;
+    background-color: transparent;
+    text-align: center;
+    /* border-radius: 0; */
+    cursor: pointer;
+    z-index: 12;
+    box-shadow: none;
+}
+div.DTED_Lightbox_Wrapper div.DTED_Lightbox_Container div.DTED_Lightbox_Content_Wrapper div.DTED_Lightbox_Content div.DTED_Lightbox_Close:after {
+    content: '\00d7';
+    color: dimgray;
+    font-weight: bold;
+    font-size: 33px;
+    line-height: 22px;
+    font-family: 'Courier New', Courier, monospace;
+    padding-left: 1px;
+}	
+
+div.DTE button.btn-primary, 
+div.DTE div.DTE_Form_Buttons button.btn-primary,
+div.DTE button.btn-primary:hover, 
+div.DTE div.DTE_Form_Buttons button.btn-primary:hover	 {
+    color: white !important;
+    fill: white !important;
+    background: #007Faa !important;
+    border-color: #007Faa !important;
+    font-size: 12px !important;
+}	
+
+div.DTE button.btn-secondary, 
+div.DTE div.DTE_Form_Buttons button.btn-secondary,
+div.DTE button.btn-secondary:hover, 
+div.DTE div.DTE_Form_Buttons button.btn-secondary:hover	 {
+    color: #007Faa !important;
+    fill: #007Faa !important;
+    background: white !important;
+    border-color: #007Faa !important;
+    font-size: 12px !important;
+}	
+div.DTED_Lightbox_Wrapper div.DTED_Lightbox_Container div.DTED_Lightbox_Content_Wrapper div.DTED_Lightbox_Content div.DTED_Lightbox_Close {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}		
+.deactivated:not(.child) td {
+	color: #dedede;
+}
+tr.deactivated + .child td {
+    color: #ccc;
+}		 
+
+.dataTables_scrollBody {
+	overflow-x: hidden !important;
+}
+
+.dataTables_w-breakage {
+    max-height: calc(100vh - 22rem);
+    overflow: auto;
+}
+.dataTables_w-breakage tr:hover {
+	    background-color: #f3fbfd;
+	    cursor: pointer;
+}
+.dataTables_w-breakage td {
+	word-break: break-all;
+	min-width: 100px;
+}
+
+    #partsLibBigSearch_wrapper .dataTables_scrollBody {
+	overflow: scroll !important;
+}
+    
+

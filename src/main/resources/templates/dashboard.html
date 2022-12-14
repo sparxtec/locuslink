@@ -1,0 +1,438 @@
+<!doctype html>
+
+<html  xmlns:th="http://www.thymeleaf.org"
+ 	   xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- CSRF Token -->
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Dashboard</title>
+
+	<!-- StyleSheets - ORDER IS IMPORTANT -->
+	<link href="css/datatables/datatables.css" rel="stylesheet">
+	<link href="css/fontawesome-all-5.4.2.css"  rel="stylesheet">
+	<link href="css/de-styles.css" rel="stylesheet">
+	<link href="css/de-dashboard-styles.css" rel="stylesheet">
+	<link href="css/jquery-ui-1.12.1.min.css" rel="stylesheet">
+	<link href="css/progress-bar.css" rel="stylesheet">
+
+	<!-- C.Sparks 04-22-2022 -->
+	<link href="css/med.css"  rel="stylesheet" type="text/css" media="print, projection, screen" />
+	<link href="css/calendar.css"  rel="stylesheet"  type="text/css" media="print, projection, screen" />
+
+	 <!-- JavaScript -->
+	<script src="js/jquery-3.3.1.js"></script>
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/gim.common.js"></script>
+	<script src="js/datatables/datatables.js"></script>
+	<script src="js/moment.js"></script>
+
+
+	<script src="js/jquery-ui-1.12.1.min.js"></script>
+	<script src="js/jquery.hideseek.min.js"></script>
+	<script src="js/dropzone.js"></script>
+
+<style>
+table.dataTable thead th {
+  font-size: 1.2rem;
+ }
+</style>
+
+
+	<script>
+
+		$(document).ready(function() {
+			setupAjaxSend();
+			// Retrieve token
+			var token = $("meta[name='_csrf']").attr("content");
+		    var header = $("meta[name='_csrf_header']").attr("content");
+			
+		    console.log("Get token: ", token, header);
+
+			// Sign Out
+			$('#logoutPage').click(function() {
+				showSpinner();
+				submitFormHTML('initsignout', 'dashboardFormDTO');
+			});
+
+
+			// **************************************
+			// **  Header - Events
+			// **************************************
+
+			// Home
+			$('#buttonHeaderHomeId').click(function() {
+				showSpinner();
+				submitFormHTML('initDashboard', 'dashboardFormDTO');
+			});
+
+
+			//  Provider
+			$('#buttonHeaderProviderId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initProvider', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$(this).addClass('is-current');
+
+			});
+
+			$('#buttonProviderId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initProvider', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderProviderId').addClass('is-current');
+			});
+
+
+			// OIG Error Correction
+			$('#buttonHeaderOigErrorCorrectionId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initOIG', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$(this).addClass('is-current');
+			});
+
+
+			// Possible Match
+			$('#buttonHeaderPossibleMatchId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initPossible', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$(this).addClass('is-current');
+			});
+
+			$('#buttonPossibleMatchId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initPossible', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderPossibleMatchId').addClass('is-current');
+			});
+
+
+			// Distribution
+			$('#buttonHeaderDistributionId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initDistribution', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$(this).addClass('is-current');
+			});
+
+
+			// Batch Launcher
+			$('#buttonHeaderBatchId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initLauncher', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$(this).addClass('is-current');
+			});
+
+			// Batch Launcher - DASHBOARD
+			$('#buttonBatchId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initLauncher', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderBatchId').addClass('is-current');
+			});
+
+
+
+
+			/////////// ***********************************************************  //////////
+			/////////// **************      Admin Events        *******************  //////////
+			/////////// ***********************************************************  //////////
+
+			$('#adminSanctionCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewSanctions', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonThreeId').addClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminErrorCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewErrors', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminStateCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewStates', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminGeneralSpecialtyCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewGeneralSpecialties', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminSubSpecialtyCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewSubSpecialties', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminUpinCodesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewUPINs', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminMedAuditsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewAudits', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+			$('#adminMedUsersId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('viewUsers', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAdminId').addClass('is-current');
+			});
+
+
+
+
+
+			/////////// ***********************************************************  //////////
+			/////////// **************      Account Events      *******************  //////////
+			/////////// ***********************************************************  //////////
+
+/* 			$('#accountHelpId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('xxxx', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAccountId').addClass('is-current');
+			}); */
+
+			$('#accountProfileId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initProfile', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAccountId').addClass('is-current');
+			});
+
+			$('#accountLogout').click(function() {
+				showSpinner();
+
+			//	submitFormAjaxHTML('initLogout', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+
+				url = 'initLogout';
+				datastring = $( "#dashboardFormDTO" ).serialize();
+				responseMethodName = "initCommonResponse";
+
+				var appLogoutUrl = $('#appLogoutUrl').val();
+				//console.log( "appLogoutUrl  1 ->:" + appLogoutUrl ) ;
+
+
+			     $.ajax({
+			         type: "POST",
+			         url: url,
+			         crossDomain: true,
+			         headers: {
+			               "accept": "application/json",
+			                "Access-Control-Allow-Origin":"*",
+			                "Access-Control-Allow-Credentials":true,
+			             "Access-Control-Allow-Headers": "Accept, Origin, Content-Type, Depth, User-Agent, If-Modified-Since, x-auth-token,x-requested-by, Cache-Control, Authorization, X-Req, X-File-Size, X-Requested-With, X-File-Name",
+			               "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+			               "Access-Control-Max-Age": "36002"
+			           },
+
+			         data: datastring,
+			         success: function (data) {
+			        	// alert("S");
+			 			// var processAjaxResponse = window[responseMethodName];
+			 			// processAjaxResponse(data);
+
+			 			//window.location.replace(appLogoutUrl);
+
+			 		//	window.open(appLogoutUrl, '_self');
+
+			 		},
+			 		 error: function (data) {
+
+			 			// alert("Fail");
+			 			// var processAjaxResponse = window[responseMethodName];
+			 			// processAjaxResponse(data);
+
+			 			//window.location.replace(appLogoutUrl);
+
+			 			//window.open(appLogoutUrl, '_self');
+
+			 		 }
+
+			 	 });
+
+			     window.open(appLogoutUrl, '_self');
+			    // window.location.replace(appLogoutUrl);
+
+
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAccountId').addClass('is-current');
+			});
+
+
+
+			//Navigation dropdown
+			var de = {};
+			var activeClass = 'is-active';
+			var nav = document.querySelector('.de-header-nav__group');
+			var navItems = nav.getElementsByClassName('de-header-nav__item');
+			var parentLinks = nav.getElementsByClassName('js-trigger-header-nav-dropdown');
+
+			de.removeActive = function () {
+			  [].forEach.call(parentLinks, function (item) {
+			    item.classList.remove(activeClass);
+			  });
+			};
+
+			[].forEach.call(parentLinks, function (item) {
+			  item.addEventListener('click', function (e) {
+			    if (this.classList.contains(activeClass)) {
+			      de.removeActive();
+			    } else {
+			      de.removeActive();
+			      this.classList.add(activeClass);
+			    }
+			  });
+			});
+			[].forEach.call(parentLinks, function (link) {
+			  link.addEventListener('click', function (e) {
+			    e.preventDefault();
+			    e.stopPropagation();
+			  });
+			});
+
+			// remove active dropdown if clicking anywhere else on the screen
+			$(document).on('click', function(){
+				de.removeActive();
+			});
+
+		});
+
+		function initCommonResponse(returnData) {
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+		$(window).resize(function(){
+			$('#mobileNav').removeClass(['collapse', 'show']);
+		});
+
+	</script>
+
+
+  </head>
+
+
+  <body id="Body" class="de-body de-trace"  >
+	<div th:replace="fragments/header :: header"></div>
+
+    <!-- Import Spinner Modal -->
+	<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+
+
+    <div class="de-content de-component--gray ">
+
+	    <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post" class="w-100">
+
+		     <input type="hidden" th:value="${appLogoutUrl}" name="appLogoutUrl"  id="appLogoutUrl" />
+		     <!-- CSRF token -->
+			 <input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
+
+	        <main id="mainBody" role = "main" class="de-content__main">
+
+	         	<header class="de-page-header de-component--white">
+					<div class="de-page-header__container">
+						<img class="de-component-header__icon" src="images/electron/icons/icon-badge-check.svg" alt="badge check dashboard">
+						<h1 class="de-page-header__title">Welcome to MED !</h1>
+						<p class="de-component-header__intro">Medicare Exclusion Database.</p>
+
+
+ <br>User ->:
+<span sec:authentication="principal">Principal</span>
+<br>Role ->:
+<span sec:authentication="credentials">credentials</span>
+
+
+					</div>
+				</header>
+
+
+	            <section class="de-component">
+
+	                <div class="de-component__container">
+
+	                  	<header class="de-component-header">
+	                        <h2 class="de-component-header__title">Quicklinks</h2>
+	                    </header>
+
+
+						<div class="nav-cards nav-cards--big-icon">
+
+							<ul class="nav-cards__items">
+
+								<li class="nav-cards__item"  >
+									<a id="buttonProviderId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+										<picture class="nav-card-media">
+											<source srcset="images/electron/icons/icon-arrow-up.svg?h=195&amp;w=195" media="(min-width: 600px)">
+											<img class="nav-card-media__image" src="images/electron/icons/icon-arrow-up.svg?h=195&amp;w=195" alt="arrow up">
+										</picture>
+										<div class="nav-card-body">
+									    	<h3 class="nav-card-body__title"><span>Providers</span></h3>
+										</div>
+									</a>
+								</li>
+
+
+								<li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"  class="nav-cards__item"   >
+									<a id="buttonPossibleMatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+										<picture class="nav-card-media">
+											<img src="images/electron/icons/icon-clipboard.svg" alt="clipboard">
+										</picture>
+										<div class="nav-card-body">
+									    	<h3 class="nav-card-body__title text-nowrap"><span>Possible Match</span></h3>
+										</div>
+									</a>
+							</li>
+
+							 	<li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"    class="nav-cards__item"  >
+									<a id="buttonBatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+										<picture class="nav-card-media">
+											<img src="images/electron/icons/icon-three-gears.svg" alt="three gears">
+										</picture>
+										<div class="nav-card-body">
+									    	<h3 class="nav-card-body__title text-nowrap"><span>Batch</span></h3>
+										</div>
+									</a>
+								</li>
+
+							</ul>
+						</div>
+
+	                </div>
+	            </section>
+	        </main>
+        </form>
+    </div>
+
+	<div th:replace="fragments/footer :: footer"></div>
+  </body>
+
+</html>

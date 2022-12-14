@@ -1,0 +1,72 @@
+/* add to resource in case your browser does not support smooth transitions : //ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css */
+
+/* this declares a better box model */
+* 
+
+
+/* #itemList li {
+  transition-property: margin, background-color, border-color;
+  transition-duration: 0.4s, 0.2s, 0.2s;
+  transition-timing-function: ease-in-out, ease, ease;
+}
+ */
+
+
+.hiding {
+  margin-left: -100%;
+  opacity: 0.5;
+}
+
+.hidden {
+  display: none;
+}
+
+/* #itemList {
+  float: left;
+  width: 100%;
+  margin: 2em 0;
+  padding: 0;
+  position: relative;
+}
+
+#itemList:before {
+  position: absolute;
+  left: -2.8em;
+  font-size: 3em;
+  text-align: right;
+  top: 1.5em;
+  color: #ededed;
+  font-weight: bold;
+  font-family: "Maven Pro", sans-serif;
+  transform: rotate(-90deg);
+} */
+
+/* #itemList li {
+  float: left;
+  clear: left;
+  width: 100%;
+  margin: 0.2em 0;
+  padding: 0.5em 0.8em;
+  list-style: none;
+  background-color: #f2f2f2;
+  border-left: 5px solid #003842;
+  cursor: pointer;
+  color: #333;
+  position: relative;
+  z-index: 2;
+} */
+
+
+
+
+
+/*
+The following are styles purely for the surroundings
+*/
+
+
+
+
+
+
+
