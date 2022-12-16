@@ -13,18 +13,18 @@
 FROM alpine:3.10 AS BUILD_IMAGE
 
 
-FROM openjdk
+#FROM openjdk
 
-COPY src src
-COPY pom.xml   .
-WORKDIR src
+#COPY src src
+#COPY pom.xml   .
+#WORKDIR src
 
 #run mkdir -p bin
 
 #ADD apache-maven-3.3.9 /opt/maven3
 
 
-RUN mvn -f pom.xml package
+#RUN mvn -f pom.xml package
 
 
 #run mvn package
