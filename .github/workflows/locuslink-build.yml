@@ -31,7 +31,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
 
-  #  - name: Build the Docker image
+    - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
 
