@@ -41,7 +41,7 @@ jobs:
       with:
         registry: ghcr.io
         username: csparks803
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: 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
 
     - name: Store the Docker Image
       run: docker run ghcr.io/locuslink/locuslink-portal-image:$(date +%s)
