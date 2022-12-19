@@ -71,7 +71,8 @@ jobs:
         
         #docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
         docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_ID}
-        docker push $IMAGE_ID:$VERSION
+        #docker push $IMAGE_ID:$VERSION
+        docker push $IMAGE_ID:${GITHUB_RUN_ID}
           
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
