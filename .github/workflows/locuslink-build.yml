@@ -19,7 +19,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: locuslink-portal-image
+  IMAGE_NAME: ${{ github.repository }}
   
   
 jobs:
