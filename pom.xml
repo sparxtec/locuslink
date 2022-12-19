@@ -7,22 +7,12 @@
 
 
 	<properties>
-
-		<spring-boot.version>2.0.5.RELEASE</spring-boot.version>
-
-		<mysql.driver.version>8.0.20</mysql.driver.version>
-		<junit.version>4.11</junit.version>
-		<jaxb.api.version>2.3.0</jaxb.api.version>
-
-		<java.version>11</java.version>
-		<maven.compiler.target>11</maven.compiler.target>
-    	<maven.compiler.source>11</maven.compiler.source>
-    	<maven.compiler.release>11</maven.compiler.release>
-<!--     <spring-cloud.version>Finchley.SR4</spring-cloud.version> -->
-
- <aws.java.sdk.version>2.17.118</aws.java.sdk.version>
-
-
+		<spring-boot.version>2.7.0</spring-boot.version>
+		<aws-sdk-bom-version>1.12.367</aws-sdk-bom-version>
+		<java.version>17</java.version>
+		<maven.compiler.target>17</maven.compiler.target>
+    	<maven.compiler.source>17</maven.compiler.source>
+    	<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
 	<dependencyManagement>
@@ -34,6 +24,16 @@
                       <type>pom</type>
                       <scope>import</scope>
                 </dependency>
+                                
+                <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bom -->
+				<dependency>
+				    <groupId>com.amazonaws</groupId>
+				    <artifactId>aws-java-sdk-bom</artifactId>
+				    <version>${aws-sdk-bom-version}</version>
+				    <type>pom</type>
+				    <scope>import</scope>
+				</dependency>
+                
            </dependencies>
      </dependencyManagement>
 
@@ -42,51 +42,45 @@
 	<dependencies>
 
 
-<dependency>
+<!--<dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>aws-sdk-java</artifactId>
   <version>2.17.162</version>
-</dependency>
+</dependency>-->
 
+		<!-- AWS Sparks 12-19-2022 -->
+		<dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+        </dependency>
+        
+		 <dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk-secretsmanager</artifactId>    
+		</dependency>
 
-		<!-- 01-19-2022 -->
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk-s3</artifactId>  
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-efs</artifactId>
+		</dependency>
+
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
-		<!--     <scope>runtime</scope> -->
 		</dependency>
+
+
 
 		 <dependency>
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		</dependency>
 
-		 <dependency>
-		    <groupId>com.amazonaws</groupId>
-		    <artifactId>aws-java-sdk-secretsmanager</artifactId>
-		    <version>1.11.558</version>
-		</dependency>
-
-		<dependency>
-		    <groupId>com.amazonaws</groupId>
-		    <artifactId>aws-java-sdk-s3</artifactId>
-		    <version>1.12.150</version>
-		</dependency>
-
-<dependency>
-	<groupId>com.amazonaws</groupId>
-	<artifactId>aws-java-sdk-efs</artifactId>
-	<version>1.11.573</version>
-</dependency>
-
-
-
-
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-       	    <version>1.12.150</version>
-        </dependency>
 
 
 
@@ -163,11 +157,11 @@
 
 		<!--   Added 5-5-2020   -->
 
-<dependency>
-    <groupId>org.thymeleaf.extras</groupId>
-    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-    <version>3.0.4.RELEASE</version>
-</dependency>
+		<dependency>
+		    <groupId>org.thymeleaf.extras</groupId>
+		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		<!--    <version>3.0.4.RELEASE</version>-->
+		</dependency>
 
 
 
@@ -184,33 +178,32 @@
 		</dependency>
 
 
-		    <!-- C.Sparks 4-14-2022 -->
-            <!-- Spring Security -->
+	    <!-- C.Sparks 4-14-2022 -->
+        <!-- Spring Security -->
+         <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-ldap</artifactId>
+         </dependency>
 
-             <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-data-ldap</artifactId>
-             </dependency>
+         <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-integration</artifactId>
+         </dependency>
 
-             <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-integration</artifactId>
-             </dependency>
+         <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+         </dependency>
 
-             <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-security</artifactId>
-             </dependency>
+         <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+         </dependency>
 
-             <dependency>
-                    <groupId>org.springframework.security</groupId>
-                    <artifactId>spring-security-config</artifactId>
-             </dependency>
-
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-oauth2-jose</artifactId>
-</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-oauth2-jose</artifactId>
+		</dependency>
 
  		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -220,30 +213,12 @@
 
 
 
- <dependency>
-    <groupId>org.opensaml</groupId>
-    <artifactId>opensaml-core</artifactId>
-    <version>4.0.1</version>
-</dependency>
+		 <dependency>
+		    <groupId>org.opensaml</groupId>
+		    <artifactId>opensaml-core</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
 
-<!-- <dependency>
-    <groupId>org.opensaml</groupId>
-    <artifactId>opensaml</artifactId>
-    <version>2.6.1</version>
-    <exclusions>
-    	<exclusion>
-    		<groupId>org.opensaml</groupId>
-    		<artifactId>xmltooling</artifactId>
-    	</exclusion>
-    </exclusions>
-</dependency> -->
-
-<!--
-		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>runtime</scope>
-		</dependency> -->
 
         <dependency>
              <groupId>org.springframework.boot</groupId>
@@ -260,7 +235,6 @@
              	</exclusion>
              </exclusions>
         </dependency>
-
 
 
 
@@ -304,12 +278,6 @@
            <version>1.2.17</version>
         </dependency>
 
-<!-- 	    <dependency>
-	        <groupId>com.thoughtworks.xstream</groupId>
-	        <artifactId>xstream</artifactId>
-	        <version>1.4.11.1</version>
-	    </dependency>
- -->
 
 		<!-- Misc -->
 		<dependency>
@@ -317,14 +285,12 @@
 		    <artifactId>commons-lang3</artifactId>
 		</dependency>
 
-
 	    <!-- Mail -->
 		<dependency>
 		    <groupId>javax.mail</groupId>
 		    <artifactId>mail</artifactId>
 		    <version>1.4.7</version>
 		</dependency>
-
 
 	</dependencies>
 

@@ -1,0 +1,15 @@
+com\locuslink\controller\DashboardController.class
+com\locuslink\controller\LoginController.class
+com\locuslink\config\AwsSecrets.class
+com\locuslink\dto\DashboardFormDTO.class
+com\locuslink\controller\AdminController.class
+com\locuslink\config\SecurityConfig.class
+com\locuslink\dto\ErrorFormDTO.class
+com\locuslink\common\GenericMessageRequest.class
+com\locuslink\controller\LogoutController.class
+com\locuslink\common\SecurityContextManager.class
+com\locuslink\dto\LoginFormDTO.class
+com\locuslink\config\Application.class
+com\locuslink\common\AbstractMessage.class
+com\locuslink\common\GenericMessageResponse.class
+com\locuslink\config\AwsConfig.class
