@@ -1,14 +1,12 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+# This workflow will:
+#  - compile Java using Maven
+#  - build Docker Image, tagged with Build Number   xxxxxx.2
+#  - store Docker Image on GitHub Container Registry  - GHCR
 
-name: Deploy Docker Image -  AWS Test
+
+name: Build Docker Dev - Java build Maven, store GHCR, 
 
 on: [workflow_dispatch]
-  #push:
-  #  branches: [ "dev" ]
-  #pull_request:
-  #  branches: [ "dev" ]
-
 
 env:
   REGISTRY: ghcr.io
@@ -69,16 +67,9 @@ jobs:
         echo VERSION=$VERSION
         echo BUILD_ID=${GITHUB_RUN_ID}
         echo BUILD_NBR=${GITHUB_RUN_NUMBER}
-        
-        #docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_ID}
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}
-        
+      
         docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        
-        #docker push $IMAGE_ID:$VERSION
-        #docker push $IMAGE_ID:${GITHUB_RUN_ID}
-        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}
+
         docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
           
 

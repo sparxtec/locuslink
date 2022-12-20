@@ -1,8 +1,7 @@
 # This workflow will:
-#        - build a Java project with Maven
-#        - build the Docker Imag
-#        - store the Docker Image in the GHCR Git Hub Container Registry
-#        - deploy the Docker Inmage to AWS ECS Fargate Container
+#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter
+#        - store the Docker Image in the GHCR Git Hub Container Registry, using build number and DEV environment ,    xxxxxxxxxx.7.dev
+#        - deploy the Docker Inmage to AWS ECS Fargate Container - DEV Environment
 
 name: Deploy Docker Image - Build Java, store GHCR, deploy AWS DEv
 
