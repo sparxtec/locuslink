@@ -4,7 +4,8 @@
 
 name: Build Code - Java build with Maven
 
-on: 
+on:  
+  workflow_dispatch:
   push:  
     #branches: [ "dev" ]
   pull_request:
