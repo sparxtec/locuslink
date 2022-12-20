@@ -2,7 +2,7 @@
 #  - compile Java using Maven
 #  - future, code scan
 
-name: Build Docker Dev - Java build Maven, store GHCR 
+name: Build Code - Java build with Maven
 
 on: 
   push:  

@@ -3,7 +3,7 @@
 #        - store the Docker Image in the GHCR Git Hub Container Registry, using build number and TEST  environment ,    xxxxxxxxxx.7.test
 #        - deploy the Docker Inmage to AWS ECS Fargate Container - TEST Environment
 
-name: Deploy Docker Image - Build Java, store GHCR, deploy AWS DEv
+name: Deploy AWS Test
 
 on: [workflow_dispatch]
 

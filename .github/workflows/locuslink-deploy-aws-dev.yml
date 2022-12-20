@@ -3,7 +3,7 @@
 #        - store the Docker Image in the GHCR Git Hub Container Registry, using build number and DEV environment ,    xxxxxxxxxx.7.dev
 #        - deploy the Docker Inmage to AWS ECS Fargate Container - DEV Environment
 
-name: Deploy Docker Image - Build Java, store GHCR, deploy AWS DEv
+name: Deploy AWS Dev
 
 on: [workflow_dispatch]
 
