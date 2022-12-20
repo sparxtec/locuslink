@@ -4,7 +4,7 @@
 #  - store Docker Image on GitHub Container Registry  - GHCR
 
 
-name: Build Docker Dev - store GHCR, 
+name: Build Docker Dev - store GHCR
 
 on: [workflow_dispatch]
 
