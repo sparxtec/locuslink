@@ -5,9 +5,9 @@ name: Deploy Docker Image - AWS Dev
 on: 
   workflow_dispatch:
     inputs:
-      version:
+      buildnumber:
         description: Input the Build Run Number to deploy
-        default: 2.dev
+        default: 0
         required: true
 
 env:
@@ -21,6 +21,10 @@ env:
   ECS_CLUSTER: demo-ecs-cluster              
   ECS_TASK_DEFINITION: .aws/td.json 
   CONTAINER_NAME: nginx
+  
+  BUILD_NUMBER :  ${{ inputs.buildnumber }}
+  #BUILD_SOURCE_ENV: dev
+  BUILD_TARGET_ENV: dev    #dev,test,prod
   
 jobs:
 
@@ -41,26 +45,15 @@ jobs:
     - name: Pull the Docker Image
       run: |      
         IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
-        
-        # Change all uppercase to lowercase
-        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-        
-        # Strip git ref prefix from version
-        #VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          
-        # Strip "v" prefix from tag name
-        #[[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-        
-        # Use Docker `latest` tag convention
-        #[ "$VERSION" == "master" ] && VERSION=latest
-        
+              
         echo IMAGE_ID=$IMAGE_ID        
-        echo VERSION=$VERSION
-        echo BUILD_ID=${GITHUB_RUN_ID}
-        echo BUILD_NBR=${GITHUB_RUN_NUMBER}
-   
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
+        echo GITHUB_RUN_ID=${GITHUB_RUN_ID}        
+        echo BUILD_NUMBER=$BUILD_NUMBER
+        echo BUILD_SOURCE_ENV=$BUILD_SOURCE_ENV
+        echo BUILD_TARGET_ENV=$BUILD_TARGET_ENV
 
-        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-          
-        docker pull $IMAGE_ID:2.dev
+        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
+        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION          
+        #docker pull $IMAGE_ID:2.dev
+        
+        docker pull $IMAGE_ID:$BUILD_NUMBER.$BUILD_SOURCE_ENV
