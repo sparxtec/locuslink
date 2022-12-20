@@ -23,14 +23,11 @@ FROM alpine:3.10 AS BUILD_IMAGE
 
 #ADD apache-maven-3.3.9 /opt/maven3
 
-
 #RUN mvn -f pom.xml package
 
 
-#run mvn package
-
-
-#COPY --from=BUILD_IMAGE target/portal-boot.jar ./portal.jar
+# C.Sparks 12-20-2022 This is the step to copy the JAR into the image
+COPY --from=BUILD_IMAGE target/portal-boot.jar ./portal.jar
 
 
 #STAGE 2
@@ -56,6 +53,7 @@ FROM alpine:3.10 AS BUILD_IMAGE
 
 #STAGE 3 - Set up the run options, make port available to world outside the container
 EXPOSE 80
+EXPOSE 5000
 EXPOSE 8443
 
 # 6-27 test 3
