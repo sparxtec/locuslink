@@ -7,7 +7,7 @@ on:
     inputs:
       version:
         description: Input the Build Run Number to deploy
-        default: 1.dev
+        default: 2.dev
         required: true
 
 env:
@@ -63,4 +63,4 @@ jobs:
 
         #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
           
-        docker pull $IMAGE_ID:1.dev
+        docker pull $IMAGE_ID:2.dev
