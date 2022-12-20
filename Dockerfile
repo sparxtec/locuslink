@@ -10,10 +10,13 @@
 
 #FROM maven:3.5.2-jdk-8-alpine AS BUILD_IMAGE
 
-FROM alpine:3.10 AS BUILD_IMAGE
+#FROM alpine:3.10 AS BUILD_IMAGE
 
 
 #FROM openjdk
+
+FROM openjdk:17-jdk-alpine
+
 
 #COPY src src
 #COPY pom.xml   .
@@ -27,7 +30,9 @@ FROM alpine:3.10 AS BUILD_IMAGE
 
 
 # C.Sparks 12-20-2022 This is the step to copy the JAR into the image
-COPY --from=BUILD_IMAGE target/portal-boot.jar ./portal.jar
+#COPY --from=BUILD_IMAGE target/portal-boot.jar ./portal.jar
+
+COPY  target/portal-boot.jar ./portal.jar
 
 
 #STAGE 2
