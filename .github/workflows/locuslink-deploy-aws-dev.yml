@@ -1,6 +1,5 @@
 # This workflow will:
-#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter
-#        - store the Docker Image in the GHCR Git Hub Container Registry, using build number and DEV environment ,    xxxxxxxxxx.7.dev
+#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter  xxxxxxxxxx.7.dev  
 #        - deploy the Docker Inmage to AWS ECS Fargate Container - DEV Environment
 
 name: Deploy AWS Dev
@@ -11,12 +10,12 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   
-  AWS_REGION: ap-south-1                   
-  ECR_REPOSITORY: demo-repo        
-  ECS_SERVICE: demo-service               
-  ECS_CLUSTER: demo-ecs-cluster              
-  ECS_TASK_DEFINITION: .aws/td.json 
-  CONTAINER_NAME: nginx
+  AWS_REGION: us-east-1                   
+  ECR_REPOSITORY: ghcr.io/sparxtec-locuslink/sparxtec-locuslink/locuslink:3.dev        
+  ECS_SERVICE: container-sparks-service               
+  ECS_CLUSTER: sparks-default-cluster              
+  ECS_TASK_DEFINITION: first-run-task-definition:2 
+  CONTAINER_NAME: container-sparks
   
   BUILD_NUMBER :  ${{ inputs.buildnumber }}
   #BUILD_SOURCE_ENV: dev
@@ -29,16 +28,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-        
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      
+ 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
