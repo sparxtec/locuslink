@@ -72,8 +72,8 @@ jobs:
         #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
         
         # 12-26-2022  Need a this convention for AWS deployment later in the pipeline
-        docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
+        docker tag $IMAGE_NAME $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
+        docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
           
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
