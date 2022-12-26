@@ -68,8 +68,11 @@ jobs:
         echo BUILD_ID=${GITHUB_RUN_ID}
         echo BUILD_NBR=${GITHUB_RUN_NUMBER}
       
+        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
+        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
+        
+        # 12-26-2022  Need a this convention for AWS deployment later in the pipeline
         docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-
         docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
           
 
