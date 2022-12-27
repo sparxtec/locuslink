@@ -9,7 +9,7 @@ name: Deploy AWS Dev
 on: 
   workflow_dispatch:
     inputs:
-      version:
+      buildnumber_to_deploy:
         description: 'Build Number to Deploy'
         required: true
     
@@ -22,7 +22,7 @@ env:
   ECS_SERVICE: container-sparks-service                          
   CONTAINER_NAME: container-sparks
   
-  BUILD_NUMBER :  ${{ inputs.buildnumber }}
+  BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
   
 jobs:
   build:
@@ -49,20 +49,17 @@ jobs:
       run: |      
         IMAGE_ID=ghcr.io/$IMAGE_NAME
               
-        echo IMAGE_ID=$IMAGE_ID        
-        echo GITHUB_RUN_ID=${GITHUB_RUN_ID}        
-        echo BUILD_NUMBER=$BUILD_NUMBER
-        echo BUILD_SOURCE_ENV=$BUILD_SOURCE_ENV
-        echo BUILD_TARGET_ENV=$BUILD_TARGET_ENV
-
+        echo IMAGE_ID=$IMAGE_ID               
+        echo BUILD_NUMBER_TO_DEPLOY=$BUILD_NUMBER_TO_DEPLOY
+        
         #docker tag $IMAGE_NAME $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
         #docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
         
         # pull the one we want to deploy
-        docker pull $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}     
+        docker pull $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}     
         
         # push the build number as build.latest for reference and DR, and redeploy
-        docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}.latest
+        docker push $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest
         
          # push as latest for AWS ECS configuration
         docker push $IMAGE_ID:$VERSION.latest
