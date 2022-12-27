@@ -6,7 +6,7 @@
 # -  update AWS ECS Service to run the newly created latest
 
 
-name: Build App, Builod Docker, Store GHCR, AWS Update - Full Pipeline - DEV
+name: Full Pipeline - DEV
 
 on: [workflow_dispatch]
 
