@@ -1,26 +1,29 @@
 # This workflow will:
-#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter only for DEV images.    xxxxxxxxxx.7.dev
-#        - store the Docker Image in the GHCR Git Hub Container Registry, using build number and TEST  environment ,    xxxxxxxxxx.7.test
-#        - deploy the Docker Inmage to AWS ECS Fargate Container - TEST Environment
+#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter  xxxxxxxxxx.dev.4 
+#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.4.latest  {for reference for redeploy, backout, etc} 
+#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
+#        - update the AWS Cluster & Service, will will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
 
-name: Deploy AWS Test
+name: Deploy AWS Dev
 
-on: [workflow_dispatch]
-
+on: 
+  workflow_dispatch:
+    inputs:
+      buildnumber_to_deploy:
+        description: 'Build Number to Deploy'
+        required: true
+    
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   
-  AWS_REGION: ap-south-1                   
-  ECR_REPOSITORY: demo-repo        
-  ECS_SERVICE: demo-service               
-  ECS_CLUSTER: demo-ecs-cluster              
-  ECS_TASK_DEFINITION: .aws/td.json 
-  CONTAINER_NAME: nginx
+  AWS_REGION: us-east-1      
+  ECS_CLUSTER: sparks-default-cluster   
+  ECS_SERVICE: container-sparks-service                          
+  CONTAINER_NAME: container-sparks
   
-  BUILD_NUMBER :  ${{ inputs.buildnumber }}
-  #BUILD_SOURCE_ENV: dev
-  BUILD_TARGET_ENV: dev    #dev,test,prod
+  BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
+  VERSION: dev
   
 jobs:
   build:
@@ -29,48 +32,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-        
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-      
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
-
+    
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-      with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            
-    - name: Store the Docker Image
-      run: |      
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
-              
-        echo IMAGE_ID=$IMAGE_ID        
-        echo GITHUB_RUN_ID=${GITHUB_RUN_ID}        
-        echo BUILD_NUMBER=$BUILD_NUMBER
-        echo BUILD_SOURCE_ENV=$BUILD_SOURCE_ENV
-        echo BUILD_TARGET_ENV=$BUILD_TARGET_ENV
-
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION          
-        #docker pull $IMAGE_ID:2.dev
         
-        docker pull $IMAGE_ID:$BUILD_NUMBER.$BUILD_SOURCE_ENV        
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+    - name: AWS DEv Deploy - Update Service with latest Image
+      run: |
+          aws ecs update-service --cluster $ECS_CLUSTER --service example-web --force-new-deployment
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-1
+           
+ 
