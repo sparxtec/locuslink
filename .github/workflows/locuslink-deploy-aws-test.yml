@@ -15,15 +15,12 @@ on:
     
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  
-  AWS_REGION: us-east-1      
-  ECS_CLUSTER: sparks-default-cluster   
-  ECS_SERVICE: container-sparks-service                          
-  CONTAINER_NAME: container-sparks
-  
+  IMAGE_NAME: ${{ github.repository }}                           
   BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
   VERSION: dev
+  
+  ECS_CLUSTER: sparks-default-cluster   
+  ECS_SERVICE: container-sparks-service  
   
 jobs:
   build:
@@ -42,10 +39,13 @@ jobs:
         
     - name: AWS DEv Deploy - Update Service with latest Image
       run: |
-          aws ecs update-service --cluster $ECS_CLUSTER --service example-web --force-new-deployment
+          aws ecs update-service --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} --force-new-deployment
       env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          AWS_ACCESS_KEY_ID: AKIA5MSVXCMPY7CNJTEP
+          AWS_SECRET_ACCESS_KEY: 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            
+          AWS_DEFAULT_REGION: us-east-1 
            
  
