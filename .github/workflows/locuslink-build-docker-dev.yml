@@ -49,7 +49,6 @@ jobs:
   
     - name: Store the Docker Image
       run: |      
-        #IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
         IMAGE_ID=ghcr.io/$IMAGE_NAME
         
         # Change all uppercase to lowercase
@@ -57,21 +56,12 @@ jobs:
         
         # Strip git ref prefix from version
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          
-        # Strip "v" prefix from tag name
-        #[[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-        
-        # Use Docker `latest` tag convention
-        #[ "$VERSION" == "master" ] && VERSION=latest
-        
+                 
         echo IMAGE_ID=$IMAGE_ID        
         echo VERSION=$VERSION
         echo GITHUB_RUN_ID=${GITHUB_RUN_ID}
         echo GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}
-      
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        
+          
         # 12-26-2022  Need a this convention for AWS deployment later in the pipeline
         docker tag $IMAGE_NAME $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
         docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
