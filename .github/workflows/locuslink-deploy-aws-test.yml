@@ -8,10 +8,6 @@ name: TESTING -  AWS Service Update Dev
 
 on: 
   workflow_dispatch:
-    inputs:
-      buildnumber_to_deploy:
-        description: 'Build Number to Deploy'
-        required: true
     
 env:
   REGISTRY: ghcr.io
