@@ -4,7 +4,7 @@
 #        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
 #        - update the AWS Cluster & Service, will will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
 
-name: TESTING -  AWS Service Update Dev
+name: AWS Service Update Test - TBD
 
 on: 
   workflow_dispatch:
@@ -33,19 +33,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: AWS Dev Deploy - Update Service with latest Image
-      run: |
-          aws ecs update-service --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} --force-new-deployment
-          
-          echo Service Update Completed, Waiting for the deployment to Finish ....
-          aws ecs wait services-stable --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} 
-          
-      env:
-          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
-          AWS_ACCESS_KEY_ID: AKIA5MSVXCMPY7CNJTEP
-          AWS_SECRET_ACCESS_KEY: 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            
-          AWS_DEFAULT_REGION: us-east-1 
+
            
  
