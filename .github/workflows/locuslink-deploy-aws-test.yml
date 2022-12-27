@@ -37,7 +37,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: AWS DEv Deploy - Update Service with latest Image
+    - name: AWS Dev Deploy - Update Service with latest Image
       run: |
           aws ecs update-service --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} --force-new-deployment
       env:
