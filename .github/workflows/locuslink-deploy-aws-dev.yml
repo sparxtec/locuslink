@@ -1,6 +1,6 @@
 # This workflow will:
 #        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter  xxxxxxxxxx.dev.4 
-#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.4.latest  {for reference ro redeploy, backout, etc} 
+#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.4.latest  {for reference for redeploy, backout, etc} 
 #        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
 #        - update the AWS Cluster & Service, will will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
 
@@ -47,7 +47,7 @@ jobs:
             
     - name: Pull and Re-Store the Docker Image as the LATEST for this environment
       run: |      
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+        IMAGE_ID=ghcr.io/$IMAGE_NAME
               
         echo IMAGE_ID=$IMAGE_ID        
         echo GITHUB_RUN_ID=${GITHUB_RUN_ID}        
@@ -55,10 +55,15 @@ jobs:
         echo BUILD_SOURCE_ENV=$BUILD_SOURCE_ENV
         echo BUILD_TARGET_ENV=$BUILD_TARGET_ENV
 
-        #docker tag $IMAGE_NAME $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION
-        #docker push $IMAGE_ID:${GITHUB_RUN_NUMBER}.$VERSION          
-        #docker pull $IMAGE_ID:2.dev
+        #docker tag $IMAGE_NAME $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
+        #docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
         
-        docker pull $IMAGE_ID:$BUILD_NUMBER.$BUILD_SOURCE_ENV        
-
+        # pull the one we want to deploy
+        docker pull $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}     
+        
+        # push the build number as build.latest for reference and DR, and redeploy
+        docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}.latest
+        
+         # push as latest for AWS ECS configuration
+        docker push $IMAGE_ID:$VERSION.latest
 
