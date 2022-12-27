@@ -4,7 +4,7 @@
 #        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
 #        - update the AWS Cluster & Service, will will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
 
-name: Deploy AWS Dev
+name: TESTING -  AWS Service Update Dev
 
 on: 
   workflow_dispatch:
