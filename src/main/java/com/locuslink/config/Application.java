@@ -47,8 +47,9 @@ public class Application extends SpringBootServletInitializer   {
 	@Autowired
 	private AwsSecrets awsSecrets;
 
-	@Value("${app.secretName}")
-	private  String appSecretName;
+	// 12-21-2022 TODO Add this back C.Sparks ??
+	//@Value("${app.secretName}")
+	//private  String appSecretName;
 
 	@Value("${app.region}")
 	private String appRegion;
@@ -70,7 +71,7 @@ public class Application extends SpringBootServletInitializer   {
 
 
 	// 5-6-2022 testing to thymeleaf can use the sec:authorize
-	//  This was the majig bullet to making the thymeleaf sec:authorize work
+	//  This was the magic bullet to making the thymeleaf sec:authorize work
 	@Bean
 	public SpringSecurityDialect securityDialect() {
 	    return new SpringSecurityDialect();
