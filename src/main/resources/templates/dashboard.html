@@ -46,9 +46,7 @@ table.dataTable thead th {
  }
 </style>
 
-
 	<script>
-
 		$(document).ready(function() {
 			setupAjaxSend();
 			// Retrieve token
@@ -58,10 +56,10 @@ table.dataTable thead th {
 		    console.log("Get token: ", token, header);
 
 			// Sign Out
-			$('#logoutPage').click(function() {
+/* 			$('#logoutPage').click(function() {
 				showSpinner();
 				submitFormHTML('initsignout', 'dashboardFormDTO');
-			});
+			}); */
 
 
 			// **************************************
@@ -75,71 +73,20 @@ table.dataTable thead th {
 			});
 
 
-			//  Provider
-			$('#buttonHeaderProviderId').click(function() {
+			//  Upload
+			$('#buttonHeaderUploadId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initProvider', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
 				$(this).addClass('is-current');
 
 			});
 
-			$('#buttonProviderId').click(function() {
+			$('#buttonManageId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initProvider', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initManage', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderProviderId').addClass('is-current');
-			});
-
-
-			// OIG Error Correction
-			$('#buttonHeaderOigErrorCorrectionId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initOIG', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$(this).addClass('is-current');
-			});
-
-
-			// Possible Match
-			$('#buttonHeaderPossibleMatchId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initPossible', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$(this).addClass('is-current');
-			});
-
-			$('#buttonPossibleMatchId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initPossible', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderPossibleMatchId').addClass('is-current');
-			});
-
-
-			// Distribution
-			$('#buttonHeaderDistributionId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initDistribution', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$(this).addClass('is-current');
-			});
-
-
-			// Batch Launcher
-			$('#buttonHeaderBatchId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initLauncher', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$(this).addClass('is-current');
-			});
-
-			// Batch Launcher - DASHBOARD
-			$('#buttonBatchId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initLauncher', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderBatchId').addClass('is-current');
+				$('#buttonHeaderManageId').addClass('is-current');
 			});
 
 
@@ -149,77 +96,21 @@ table.dataTable thead th {
 			/////////// **************      Admin Events        *******************  //////////
 			/////////// ***********************************************************  //////////
 
-			$('#adminSanctionCodesId').click(function() {
+/* 			$('#adminSanctionCodesId').click(function() {
 				showSpinner();
 				submitFormAjaxHTML('viewSanctions', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
 				$('#buttonThreeId').addClass('is-current');
 				$('#buttonHeaderAdminId').addClass('is-current');
 			});
-
-			$('#adminErrorCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewErrors', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminStateCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewStates', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminGeneralSpecialtyCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewGeneralSpecialties', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminSubSpecialtyCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewSubSpecialties', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminUpinCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewUPINs', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminMedAuditsId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewAudits', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-			$('#adminMedUsersId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewUsers', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
-
-
+ */
+			
 
 
 
 			/////////// ***********************************************************  //////////
 			/////////// **************      Account Events      *******************  //////////
 			/////////// ***********************************************************  //////////
-
-/* 			$('#accountHelpId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('xxxx', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderAccountId').addClass('is-current');
-			}); */
 
 			$('#accountProfileId').click(function() {
 				showSpinner();
@@ -230,16 +121,19 @@ table.dataTable thead th {
 
 			$('#accountLogout').click(function() {
 				showSpinner();
-
-			//	submitFormAjaxHTML('initLogout', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormHTML('initLogout', 'dashboardFormDTO');
+			});
+			
+	
+	
+/* 			$('#XXXXXXXaccountLogout').click(function() {
+				showSpinner();
 
 				url = 'initLogout';
 				datastring = $( "#dashboardFormDTO" ).serialize();
 				responseMethodName = "initCommonResponse";
 
 				var appLogoutUrl = $('#appLogoutUrl').val();
-				//console.log( "appLogoutUrl  1 ->:" + appLogoutUrl ) ;
-
 
 			     $.ajax({
 			         type: "POST",
@@ -253,30 +147,11 @@ table.dataTable thead th {
 			               "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
 			               "Access-Control-Max-Age": "36002"
 			           },
-
 			         data: datastring,
 			         success: function (data) {
-			        	// alert("S");
-			 			// var processAjaxResponse = window[responseMethodName];
-			 			// processAjaxResponse(data);
-
-			 			//window.location.replace(appLogoutUrl);
-
-			 		//	window.open(appLogoutUrl, '_self');
-
 			 		},
 			 		 error: function (data) {
-
-			 			// alert("Fail");
-			 			// var processAjaxResponse = window[responseMethodName];
-			 			// processAjaxResponse(data);
-
-			 			//window.location.replace(appLogoutUrl);
-
-			 			//window.open(appLogoutUrl, '_self');
-
 			 		 }
-
 			 	 });
 
 			     window.open(appLogoutUrl, '_self');
@@ -285,7 +160,7 @@ table.dataTable thead th {
 
 				$('.is-current').removeClass('is-current');
 				$('#buttonHeaderAccountId').addClass('is-current');
-			});
+			}); */
 
 
 
@@ -337,7 +212,6 @@ table.dataTable thead th {
 
 	</script>
 
-
   </head>
 
 
@@ -361,14 +235,14 @@ table.dataTable thead th {
 	         	<header class="de-page-header de-component--white">
 					<div class="de-page-header__container">
 						<img class="de-component-header__icon" src="images/electron/icons/icon-badge-check.svg" alt="badge check dashboard">
-						<h1 class="de-page-header__title">Welcome to MED !</h1>
-						<p class="de-component-header__intro">Medicare Exclusion Database.</p>
+						<h1 class="de-page-header__title">Welcome to Locuslink !</h1>
+						<p class="de-component-header__intro">Utilities Record Management</p>
 
 
- <br>User ->:
+<!--  <br>User ->:
 <span sec:authentication="principal">Principal</span>
 <br>Role ->:
-<span sec:authentication="credentials">credentials</span>
+<span sec:authentication="credentials">credentials</span> -->
 
 
 					</div>
@@ -395,30 +269,30 @@ table.dataTable thead th {
 											<img class="nav-card-media__image" src="images/electron/icons/icon-arrow-up.svg?h=195&amp;w=195" alt="arrow up">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title"><span>Providers</span></h3>
+									    	<h3 class="nav-card-body__title"><span>Upload</span></h3>
 										</div>
 									</a>
 								</li>
 
 
-								<li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"  class="nav-cards__item"   >
+								<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"  class="nav-cards__item"   >
 									<a id="buttonPossibleMatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<img src="images/electron/icons/icon-clipboard.svg" alt="clipboard">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>Possible Match</span></h3>
+									    	<h3 class="nav-card-body__title text-nowrap"><span>Manage</span></h3>
 										</div>
 									</a>
 							</li>
 
-							 	<li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')"    class="nav-cards__item"  >
+							 	<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"    class="nav-cards__item"  >
 									<a id="buttonBatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<img src="images/electron/icons/icon-three-gears.svg" alt="three gears">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>Batch</span></h3>
+									    	<h3 class="nav-card-body__title text-nowrap"><span>TBD</span></h3>
 										</div>
 									</a>
 								</li>

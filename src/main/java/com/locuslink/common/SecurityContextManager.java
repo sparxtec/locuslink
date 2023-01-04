@@ -62,7 +62,7 @@ public class SecurityContextManager {
 	    }
 
 	    String credentials = sc.getAuthentication().getCredentials().toString() ;
-		if (credentials.startsWith("med-") || credentials.startsWith("MED-")) {
+		if (credentials.startsWith("locuslink-") || credentials.startsWith("LOCUSLINK-")) {
 			// all good
 		} else {
 			logger.debug("  User came her in an un authenticated way, returngin to login.   credentials ->: " + credentials);
@@ -82,38 +82,32 @@ public class SecurityContextManager {
 		logger.debug("  processSpringSecurityContext  ->: " );
 
 		// 7-11-2022
-		//  The user can have multiple roles, from other systems, as well as multiple roles from within MED.
-		//   we need to parse out just the MED roles
+		//  The user can have multiple roles, from other systems, as well as multiple roles from within the application.
+		//   we need to parse out just the LOCUSLINK roles
 		//   then we need to take the lowest role found.
-		// ex.   roles = 'eppe_user,med-poweruser, ENDUSER,med-user'
 
 		StringTokenizer st = new StringTokenizer(jwtCmsRoles.toUpperCase(),",");
 		String wrkRole = "";
-		String medRoleWeWantToUse="";
+		String locuslinkRoleWeWantToUse="";
 	     while (st.hasMoreTokens()) {
 	    	 wrkRole = st.nextToken().trim();
-	    	 if (wrkRole.equals("MED-USER")) {
-	    		 medRoleWeWantToUse = wrkRole;
-	    	 } else if (wrkRole.equals("MED-POWERUSER")) {
-	    		 if (medRoleWeWantToUse.equals("") || medRoleWeWantToUse.equals("MED-ADMIN")) {
-	    			 medRoleWeWantToUse = wrkRole;
-	    		 }
-	    	 } else if (wrkRole.equals("MED-ADMIN")) {
-	    		 if (medRoleWeWantToUse.equals("")) {
-	    			 medRoleWeWantToUse = wrkRole;
+	    	 if (wrkRole.equals("LOCUSLINK-USER")) {
+	    		 locuslinkRoleWeWantToUse = wrkRole;	    	
+	    	 } else if (wrkRole.equals("LOCUSLINK-ADMIN")) {
+	    		 if (locuslinkRoleWeWantToUse.equals("")) {
+	    			 locuslinkRoleWeWantToUse = wrkRole;
 	    		 }
 	    	 }
 	     }
 
        // UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, jwtCmsRoles,AuthorityUtils.createAuthorityList("ROLE_"+jwtCmsRoles.toUpperCase()));
-	    UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, medRoleWeWantToUse,AuthorityUtils.createAuthorityList("ROLE_"+medRoleWeWantToUse.toUpperCase()));
+	    UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, locuslinkRoleWeWantToUse,AuthorityUtils.createAuthorityList("ROLE_"+locuslinkRoleWeWantToUse.toUpperCase()));
         SecurityContext sc = SecurityContextHolder.getContext();
 
         sc.setAuthentication(authReq);
         session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
-		session.setAttribute("medUser", jwtUid);
-		//session.setAttribute("medRole", jwtCmsRoles.toUpperCase());
-		session.setAttribute("medRole", medRoleWeWantToUse.toUpperCase());
+		session.setAttribute("locuslinkUser", jwtUid);
+		session.setAttribute("locuslinkRole", locuslinkRoleWeWantToUse.toUpperCase());
 		session.setAttribute("appLogoutUrl", appLogoutUrl);
 
 		return true;

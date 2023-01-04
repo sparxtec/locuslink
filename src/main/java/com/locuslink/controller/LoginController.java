@@ -46,15 +46,15 @@ public class LoginController {
 
 
 
-    @RequestMapping(value = "/initCognitoLogout")
-	public String initCognitoLogout(@ModelAttribute(name = "loginFormDTO") LoginFormDTO loginFormDTO, Model model, HttpSession session) {
-
-		logger.debug(" initCognitoLogout()");
-
-	   	model.addAttribute("appLogoutUrl",appLogoutUrl);
-
-		return "logout";
-    }
+//    @RequestMapping(value = "/initCognitoLogout")
+//	public String initCognitoLogout(@ModelAttribute(name = "loginFormDTO") LoginFormDTO loginFormDTO, Model model, HttpSession session) {
+//
+//		logger.debug(" initCognitoLogout()");
+//
+//	   	model.addAttribute("appLogoutUrl",appLogoutUrl);
+//
+//		return "logout";
+//    }
 
 
 	/**
@@ -62,7 +62,7 @@ public class LoginController {
 	 *  	This routine should only be used in the lower environments, when:
 	 *  	 	-https is not turned on
 	 *  		- the initLogin failed for some reason
-	 *  		- come here manually, nu using the ALB instead of the DNS. ALB should be off in the higher environments.
+	 *  		- come here manually, is using the ALB instead of the DNS. ALB should be off in the higher environments.
 	 */
 	@RequestMapping(value = "/login", method=RequestMethod.POST)
 	public String login(@ModelAttribute(name = "loginFormDTO") LoginFormDTO loginFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
@@ -71,17 +71,14 @@ public class LoginController {
 
 		// Common Routine
 		if (loginFormDTO.getUsername().equals("admin")) {
-			securityContextManager.processSecurityContext( session , "Admin", "med-admin", appLogoutUrl);
+			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
 		} else if (loginFormDTO.getUsername().equals("user")) {
-			securityContextManager.processSecurityContext( session , "User", "med-user", appLogoutUrl);
-		} else if (loginFormDTO.getUsername().equals("poweruser")) {
-			securityContextManager.processSecurityContext( session , "PowerUser", "med-poweruser", appLogoutUrl);
+			securityContextManager.processSecurityContext( session , "User", "locuslink-user", appLogoutUrl);	
 		} else {
 			return "login";
 		}
 
 	   	model.addAttribute("appLogoutUrl",appLogoutUrl);
-
 
 		return "dashboard";
 	}
@@ -90,7 +87,7 @@ public class LoginController {
 
 	/**
 	 * 	C.Sparks  04-20-2022
-	 *  	This is the main entry point. If https is enables, then we need the JWT token or its an error.
+	 *  	This is the main entry point. If https is enabled, then we need the JWT token or its an error.
 	 */
 	@RequestMapping(value = "/initLogin")
 	public String initLogin(@ModelAttribute(name = "loginFormDTO") LoginFormDTO loginFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
