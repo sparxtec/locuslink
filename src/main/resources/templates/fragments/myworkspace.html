@@ -1,0 +1,88 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<script>
+
+
+		$(document).ready(function() {
+			hideSpinner();
+		});
+
+		function initCommonResponse(returnData) {
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+
+	</script>
+
+  </head>
+
+  <body id="white">
+
+	<!-- Sparks 4-7-2022 added this for the form margins -->
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>My Workspace</span></h3>
+	</div>
+
+
+
+ <form id="profileId"  th:objects="${dashboardFormDTO}">
+
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+
+			<div class="de-component__footer">
+
+				<div class="card">
+					<div class="card-header"><i class="fas fa-user mr-2"></i> My Assets:</div>					
+
+					<div class="card-body p-0">
+						<div class="de-table border-0 w-100 m-0 p-0 mw-100">
+					  		<table class="w-100">
+							    <tr>
+							    	<td class="py-3 px-4" colspan="2">
+							      		<div class="d-flex justify-content-between">
+								      		<div class="d-flex flex-column"><span>Type:</span>
+								      			<span >Steel Pipe</span>
+								      			<span >2222222222</span>
+								      		</div>
+								      										      										      									      	   
+								      		<div class="d-flex flex-column"><span>Description:</span> 
+								      		   <span >ASTM A106 SEAMLESS PIPE</span>
+								      		    <span >ASTM A53 WELDED PIPE</span>
+								      		</div>									      		
+								      		<div class="d-flex flex-column"><span>Usage:</span> 
+								      		   <span >ASTM A106 seamless carbon steel nominal wall pipe for high-temperature service.</span>								      		
+								      		   <span>ASTM A53 is designed for coiling, bending and flanging.</span>								      		
+								      		</div>									      									      	
+								            <div class="d-flex flex-column"><span>Qty:</span>
+								                <Strong>28</strong>
+								                <Strong>34</strong>
+								            </div>
+								      		<div class="d-flex flex-column"><span>isPublished:</span>
+								      		    <Strong>Yes</strong>
+												<Strong>No</strong>								      		    
+								      		</div>	
+								      	</div>
+								      	
+
+								      	
+							      	</td>
+							    </tr>
+					  		</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</section>
+
+
+	</form>
+</div>
+  </body>
+
+</html>

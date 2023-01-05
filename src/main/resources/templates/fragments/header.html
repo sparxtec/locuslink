@@ -30,23 +30,18 @@
                         <a id="buttonHeaderHomeId" class="de-header-nav__link is-current" href="#"><span>Home</span></a>
                     </li>
 
-                    <li class="de-header-nav__item" >
+                    <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
+                        <a id="buttonHeaderMyWorkspaceId" class="de-header-nav__link" href="#"><span>MyWorkspace</span></a>
+                    </li>
+                    
+                    <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
                         <a id="buttonHeaderUploadId" class="de-header-nav__link" href="#"><span>Upload</span></a>
                     </li>
 
-                    <li class="de-header-nav__item" >
-                        <a id="buttonHeaderManageId" class="de-header-nav__link" href="#"><span>Manage</span></a>
+                    <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
+                        <a id="buttonHeaderPublishId" class="de-header-nav__link" href="#"><span>Publish</span></a>
                     </li>
                     
-<!--                     <li sec:authorize="hasAnyRole('MED-POWERUSER','MED-ADMIN')" class="de-header-nav__item" >
-                        <a id="buttonHeaderOigErrorCorrectionId" class="de-header-nav__link" href="#"><span>OIG Error Correction</span></a>
-                    </li> -->
-
-
-<!--                     <li  class="de-header-nav__item" >
-                        <a id="buttonHeaderDistributionId" class="de-header-nav__link" href="#"><span>Distribution</span></a>
-                    </li> -->
-
 
 
 

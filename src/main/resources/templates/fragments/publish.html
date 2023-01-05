@@ -1,0 +1,47 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<script>
+
+
+		$(document).ready(function() {
+			hideSpinner();
+		});
+
+		function initCommonResponse(returnData) {
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+
+	</script>
+
+  </head>
+
+  <body id="white">
+
+	<!-- Sparks 4-7-2022 added this for the form margins -->
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>Publish</span></h3>
+	</div>
+
+
+
+ <form id="profileId"  th:objects="${dashboardFormDTO}">
+
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+
+			<div class="de-component__footer">
+
+			</div>
+
+		</section>
+
+
+	</form>
+</div>
+  </body>
+
+</html>

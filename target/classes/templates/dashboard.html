@@ -63,7 +63,7 @@ table.dataTable thead th {
 
 
 			// **************************************
-			// **  Header - Events
+			// **  Navigation Events
 			// **************************************
 
 			// Home
@@ -72,40 +72,50 @@ table.dataTable thead th {
 				submitFormHTML('initDashboard', 'dashboardFormDTO');
 			});
 
+		    //  My Workspace
+			$('#buttonHeaderMyWorkspaceId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initMyWorkspace', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderMyWorkspaceId').addClass('is-current');
+			});
 
+			$('#buttonMyWorkspaceId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initMyWorkspace', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderMyWorkspaceId').addClass('is-current');				
+			});
+								
 			//  Upload
 			$('#buttonHeaderUploadId').click(function() {
 				showSpinner();
 				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
-				$(this).addClass('is-current');
-
+				$('#buttonHeaderUploadId').addClass('is-current');	
 			});
-
-			$('#buttonManageId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initManage', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderManageId').addClass('is-current');
-			});
-
-
-
-
-			/////////// ***********************************************************  //////////
-			/////////// **************      Admin Events        *******************  //////////
-			/////////// ***********************************************************  //////////
-
-/* 			$('#adminSanctionCodesId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('viewSanctions', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonThreeId').addClass('is-current');
-				$('#buttonHeaderAdminId').addClass('is-current');
-			});
- */
 			
+			$('#buttonUploadId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderUploadId').addClass('is-current');	
+			});
 
+			//  Publish
+			$('#buttonHeaderPublishId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initPublish', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderPublishId').addClass('is-current');	
+			});
+			
+			$('#buttonPublishId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initPublish', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderPublishId').addClass('is-current');	
+			});
 
 
 			/////////// ***********************************************************  //////////
@@ -164,7 +174,7 @@ table.dataTable thead th {
 
 
 
-			//Navigation dropdown
+ 			//Navigation dropdown
 			var de = {};
 			var activeClass = 'is-active';
 			var nav = document.querySelector('.de-header-nav__group');
@@ -197,7 +207,7 @@ table.dataTable thead th {
 			// remove active dropdown if clicking anywhere else on the screen
 			$(document).on('click', function(){
 				de.removeActive();
-			});
+			}); 
 
 		});
 
@@ -234,9 +244,9 @@ table.dataTable thead th {
 
 	         	<header class="de-page-header de-component--white">
 					<div class="de-page-header__container">
-						<img class="de-component-header__icon" src="images/electron/icons/icon-badge-check.svg" alt="badge check dashboard">
+						<img class="de-component-header__icon" src="images/electron/icons/icon-badge-check-ll.svg" alt="badge check dashboard">
 						<h1 class="de-page-header__title">Welcome to Locuslink !</h1>
-						<p class="de-component-header__intro">Utilities Record Management</p>
+						<p class="de-component-header__intro">Utilities Asset Management</p>
 
 
 <!--  <br>User ->:
@@ -262,8 +272,19 @@ table.dataTable thead th {
 
 							<ul class="nav-cards__items">
 
-								<li class="nav-cards__item"  >
-									<a id="buttonProviderId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+								<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"  class="nav-cards__item"   >
+									<a id="buttonMyWorkspaceId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+										<picture class="nav-card-media">
+											<img src="images/electron/icons/icon-clipboard.svg" alt="clipboard">
+										</picture>
+										<div class="nav-card-body">
+									    	<h3 class="nav-card-body__title text-nowrap"><span>My Workspace</span></h3>
+										</div>
+									</a>
+							   </li>
+							   
+							   <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"  class="nav-cards__item"   >
+									<a id="buttonUploadId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<source srcset="images/electron/icons/icon-arrow-up.svg?h=195&amp;w=195" media="(min-width: 600px)">
 											<img class="nav-card-media__image" src="images/electron/icons/icon-arrow-up.svg?h=195&amp;w=195" alt="arrow up">
@@ -275,24 +296,13 @@ table.dataTable thead th {
 								</li>
 
 
-								<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"  class="nav-cards__item"   >
-									<a id="buttonPossibleMatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
-										<picture class="nav-card-media">
-											<img src="images/electron/icons/icon-clipboard.svg" alt="clipboard">
-										</picture>
-										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>Manage</span></h3>
-										</div>
-									</a>
-							</li>
-
 							 	<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"    class="nav-cards__item"  >
-									<a id="buttonBatchId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+									<a id="buttonPublishId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<img src="images/electron/icons/icon-three-gears.svg" alt="three gears">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>TBD</span></h3>
+									    	<h3 class="nav-card-body__title text-nowrap"><span>Publish</span></h3>
 										</div>
 									</a>
 								</li>
