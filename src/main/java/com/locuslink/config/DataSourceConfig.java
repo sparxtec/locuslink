@@ -60,6 +60,11 @@ public class DataSourceConfig {
         properties.put("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
         properties.put("current_session_context_class", env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
  
+        // 1-6-2022 This works, none of the other config settings in the property file work, to make vaslidation happen during startup.
+        properties.put("hibernate.hbm2ddl.auto", "validate");
+        
+        
+        
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         factoryBean.setPackagesToScan(new String[] { "com.locuslink" });
         factoryBean.setDataSource(dataSource);

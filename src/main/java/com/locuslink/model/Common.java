@@ -20,7 +20,7 @@ public abstract class Common implements Serializable  {
    private String addBy; 
    
    @Temporal(TemporalType.TIMESTAMP)
-   @Column(name = "ADD_TIMESTAMP", nullable=false)
+   @Column(name = "ADD_TS", nullable=false)
    @CreationTimestamp
    private Date addTs; 
    
@@ -28,7 +28,7 @@ public abstract class Common implements Serializable  {
    private String updateBy; 
    
    @Temporal(TemporalType.TIMESTAMP)
-   @Column(name = "UPDATE_TIMESTAMP", nullable=false)
+   @Column(name = "UPDATE_TS", nullable=false)
    @UpdateTimestamp
    private Date updateTs;
 

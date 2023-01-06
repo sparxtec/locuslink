@@ -26,7 +26,7 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 
 
-@SpringBootApplication(scanBasePackages = "com.locuslink")
+@SpringBootApplication
 @EnableAutoConfiguration(exclude= {
     DataSourceAutoConfiguration.class,
     DataSourceTransactionManagerAutoConfiguration.class,

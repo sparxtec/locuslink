@@ -20,28 +20,29 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "User_Locuslink")
+@Table(name = "user_locuslink")
 public class UserLocuslink extends Common {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "User_Trace_Id", unique = true, nullable = false)
-	private int UserTraceId;
+	@Column(name = "user_locuslink_id", unique = true, nullable = false)
+	private int userLocusLinkId;
 	
-	@Column(name = "Login_Id", length = 120)
-	private String loginId;
+	@Column(name = "user_type_code", nullable = false)
+	private String userTypeCode;
 	
+	@Column(name = "login_name", nullable = false)
+	private String loginName;
+		
 	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "last_name")
-	private String lastName;
+	@Column(name = "last_name_bus_name")
+	private String lastNameBusName;
 	
-	@Column(name = "Active_Flag", nullable = false, length = 1)
-	private char activeFlag;
-
+	@Column(name = "Active_Flag", nullable = false)
+	private String activeFlag;
 	
-
 }

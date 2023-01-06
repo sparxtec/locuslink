@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.UserLocuslinkDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.model.UserLocuslink;
 
 /**
  * This is a Spring MVC Controller.
@@ -40,14 +42,27 @@ public class DashboardController {
     @Autowired
     private SecurityContextManager securityContextManager;
 
+    
+    @Autowired
+    private UserLocuslinkDao userLocuslinkDao;
+    
+    
 
 	@RequestMapping(value = "/initDashboard")
 	public String initDashboard(Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
 
 		logger.debug("Starting Dashbaord()...");
 
-		model.addAttribute("appLogoutUrl",appLogoutUrl);
+		//model.addAttribute("appLogoutUrl",appLogoutUrl);
 
+		
+		// SQL Testing RDS
+		UserLocuslink  userLocuslink= userLocuslinkDao.getById(1);
+		if (userLocuslink == null) {
+			logger.debug("SQL Error could not find the logged in User.");
+		}
+		
+		
 		// Common Routine
 		if (securityContextManager.isSecurityCredentialsGood()) {
 			return "dashboard";
