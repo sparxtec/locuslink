@@ -1,47 +1,303 @@
-<!doctype html>
 <html  xmlns:th="http://www.thymeleaf.org">
   <head>
-	<script>
+    <title>UI - Upload Docs - Page1</title>
 
+    <!-- StyleSheets - ORDER IS IMPORTANT -->
+    <link href="css/de-upload-styles.css" rel="stylesheet">
+    
+  
+    
+    <script>
 
+		var stepper1 = null;
+		
+		Dropzone.autoDiscover = false;
+		       	
 		$(document).ready(function() {
-			hideSpinner();
+			
+			var showContractorDropdowns = $('#showContractorDropdowns').val();
+			
+			if(showContractorDropdowns == 'N') {
+				$("select[name=selectedDocType] option[value='CONTRACTOR']").hide();
+			}
+
+			$('#selectedDocType').change(function(){
+				let dropdown= $('#selectedDocType').val();
+				$("#inputSearchNumber").attr("placeholder", "Enter Number Here")
+				console.log('SELECTED VAL ' +dropdown);
+				if(dropdown === 'CONTRACTOR'){
+					//$('#inputSearchNumber').hide();
+					$('#selectedContractor').show();
+					$("#inputSearchNumber").attr("placeholder", "Enter Item Number Here")
+					
+						$.ajax({
+							type : "GET",
+							url : "getContractors",
+							success : function(data){
+								contractorList=data;
+								console.log(contractorList);
+							},
+							error : ajaxResponseError,
+							complete : function() {
+								 $.each(contractorList, function(index,item){
+								        $("#selectedContractor")
+								        .append('<option value="'+ (item[0]) +'">'+item[1] +' '+ item[3] +' '+ item[2] +'</option>');
+								 });
+								 
+								// hideSpinner();
+							}});
+					//}
+				} else{
+					$('#selectedContractor').hide();
+					$('#poNum').hide();
+					$('#inputSearchNumber').show();
+					
+				}
+			});
+			
+			$('#inputSearchNumber').keyup(function() {
+				showSpinner();
+				let projectNumber = $('#inputSearchNumber').val();
+				if($('#selectedDocType').val() === "PROJECT_NUMBER" && projectNumber.length > 0) {
+				
+					$.ajax({
+						type : "GET",
+						url : "getPONumbers/" + projectNumber,
+						success : function(data){
+							poNumbersList=data;
+							console.log(poNumbersList);
+						},
+						error : ajaxResponseError,
+						complete : function() {
+							$("#poNum").empty();
+							$("#poNum").append('<option value="">Select a P.O. Number</option>');
+							 $.each(poNumbersList, function(index,item){
+							        $("#poNum")
+							        .append('<option value="'+ item +'">'+ item +'</option>');
+							 });
+								$('#poNum').show();
+							hideSpinner();
+						}});
+			} else {
+				$('#poNum').hide();
+				hideSpinner();
+			}
+			});
+			
+			$("#selectedContractor").click(function(){
+				 if ($('#inputSearchNumber').val().length > 0  &&  $("#selectedContractor").val() !="0") {
+			            $('.button--continue').prop("disabled", false);            
+				  }else{
+					  $('.button--continue').prop("disabled", true); 
+				  }
+				 
+			  })
+			  
+			  $("#poNum").click(function(){
+				 if ($('#inputSearchNumber').val().length > 0  &&  $("#poNum").val() !="0") {
+			            $('.button--continue').prop("disabled", false);            
+				  }else{
+					  $('.button--continue').prop("disabled", true); 
+				  }
+				 
+			  })
+			  
+		    $('#inputSearchNumber').on('input', function() {
+		        
+		    	if ($('#inputSearchNumber').val().length > 0 ) {
+		            $('.button--continue').prop("disabled", false);            
+		        } else {
+		            $('.button--continue').prop("disabled", true);
+		        }
+		    	
+		    	if($('#selectedDocType').val() === 'CONTRACTOR'){
+		    		if ($('#inputSearchNumber').val().length > 0  &&  $("#selectedContractor").val() !="0") {
+			            $('.button--continue').prop("disabled", false);            
+				  }else{
+					  $('.button--continue').prop("disabled", true); 
+				  }
+		    		
+		    	}
+		    	
+		    	if($('#selectedDocType').val() === 'PROJECT_NUMBER'){
+		    		if ($('#inputSearchNumber').val().length > 0  &&  $("#poNum").val() !="0") {
+			            $('.button--continue').prop("disabled", false);            
+				  }else{
+					  $('.button--continue').prop("disabled", true); 
+				  }
+		    		
+		    	}
+		    	
+		    	
+		    });
+			
+			$('#inputSearchNumber').keydown(function(e) {
+				//console.log("purchaseOrderNumber keydown");
+			    if (e.keyCode === 13) {	// When enter key pressed  
+			    	e.preventDefault();
+			        $('#continueGoToPage2').click();
+			    }
+			});
+			
+			$('#continueGoToPage2').click(function() {													
+				showSpinner();	
+				
+				console.log('sparks - todo');
+			//	$('#showOnlyWhenPOErrors').hide();
+			//	$('#showOnlyWhenDBErrors').hide();
+				
+			//	var searchVal = $('#inputSearchNumber').val().trim(); 
+			//	var docType = $('#selectedDocType').val().trim(); 
+				
+			//	console.log ( "inputSearch ->: " + searchVal);
+			//	console.log ( "selectedDocType ->: " + docType);
+				
+				submitFormAjaxHTML('initUploadStep2', $("#docUploadFormDTO").serialize(), "commonResponse");
+						
+						
+/* 				if (searchVal != null || searchVal != '') { 
+					
+					if (docType == 'PO' && !($.isNumeric(searchVal))) {
+						console.log ( "not numeric");
+						hideSpinner(); 
+						$('#showOnlyWhenPOErrors').show();
+					} else if (docType == 'ITEM' && !($.isNumeric(searchVal))) {
+						console.log ( "not numeric");
+						hideSpinner(); 
+						$('#showOnlyWhenPOErrors').show();
+						
+					} else {
+						console.log("Calling continueGoToPage2()...");			
+						submitFormAjaxHTML('initDocUploadStep2', $("#docUploadFormDTO").serialize(), "commonResponse");					
+					}					
+				} */
+
+									
+		});	
 		});
-
-		function initCommonResponse(returnData) {
-			//console.log("initCommonResponse()");
+	
+		function commonResponse(returnData) {	
 			hideSpinner();
-			$('#mainBody').html( returnData);
+			$('#mainBody').html(returnData); 
+			$("#purchaseOrderNumber").val("");
+			$('#showOnlyWhenDBErrors').show();
+			$('#showOnlyWhenNoErrors').hide();
 		}
-
+		
+		function commonResponsePrev(returnData) {	
+			hideSpinner();
+			$('#mainBody').html(returnData); 
+		}
 
 	</script>
 
   </head>
+  
+  
+  <body>
 
-  <body id="white">
+<!--      <input type="hidden" id="poNumber" name="poNumber" th:value="${docUploadFormDTO.purchaseOrderNumber}">         	
+	 <input type="hidden" id="fileName"  name="fileName" th:value="${docUploadFormDTO.getFileName()}">
+	 <input type="hidden" id="showContractorDropdowns" name="showContractorDropdowns" th:value="${showContractorDropdowns}"> -->
 
-	<!-- Sparks 4-7-2022 added this for the form margins -->
-	<div  style="margin:20px">
-	<div class="nav-card-body">
-	   	<h3 class="nav-card-body__title" style="text-align:center"><span>Upload</span></h3>
-	</div>
+    <div>
+    <!-- <form id="docUploadFormDTO" name="docUploadFormDTO" th:object="${docUploadFormDTO}"  method="post" class="w-100"> --> 
+ 			<main>
+	            <section class="de-component h-100">
+	                <div class="de-component__container">
+	                    <header class="de-component-header mb-0">
+	                        <h2 class="de-component-header__title">Upload Docs</h2>
+	                    </header>
+	
+	                    <div id="stepper1" class="bs-stepper">
+	                        <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
+	                            <div class="step active" data-target="#step1">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
+	                                    <span class="bs-stepper-circle">1</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+	                            <div class="line"></div>
+	                            <div class="step" data-target="#step2">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2" aria-selected="false">
+	                                    <span class="bs-stepper-circle">2</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+	                            <div class="line"></div>
+	                            <div class="step" data-target="#step3">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3" aria-selected="false">
+	                                    <span class="bs-stepper-circle">3</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+	                            <div class="step d-none" data-target="#step4">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger4" aria-controls="test-l-4" aria-selected="false">
+	                                    <span class="bs-stepper-circle">4</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
 
+	                        </div>  
+	                        
+	                        
+	                        
+	                                      
+	                        <div class="bs-stepper-content">
+	                            <div id="step1" role="tabpanel" class="content active" aria-labelledby="stepper1trigger1">
+	                                <div class="form-group d-flex flex-column justify-content-center align-items-center bs-stepper-custom-width m-auto text-center">
+	                                    
+	                                    <div id="showOnlyWhenNoErrors">
+	                                    	<label  class="d-inline-block mb-3" for="purchaseOrderNumber">Please choose what type of asset record you will be uploading.</label>
+	                                     </div>
+	                                     
+<!-- 	                                     <div id="showOnlyWhenDBErrors" class="alert alert-danger failure-text p-5" role="alert"  style="display:none">
+		                                     <i class="fas fa-exclamation-triangle"></i>
+		                                     <strong>Invalid  Number:</strong> The Number that was entered either does not have any traceable items attached to it, or is not a valid  Number
+										</div>
+										
+	                                     <div id="showOnlyWhenPOErrors" class="alert alert-danger failure-text p-5" role="alert"  style="display:none">
+		                                     <i class="fas fa-exclamation-triangle"></i>
+  											<strong>Invalid  Number:</strong> The Number that was entered was not Numeric.
+										</div> -->
+										
+										<div class="de-component-footer__action">
+											<div class="d-flex justify-content-between">
+		
+												<select class="form-control mb-3" id="selectedDocType" name="selectedDocType" style="width: 260px">
+													<option value="PIPE" selected>Steel Pipe</option>
+												    <option value="VALVE">Valve</option>
+													<option value="TRANSFORMER">Transformer</option>
+													<option value="BREAKER">Circuit Breaker</option>
+												</select>
+												
+<!-- 				                                <select class="form-control mb-3" id="selectedContractor" name="selectedContractorType" style="width: 49.5%; display: none;">
+													<option value="">Select a Contractor</option>	
+												</select> -->
+												
+<!-- 												<input type="text" id="inputSearchNumber"  name="inputSearchNumber" class="form-control" style="width: 49.5%;" placeholder="Enter Number Here">
+												 -->
+<!-- 			                                   <select class="form-control mb-3" id="poNum" name="poNum" style="width: 49.5%; display: none;">
+												</select> -->
+												
+											</div>
+										</div>
+	                                </div>
+	                                
+	                                <div class="text-center px-0">
+	                                    <button type="button" id="continueGoToPage2" class="button button--continue"  >Continue</button>
+	                                </div>
+	                            </div>
+	                            
+	                        </div>
+	                    </div>
+	
+	                </div>
+	            </section>
+	        </main>	       
+      <!-- </form>  -->  
+    </div>
 
-
- <form id="profileId"  th:objects="${dashboardFormDTO}">
-
-		<section id="manage_1_mainBody" class="de-component de-component--gray">
-
-			<div class="de-component__footer">
-
-			</div>
-
-		</section>
-
-
-	</form>
-</div>
   </body>
-
+  
 </html>
