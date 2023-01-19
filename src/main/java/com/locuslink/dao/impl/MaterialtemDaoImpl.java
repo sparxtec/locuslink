@@ -21,18 +21,18 @@ import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.locuslink.dao.ItemDao;
-import com.locuslink.model.Item;
+import com.locuslink.dao.MaterialItemDao;
+import com.locuslink.model.MaterialItem;
 
 
 @Transactional
-@Repository(ItemDao.BEAN_NAME)
-public class ItemDaoImpl extends DaoSupport implements ItemDao, ApplicationContextAware {
+@Repository(MaterialItemDao.BEAN_NAME)
+public class MaterialtemDaoImpl extends DaoSupport implements MaterialItemDao, ApplicationContextAware {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private static final Logger logger = Logger.getLogger(ItemDaoImpl.class);
+	private static final Logger logger = Logger.getLogger(MaterialtemDaoImpl.class);
 	
 	
 	@Override
@@ -45,29 +45,29 @@ public class ItemDaoImpl extends DaoSupport implements ItemDao, ApplicationConte
 		
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Item> getAllItems() {
+	public List<MaterialItem> getAllItems() {
 		Session session = this.sessionFactory.getCurrentSession();	
 		return session.createQuery("from Item").getResultList();	
 	}
 	
 	@Override
-	public Item getById(int itemId) {
-		return this.sessionFactory.getCurrentSession().get(Item.class, itemId);	
+	public MaterialItem getById(int matItemId) {
+		return this.sessionFactory.getCurrentSession().get(MaterialItem.class, matItemId);	
 	}
 	
 
 	
 	
-	public void saveItem(Item item) {
-		this.sessionFactory.getCurrentSession().save(item);  
+	public void saveItem(MaterialItem materialItem) {
+		this.sessionFactory.getCurrentSession().save(materialItem);  
 	}
 
-	public void updateItem(Item item) {
-		this.sessionFactory.getCurrentSession().update(item);  
+	public void updateItem(MaterialItem materialItem) {
+		this.sessionFactory.getCurrentSession().update(materialItem);  
 	}
 	
-	public void deleteItem(Item item) {
-		this.sessionFactory.getCurrentSession().delete(item);  
+	public void deleteItem(MaterialItem materialItem) {
+		this.sessionFactory.getCurrentSession().delete(materialItem);  
 	}
 	
 	

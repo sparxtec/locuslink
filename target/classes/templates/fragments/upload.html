@@ -10,170 +10,17 @@
     <script>
 
 		var stepper1 = null;
-		
-		Dropzone.autoDiscover = false;
-		       	
+		   	
 		$(document).ready(function() {
 			
-			var showContractorDropdowns = $('#showContractorDropdowns').val();
-			
-			if(showContractorDropdowns == 'N') {
-				$("select[name=selectedDocType] option[value='CONTRACTOR']").hide();
-			}
-
-			$('#selectedDocType').change(function(){
-				let dropdown= $('#selectedDocType').val();
-				$("#inputSearchNumber").attr("placeholder", "Enter Number Here")
-				console.log('SELECTED VAL ' +dropdown);
-				if(dropdown === 'CONTRACTOR'){
-					//$('#inputSearchNumber').hide();
-					$('#selectedContractor').show();
-					$("#inputSearchNumber").attr("placeholder", "Enter Item Number Here")
-					
-						$.ajax({
-							type : "GET",
-							url : "getContractors",
-							success : function(data){
-								contractorList=data;
-								console.log(contractorList);
-							},
-							error : ajaxResponseError,
-							complete : function() {
-								 $.each(contractorList, function(index,item){
-								        $("#selectedContractor")
-								        .append('<option value="'+ (item[0]) +'">'+item[1] +' '+ item[3] +' '+ item[2] +'</option>');
-								 });
-								 
-								// hideSpinner();
-							}});
-					//}
-				} else{
-					$('#selectedContractor').hide();
-					$('#poNum').hide();
-					$('#inputSearchNumber').show();
-					
-				}
-			});
-			
-			$('#inputSearchNumber').keyup(function() {
-				showSpinner();
-				let projectNumber = $('#inputSearchNumber').val();
-				if($('#selectedDocType').val() === "PROJECT_NUMBER" && projectNumber.length > 0) {
+			$('#continueGoToPage2').click(function() {	
 				
-					$.ajax({
-						type : "GET",
-						url : "getPONumbers/" + projectNumber,
-						success : function(data){
-							poNumbersList=data;
-							console.log(poNumbersList);
-						},
-						error : ajaxResponseError,
-						complete : function() {
-							$("#poNum").empty();
-							$("#poNum").append('<option value="">Select a P.O. Number</option>');
-							 $.each(poNumbersList, function(index,item){
-							        $("#poNum")
-							        .append('<option value="'+ item +'">'+ item +'</option>');
-							 });
-								$('#poNum').show();
-							hideSpinner();
-						}});
-			} else {
-				$('#poNum').hide();
-				hideSpinner();
-			}
-			});
-			
-			$("#selectedContractor").click(function(){
-				 if ($('#inputSearchNumber').val().length > 0  &&  $("#selectedContractor").val() !="0") {
-			            $('.button--continue').prop("disabled", false);            
-				  }else{
-					  $('.button--continue').prop("disabled", true); 
-				  }
-				 
-			  })
-			  
-			  $("#poNum").click(function(){
-				 if ($('#inputSearchNumber').val().length > 0  &&  $("#poNum").val() !="0") {
-			            $('.button--continue').prop("disabled", false);            
-				  }else{
-					  $('.button--continue').prop("disabled", true); 
-				  }
-				 
-			  })
-			  
-		    $('#inputSearchNumber').on('input', function() {
-		        
-		    	if ($('#inputSearchNumber').val().length > 0 ) {
-		            $('.button--continue').prop("disabled", false);            
-		        } else {
-		            $('.button--continue').prop("disabled", true);
-		        }
-		    	
-		    	if($('#selectedDocType').val() === 'CONTRACTOR'){
-		    		if ($('#inputSearchNumber').val().length > 0  &&  $("#selectedContractor").val() !="0") {
-			            $('.button--continue').prop("disabled", false);            
-				  }else{
-					  $('.button--continue').prop("disabled", true); 
-				  }
-		    		
-		    	}
-		    	
-		    	if($('#selectedDocType').val() === 'PROJECT_NUMBER'){
-		    		if ($('#inputSearchNumber').val().length > 0  &&  $("#poNum").val() !="0") {
-			            $('.button--continue').prop("disabled", false);            
-				  }else{
-					  $('.button--continue').prop("disabled", true); 
-				  }
-		    		
-		    	}
-		    	
-		    	
-		    });
-			
-			$('#inputSearchNumber').keydown(function(e) {
-				//console.log("purchaseOrderNumber keydown");
-			    if (e.keyCode === 13) {	// When enter key pressed  
-			    	e.preventDefault();
-			        $('#continueGoToPage2').click();
-			    }
-			});
-			
-			$('#continueGoToPage2').click(function() {													
-				showSpinner();	
+				// set the FORM value from the document combo box dropdown				
+				$('#selectedDocType').val($('#comboSelectedDocType').val().trim()); 		;
 				
-				console.log('sparks - todo');
-			//	$('#showOnlyWhenPOErrors').hide();
-			//	$('#showOnlyWhenDBErrors').hide();
-				
-			//	var searchVal = $('#inputSearchNumber').val().trim(); 
-			//	var docType = $('#selectedDocType').val().trim(); 
-				
-			//	console.log ( "inputSearch ->: " + searchVal);
-			//	console.log ( "selectedDocType ->: " + docType);
-				
-				submitFormAjaxHTML('initUploadStep2', $("#docUploadFormDTO").serialize(), "commonResponse");
-						
-						
-/* 				if (searchVal != null || searchVal != '') { 
-					
-					if (docType == 'PO' && !($.isNumeric(searchVal))) {
-						console.log ( "not numeric");
-						hideSpinner(); 
-						$('#showOnlyWhenPOErrors').show();
-					} else if (docType == 'ITEM' && !($.isNumeric(searchVal))) {
-						console.log ( "not numeric");
-						hideSpinner(); 
-						$('#showOnlyWhenPOErrors').show();
-						
-					} else {
-						console.log("Calling continueGoToPage2()...");			
-						submitFormAjaxHTML('initDocUploadStep2', $("#docUploadFormDTO").serialize(), "commonResponse");					
-					}					
-				} */
-
-									
-		});	
+				showSpinner();								
+				submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
+			});	
 		});
 	
 		function commonResponse(returnData) {	
@@ -195,13 +42,9 @@
   
   
   <body>
-
-<!--      <input type="hidden" id="poNumber" name="poNumber" th:value="${docUploadFormDTO.purchaseOrderNumber}">         	
-	 <input type="hidden" id="fileName"  name="fileName" th:value="${docUploadFormDTO.getFileName()}">
-	 <input type="hidden" id="showContractorDropdowns" name="showContractorDropdowns" th:value="${showContractorDropdowns}"> -->
-
-    <div>
-    <!-- <form id="docUploadFormDTO" name="docUploadFormDTO" th:object="${docUploadFormDTO}"  method="post" class="w-100"> --> 
+  
+    <input type="hidden" id="selectedDocType" name="selectedDocType"  th:value="${comboSelectedDocType}">
+    	 
  			<main>
 	            <section class="de-component h-100">
 	                <div class="de-component__container">
@@ -210,6 +53,7 @@
 	                    </header>
 	
 	                    <div id="stepper1" class="bs-stepper">
+	                    
 	                        <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
 	                            <div class="step active" data-target="#step1">
 	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
@@ -231,12 +75,12 @@
 	                                    <span class="bs-stepper-label"></span>
 	                                </button>
 	                            </div>
-	                            <div class="step d-none" data-target="#step4">
+<!-- 	                            <div class="step d-none" data-target="#step4">
 	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger4" aria-controls="test-l-4" aria-selected="false">
 	                                    <span class="bs-stepper-circle">4</span>
 	                                    <span class="bs-stepper-label"></span>
 	                                </button>
-	                            </div>
+	                            </div> -->
 
 	                        </div>  
 	                        
@@ -251,34 +95,16 @@
 	                                    	<label  class="d-inline-block mb-3" for="purchaseOrderNumber">Please choose what type of asset record you will be uploading.</label>
 	                                     </div>
 	                                     
-<!-- 	                                     <div id="showOnlyWhenDBErrors" class="alert alert-danger failure-text p-5" role="alert"  style="display:none">
-		                                     <i class="fas fa-exclamation-triangle"></i>
-		                                     <strong>Invalid  Number:</strong> The Number that was entered either does not have any traceable items attached to it, or is not a valid  Number
-										</div>
-										
-	                                     <div id="showOnlyWhenPOErrors" class="alert alert-danger failure-text p-5" role="alert"  style="display:none">
-		                                     <i class="fas fa-exclamation-triangle"></i>
-  											<strong>Invalid  Number:</strong> The Number that was entered was not Numeric.
-										</div> -->
-										
 										<div class="de-component-footer__action">
 											<div class="d-flex justify-content-between">
 		
-												<select class="form-control mb-3" id="selectedDocType" name="selectedDocType" style="width: 260px">
-													<option value="PIPE" selected>Steel Pipe</option>
+												<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" style="width: 260px">
+													<option value="PIPE" >Steel Pipe</option>
+													<option value="TRANSFORMER">Transformer</option>	
 												    <option value="VALVE">Valve</option>
-													<option value="TRANSFORMER">Transformer</option>
-													<option value="BREAKER">Circuit Breaker</option>
+												    <option value="WIRE" selected>Wire</option>
+														
 												</select>
-												
-<!-- 				                                <select class="form-control mb-3" id="selectedContractor" name="selectedContractorType" style="width: 49.5%; display: none;">
-													<option value="">Select a Contractor</option>	
-												</select> -->
-												
-<!-- 												<input type="text" id="inputSearchNumber"  name="inputSearchNumber" class="form-control" style="width: 49.5%;" placeholder="Enter Number Here">
-												 -->
-<!-- 			                                   <select class="form-control mb-3" id="poNum" name="poNum" style="width: 49.5%; display: none;">
-												</select> -->
 												
 											</div>
 										</div>
@@ -295,8 +121,8 @@
 	                </div>
 	            </section>
 	        </main>	       
-      <!-- </form>  -->  
-    </div>
+
+        </div>
 
   </body>
   

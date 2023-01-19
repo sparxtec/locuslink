@@ -7,7 +7,8 @@
     
     <script>		
 		var stepper1 = null;		
-		Dropzone.autoDiscover = false;		
+		Dropzone.autoDiscover = false;	
+		
 		$('#tracedropzone').dropzone({
 			
 	 		   init: function() {
@@ -40,9 +41,9 @@
 			 		   		document.getElementById("continueGoToPage3_NEW").disabled = true;
 			 		    }
 	 	     		});		   
-	 		   }
+	 		   } 
 	 		
-	 		}); 
+	 		});  
 	         	
 		$(document).ready(function() {	
 			
@@ -60,7 +61,7 @@
 			
 			$('#previousGoToPage1').click(function() {		
 				showSpinner();			
-				submitFormAjaxHTML('initDocUploadStep1', $("#docUploadFormDTO").serialize(), "commonResponse");
+				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
 	
@@ -146,8 +147,10 @@
   
   
   <body>
+	    <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post" class="w-100">
 
-	 <!-- CS 5-14-2020 -->
+
+<!-- 	
 	 <input type="hidden" id="itemNumber"   name="itemNumber"  th:value="${itemNumber}">
 	 <input type="hidden" id="selectedDocType" name="selectedDocType"  th:value="${selectedDocType}">			
 			 	       						
@@ -155,10 +158,10 @@
      <input type="hidden" id="poNumber" name="poNumber" th:value="${poNumber}">  
      <input type="hidden" id="purchaseOrderNumber"   name="purchaseOrderNumber" th:value="${purchaseOrderNumber}"> 
          	
-<!-- 	 <input type="hidden" id="fileName"  name="fileName" th:value="${docUploadFormDTO.getFileName()}"> -->
+	 <input type="hidden" id="fileName"  name="fileName" th:value="${docUploadFormDTO.getFileName()}">
 	 
 	 <input type="hidden" id="ehubPOLineString"  name="ehubPOLineString" th:value="${ehubPOLineString}">
-	 <input type="hidden" id="projectNum" name="projectNum" th:value="${projectNum}">
+	 <input type="hidden" id="projectNum" name="projectNum" th:value="${projectNum}"> -->
 
      <section class="de-component h-100">
          <div class="de-component__container">
@@ -188,12 +191,14 @@
                              <span class="bs-stepper-label"></span>
                          </button>
                      </div>
-                     <div class="step d-none" data-target="#step4">
+                     
+<!--                      <div class="step d-none" data-target="#step4">
                          <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger4" aria-controls="test-l-4" aria-selected="false">
                              <span class="bs-stepper-circle">4</span>
                              <span class="bs-stepper-label"></span>
                          </button>
-                     </div>
+                     </div> -->
+                     
 
                  </div>    
                  
@@ -218,12 +223,21 @@
                      
                      <div id="step2" role="tabpanel" class="content active" aria-labelledby="stepper1trigger2">
                          <div class="form-group text-center bs-stepper-custom-width m-auto">
-                                <label class="d-inline-block mb-3"  th:if="${selectedDocType == 'PO' or selectedDocType == 'PROJECT_NUMBER'}"><span th:if="${selectedDocType == 'PROJECT_NUMBER'}"> Project Number # : <span th:text="${projectNum}"></span></span> | P.O. #: <span th:text="${poNumber}"></span><span th:if="${woNumber != ''}"> | W.O. # : <span th:text="${woNumber}"></span></span>
+                                <label class="d-inline-block mb-3"  
+                                th:if="${selectedDocType == 'PO' or selectedDocType == 'PROJECT_NUMBER'}">
+                                <span th:if="${selectedDocType == 'PROJECT_NUMBER'}"> Project Number # : 
+                                <span th:text="${projectNum}"></span></span> | P.O. #: 
+                                
+                                <span th:text="${poNumber}"></span>
+                                <span th:if="${woNumber != ''}"> | W.O. # : 
+                                <span th:text="${woNumber}"></span></span>
                                 </label>
                                 
-                               <label th:if="${selectedDocType == 'ITEM'}" >
-                               <span th:text="${'Item # : '+itemNumber}"> </span>
+                               <label class="d-inline-block mb-3" >
+                                  <span>Document Type : </span>
+                                  <span th:text="${dashboardFormDTO.selectedDocType}"></span>                        
                                </label>
+                               
                                
                                 <form id="tracedropzone" name="tracedropzone" action="/processFileUpload" class="dropzone dz-clickable" enctype="multipart/form-data" method="POST">
                                     <div>	
@@ -264,7 +278,7 @@
                          </div>
                      </div>
                      
-                     <div id="step4" role="tabpanel" class="content" aria-labelledby="stepper1trigger4">
+<!--                      <div id="step4" role="tabpanel" class="content" aria-labelledby="stepper1trigger4">
                          <div class="form-group text-center bs-stepper-custom-width m-auto d-flex flex-column">
                              <div class="alert alert-dismissible fade hidden de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center d-none" role="alert">
                                  <span><strong>Congrats!</strong> You have successfully corrected unparsed documents. <a href="#" data-dismiss="alert" class="button button--text" onclick="stepper1.reset();" >Upload more documents</a></span> 
@@ -279,7 +293,7 @@
                          <div class="py-4 text-center px-0 d-flex justify-content-center">
                              <button type="button" class="button button--submit ml-3" id="startOver">Start Over</button>
                          </div>
-                     </div> 
+                     </div>  -->
      
                      
                  </div>
@@ -287,7 +301,7 @@
 
          </div>
      </section>
-
+</form>
 	</body>
   
 </html>

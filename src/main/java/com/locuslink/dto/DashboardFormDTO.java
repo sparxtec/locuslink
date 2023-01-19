@@ -2,9 +2,10 @@ package com.locuslink.dto;
 
 public class DashboardFormDTO {
 
-	// Job Launcher
+
 	private String fileName;
 	private String responseText ="";
+	private String selectedDocType;
 	
 	
 	public String getFileName() {
@@ -19,9 +20,12 @@ public class DashboardFormDTO {
 	public void setResponseText(String responseText) {
 		this.responseText = responseText;
 	}
-	
-
-
-
+	public String getSelectedDocType() {
+		return selectedDocType;
+	}
+	public void setSelectedDocType(String selectedDocType) {
+		this.selectedDocType = selectedDocType;
+	}
+		
 	
 }

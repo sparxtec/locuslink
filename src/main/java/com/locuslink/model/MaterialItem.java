@@ -14,37 +14,34 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="Item")
-public class Item extends Common {
+@Table(name="Material_Item")
+public class MaterialItem extends Common {
 
-	public Item() {
+	public MaterialItem() {
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	@Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column(name="Item_Id", unique=true, nullable = false)
-    private int itemId;
+    @Column(name="mat_item_id", unique=true, nullable = false)
+    private int matItemId;
   
+	
+    @Column(name = "mat_item_type_Id", nullable = false)
+	private int matItemTypeId; 
+    
+    @Column(name = "mat_item_num", nullable = false)
+  	private String matItemNum; 
+    
     @Column(name="manufacturer_id", nullable = false)
     private int manufacturerId;
-
-    @Column(name = "item_attr_id", nullable = false)
-	private int itemAttrId; 
-	
-    @Column(name = "item_type_Id", nullable = false)
-	private int itemTypeId; 
-
-    @Column(name = "item_num", nullable = false)
-	private String itemNum; 
-           
+      
     @Column(name = "model_num", nullable = false)
 	private String modelNum; 
   
     @Column(name = "item_desc", nullable = false)
 	private String itemDesc; 
 	
-    
 
 }

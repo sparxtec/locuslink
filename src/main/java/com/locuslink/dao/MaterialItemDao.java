@@ -3,26 +3,26 @@ package com.locuslink.dao;
 
 import java.util.List;
 
-import com.locuslink.model.Item;
+import com.locuslink.model.MaterialItem;
 
-public interface ItemDao  {
+public interface MaterialItemDao  {
     
-    public static final String BEAN_NAME = "itemDao";
+    public static final String BEAN_NAME = "materialItemDao";
     
    
-	public Item getById (int itemId);
+	public MaterialItem getById (int matItemId);
 	
-    public List<Item> getAllItems();
+    public List<MaterialItem> getAllItems();
 
 //	public Item getByItemNumAndHeatNum(String itemNum, String heatSerial);
 	
 	
 	// PERSISTENCE 
-	public void saveItem(Item item);
+	public void saveItem(MaterialItem materialItem);
 	
-    public void updateItem(Item item) ;
+    public void updateItem(MaterialItem materialItem) ;
     
-    public void deleteItem(Item item);
+    public void deleteItem(MaterialItem materialItem);
     
 
 	
