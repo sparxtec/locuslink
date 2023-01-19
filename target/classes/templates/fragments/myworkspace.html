@@ -1,88 +1,184 @@
 <!doctype html>
 <html  xmlns:th="http://www.thymeleaf.org">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>  
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+
+    
+    <title>User Profile Page</title>
+
 	<script>
+	
+		// CS 11-20-2019 - Dataloader for PROD Purchase Orders from MAximo
+/*     	mpoAlreadyRunningFlag; 
+    	mpoProgressCounter = 0;
+    	mpoProgressPercentComplete = 80; */
+    
+		$(document).ready(function() {	
+			
+			// Need to eventually remove these 2 lines
+// 			$('#spinnerModal').hide();
+// 			$('.modal-backdrop').remove();
+			$('body').removeClass('modal-open').css('padding','0');
+			
+			hideSpinner();	
+			
+			$("[id^='userRole_']").each(function(item,e) { 
+										
+			  var tokens= ($(this).attr("id")).split("_");
+			  var roleType=tokens[1];					
+					  
+			  //  Put this back when roles and permission coding is done.
+ 			  if(roleType=="ADMIN" || roleType=="SUPERADMIN" ) {
+				   $('#Manageusers').show();
+			  } else {
+				  $('#Manageusers').hide();
+			  } 
+				 			 							 
+			});	
+			
+		
+			 $('#addUserlink').off('click').on('click',function(e) {
+				 $('#role option[value="MRC"]').prop('selected', true);
+				 $("#addUserModal").find('input[type="text"],textarea').val('');
+				 $('#addUserMessage').text("");
+			 });
+			 
+			 $('#user_profile_edit_users').off('click').on('click',function(e) {			
+				e.preventDefault();
+					submitFormAjaxHTML('editUser', $( "#docUploadFormDTO" ).serialize(), "initCommonResponse");
+				});
+			 
 
-
-		$(document).ready(function() {
-			hideSpinner();
+			$('#user_profile_edit_roles').off('click').on('click',function(e) {					
+				e.preventDefault();
+				showSpinner();	
+				submitFormAjaxHTML('editRoles', $( "#docUploadFormDTO" ).serialize(), "initCommonResponse");
+				
+			});
+/* 			
+			$('#load_db_table_data_button').off('click').on('click',function(e) {					
+				e.preventDefault();
+				showSpinner();	
+				submitFormAjaxHTML('runProdToQaDataloader', $( "#docUploadFormDTO" ).serialize(), "dataLoaderResponse");
+				
+			}); */
+			
 		});
-
-		function initCommonResponse(returnData) {
-			//console.log("initCommonResponse()");
+		
+		function initCommonResponse(returnData) {	
+			console.log("initCommonResponse()");
 			hideSpinner();
-			$('#mainBody').html( returnData);
+			$('#mainBody').html( returnData); 
 		}
-
+		
 
 	</script>
-
+	
   </head>
 
-  <body id="white">
-
-	<!-- Sparks 4-7-2022 added this for the form margins -->
-	<div  style="margin:20px">
-	<div class="nav-card-body">
-	   	<h3 class="nav-card-body__title" style="text-align:center"><span>My Workspace</span></h3>
-	</div>
-
-
-
- <form id="profileId"  th:objects="${dashboardFormDTO}">
-
+  <body id="Body">
+	 			
+	 	
+	<form id="docUploadFormDTO" class="bg-light" name="docUploadFormDTO"   method="post"> 
+     				  
 		<section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">My Workspace</h2>
+		        </header>
+		    </div>
 
-			<div class="de-component__footer">
 
-				<div class="card">
-					<div class="card-header"><i class="fas fa-user mr-2"></i> My Assets:</div>					
-
-					<div class="card-body p-0">
-						<div class="de-table border-0 w-100 m-0 p-0 mw-100">
-					  		<table class="w-100">
-							    <tr>
-							    	<td class="py-3 px-4" colspan="2">
-							      		<div class="d-flex justify-content-between">
-								      		<div class="d-flex flex-column"><span>Type:</span>
-								      			<span >Steel Pipe</span>
-								      			<span >2222222222</span>
-								      		</div>
-								      										      										      									      	   
-								      		<div class="d-flex flex-column"><span>Description:</span> 
-								      		   <span >ASTM A106 SEAMLESS PIPE</span>
-								      		    <span >ASTM A53 WELDED PIPE</span>
-								      		</div>									      		
-								      		<div class="d-flex flex-column"><span>Usage:</span> 
-								      		   <span >ASTM A106 seamless carbon steel nominal wall pipe for high-temperature service.</span>								      		
-								      		   <span>ASTM A53 is designed for coiling, bending and flanging.</span>								      		
-								      		</div>									      									      	
-								            <div class="d-flex flex-column"><span>Qty:</span>
-								                <Strong>28</strong>
-								                <Strong>34</strong>
-								            </div>
-								      		<div class="d-flex flex-column"><span>isPublished:</span>
-								      		    <Strong>Yes</strong>
-												<Strong>No</strong>								      		    
-								      		</div>	
-								      	</div>
-								      	
-
-								      	
-							      	</td>
-							    </tr>
-					  		</table>
+			<div  id="Manageusers" class="mt-5">
+						    
+		 		<div class="de-component__footer row">
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Customers</span></div>
+							<div class="card-body h-25">
+								<p>Add new customers and Manage existing customers</p>
+								<a id="XXXXuser_profile_edit_users" href=""  class="text-left clearfix" oncontextmenu="return false;">Manage Customers</a>
+								<a id="XXXXaddUserlink" href="" class="text-left clearfix" data-toggle="modal" data-target="#addUserModal" >Add Customer</a>
+							</div>
 						</div>
 					</div>
+					
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Access</span></div>
+							<div class="card-body h-25">
+								<p>Adjust roles and permissions for my customers.</p>
+								<a href="" id="XXXXuser_profile_edit_roles" class="text-left clearfix">Manage User Profiles</a>
+							</div>
+						</div>
+					</div>
+				</div>	
+								
+					<div XXXXth:replace="fragments/addUser :: addUser"></div>	
+  				
+				</div>
+		
+		
+		
+		
+		       <div  id="dbUtility" class="mt-5" >
+		       	
+			 		<div class="de-component__footer row">
+						<div class="col-12 col-md-4 pb-4">
+							<div class="card mb-2">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Asset Data - Electric</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">View all asset data related to Electric materials.</p>
+									<p>Last Update: <span id="p2qLastUpdateDateId"><strong th:text="${p2qLastDataloadUpdateDate}"></strong></span></p>	
+
+									<button th:id="XXXXload_db_table_data_button" data-toggle="tooltip" data-placement="left" title="View Electric asset records." class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12 col-md-4 pb-4">
+							<div class="card mb-2">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Asset Data - Gas</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">View all asset data related to Gas materials.</p>																												
+									<p>Last Update: <span id="mpoLastUpdateDateId"><strong th:text="${mpoLastDataloadUpdateDate}"></strong></span></p>	
+																									
+									<button th:id="XXXXmpoDataloaderId" data-toggle="tooltip" data-placement="left" title="View Gas asset records." class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Load Data</button>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="col-12 col-md-4 pb-4">
+							<div class="card mb-2">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Publish Assets</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">View and Publish assets to customers.</p>
+									<p>Last Update: <span id="p2qLastUpdateDateId"><strong th:text="${p2qLastDataloadUpdateDate}"></strong></span></p>	
+
+									<button th:id="checkTraceFlags" data-toggle="tooltip" data-placement="left" title="Load new Traceable Items" class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Load Data</button>
+								</div>
+							</div>
+						</div>
+						
+					</div>	
+					
+								
 				</div>
 
-			</div>
-
 		</section>
+	
+	</form>	
 
-
-	</form>
-</div>
+	      
   </body>
-
+  
 </html>
