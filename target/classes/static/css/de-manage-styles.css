@@ -31,6 +31,10 @@
     min-height: 17rem;
 }
 
+.quality-docs .card.auto {
+    min-height: auto;
+}
+
 .quality-docs .card-title-wrapper .badge {
 	right: 1rem;
 	position:absolute;

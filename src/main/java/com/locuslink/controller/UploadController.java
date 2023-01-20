@@ -11,11 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.service.FileStorageService;
 /**
  * This is a Spring MVC Controller.
  *
@@ -65,6 +66,40 @@ public class UploadController {
 		return "fragments/uploadstep2";
 	}
 
+	
+	
+	
+	
+	@PostMapping(value = "/processCsvFileUpload", produces = "application/json")
+	public @ResponseBody GenericMessageResponse processCsvFileUpload(@RequestParam("file") MultipartFile file,
+			Model model, @ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,
+			HttpSession session) {
+
+//		UserTrace user = (UserTrace) session.getAttribute("userTrace");
+//		if (user == null) {
+//			logger.debug(" userTrace in session does not exist");
+//		}
+		logger.debug("Starting processFileUpload()..file ->:" + file.getOriginalFilename());
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "trace - processCsvFileUpload");
+
+		try {
+//			String jobFilePath = nfsPath + csvUploadPath;
+//
+//			if (file.getOriginalFilename().contains(".csv") || file.getOriginalFilename().contains(".xlsx")) {
+//				fileStorageService.storeAtGivenTotalPath(file, jobFilePath, file.getOriginalFilename());
+//			}
+			model.addAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+			logger.debug(" CSV fileUpload Worked,  size ->: " + file.getSize());
+
+		} catch (Exception e) {
+			logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
+		}
+		return response;
+	}
+	
+	
+	
+	
 	
 	/*
 	 * MultipartFile Upload - DropZone
