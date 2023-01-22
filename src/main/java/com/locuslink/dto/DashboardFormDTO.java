@@ -1,5 +1,8 @@
 package com.locuslink.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DashboardFormDTO {
 
 
@@ -31,7 +34,8 @@ public class DashboardFormDTO {
 	
 	
 	
-	
+	// Upload Page 3
+	private List <String[]> dataTableArray = new ArrayList<String[]>();
 	
 	
 	

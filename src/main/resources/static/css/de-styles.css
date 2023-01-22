@@ -3939,7 +3939,7 @@ button.bg-dark:focus {
   padding-left: 0.5rem !important; }
 
 .p-3 {
-  padding: 1rem !important; }
+  padding: 0.5rem !important; }
 
 .pt-3,
 .py-3 {
@@ -9977,7 +9977,7 @@ button {
   font-family: inherit; }
 
 input {
-  height: 50px;
+  height: 35px;
   letter-spacing: 0.025em; }
 
 .form-control {
@@ -10898,7 +10898,7 @@ table.dataTable tbody tr td {
   border-color: #dfe4e4; }
 
 .datatable-toolbar {
-  background-color: #cc6600;
+  background-color: #e0dfde;
   color: #fff !important; }
 
 .datatable-toolbar strong {

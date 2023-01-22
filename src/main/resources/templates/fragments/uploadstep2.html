@@ -24,7 +24,7 @@
 	 		    	function(file) {
 	 		    	  $(".dz-success-mark svg").css("background", "green");
 	 		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
-	 		    	  document.getElementById("continueGoToPage3_NEW").disabled = false;	 		    		    
+	 		    	  document.getElementById("continueUploadPage3").disabled = false;	 		    		    
 	 		      }); 		     		  
 	 		
 	 	     	this.on("error", 
@@ -44,7 +44,7 @@
 	 	        		submitFormAjaxJSON("deleteFileUpload", myData, "deleteFileUploadResponse");
 	 	        		if (this.files[0] == null) {
 
-			 		   		document.getElementById("continueGoToPage3_NEW").disabled = true;
+			 		   		document.getElementById("continueUploadPage3").disabled = true;
 			 		    }
 	 	     		});		   
 	 		   }
@@ -63,7 +63,7 @@
 				},false);
 			
 			// C.Sparks 2-19-2020				
-			document.getElementById("continueGoToPage3_NEW").disabled = true;
+			document.getElementById("continueUploadPage3").disabled = true;
 			
 			$('#previousGoToUploadPage1').click(function() {		
 				showSpinner();			
@@ -72,22 +72,28 @@
 			
 	
 			// C.Sparks - 2-19-2020 New Routine, both buttons on the UI for now
-			$('#continueGoToPage3_NEW').click(function() {													
+			$('#continueUploadPage3').click(function() {													
 				showSpinner();	
 				
-	         	var myData = {version:"1.0", protocol:"json", clientId:"trace"};
- 	            var innerData = {};	        	
- 	            innerData["poNumber"] = $('#poNumber').val();
+/* 	         	var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+ 	            var innerData = {};	  */
+ 	            
+/*  	            innerData["poNumber"] = $('#poNumber').val();
 	        	innerData["woNumber"] = $('#woNumber').val();
-	        	innerData["projectNum"] = $('#projectNum').val()
-	        	innerData["selectedDocType"] = $('#selectedDocType').val() 
-	        	innerData["itemNumber"] = $('#itemNumber').val() 
-	        	 innerData["selectedContractorType"] = $('#selectedContractorType').val() 
+	        	innerData["projectNum"] = $('#projectNum').val() */
+//	        	innerData["selectedDocType"] = $('#selectedDocType').val() 
+/* 	        	innerData["itemNumber"] = $('#itemNumber').val() 
+	        	innerData["selectedContractorType"] = $('#selectedContractorType').val()  */
 	        	  	
- 	        	myData["data"] = innerData; 
+/*  	        	myData["data"] = innerData; 
 	        	
         		submitFormAjaxJSON("loadQDocReqLine_2", myData, "processTableData");
-        						
+        			 */	
+        			 
+				showSpinner();			
+				submitFormAjaxHTML('initUploadStep3', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+	 
+        			 
 			});
 			
 				
@@ -215,7 +221,7 @@
                          <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
                          
                              <button type="button" id="previousGoToUploadPage1" class="button button--previous" onclick="">Previous</button>
-                            <button type="button" id="continueGoToPage3_NEW" class="button button--continue ml-3" onclick="" disabled>Continue</button>           
+                            <button type="button" id="continueUploadPage3" class="button button--continue ml-3" onclick="" disabled>Continue</button>           
                                           
                          </div>
                      </div>

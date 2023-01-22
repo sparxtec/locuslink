@@ -67,6 +67,20 @@ public class UploadController {
 	}
 
 	
+	@PostMapping(value = "/initUploadStep3")
+	public String initUploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initUploadStep3()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/uploadstep3";
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
