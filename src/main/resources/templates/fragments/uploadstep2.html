@@ -200,12 +200,12 @@
                      
                      <div id="step2" role="tabpanel" class="content active" aria-labelledby="stepper1trigger2">
                          <div class="form-group text-center bs-stepper-custom-width m-auto">
-                                <label class="d-inline-block mb-3"  th:if="${selectedDocType == 'PO' or selectedDocType == 'PROJECT_NUMBER'}"><span th:if="${selectedDocType == 'PROJECT_NUMBER'}"> Project Number # : <span th:text="${projectNum}"></span></span> | P.O. #: <span th:text="${poNumber}"></span><span th:if="${woNumber != ''}"> | W.O. # : <span th:text="${woNumber}"></span></span>
-                                </label>
+                            <label class="d-inline-block mb-3"  th:if="${selectedDocType == 'PO' or selectedDocType == 'PROJECT_NUMBER'}"><span th:if="${selectedDocType == 'PROJECT_NUMBER'}"> Project Number # : <span th:text="${projectNum}"></span></span> | P.O. #: <span th:text="${poNumber}"></span><span th:if="${woNumber != ''}"> | W.O. # : <span th:text="${woNumber}"></span></span>
+                             </label>
                                 
-                               <label th:if="${selectedDocType == 'ITEM'}" >
-                               <span th:text="${'Item # : '+itemNumber}"> </span>
-                               </label>
+                            <label class="d-inline-block mb-3" >Document Type : 
+                                <span th:text="${dashboardFormDTO.selectedDocType}"> </span>
+                            </label>
                                
 							<form id="tracedropzone" name="tracedropzone"							
 								action="/portal/processCsvFileUpload" class="dropzone dz-clickable"enctype="multipart/form-data" method="POST">								

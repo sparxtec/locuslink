@@ -6,239 +6,93 @@
    
     <script>
 
-	    var dataTableArray = dashboardFormDTO.dataTableArray;
-	
-	    
-/* 		var docUploadPage3DTO = JSON.parse ( $('#docUploadPage3DTO').val() );	    	
-		var dataTableArray = docUploadPage3DTO.dataTableArray;
-    	var poLineArray = docUploadPage3DTO.traceablePoLinesArray */;
 
 		var stepper1 = null;
-//		var purchaseOrderNumber = $('#purchaseOrderNumber').val(); 
 
-		//Dropzone.autoDiscover = false;
 		var globalTable;
 		
-		$(document).ready(function() {
 			
-			//$.noConflict();
-			
-			var selectedDocType ="[[${selectedDocType}]]";
-			console.log ('selectedDocType ->:' + selectedDocType) ;
-
-	        var table = $('#tableData').DataTable({				
-	            data: dataTableArray,
-	            responsive: true,
-	            autoWidth: true,
-	            paginate: false,	        
-	            order: [],
-	            dom: '<"datatable-toolbar border border-bottom-0 text-secondary p-3 d-flex flex-row justify-content-between align-items-center" <"datatable-toolbar-group d-none" <"#sortUnparsed">> <"datatable-toolbar-group d-none d-md-block" <i>> <"datatable-toolbar-group" f> ><t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p>>',
-	            columns: [
-	                {   
-	                    title: "Hidden",
-	                    visible: false
-	                },
-	                {   
-	                    title: "File Name", 
-	                    render: function (data, type, row, meta) { 
-	                    	if ( type === "sort" || type === "type" || type === "filter") {
-	                    	    return data.trim();
-	                    	}  else {
-	                            var selectStr = '<span id="fileName_' + meta.row + '" class="mtr-file-name" data-toggle="tooltip" data-placement="right" title="' + data + '">' + data + '</span>'; 
-		                    	return selectStr;		                    	
-	 		                }
-		                }
-	                },
-	                { 
-	                    title: "Heat/Serial #", 
-	                    render: function (data, type, row, meta) {
-	                         if ( type === "sort" || type === "type" ) {
-	                    		return data.trim();
-	                    	 }  else {
-		                		return '<input id="heatNum_'+meta.row+'" class="form-control" type="input" value="'+data+'">';
-	                    	} 	                    	
-	                    }
-	                },
-	                {
-	                    title: "Mfg Name", 
-	                    render: function (data, type, row, meta) {
-	                    	if ( type === "sort" || type === "type" ) {
-	                    		return data.trim();
-	                    	}  else {
-	 		                	return '<input id="mfg_'+meta.row+'" class="form-control" type="input" value="'+data+'">';
-	 		                }
-	                    }
-	                },
-// 	                { 
-// 	                    title: "Mfg Item Desc", 
-// 	                    render: function (data, type, row, meta) {
-// 	                    	if ( type === "sort" || type === "type" ) {
-// 	                    		return data.trim();
-// 	                    	}  else {
-// 	                    		return '<input id="mfgDesc_'+meta.row+'" class="form-control" type="input" value="'+data+'">';
-// 	 		                }		                	
-// 		                }
-// 	                },
-	                { 
-	                    title: "Vendor Catalog #"
-	                },
-	                { 
-	                    title: "Duke PO Line #",
-	                    visible: selectedDoc == "PO" || selectedDoc === "PROJECT_NUMBER",
-	                    render: function (data, type, row, meta) {
-	                    	if ( type === "sort" || type === "type" ) {
-	                    		return data*1;
-	                    	} else {
-	                    		var selectStr = '<select id="poLineSelect_ID_'+meta.row+'" class="form-control" type="input"><option id="poLineId_NONE" value="" selected></option>'; 
-	                    		for (var i = 0; i < poLineArray.length; i++) {
-	                    			selectStr = selectStr + '<option id="poLineId_'+meta.row+'_'+poLineArray[i][0]+'" value="'+poLineArray[i][0]+'">' + poLineArray[i][0] + '</option>'; 
-	                    	    }
-	                    		selectStr = selectStr + '</select>'; 
-		                		return selectStr; 
-	                    	}
-		                }	
-	                },
-	                { 
-	                    title: "Maximo Item #",
-	                    render: function (data, type, row, meta) { 
-	                    	if ( type === "sort" || type === "type" || type === "filter") {
-	                    	    return data*1;
-	                    	}  else {
-	                            var selectStr = '<span id="maximoItemNumId_'+meta.row+'">' + data + '</span>'; 
-		                    	return selectStr;
-	 		                }
-		                }
-	                },
-	                { 
-	                    title: "Maximo Item Desc", 
-	                    render: function (data, type, row, meta) {
-	                    	if ( type === "sort" || type === "type") {
-	                    	    return data.trim();
-	                    	}  else {
-		                    	var selectStr = '<span id="maximoItemDescId_'+meta.row+'">' + data + '</span>';
-		                    	return selectStr;
-	 		                }
-		                }
-	                },
-	        		{
-                    	title: "Maximo Order Qty", 
-                    	visible: false,
-                    	render: function (data, type, row, meta) {
-                    		if ( type === "sort" || type === "type") {
-                    	    	return data;
-                    		}  else {
-	                    		var selectStr = '<span id="orderQtyId_'+meta.row+'">' + data + '</span>';
-	                    		return selectStr;
- 		                	}
-	                	}
-                	},
-	                { 
-	                    title: "Remove", 
-	                    render: function (data, type, row, meta) {
-	                    	return '<button id="removeId_'+meta.row+'" type="button" class="close"><span>&times;</span></button>';
-	                    }	
-	                },	               
-	                
-	            ],
-	            createdRow: function (row, data, index) {
-	                if (data[0] == "unparsed") {
-	                    $(row).addClass('de-alert-urgent');
-	                }
-	            }
-	        });
-	        
-	        globalTable = table;
-	        
-	        var invalidRowCount = 0; 
-            var totalRows = 0; 
-            var rowNbr = 0; 
-            var nonFilledPOLineCount = 0;
-
-            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-
-               var heatSerialNbrVal = table.cell(rowNbr, 2).nodes().to$().find('input').val();
-               var mfgNameVal = table.cell(rowNbr, 3).nodes().to$().find('input').val();
-               var poLineVal = table.cell(rowNbr, 5).nodes().to$().find('select').val();
-               
-               //console.log("REMOVE :: Row # : " + rowNbr + " | heatSerialNbrVal = " + heatSerialNbrVal + " | mfgNameVal = " + mfgNameVal + " | mfgDescVal = " + mfgDescVal + " | poLineVal = " + poLineVal); 
-            
-               if (heatSerialNbrVal.trim().length == 0 || mfgNameVal.trim().length == 0) {
-            	   //console.log("unparsed count "); 
-            	   invalidRowCount = invalidRowCount + 1; 
-               }
-               
-               if(selectedDoc == 'PO' || selectedDoc == 'PROJECT_NUMBER') {
-                   if (poLineVal.trim().length == 0) {
-                	   //console.log("unparsed count "); 
-                	   nonFilledPOLineCount = nonFilledPOLineCount + 1;
-                   }
-               } else {
-            	   console.log('Dont need to count PO line because we are doing item upload');
-               }
-
-               totalRows = totalRows + 1;
-               rowNbr = rowNbr + 1; 
-            });
-
-            var unparsedFilesText = "";
-            console.log(totalRows);
-            console.log(invalidRowCount);
-            if (totalRows == 0) {
-            	$("#subText").text("");
-            	unparsedFilesText = "<strong class='text-warning'><i class='fas fa-exclamation-triangle' style='color:#ffc107;'></i> No Records Found</strong> <p>Click on 'PREVIOUS' button to upload more documents.</p>";
-	    	    $("#unparsedFiles").html(unparsedFilesText); 
-	    	    $("#showUnparsedFiles").modal('show');	
-            } else if (invalidRowCount > 0) {
-            	unparsedFilesText = "<strong  class='failure-text'><i class='fas fa-exclamation-triangle'></i> Whoops! Some of your files didn't upload correctly...</strong> <p>Please correct the fields displayed in red. Tip: Check the filename for the missing information.<p> ";	
-            	$("#unparsedFiles").html(unparsedFilesText); 
-	    	    $("#showUnparsedFiles").modal('show');	
-	    	    $('#step3').find('.button--submit').prop("disabled", true);
-	    	    
-            } else if (nonFilledPOLineCount > 0) {
-            	unparsedFilesText = "<strong class='success-text'><i class='fas fa-check-circle'></i> Your files uploaded successfully! Only one more step...</strong> <p>Please select 'Duke PO Line #' for each row and click Submit.</p>";
-            	$("#unparsedFiles").html(unparsedFilesText); 
-	    	    $("#showUnparsedFiles").modal('show');	
-	    	    $('#step3').find('.button--submit').prop("disabled", true);
-            
-            } else {
-        	     var unparsedFilesText = "<strong class='success-text'><i class='fas fa-check-circle'></i> You are ready to SUBMIT!</strong>";
-        	     $("#unparsedFiles").html(unparsedFilesText);
-        	     $("#showUnparsedFiles").modal('show');
-        	     $('#step3').find('.button--submit').prop("disabled", false); 
-            }		    	    
- 
-	        
-	        $('[data-toggle="tooltip"]').tooltip();
-
-		    $('#purchaseOrderNumber').on('input', function() {
-		        if ($(this).val() !== "" ) {
-		            $(this).parent().siblings().find('.button--continue').prop("disabled", false);            
-		        } else {
-		            $(this).parent().siblings().find('.button--continue').prop("disabled", true);
-		        }    
-		    });
-		    
-			$('#purchaseOrderNumber').keydown(function(e) {
-			    if (e.keyCode === 13) {	// When enter key pressed  
-			    	e.preventDefault();
-			        $('#continueGoToPage2').click();
-			    }
-			});
-			
-/* 			$('#continueGoToPage2').click(function() {													
-				showSpinner();	
-				submitFormAjaxHTML('initDocUploadStep2', $( "#docUploadFormDTO" ).serialize(), "commonResponse");
-			}); */
-
-			$('#previousGoToPage2').click(function() {					
-				// set the FORM value from the document combo box dropdown				
-				//$('#selectedDocType').val($('#comboSelectedDocType').val().trim()); 		;
-				
-				showSpinner();								
-				submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
-			});	
-			
-			stepper1 = new Stepper($('.bs-stepper')[0], {
+    	$(document).ready(function() {	
+     		hideSpinner();	
+     		
+     		if( $('#materialDataTable').length){
+     			
+     			var table = $('#materialDataTable').DataTable( {
+            	retrieve: true,
+     	 		searchHighlight: false,
+             	responsive: true,		        
+             	"paging":   true,	
+             	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)',	
+             	order: [1, 'asc' ],		        
+         		//colReorder: true,		        
+     
+     	    	ajax: {
+           		    url: 'getAllStagedUploads',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"gim"};
+            			var innerData = {};
+            			//innerData["designId"] = "123";
+            			//innerData["pageCode"] = pageCode;
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	wireObjectList = json.data.wireObjectList;	     	        	
+     	        	hideSpinner();	// C.Sparks 1-19-19			    		
+     	      	        	
+     	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
+     	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
+     	        	console.log(JSON.parse(wireObjectList));
+     	        	return JSON.parse(wireObjectList);     	        	      	        	
+     	         }					       
+        		},  
+     
+             columns: [	 
+             	
+                 { data: "materialId" },
+                 { data: "materialName" },
+               //  { data: "lastName" },
+                 { data: "materialDesc" },
+              //   { data: "region" },
+               //  { data: "role" } ,
+                 { data: "activeStatus" ,
+                 	"render": function(data, type, row, meta){	
+                 		if('Y' == row['activeStatus']){
+                 			
+                 			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeStatus+"' onclick='deactivateRow(this)' class='button button--text'>Deactivate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
+                         }
+                 		else
+                 			{
+                 			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeStatus+"' onclick='deactivateRow(this)' class='button button--text'>Activate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
+                 			}
+                         return data;
+                      }},
+                      
+                      
+            	],
+            	
+            	"createdRow": function( row, data, dataIndex ) {
+            		//console.log(data.itemNumErrorFlag);
+            	
+            	    if ( data.activeStatus == "N" ) {
+            	    	 $(row).addClass('deactivated');
+            	    	 // $('tr', row).eq(9).addClass("checked"); 
+            	    }    
+            	   
+            	  },
+            	  //dom: '<"datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3" <"datatable-toolbar-group" <"#addbtn">> <"datatable-toolbar-group" f> ><t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+            	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+            	  
+        		
+         });
+     }
+        
+     		
+     		stepper1 = new Stepper($('.bs-stepper')[0], {
 		        linear: true
 		      }); 
 		   
@@ -246,570 +100,34 @@
 			
 		    stepper1.to(3);
 		    	
-	        if($('tr.de-alert-urgent').length > 0) {
+/* 	        if($('tr.de-alert-urgent').length > 0) {
 	            $('.alert').removeClass('hidden').addClass('show');
-	        }
-
-	        // clear fields on load
-	        $('#tableData .de-alert-urgent input').val('');
-	        $("#tableData input").each(function() {
-	            if ($(this).val().length === 0 ) {
-	                $(this).addClass('error');
-	            }
-	        });
-	        $("#tableData select option:selected").each(function() {
-	            if ($(this).val().length == 0 ) {
-	                $(this).parent().addClass('error');
-	            }
-	        });
-
-	        $('#totalUnparsed').html('<strong>3</strong> of <strong>11</strong> files did not load correctly');
-	        $('#sortUnparsed').html('<button class="button button--secondary-reversed button--small" type="button" onclick="sortUnparsed();">Sort Errors</button>');
-		       
-	        // Fire this when a value in any cell changes
-            $('#tableData').on('change', 'td', function () {
-            	
-	        	var thisHtml = $(this).html().trim(); 
-	    		var idHtml = thisHtml.match('id="(.*)" class'); 
-	    		if (idHtml == null || idHtml == "null" || idHtml == "") {
-	    			idHtml = thisHtml.match('id="(.*)" type');
-	    		}    			    		
-
-	    		var elementId = idHtml[1].trim(); 	  	
-	    		var rowIndex = table.cell($(this)).index().row;	    	
-	    		var elementVal = $('#'+elementId).val();
-	    				    		
-	    		if (elementId.indexOf("maximoItemNumId_") >= 0 || elementId.indexOf("maximoItemDescId_") >= 0) {
-	    			table.cell($(this)).data(elementVal).invalidate(); 	    			
-	    		}
-	    		
-	    		if (elementId.indexOf("poLineSelect_ID_") >= 0) {
-	    			table.cell($(this)).data(elementVal).invalidate();
-	    			
-        		    var poLineNodeId = table.cell(rowIndex, 5).nodes().to$().find('select').attr("id");
-    	    		var itemNumNodeId = table.cell(rowIndex, 6).nodes().to$().find('span').attr("id");
-    	    		var itemDescNodeId = table.cell(rowIndex, 7).nodes().to$().find('span').attr("id");
-    	    		var orderQtyNodeId = table.cell(rowIndex, 8).nodes().to$().find('span').attr("id");    	    		 
-    	    		
-		    		var elementVal_po = $('#'+poLineNodeId).val();
-	    			$('#'+poLineNodeId).val(table.cell(this).data()); 
-	    			
-	        		var selectedIndex = $("#"+poLineNodeId).prop('selectedIndex');
-	        		if (selectedIndex == 0) {
-	        			console.log(" add the red ");	        			
-        				$('#'+poLineNodeId).val('');
-        				$('#'+itemNumNodeId).text('AUTO POPULATE');
-                   		$('#'+itemDescNodeId).text('AUTO POPULATE');	
-                   		$('#'+poLineNodeId).addClass('error');
-	        		} else {        		    
-	        		    //console.log ("rowIndex ->: " + rowIndex) ;	  // the selected row in the UI table      	    	        		    
-	        		    console.log(" remove the red ");	
-	        			$('#'+poLineNodeId).removeClass('error');	
- 		        				        		
-	        			var wrk_poLineArray = poLineArray[selectedIndex - 1];
-	        			 
-	        			// add the values to the UI display table
-        				$('#'+poLineNodeId).val(wrk_poLineArray[0]);
-        				$('#'+itemNumNodeId).text(wrk_poLineArray[1]);
-                   		$('#'+itemDescNodeId).text(wrk_poLineArray[2]);
-                   		$('#'+orderQtyNodeId).text(wrk_poLineArray[3]);
-                   		                   		
-                   		// Add the values from the UI, to the object going to the controller for DB save
-                		dataTableArray[rowIndex][6] = wrk_poLineArray[1]; // set the pkId
-                		dataTableArray[rowIndex][7] = wrk_poLineArray[2]; // set the pkId                		
-                   		dataTableArray[rowIndex][8] = wrk_poLineArray[4]; // set the pkId
-
-	        		} 	    				    			
-	    		}
-	    		
-	    		
-	    		// check how many rows have empty fields 
-	            //console.log("EDIT : Check if how many rows still not loaded correctly.");
-	            var invalidRowCount = 0; 
-	            var totalRows = 0; 
-	            var rowNbr = 0; 
-	            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-	                var rowData = this.data();
-	                //console.log("row data = " + rowData[0]); 	                
-	                var heatSerialNbrVal = table.cell(rowNbr, 2).nodes().to$().find('input').val();
-	                var mfgNameVal = table.cell(rowNbr, 3).nodes().to$().find('input').val();
-	                var poLineVal = table.cell(rowNbr, 5).nodes().to$().find('select').val();
-	                
-	                if (heatSerialNbrVal.trim().length == 0 || mfgNameVal.trim().length == 0 || poLineVal.trim().length == 0) {	                	
-	                	invalidRowCount = invalidRowCount + 1; 
-	                }
-	                totalRows = totalRows + 1;
-	                rowNbr = rowNbr + 1; 
-	            });
-	            
-	            
-	            var unparsedFilesText = ""; 
-	            if (totalRows == 0) {
-	            	$("#subText").text("");
-	            	unparsedFilesText = " No records found. Click on 'PREVIOUS' button to upload more documents.";
-	            } else if (invalidRowCount > 0) {
-	            	unparsedFilesText = "<strong  class='failure-text'><i class='fas fa-exclamation-triangle'></i> Please correct missing fields.</strong> <p> " + invalidRowCount + " of " + totalRows + " files did not load correctly. Missing fields are displayed in red. <p> ";	
-	            }
-	            
-	            $("#unparsedFiles").text(unparsedFilesText);            
-	            
-	            var totalFields = $('#tableData input').length + $('#tableData select').length;
-	        	var chaseCount = 0;
-	             
-	            $("#tableData input").each(function() {                 
-	                if ($(this).val().trim().length > 0 ) {
-	 	                $(this).removeClass('error');
-	 	                chaseCount = chaseCount + 1;
-	 	            } else {
-	 	                $(this).addClass('error');
-	 	            }                 
-	            });
-
-	            $("#tableData select").each(function() {
-	                if ($(this).val().trim().length > 0 ) {
-		 	            //$(this).removeClass('error');
-		 	            chaseCount = chaseCount + 1;
-		 	        } else {
-		 	            //$(this).addClass('error');
-		 	        }	                 
-	             });
-
-	             if (totalFields === chaseCount) {
-	            	 $("#subText").text("");
-	        	     var unparsedFilesText = "<strong class='success-text'><i class='fas fa-check-circle'></i> You are ready to SUBMIT!</strong>";
-	        	     $("#unparsedFiles").html(unparsedFilesText);
-	        	     $("#showUnparsedFiles").modal('show');
-
-	                 $('#step3').find('.button--submit').prop("disabled", false);            
-	             } else {
-					$('#step3').find('.button--submit').prop("disabled", true);
-	             }
-	    		
-            });
+	        } */
 	        
-
-	
-	      	$("[id^='startOver_']").click(function() {   
-				showSpinner();			
-				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-	        });
-		      
-	      	
-	      	
-		    // Delete a file 
-		    $("[id^='removeId_']").click(function() {
-		        	
-        		var tokens= (this.id).split("_");
-	        	var actualRowId = tokens[1]; 			        	
-	            var delThis = $(this).parents('tr');
-	            var rowIndexToDelete= delThis[Object.keys(delThis)[0]].rowIndex;
-	            
-	        	var modalConfirm = function(callback) {
-          			    $('#deletealert').modal('show'); 
-          			    $("#deleteModalYes").unbind().click(function() {
-	        		      callback(true);
-	        		      $('#deletealert').modal('hide');
-	        		});
-	        		  
-	        		$("#deleteModalNo").unbind().click(function() {
-	        		      callback(false);
-	        		      $('#deletealert').modal('hide');
-	        		});
-	        		  		        		  
-	        	}
-	        	modalConfirm(function(confirm) {
-
-        		  if (confirm) {		        			  
-        			  	console.log(" Go ahead and delete the row. ");
-        			  	var fileName = $("#fileName_"+actualRowId).text();
-        			  	console.log(fileName);
-	      	        	var myData = {version:"1.0", clientId:"trace"};
-	    	        	var innerData = {};   	        		    	        	
-	    	        	
-	    	          	innerData["fileName"] = fileName;
-	          		    myData["data"] = innerData;	 
-	          		  	dataTableArray.splice(rowIndexToDelete-1, 1); //deleting out of dataTableArray TS-4-1-20
-	          		    table.row(delThis).remove().draw();  
-	    				submitFormAjaxJSON('processDeleteFile', myData, "deleteResponse");  // now delete the physical file  	        			  
-
-			            var invalidRowCount = 0; 
-			            var totalRows = 0; 
-			            var rowNbr = 0; 
-
-			            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-
-		                   var heatSerialNbrVal = table.cell(rowNbr, 2).nodes().to$().find('input').val();
-		                   var mfgNameVal = table.cell(rowNbr, 3).nodes().to$().find('input').val();
-		                   var poLineVal = table.cell(rowNbr, 5).nodes().to$().find('select').val();
-		                   
-		                   //console.log("REMOVE :: Row # : " + rowNbr + " | heatSerialNbrVal = " + heatSerialNbrVal + " | mfgNameVal = " + mfgNameVal + " | mfgDescVal = " + mfgDescVal + " | poLineVal = " + poLineVal); 
-		                
-		                   if (heatSerialNbrVal.trim().length == 0 || mfgNameVal.trim().length == 0) {
-		                	   //console.log("unparsed count "); 
-		                	   invalidRowCount = invalidRowCount + 1; 
-		                   }
-		                   
-		                   if(selectedDoc == 'PO' || selectedDoc == 'PROJECT_NUMBER') {
-			                   if (poLineVal.trim().length == 0) {
-			                	   //console.log("unparsed count "); 
-			                	   invalidRowCount = invalidRowCount + 1; 
-			                   }
-		                   } else {
-		                	   console.log('Dont need to count PO line because we are doing item upload');
-		                   }
-
-		                   totalRows = totalRows + 1;
-		                   rowNbr = rowNbr + 1; 
-			            });
-
-			            var unparsedFilesText = "";
-			            console.log(totalRows);
-			            console.log(invalidRowCount);
-			            if (totalRows == 0) {
-			            	$("#subText").text("");
-			            	unparsedFilesText = "<strong class='text-warning'><i class='fas fa-exclamation-triangle' style='color:#ffc107;'></i> No Records Found</strong> <p>Click on 'PREVIOUS' button to upload more documents.</p>";
-				    	    $("#unparsedFiles").html(unparsedFilesText); 
-				    	    $("#showUnparsedFiles").modal('show');	
-			            } else if (invalidRowCount > 0) {
-
-				    	    $('#step3').find('.button--submit').prop("disabled", true);
-			            } else {
-			        	     var unparsedFilesText = "<strong class='success-text'><i class='fas fa-check-circle'></i> You are ready to SUBMIT!</strong>";
-			        	     $("#unparsedFiles").html(unparsedFilesText);
-			        	     $("#showUnparsedFiles").modal('show');
-			        	     $('#step3').find('.button--submit').prop("disabled", false); 
-			            }		    	    
-  		              
-        		  } else {
-        			   // console.log(" Don't delete the row. ");
-        		       // DON'T DELETE THE DATATABLE ROW  
-        		  }
-        		  
-	           });
-		        			        		
-		    });	
-		    
-		    // Delete a file when the remove button is responsive...you have to find the row index of the list (li)
-		    $("#tableData").on('click', 'li', function () {
-		    	
-		    	var cellIndex = table.responsive.index( this );
-		    	
-		    	console.log(cellIndex.row);
-		    	
-		    	$( table.cell( this ).node() ).addClass('highlight');
-		
-	        	var actualRowId = cellIndex.row; 			        	
-	            var delThis = $( table.cell( this ).node() ).parents('tr');
-	            console.log(delThis);
-	            var rowIndexToDelete= delThis[Object.keys(delThis)[0]].rowIndex;
-	            
-	        	var modalConfirm = function(callback) {
-          			    $('#deletealert').modal('show'); 
-          			    $("#deleteModalYes").unbind().click(function() {
-	        		      callback(true);
-	        		      $('#deletealert').modal('hide');
-	        		});
-	        		  
-	        		$("#deleteModalNo").unbind().click(function() {
-	        		      callback(false);
-	        		      $('#deletealert').modal('hide');
-	        		});
-	        		  		        		  
-	        	}
-	        	modalConfirm(function(confirm) {
-
-        		  if (confirm) {		        			  
-        			  	//console.log(" Go ahead and delete the row. ");
-        			  	var fileName = $("#fileName_"+actualRowId).text();
-	      	        	var myData = {version:"1.0", clientId:"trace"};
-	    	        	var innerData = {};   	        		    	        	
-	    	        	
-	    	          	innerData["fileName"] = fileName;
-	          		    myData["data"] = innerData;	 
-	          		  	dataTableArray.splice(rowIndexToDelete-1, 1); //deleting out of dataTableArray TS-4-1-20
-	          		    table.row(delThis).remove().draw();  
-	    				submitFormAjaxJSON('processDeleteFile', myData, "deleteResponse");  // now delete the physical file  	        			  
-
-			            var invalidRowCount = 0; 
-			            var totalRows = 0; 
-			            var rowNbr = 0; 
-
-			            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-
-		                   var heatSerialNbrVal = table.cell(rowNbr, 2).nodes().to$().find('input').val();
-		                   var mfgNameVal = table.cell(rowNbr, 3).nodes().to$().find('input').val();
-		                   var poLineVal = table.cell(rowNbr, 5).nodes().to$().find('select').val();
-		                   
-		                   //console.log("REMOVE :: Row # : " + rowNbr + " | heatSerialNbrVal = " + heatSerialNbrVal + " | mfgNameVal = " + mfgNameVal + " | mfgDescVal = " + mfgDescVal + " | poLineVal = " + poLineVal); 
-		                
-		                   if (heatSerialNbrVal.trim().length == 0 || mfgNameVal.trim().length == 0) {
-		                	   //console.log("unparsed count "); 
-		                	   invalidRowCount = invalidRowCount + 1; 
-		                   }
-		                   
-		                   if(selectedDoc == 'PO' || selectedDoc == 'PROJECT_NUMBER') {
-			                   if (poLineVal.trim().length == 0) {
-			                	   //console.log("unparsed count "); 
-			                	   invalidRowCount = invalidRowCount + 1; 
-			                   }
-		                   } else {
-		                	   console.log('Dont need to count PO line because we are doing item upload');
-		                   }
-
-		                   totalRows = totalRows + 1;
-		                   rowNbr = rowNbr + 1; 
-			            });
-
-			            var unparsedFilesText = ""; 
-			            if (totalRows == 0) {
-			            	$("#subText").text("");
-			            	unparsedFilesText = "<strong class='text-warning'><i class='fas fa-exclamation-triangle' style='color:#ffc107;'></i> No Records Found</strong> <p>Click on 'PREVIOUS' button to upload more documents.</p>";
-				    	    $("#unparsedFiles").html(unparsedFilesText); 
-				    	    $("#showUnparsedFiles").modal('show');	
-			            } else if (invalidRowCount > 0) {
-
-				    	    $('#step3').find('.button--submit').prop("disabled", true);
-			            } else {
-			        	     var unparsedFilesText = "<strong class='success-text'><i class='fas fa-check-circle'></i> You are ready to SUBMIT!</strong>";
-			        	     $("#unparsedFiles").html(unparsedFilesText);
-			        	     $("#showUnparsedFiles").modal('show');
-			        	     $('#step3').find('.button--submit').prop("disabled", false); 
-			            }		    	    
-  		              
-        		  } else {
-        			   // console.log(" Don't delete the row. ");
-        		       // DON'T DELETE THE DATATABLE ROW  
-        		  }
-        		  
-	           });
-		        			        		
-		    });	
-		        
-		    
-	    	// CS - 2-24-2020
-	    	//	This is the main form submission.
-	    	$("#submitForm_NEW").on('click', function() {
-				sendSubmitRequest_NEW (table, false, false, false);  // (table, override, createFile, skipFile)	
-	        });
-    		    	
-	    	
-	        sortUnparsed = function () {
-	            $('#tableData').DataTable().order( [ 0, 'asc' ] ).draw();
-	        }
-	        sortUnparsed();
-			    
-		    $('#uploadDocs1_Id').addClass("is-current");	
-		    		    		   
-		    $('#showUnparsedFiles').on('hidden.bs.modal', function (e) {
-	        	if ($('#tableData td').hasClass("dataTables_empty")){
-	                $('#step3').find('.button--submit').prop("disabled", true);
-	             }
-	        });
-
-/* 			$("[id^='heatNum_']").keydown( function(e) {
-		       if (e.which === 189 && e.shiftKey === true) {
-		        e.preventDefault();
-		        }
-			});
-		    
-			$("[id^='mfg_']").keydown( function(e) {
-			    if (e.which === 189 && e.shiftKey === true) {
-			     e.preventDefault();
-			  	}
-			 }); */
-	  	  
-// 			$("[id^='mfgDesc_']").keydown( function(e) {
-// 			     if (e.which === 189 && e.shiftKey === true) {
-// 			        e.preventDefault();
-// 			      }
-// 			});
+	        
+ 		// SEARCH FILTER
+ 		$('#materialDataTable_filter input').keyup(function(){
+ 			table.search($(this).val()).draw() ;
+ 		});
+     			
 			
-			document.addEventListener('paste', function (event) {
-				$('#noUnderScore').hide();
-				  var clipText = event.clipboardData.getData('Text');
-				  console.log(clipText);
-				  if(clipText.includes('_')) {
-					  $('#noUnderScore').show();
-					  event.preventDefault();
-				  }
-			});
-			
-								
-		});
-           			
+		$('#previousGoToPage2').click(function() {					
+			showSpinner();								
+			submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
+		});	
 		
 		
-		// Cs 2-24-2020 - New routine	
-		// 	This section processes any field on the UI that is enterable.The changed values
-		// 	need to be put into the dataArray so it can be saved on the back end.
-		function sendSubmitRequest_NEW (table, overWriteFlag, createFile, skipFileFlag) {
-
-		    showSpinner();
-		    //TS 4-1-20
-		    //counting how many rows there are in array
-		    //Have to use the datatablearrayindex instead of the actual row index 
-		    //because when you delete something the row index may not exist in the data table array index.
-		    var dataTableIndex = 0;	
-	       	$("[id^='heatNum_']").each(function(item,e) {   
-	        	var tokens = (this.id).split("_");
-	        	var rowIndex = tokens[1];
-
-		    	dataTableArray[dataTableIndex][2] = $('#heatNum_'+rowIndex).val(); 
-		    	dataTableIndex++;
-	        });
-	       	
-	       	dataTableIndex = 0;
-	       	 $("[id^='mfg_']").each(function(item,e) {   
-	        	var tokens = (this.id).split("_");
-	        	var rowIndex = tokens[1];	        	
-	       	
-        		dataTableArray[dataTableIndex][3] = $('#mfg_'+rowIndex).val();    
-        		dataTableIndex++;
-	        });
-	       	 
-	       	dataTableIndex = 0;
-// 	       	$("[id^='mfgDesc_']").each(function(item,e) {   
-// 	        	var tokens = (this.id).split("_");
-// 	        	var rowIndex = tokens[1];
-
-// 		        dataTableArray[dataTableIndex][4] = $('#mfgDesc_'+rowIndex).val(); 
-// 		        dataTableIndex++
-// 	        });
-	       	      	 	     
-                         
-     		var	myData = {version:"1.0", clientId:"trace"};
-       		var	innerData = {};       			
-	    	innerData["docUploadPage3DTO"] = docUploadPage3DTO;
-	    	
-	    	innerData["skipFileFlag"] = skipFileFlag;
-	    	innerData["overWriteFlag"] = overWriteFlag;
-	    	
-	    	
-   			myData["data"] = innerData;	       
- 
-   		    hideSpinner(); 
-   		    showSpinner();
-			submitFormAjaxJSON('saveTraceDB_NEW', myData, "saveTraceDBResponse") ;
-    	}
-		
-		
-		function uploadActivityLog(returnData) {	
-			hideSpinner();
-			console.log("Activity Log entry added for UPLOAD"); 
-		}	
-		
+   	 });  
+    	
+    	
 		function commonResponse(returnData) {	
 			hideSpinner();
 			$('#mainBody').html(returnData); 
 			hideSpinner();
 			 
 		}
-
-		function unique(array) {
-		    return $.grep(array, function(el, index) {
-		        return index == $.inArray(el, array);
-		    });
-		}
+					
 		
-		
-		var returnDataGlobal;				
-		function saveTraceDBResponse(returnData) {
-         	returnDataGlobal = returnData;
-			hideSpinner();  
-			var data = returnData.data;
-
-			// All the data on Page 3 has been processed, otherwise show the duplicates popup
-			if(data.isFinished) {		
-				processResponse();
-				
-			} else {
-				$("#dupOptionOverwrite").modal('show');
-			}
-			
-		}
-		
-		var continueClicked = false;
-		var skip = false;
-		$("#dupOptionIgnoreContinue").click(function(e) {
-			continueClicked=true;
-			sendSubmitRequest_NEW (globalTable, false, true, false);  // (table, override, createFile, skipFile)		
-		});
-		
-		$("#dupOptionOverwriteSkip").click(function(e) {
-			skip=true;
-			sendSubmitRequest_NEW (globalTable, false, false, true);  // (table, override, createFile, skipFile)	
-		});
-				
-		
-		
-		// TODO CS 3-26-2020
-		//   This is called from the Duplicates Dlg, and the DISMISS button was clicked.
-		//   If there were many table rows, but only one duplicate row, the good rows have already been processed.
-		//   So the table needs to be updated to only show the rows that need to stay on the UI.
-		$("#dupOptionOverwriteDismiss, #dupOptionIgnoreDismiss").click(function(e) {
-			showSpinner();	
-							
-         	var myData = {version:"1.0", protocol:"json", clientId:"trace"};
-	        var innerData = {};	        	
-	        
-	        innerData["poNumber"] = docUploadPage3DTO.purchaseOrderNumber;
-        	innerData["woNumber"] = docUploadPage3DTO.workOrderNumber;
-        	innerData["projectNum"] = docUploadPage3DTO.projectNumber;  
-        	innerData["selectedDocType"] = docUploadPage3DTO.selectedDocType
-			innerData["selectedContractorType"] = docUploadPage3DTO.selectedContractorType
-       
-        	innerData["itemNumber"] = docUploadPage3DTO.itemNumber
-	        myData["data"] = innerData; 	
-	            		        
-       		submitFormAjaxJSON("loadQDocReqLine_2", myData, "processTableData");
-			
-		});
-		
-		
-		function processResponse() {
-			var resultFlag = returnDataGlobal.data.resultFlag;
-			
-			// Navigate to Sign Out Page
-			if (resultFlag == "error") {	
-				stepper1.to(5);				
-			} else if (resultFlag == "success") {
-				stepper1.to(4);	
-			} else {
-				stepper1.to(5);
-			}
-		}
-		
-		var override = false;
-		$("#dupOptionOverwriteOverride").click(function(e) {
-			sendSubmitRequest_NEW (globalTable, true, false, false);  // (table, override, createFile, skipFile)	
-			override = true;
-		});
-		
-		function displayPage3ErrorFiles(returnData) {
-			$('#mainBody').html( returnData);
-			$('#showRequiredFieldsErrorMessage').show();
-			
-			hideSpinner(); 
-		}
-		
-		function deleteResponse(returnData) {	
-			var resultFlag = returnData.data.resultFlag;			
-			hideSpinner();  
-		}
-		
-		function processTableData(returnData) {		
-    	    $.ajax({
-   	           type: "POST",
-   	           url: "initDocUploadStep3",               
-   	           data: JSON.stringify(returnData),
-   	           contentType: 'application/json',
-   	           success: showDataTable,         
-  				   error: ajaxResponseError, 
-			   complete: function() { 
-					hideSpinner();
-	           }
-    	     });  	
-		}
 		</script>
 
   </head>
@@ -818,22 +136,19 @@
 
 <!-- 	 <input type="hidden" id="woNumber" name="woNumber" >
      <input type="hidden" id="poNumber" name="poNumber" >
-     <input type="hidden" id="itemNumber" name="itemNumber" > -->
-<!--      
-	 <input type="hidden" id="docUploadPage3DTO"  name="docUploadFormDTOList" th:value="${docUploadPage3DTO}"> 
-	 -->	
-	 
-	 
-<!-- 	 <form id="docUploadFormDTOList" name="docUploadFormDTOList" th:object="${docUploadFormDTOList}"  method="post" class="w-100">
- -->
+     <input type="hidden" id="itemNumber" name="itemNumber" > -->  
+	 <input type="hidden" id="dashboardFormDTO"  name="dashboardFormDTO" th:value="${dashboardFormDTO}"> 
+	-->
            <section class="de-component h-100">
            
-               <div class="de-component__container">
+            <!--    <div class="de-component__container"> -->
+               
                    <header class="de-component-header mb-0">
                        <h2 class="de-component-header__title">Upload Docs</h2>
                    </header>
 
                    <div id="stepper1" class="bs-stepper">
+                   
                        <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
                            <div class="step" data-target="#step1">
                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
@@ -868,31 +183,57 @@
                            
                            
                            <div id="step3" role="tabpanel" class="content active" aria-labelledby="stepper1trigger3">
+                              
                                <div class="form-group text-center">
-                                   <label class="d-inline-block mb-3" th:if="${selectedDocType == 'PO'}" >P.O. #: <span th:text="${poNumber}"></span> <span th:if="${woNumber != ''}"> | W.O. # : <span th:text="${woNumber}"></span></span></label>
-								   <div id="noUnderScore" class="alert alert-danger failure-text pb-4" Style="display:none;">
-									  <i class="fas fa-exclamation-triangle"></i>
-									  <span>Cannot copy text with underscores to these input fields.</span>
-								   </div>
-								   
-								   <div class="modal fade alert-blocker" id="showUnparsedFiles" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:none">
-									  <div class="modal-dialog modal-dialog-centered" role="document">
-									    <div class="modal-content">
-									      <div class="modal-body text-left">
-										      <strong id="subText" class="failure-text"></strong>
-										       <p id="unparsedFiles"></p>
-									      </div>
-									      <div class="modal-footer">
-										      <button type="button" class="button button--small button--text w-auto px-0 mx-5" data-dismiss="modal">Close</button>										        
-									      </div>
-									    </div>
-									  </div>
-									</div>
+                                 
+                                  
+				<div class="card">
 
-                                   <table id="tableData" class="display w-100 bg-white border border-top-0 table-confirm"></table>
-                               </div>
+					<div class="card-header"><i class="fas fa-user mr-2"></i> My Data:
+			
+					</div>
+
+					<div class="de-component__container">				
+	                     
+						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+						 	<div class="datatable-toolbar-group">
+						 		<div id="addbtn">
+						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>
+						 		</div>
+						 	</div>
+						 	<div class="datatable-toolbar-group">
+						 		<div id="materialDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="materialDataTable"></label>
+						 		</div>
+						 	</div>
+						 </div>	                     
+	                     
+		                     <div id="editUserListHeaderId">
+		                     
+		                        <table id="materialDataTable" class="bg-white border border-top-0">
+		                        
+		                           <thead class="thead-light">
+		                              <tr>
+		                                 <th scope="col">Material Id</th>
+		                                 <th scope="col">Material Name</th>
+		                                 <th scope="col">Description</th>
+<!-- 		                                 <th scope="col">Discipline</th>
+		                                 <th scope="col">Region</th>
+		                                 <th scope="col">Role</th> -->
+		                                 <th scope="col">Action</th>
+		                              </tr>
+		                           </thead>
+		                        </table>
+		                     </div>		                     
+						
+					</div>
+				</div>
+
+
+
+<br><br>
                                
-                               <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                           <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
                                    <button type="button" id="previousGoToPage2" class="button button--previous" onclick="stepper1.previous();">Previous</button>
 
                                    <!-- C.Sparks 2-24-2020 -->
@@ -905,42 +246,11 @@
                            
                            
                            <div id="step4" role="tabpanel" class="content" aria-labelledby="stepper1trigger4">
-                               <div class="form-group text-center bs-stepper-custom-width m-auto d-flex flex-column">
-                                   <div class="alert alert-dismissible fade hidden de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center d-none" role="alert">
-                                       <span><strong>Congrats!</strong> You have successfully corrected unparsed documents. <a href="#" data-dismiss="alert" class="button button--text" onclick="stepper1.reset();" >Upload more documents</a></span> 
-                                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                           <span aria-hidden="true">&times;</span>
-                                       </button>
-                                   </div>
-                                   <label class="d-inline-block mb-3" th:if="${selectedDocType == 'PO' }">P.O. #:<span th:text="${poNumber}"></span> <span th:if="${woNumber != ''}">| W.O. # : <span th:text="${woNumber}"></span></span></label>
-                               <label class="d-inline-block mb-3" th:if="${selectedDocType == 'ITEM' }">Item #:<span th:text="${itemNumber}"></span></label>
-                               <i class="far fa-check-circle" style="font-size:7rem;color: #00853f;"></i>
-                               	<span class="de-h4">Congratulations!</span> <span>You have successfully uploaded documents.</span>
-                               </div>
-                               <div class="py-4 text-center px-0 d-flex justify-content-center">
-                                   <button type="button" class="button button--submit ml-3" id="startOver_1">Start Over</button>
-                               </div>
                            </div>
                            
                            
                            
                           <div id="step5" role="tabpanel" class="content" aria-labelledby="stepper1trigger5">
-                          
-                               <div class="form-group text-center bs-stepper-custom-width m-auto d-flex flex-column">
-                                 
-                                   <div class="alert alert-dismissible fade hidden de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center d-none" role="alert">
-                                       <span><strong>Congrats!</strong> You have successfully corrected unparsed documents. <a href="#" data-dismiss="alert" class="button button--text" onclick="stepper1.reset();" >Upload more documents</a></span> 
-                                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                           <span aria-hidden="true">&times;</span>
-                                       </button>
-                                   </div>
-                                   <label class="d-inline-block mb-3">P.O. #:<span th:text="${poNumber}"></span> <span th:if="${woNumber != ''}">| W.O. # : <span th:text="${woNumber}"></span></span></label>
-                                <i class="far fa-times-circle" style="font-size:7rem;color:red"></i>
-                               	<span class="de-h4">Error!</span> <span>Your file upload was NOT successful.</span>
-                               </div>
-                               <div class="py-4 text-center px-0 d-flex justify-content-center">
-                                   <button type="button" class="button button--submit ml-3" id="startOver_2">Start Over</button>
-                               </div>
                            </div>
                            
                            
@@ -1007,7 +317,7 @@
 									
            </section>  
 	               
-<!--         </form> -->
+<!--     </form> -->
 
   </body>
   

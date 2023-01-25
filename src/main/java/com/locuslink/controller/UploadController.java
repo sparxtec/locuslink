@@ -1,5 +1,8 @@
 package com.locuslink.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -10,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.transfer.Upload;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.uploadedFileObjects.WireObject;
 /**
  * This is a Spring MVC Controller.
  *
@@ -87,12 +95,71 @@ public class UploadController {
 	public String initUploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initUploadStep3()...");
 
+		
+//		String[] wrkArray = {"1","2","3","4","5"};
+//		
+//		ArrayList <String []> wrkArrayList = new ArrayList<String []>();
+//		wrkArrayList.add(wrkArray);
+//				
+//		dashboardFormDTO.setDataTableArray(wrkArrayList);
+	
+
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/uploadstep3";
 	}
 	
 	
+	
+	
+	// TODO TEsting
+	
+	 @RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	    public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllStagedUploads()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
+  
+		//ArrayList <WireObject> wireObjectList = new ArrayList<WireObject>();
+		
+		List <WireObject> wireObjectList =  new ArrayList<WireObject>(); 
+		
+		WireObject wireObject = new WireObject();
+		wireObject.setMaterialId("100");
+		wireObject.setMaterialName("Copper Wire");
+		wireObject.setMaterialDesc("2 AWG Twisted Wire.");
+		
+		wireObjectList.add(wireObject);
+		wireObjectList.add(wireObject);
+		wireObjectList.add(wireObject);
+		
+	   //	model.addAttribute("wireObjectList", wireObjectList);
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";	
+		
+		try {
+			json = mapper.writeValueAsString(wireObjectList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);
+		
+	//	String = "{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}';
+				
+		
+		//model.addAttribute("lvProjectAllList",json);
+		
+		response.setField("wireObjectList",  json);
+		
+	//	response.setField("wireObjectList",  wireObjectList);
+		
+		
+		return response;
+	 }
+	 
+	 
+	 
 	
 	
 	
