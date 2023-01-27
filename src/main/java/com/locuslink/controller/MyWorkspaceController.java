@@ -45,6 +45,61 @@ public class MyWorkspaceController {
 	}
 
 
+	
+	
+	@PostMapping(value = "/initViewCustomerData")
+	public String initViewCustomerData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewCustomerData()...");
 
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace_customer";
+	}
+
+	@PostMapping(value = "/initViewCustomerPermissionData")
+	public String initViewCustomerPermissionData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewCustomerPermissionData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace";
+	}
+	
+	
+	
+	@PostMapping(value = "/initViewCatalogData")
+	public String initViewCatalogData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewCatalogData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace";
+	}
+	
+
+
+	@PostMapping(value = "/initViewAssetData")
+	public String initViewAssetData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewAssetData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace";
+	}
+	
+	
+
+	@PostMapping(value = "/initViewPublishedData")
+	public String initViewPublishedData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewPublishedData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace";
+	}
+	
+	
+	
+	
 
 }
