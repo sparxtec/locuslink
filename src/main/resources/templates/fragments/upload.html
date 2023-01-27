@@ -75,12 +75,6 @@
 	                                    <span class="bs-stepper-label"></span>
 	                                </button>
 	                            </div>
-<!-- 	                            <div class="step d-none" data-target="#step4">
-	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger4" aria-controls="test-l-4" aria-selected="false">
-	                                    <span class="bs-stepper-circle">4</span>
-	                                    <span class="bs-stepper-label"></span>
-	                                </button>
-	                            </div> -->
 
 	                        </div>  
 	                        
@@ -102,20 +96,50 @@
 													<option value="PIPE" >Steel Pipe</option>
 													<option value="TRANSFORMER">Transformer</option>	
 												    <option value="VALVE">Valve</option>
-												    <option value="WIRE" selected>Wire</option>
-														
-												</select>
-												
+												    <option value="WIRE" selected>Wire</option>													
+												</select>												
 											</div>
 										</div>
 	                                </div>
-	                                
 	                                <div class="text-center px-0">
 	                                    <button type="button" id="continueGoToPage2" class="button button--continue"  >Continue</button>
 	                                </div>
 	                            </div>
 	                            
+	                            
+	                            
+	                           
+   						 <br><br>
+	                      <div class="form-group d-flex flex-column justify-content-center align-items-center text-center">	                                         	                                  
+
+							<div class="card mb-2" style = "text-align:center">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Do you need a template to download ?</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">Select a template for download.</p>													
+								    <button th:id="viewCatalogDataId" data-toggle="tooltip" data-placement="left" title="View all the Catalog data" 
+									        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Download
+								   </button>								   
+									<select  class="form-control mb-3 mt-4 "  id="comboTemplatesId" name="comboTemplatesId" style="width: 240px; margin-left:20; ">
+										<option value="none" >-- Select a Template ---</option>
+										<option value="TPL_2">Wire template 2</option>	
+									    <option value="TPL_3">Wire template 3</option>
+									    <option value="TPL_4">Wire template 4</option>
+										<option value="TPL_5">Wire template 5</option>	
+									    <option value="TPL_6">Wire template 6</option>
+									    <option value="TPL_7">Wire template 7</option>															
+									</select>
+								</div>											
+	                      </div> 
+	                    
+	 
+
+	                                  
 	                        </div>
+	                        
+	                        
+	                        
+	                        
+	                        
 	                    </div>
 	
 	                </div>

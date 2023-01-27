@@ -14,23 +14,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="material_item_type")
-public class MaterialItemType extends Common {
+@Table(name="document_type")
+public class DocumentType extends Common {
 
-	public MaterialItemType() {
+	public DocumentType() {
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="mat_item_type_id", unique=true, nullable = false)
-    private int matItemTypeId;
+    @Column(name="doc_type_id", unique=true, nullable = false)
+    private int docTypeId;
   
-    @Column(name="type_code", nullable = false)
-    private String type_code;
+    @Column(name="doc_type_code", nullable = false)
+    private String docTypeCode;
 
-    @Column(name = "type_desc", nullable = false)
-	private String type_desc; 
+    @Column(name = "doc_type_desc", nullable = false)
+	private String docTypeDesc; 
 	
 	
 
