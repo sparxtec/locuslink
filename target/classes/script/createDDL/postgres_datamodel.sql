@@ -1,5 +1,7 @@
-Table asset_test_type {
-  asset_test_type_id int [pk] 
+
+
+Table product_test_type {
+  product_test_type_id int [pk] 
   type_code varchar
   type_desc varchar
   add_by varchar
@@ -8,8 +10,8 @@ Table asset_test_type {
   update_ts timestamp
 }
 
-Table asset_type {
-  asset_type_id int [pk] 
+Table product_type {
+  product_type_id int [pk] 
   type_code varchar
   type_desc varchar
   add_by varchar
@@ -33,26 +35,26 @@ Table document_type {
 Table universal_catalog {
   ucat_pkId int [pk, increment]
   universal_catalog_id varchar
-  asset_type_id int
-  asset_number varchar
-  asset_name  varchar
-  asset_desc varchar
+  product_type_id int
+  product_number varchar
+  product_name  varchar
+  product_desc varchar
   add_by varchar
   add_ts timestamp
   update_by varchar
   update_ts timestamp
 }
 
-Ref fk_ucat_at { 
-   asset_type.(asset_type_id) - universal_catalog.(asset_type_id)
+Ref fk_ucat_pt { 
+   product_type.(product_type_id) - universal_catalog.(product_type_id)
 }
 
 
 
-Table asset_template {
-  asset_template_id int [pk, increment]
-  asset_type_id int
-  asset_template_desc varchar
+Table product_template {
+  product_template_id int [pk, increment]
+  product_type_id int
+  product_template_desc varchar
   
   unique_attributes_json varchar 
   additional_attributes_json varchar
@@ -63,15 +65,15 @@ Table asset_template {
   update_ts timestamp
 }
 
-Ref fk_atemplate_at { 
-   asset_type.(asset_type_id) - asset_template.(asset_type_id)
+Ref fk_ptemplate_pt { 
+   product_type.(product_type_id) - product_template.(product_type_id)
 }
 
 
 
-Table asset_test {
-  asset_test_id int [pk, increment] 
-  asset_test_type_id int
+Table product_test {
+  product_test_id int [pk, increment] 
+  product_test_type_id int
   ucat_pkId int 
   test_desc varchar
   attributes_json varchar
@@ -80,16 +82,16 @@ Table asset_test {
   update_by varchar
   update_ts timestamp
 }
-Ref fk_att_at { 
-asset_test_type.(asset_test_type_id)  - asset_test.(asset_test_type_id) 
+Ref fk_ptt_pt { 
+product_test_type.(product_test_type_id)  - product_test.(product_test_type_id) 
 }
-Ref fk_at_ucat { 
-  asset_test.(ucat_pkId) > universal_catalog.(ucat_pkId)
+Ref fk_pt_ucat { 
+  product_test.(ucat_pkId) > universal_catalog.(ucat_pkId)
 }
 
 
-Table asset_attribute {
-  asset_attr_id int [pk, increment] 
+Table product_attribute {
+  product_attr_id int [pk, increment] 
   ucat_pkId int
   unique_attributes_json varchar 
   additional_attributes_json varchar
@@ -98,12 +100,12 @@ Table asset_attribute {
   update_by varchar
   update_ts timestamp
 }
-Ref fk_aa_ucat { 
-  asset_attribute.(ucat_pkId) > universal_catalog.(ucat_pkId)
+Ref fk_pa_ucat { 
+  product_attribute.(ucat_pkId) > universal_catalog.(ucat_pkId)
 }
 
-Table asset_attachment {
-  asset_attach_id int [pk, increment] 
+Table product_attachment {
+  product_attach_id int [pk, increment] 
   ucat_pkId int
   doc_type_id int 
   attributes_json varchar
@@ -113,10 +115,10 @@ Table asset_attachment {
   update_ts timestamp
 }
 Ref fk_attach_ucat { 
-  asset_attachment.(ucat_pkId) > universal_catalog.(ucat_pkId)
+  product_attachment.(ucat_pkId) > universal_catalog.(ucat_pkId)
 }
 Ref fk_dt_attach { 
-    document_type.(doc_type_id)  - asset_attachment.(doc_type_id) 
+    document_type.(doc_type_id)  - product_attachment.(doc_type_id) 
 }
 
 
@@ -141,8 +143,8 @@ Table traceability_type {
 }
 
 Table unique_asset {
-  unique_asset_pkId_id int [pk, increment] 
-  unique_asset_id varchar
+  unique_product_pkId_id int [pk, increment] 
+  unique_product_id varchar
   
   ucat_pkId int
   manufacturer_id int

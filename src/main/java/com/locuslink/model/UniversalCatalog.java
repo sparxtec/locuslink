@@ -29,17 +29,17 @@ public class UniversalCatalog extends Common {
     @Column(name="universal_catalog_id", nullable = false)
     private String universaCatalogId;
 
-    @Column(name = "asset_type_id", nullable = false)
-	private int assetTypeId; 
+    @Column(name = "product_type_id", nullable = false)
+	private int productTypeId; 
 	
-    @Column(name = "asset_number", nullable = false)
-	private String assetNumber; 
+    @Column(name = "product_number", nullable = false)
+	private String productNumber; 
     
-    @Column(name = "asset_name", nullable = false)
-	private String assetName; 
+    @Column(name = "product_name", nullable = false)
+	private String productName; 
     
-    @Column(name = "asset_desc", nullable = false)
-	private String assetDesc; 
+    @Column(name = "product_desc", nullable = false)
+	private String productDesc; 
     
 
 }

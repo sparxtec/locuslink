@@ -14,17 +14,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="asset_test_type")
-public class AssetTestType extends Common {
+@Table(name="product_type")
+public class ProductType extends Common {
 
-	public AssetTestType() {
+	public ProductType() {
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="asset_test_type_id", unique=true, nullable = false)
-    private int assetTestTypeId;
+    @Column(name="product_type_id", unique=true, nullable = false)
+    private int productTypeId;
   
     @Column(name="type_code", nullable = false)
     private String type_code;

@@ -14,23 +14,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="asset_template")
-public class AssetTemplate extends Common {
+@Table(name="product_template")
+public class ProductTemplate extends Common {
 
-	public AssetTemplate() {
+	public ProductTemplate() {
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="asset_template_id", unique=true, nullable = false)
-    private int asset_template_id;
+    @Column(name="product_template_id", unique=true, nullable = false)
+    private int productTemplateId;
   
-    @Column(name="asset_type_id", nullable = false)
-    private int asset_type_id;
+    @Column(name="product_type_id", nullable = false)
+    private int productTypeId;
 
-    @Column(name = "asset_template_desc", nullable = false)
-	private String asset_template_desc; 
+    @Column(name = "product_template_desc", nullable = false)
+	private String productTemplateDesc; 
 	
     @Column(name = "unique_attributes_json", nullable = false)
 	private String unique_attributes_json; 
