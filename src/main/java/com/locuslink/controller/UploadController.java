@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
@@ -206,11 +207,14 @@ public class UploadController {
                 metaData // created above, with the only content type and size
             );
             
-            awsS3Client.putObject(putObjectRequest);
+            
+                    
+            PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
             	        		
 			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
 			
 			logger.debug(" CSV fileUpload Worked,  size ->: " + inputfile.getSize());
+			//logger.debug("         result details ->: " + putObjectResult.g);
 
 		} catch (Exception e) {
 			logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
