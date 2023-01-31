@@ -1,11 +1,15 @@
 package com.locuslink.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -21,9 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
@@ -110,60 +119,7 @@ public class UploadController {
 		return "fragments/uploadstep3";
 	}
 	
-	
-	
-	
-	// TODO TEsting
-	
-	 @RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	    public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-		logger.debug("In getAllStagedUploads()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
-  
-		//ArrayList <WireObject> wireObjectList = new ArrayList<WireObject>();
-		
-		List <WireObject> wireObjectList =  new ArrayList<WireObject>(); 
-		
-		WireObject wireObject = new WireObject();
-		wireObject.setMaterialId("100");
-		wireObject.setMaterialName("Copper Wire");
-		wireObject.setMaterialDesc("2 AWG Twisted Wire.");
-		
-		wireObjectList.add(wireObject);
-		wireObjectList.add(wireObject);
-		wireObjectList.add(wireObject);
-		
-	   //	model.addAttribute("wireObjectList", wireObjectList);
-		ObjectMapper mapper = new ObjectMapper();		
-		String json = "";	
-		
-		try {
-			json = mapper.writeValueAsString(wireObjectList);			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		logger.debug("json ->: " + json);
-		
-	//	String = "{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}';
-				
-		
-		//model.addAttribute("lvProjectAllList",json);
-		
-		response.setField("wireObjectList",  json);
-		
-	//	response.setField("wireObjectList",  wireObjectList);
-		
-		
-		return response;
-	 }
-	 
-	 
-	 
-	
-	
-	
 	
 	/**
 	 *  02-23-2023 - C.Sparks
@@ -225,52 +181,103 @@ public class UploadController {
 	
 	
 	
+	// TODO TEsting
 	
-	/*
-	 * MultipartFile Upload - DropZone
-	 */
-	@PostMapping(value = "/processFileUpload")
-	public String processFileUpload(@RequestParam("file") MultipartFile file, Model model,
-			@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO) {
+		 @RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+		    public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-		logger.debug("Starting processFileUpload()..file ->:" + file.getOriginalFilename());
-
-//		// CS 5-14-2020
-//		String itemNumber = docUploadFormDTO.getItemNumber();
-//		String poNumber = docUploadFormDTO.getPurchaseOrderNumber();
-//		boolean isItemUploadProcessing = false;
-//		if (poNumber.equalsIgnoreCase("notUSed") && !itemNumber.isEmpty()) {
-//			logger.debug("Processing an MTR uploading to an ITEM.  {no po}");
-//			isItemUploadProcessing = true;
-//		}
-
-		// CS 5-14-2020 - if this is an Item Upload, store the files in a different
-		// folder location
-		try {
-//			String purchaseOrderNum = "";
-//			String jobFilePath = "";
-//			if (isItemUploadProcessing) {
-//				jobFilePath = "/allItemUploads/Item" + itemNumber;
-//			} else {
-//				EhubPurchaseOrder ehubPurchaseOrder = ehubPurchaseOrderService
-//						.getByPoNumber(docUploadFormDTO.getPurchaseOrderNumber());
-//				purchaseOrderNum = ehubPurchaseOrder.getPurchaseOrderNum();
-//				jobFilePath = "/po" + purchaseOrderNum;
-//			}
-//
-//			fileStorageService.store(file, jobFilePath);
-
-			model.addAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
-			logger.debug("  fileUpload Worked,  size ->: " + file.getSize());
+			logger.debug("In getAllStagedUploads()");
+			GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
+	  
+			// Displays on the UI - Target format for the downloaded xls files from the S3 bucket.
+			List <WireObject> wireObjectList =  new ArrayList<WireObject>(); 
 			
-			model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 			
-			return "fragments/docuploadpage3";
+	        // Gets the list of just files, under the directory structure {tag name}
+	        ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+	                .withBucketName(awsS3BucketName)
+	                .withPrefix(fileStagingFullpath)
+	                .withMarker(fileStagingFullpath);
+	          
+	        Row row = null;
+	        S3Object s3Object;
+	        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
+	        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+	           
+	        	logger.debug("    staging file found ->: " + s3ObjectSummary.getKey());	  
+	            
+	            s3Object = awsS3Client.getObject(awsS3BucketName, s3ObjectSummary.getKey());	            	            
+	            S3ObjectInputStream s3is = s3Object.getObjectContent();
+	           	     	           	            
+	            // Create Workbook for each file in the staging folder
+	            try {
+					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+		            XSSFSheet sheet = workbook.getSheetAt(0);
+		            Iterator<Row> rowIterator = sheet.iterator();
+		            		            
+		        	while (rowIterator.hasNext()) {
+						row = rowIterator.next();
+						
+						// TODO Create the JSON or the java object here
+						// *********************************************************
+						
+						// Columns				
+						int len = row.getLastCellNum();
+						for ( int i = 0; len > i ; i++) {							
+							System.out.print(row.getCell(i).toString());							
+							if(len-1 == i) 	{
+								// print nothing
+							} else {
+								System.out.print(",");
+							}							
+						}
+						System.out.println();
+		        	}						
+						
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}	                  
+	        }
+	        
 
-		} catch (Exception e) {
-			logger.debug("  ERROR fileUpload failed ->: " + e.getMessage());
-			return "fragments/docuploadstep2";
-		}
-	}
+			
+
+			
+			WireObject wireObject = new WireObject();
+			wireObject.setMaterialId("100");
+			wireObject.setMaterialName("Copper Wire");
+			wireObject.setMaterialDesc("2 AWG Twisted Wire.");
+			
+			wireObjectList.add(wireObject);
+			wireObjectList.add(wireObject);
+			wireObjectList.add(wireObject);
+			
+		   //	model.addAttribute("wireObjectList", wireObjectList);
+			ObjectMapper mapper = new ObjectMapper();		
+			String json = "";	
+			
+			try {
+				json = mapper.writeValueAsString(wireObjectList);			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			logger.debug("json ->: " + json);
+			
+		//	String = "{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}';
+					
+			
+			//model.addAttribute("lvProjectAllList",json);
+			
+			response.setField("wireObjectList",  json);
+			
+		//	response.setField("wireObjectList",  wireObjectList);
+			
+			
+			return response;
+		 }
+		 
+		 
+
 
 }
