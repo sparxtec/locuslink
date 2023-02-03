@@ -3,7 +3,7 @@ package com.locuslink.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.locuslink.dto.uploadedFileObjects.WireObject;
+import com.locuslink.dto.uploadedFileObjects.ProductWire;
 
 import lombok.Data;
 
@@ -36,7 +36,7 @@ public class DashboardFormDTO {
 	// Upload Page 3
 	//private List <String[]> dataTableArray = new ArrayList<String[]>();
 		
-	private List <WireObject> dataTableArray = new ArrayList<WireObject>();
+	private List <ProductWire> dataTableArray = new ArrayList<ProductWire>();
 	
 	
 	

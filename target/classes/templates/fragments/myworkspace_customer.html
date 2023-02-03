@@ -23,7 +23,7 @@
          		//colReorder: true,		        
      
      	    	ajax: {
-           		    url: 'getAllStagedUploads',
+           		    url: 'getAllCustomers',
            		 	type: 'POST',
             		contentType: 'application/json',
             		data: function ( data ) {
@@ -34,29 +34,30 @@
                 		return JSON.stringify( myData );
      	        }, 
      	        "dataSrc": function (json) {
-     	        	wireObjectList = json.data.wireObjectList;	     	        	
+     	        	customerList = json.data.customerList;	     	        	
      	        	hideSpinner();		    		
      	      	        	
      	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
      	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
-     	        	console.log(JSON.parse(wireObjectList));
-     	        	return JSON.parse(wireObjectList);     	        	      	        	
+     	        	console.log(JSON.parse(customerList));
+     	        	return JSON.parse(customerList);     	        	      	        	
      	         }					       
         		},  
      
              columns: [	              	
-                 { data: "materialId" },
-                 { data: "materialName" },
-                 { data: "materialDesc" },                      
+                 { data: "customerPkId" },
+                 { data: "customerName" },   
+                 { data: "customerTypeCode" },
+                   
             	],
             	
-            	"createdRow": function( row, data, dataIndex ) {
+/*             	"createdRow": function( row, data, dataIndex ) {
             		//console.log(data.itemNumErrorFlag);            	
             	    if ( data.activeStatus == "N" ) {
             	    	 $(row).addClass('deactivated');
             	    	 // $('tr', row).eq(9).addClass("checked"); 
             	    }                	   
-            	  },
+            	  }, */
              	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
             	          		
            });
@@ -132,9 +133,9 @@
 	                        
 	                           <thead class="thead-light">
 	                              <tr>
-	                                 <th scope="col">Material Id</th>
-	                                 <th scope="col">Material Name</th>
-	                                 <th scope="col">Description</th>
+	                                 <th scope="col">Customer Id</th>
+	                                 <th scope="col">Customer Name</th>	                                 
+	                                 <th scope="col">Type Code</th>
 	                              </tr>
 	                           </thead>
 	                        </table>

@@ -2,9 +2,6 @@ package com.locuslink.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-//import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -23,8 +20,8 @@ public class ProductType extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="product_type_id", unique=true, nullable = false)
-    private int productTypeId;
+    @Column(name="product_type_pkId", unique=true, nullable = false)
+    private int productTypePkId;
   
     @Column(name="type_code", nullable = false)
     private String type_code;

@@ -25,20 +25,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
+import com.amazonaws.services.s3.model.GetObjectTaggingResult;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.Tag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.uploadedFileObjects.WireObject;
+import com.locuslink.dto.uploadedFileObjects.ProductWire;
 /**
  * This is a Spring MVC Controller.
  *
@@ -163,8 +167,11 @@ public class UploadController {
                 metaData // created above, with the only content type and size
             );
             
+            // Tags for easier process on retrieval
+            List<Tag> tags = new ArrayList<Tag>();
+            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+            putObjectRequest.setTagging(new ObjectTagging(tags));
             
-                    
             PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
             	        		
 			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
@@ -181,48 +188,67 @@ public class UploadController {
 	
 	
 	
-	// TODO TEsting
-	
-		 @RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-		    public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-			logger.debug("In getAllStagedUploads()");
-			GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
+	@RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllStagedUploads()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
 	  
 			// Displays on the UI - Target format for the downloaded xls files from the S3 bucket.
-			List <WireObject> wireObjectList =  new ArrayList<WireObject>(); 
-			
-			
-	        // Gets the list of just files, under the directory structure {tag name}
-	        ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
-	                .withBucketName(awsS3BucketName)
-	                .withPrefix(fileStagingFullpath)
-	                .withMarker(fileStagingFullpath);
-	          
-	        Row row = null;
-	        S3Object s3Object;
-	        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
-	        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
-	           
-	        	logger.debug("    staging file found ->: " + s3ObjectSummary.getKey());	  
-	            
-	            s3Object = awsS3Client.getObject(awsS3BucketName, s3ObjectSummary.getKey());	            	            
-	            S3ObjectInputStream s3is = s3Object.getObjectContent();
-	           	     	           	            
-	            // Create Workbook for each file in the staging folder
-	            try {
-					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
-		            XSSFSheet sheet = workbook.getSheetAt(0);
-		            Iterator<Row> rowIterator = sheet.iterator();
-		            		            
-		        	while (rowIterator.hasNext()) {
-						row = rowIterator.next();
-						
-						// TODO Create the JSON or the java object here
-						// *********************************************************
-						
-						// Columns				
-						int len = row.getLastCellNum();
+		List <ProductWire> wireObjectList =  new ArrayList<ProductWire>(); 
+		
+		
+	    // Gets the list of just files, under the directory structure {tag name}
+	    ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+	            .withBucketName(awsS3BucketName)
+	            .withPrefix(fileStagingFullpath)
+	            .withMarker(fileStagingFullpath);
+          
+	    
+		ProductWire productWire = new ProductWire();
+        Row row = null;
+        S3Object s3Object;
+        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+           
+        	System.out.println();
+        	logger.debug("    staging file found ->: " + s3ObjectSummary.getKey());	 
+        	
+            GetObjectTaggingRequest getTaggingRequest = new GetObjectTaggingRequest(awsS3BucketName, s3ObjectSummary.getKey());
+            GetObjectTaggingResult getTagsResult = awsS3Client.getObjectTagging(getTaggingRequest);
+            
+            String tagFileName = "unknown";
+            List <Tag> tagList = getTagsResult.getTagSet();
+            for (Tag tag :tagList ) {
+            	logger.debug("    s3 tags found ->: " + tag.getKey() + " : " + tag.getValue());	 
+            	if (tag.getKey().equals("filename")) {
+            		tagFileName = tag.getValue();
+            	}
+            }
+            
+            
+            s3Object = awsS3Client.getObject(awsS3BucketName, s3ObjectSummary.getKey());	            	            
+            S3ObjectInputStream s3is = s3Object.getObjectContent();           	     	              
+            
+            // Create Workbook for each file in the staging folder
+            try {
+				XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+	            XSSFSheet sheet = workbook.getSheetAt(0);
+	            Iterator<Row> rowIterator = sheet.iterator();
+	            		            
+	        	while (rowIterator.hasNext()) {
+					row = rowIterator.next();
+					
+					// TODO Create the JSON or the java object here
+					// *********************************************************
+					//wireObject = new WireObject();
+					
+					// Columns				
+					int len = row.getLastCellNum();
+
+					if (row.getCell(0).toString() == "DATA" || row.getCell(0).toString().equals("DATA")) {
+												
 						for ( int i = 0; len > i ; i++) {							
 							System.out.print(row.getCell(i).toString());							
 							if(len-1 == i) 	{
@@ -230,52 +256,55 @@ public class UploadController {
 							} else {
 								System.out.print(",");
 							}							
-						}
+						}	
 						System.out.println();
-		        	}						
 						
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}	                  
-	        }
-	        
-
-			
-
-			
-			WireObject wireObject = new WireObject();
-			wireObject.setMaterialId("100");
-			wireObject.setMaterialName("Copper Wire");
-			wireObject.setMaterialDesc("2 AWG Twisted Wire.");
-			
-			wireObjectList.add(wireObject);
-			wireObjectList.add(wireObject);
-			wireObjectList.add(wireObject);
-			
-		   //	model.addAttribute("wireObjectList", wireObjectList);
-			ObjectMapper mapper = new ObjectMapper();		
-			String json = "";	
-			
-			try {
-				json = mapper.writeValueAsString(wireObjectList);			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			logger.debug("json ->: " + json);
-			
-		//	String = "{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":100,"materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}';
+						// Key Data
+						productWire = new ProductWire();
+						productWire.setUploadedFilename(tagFileName);
+						productWire.setProductType("WIRE");						
+						productWire.setProductNumber(row.getCell(1).toString());
+						productWire.setProductName(row.getCell(2).toString());		
+						productWire.setProductDesc(row.getCell(3).toString());	
+						
+						// Product Specific Data - Unique
+						productWire.setUaWireSize("4 awg");
+						productWire.setUa2("ua2");
+						productWire.setUa3("ua3");
+						productWire.setUa4("ua4");
+						productWire.setUa5("ua5");
+						
+						// Product Specific Data - Additional
+						productWire.setAaVoltage("600v");
+						productWire.setAa21("aa21");
+						productWire.setAa22("aa22");
+						productWire.setAa23("aa23");
+						
+						wireObjectList.add(productWire);
+		        	} 
 					
-			
-			//model.addAttribute("lvProjectAllList",json);
-			
-			response.setField("wireObjectList",  json);
-			
-		//	response.setField("wireObjectList",  wireObjectList);
-			
-			
-			return response;
-		 }
+		
+	        	}	
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}	                  
+        }
+        
+
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(wireObjectList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("wireObjectList",  json);
+
+		return response;
+	 }
 		 
 		 
 

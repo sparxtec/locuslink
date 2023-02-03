@@ -53,22 +53,18 @@
      
              columns: [	 
              	
-                 { data: "materialId" },
-                 { data: "materialName" },
-               //  { data: "lastName" },
-                 { data: "materialDesc" },
-              //   { data: "region" },
-               //  { data: "role" } ,
+                 { data: "uploadedFilename" },
+                 { data: "productType" },
+                 { data: "productNumber" },
+                 { data: "productName" },
+                 { data: "productDesc" },
                  { data: "activeStatus" ,
                  	"render": function(data, type, row, meta){	
-                 		if('Y' == row['activeStatus']){
-                 			
+                 		if('Y' == row['activeStatus']){                 			
                  			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeStatus+"' onclick='deactivateRow(this)' class='button button--text'>Deactivate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
-                         }
-                 		else
-                 			{
+                         } else	{
                  			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeStatus+"' onclick='deactivateRow(this)' class='button button--text'>Activate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
-                 			}
+                 		 }
                          return data;
                       }},
                       
@@ -76,15 +72,13 @@
             	],
             	
             	"createdRow": function( row, data, dataIndex ) {
-            		//console.log(data.itemNumErrorFlag);
-            	
+            		//console.log(data.itemNumErrorFlag);            	
             	    if ( data.activeStatus == "N" ) {
             	    	 $(row).addClass('deactivated');
             	    	 // $('tr', row).eq(9).addClass("checked"); 
             	    }    
             	   
             	  },
-            	  //dom: '<"datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3" <"datatable-toolbar-group" <"#addbtn">> <"datatable-toolbar-group" f> ><t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
             	  
         		
@@ -133,12 +127,9 @@
   </head>
   
   <body>
+ 
+<!-- 	 <input type="hidden" id="dashboardFormDTO"  name="dashboardFormDTO" th:value="${dashboardFormDTO}">  -->
 
-<!-- 	 <input type="hidden" id="woNumber" name="woNumber" >
-     <input type="hidden" id="poNumber" name="poNumber" >
-     <input type="hidden" id="itemNumber" name="itemNumber" > -->  
-	 <input type="hidden" id="dashboardFormDTO"  name="dashboardFormDTO" th:value="${dashboardFormDTO}"> 
-	-->
            <section class="de-component h-100">
            
             <!--    <div class="de-component__container"> -->
@@ -214,12 +205,11 @@
 		                        
 		                           <thead class="thead-light">
 		                              <tr>
-		                                 <th scope="col">Material Id</th>
-		                                 <th scope="col">Material Name</th>
+		                                 <th scope="col">Filename</th>
+		                                 <th scope="col">Product Type</th>
+		                                 <th scope="col">Number</th>
+		                                 <th scope="col">Name</th>
 		                                 <th scope="col">Description</th>
-<!-- 		                                 <th scope="col">Discipline</th>
-		                                 <th scope="col">Region</th>
-		                                 <th scope="col">Role</th> -->
 		                                 <th scope="col">Action</th>
 		                              </tr>
 		                           </thead>

@@ -23,11 +23,11 @@ public class ProductTemplate extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="product_template_id", unique=true, nullable = false)
-    private int productTemplateId;
+    @Column(name="product_template_pkId", unique=true, nullable = false)
+    private int productTemplatePkId;
   
-    @Column(name="product_type_id", nullable = false)
-    private int productTypeId;
+    @Column(name="product_type_pkId", nullable = false)
+    private int productTypePkId;
 
     @Column(name = "product_template_desc", nullable = false)
 	private String productTemplateDesc; 

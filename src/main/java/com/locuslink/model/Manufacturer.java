@@ -20,8 +20,8 @@ public class Manufacturer extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="manufacturer_id", unique=true, nullable = false)
-    private int manufacturerId;
+    @Column(name="manufacturer_pkId", unique=true, nullable = false)
+    private int manufacturerPkId;
   
     @Column(name="name", nullable = false)
     private String name;

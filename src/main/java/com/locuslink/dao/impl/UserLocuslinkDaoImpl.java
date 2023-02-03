@@ -55,8 +55,8 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	}
 	
 	@Override
-	public UserLocuslink getById(int UserLocuslinkId) {	
-		return this.sessionFactory.getCurrentSession().get(UserLocuslink.class, UserLocuslinkId);
+	public UserLocuslink getById(int pkid) {	
+		return this.sessionFactory.getCurrentSession().get(UserLocuslink.class, pkid);				
 	}
 	
 	

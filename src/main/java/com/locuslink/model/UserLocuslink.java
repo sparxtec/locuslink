@@ -27,8 +27,8 @@ public class UserLocuslink extends Common {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_locuslink_id", unique = true, nullable = false)
-	private int userLocusLinkId;
+	@Column(name = "user_locuslink_pkid", unique = true, nullable = false)
+	private int userLocusLinkPkId;
 	
 	@Column(name = "user_type_code", nullable = false)
 	private String userTypeCode;

@@ -23,8 +23,8 @@ public class DocumentType extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="doc_type_id", unique=true, nullable = false)
-    private int docTypeId;
+    @Column(name="doc_type_pkId", unique=true, nullable = false)
+    private int docTypePkId;
   
     @Column(name="doc_type_code", nullable = false)
     private String docTypeCode;
