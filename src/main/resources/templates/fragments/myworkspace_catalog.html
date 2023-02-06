@@ -10,11 +10,12 @@
     	$(document).ready(function() {	
      		hideSpinner();	
      		
-     		if( $('#customerDataTable').length){
+     		if( $('#catalogDataTable').length){
      			
-     			var table = $('#customerDataTable').DataTable( {
+     			var table = $('#catalogDataTable').DataTable( {
             	retrieve: true,
      	 		searchHighlight: true,
+     	 		searching:true,
              	responsive: true,		        
              	"paging":   true,	
              	scrollCollapse: true,
@@ -23,31 +24,34 @@
          		//colReorder: true,		        
      
      	    	ajax: {
-           		    url: 'getAllCustomers',
+           		    url: 'getAllCatalog',
            		 	type: 'POST',
             		contentType: 'application/json',
             		data: function ( data ) {
             			showSpinner();            	
-            			var myData = {version:"1.0", clientId:"gim"};
+            			var myData = {version:"1.0", clientId:"locuslink"};
             			var innerData = {};    
             			myData["data"] = innerData;	                  			
                 		return JSON.stringify( myData );
      	        }, 
      	        "dataSrc": function (json) {
-     	        	customerList = json.data.customerList;	     	        	
+     	        	universalcataloglist = json.data.universalcataloglist;	     	        	
      	        	hideSpinner();		    		
      	      	        	
      	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
      	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
-     	        	console.log(JSON.parse(customerList));
-     	        	return JSON.parse(customerList);     	        	      	        	
+     	        	console.log(JSON.parse(universalcataloglist));
+     	        	return JSON.parse(universalcataloglist);     	        	      	        	
      	         }					       
         		},  
      
              columns: [	              	
-                 { data: "customerPkId" },
-                 { data: "customerName" },   
-                 { data: "customerTypeCode" },
+                 { data: "ucatPkId" },
+                 { data: "universaCatalogId" },   
+                 { data: "productType.typeCode" },                   
+                 { data: "productNumber" },                 
+                 { data: "productName" },
+                 { data: "productDesc" },
                    
             	],
             	
@@ -66,7 +70,7 @@
 
 	
  		// SEARCH FILTER
-  		$('#customerDataTable_filter input').keyup(function(){
+  		$('#catalogDataTable_filter input').keyup(function(){
  			table.search($(this).val()).draw() ;
  		}); 
 
@@ -106,7 +110,7 @@
 				<div class="card">
 
   
-					<div class="card-header"><i class="fas fa-user mr-2"></i> Customer Data:
+					<div class="card-header"><i class="fas fa-user mr-2"></i> Universal Catalog Data:
 			
 					</div>
 				
@@ -122,20 +126,23 @@
 						 	</div>
 						 
 						 	<div class="datatable-toolbar-group">
-						 		<div id="customerDataTable_filter" class="dataTables_filter">
-						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="customerDataTable"></label>
+						 		<div id="catalogDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
 						 		</div>
 						 	</div>
 						 </div>	                     
 	                     
 		                 <div id="xxxx">		                     
-	                        <table id="customerDataTable" class="bg-white border border-top-0">
+	                        <table id="catalogDataTable" class="bg-white border border-top-0">
 	                        
 	                           <thead class="thead-light">
 	                              <tr>
-	                                 <th scope="col">Customer Id</th>
-	                                 <th scope="col">Customer Name</th>	                                 
-	                                 <th scope="col">Type Code</th>
+	                                 <th scope="col">Catalog Id</th>
+	                                 <th scope="col">Universal Catalog ID</th>	
+	                                 <th scope="col">Type</th>
+	                                 <th scope="col">Number</th>
+ 									 <th scope="col">Name</th>
+ 	                                  <th scope="col">Description</th>	   
 	                              </tr>
 	                           </thead>
 	                        </table>

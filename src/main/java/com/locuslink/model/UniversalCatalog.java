@@ -2,10 +2,10 @@ package com.locuslink.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-//import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -29,9 +29,14 @@ public class UniversalCatalog extends Common {
     @Column(name="universal_catalog_id", nullable = false)
     private String universaCatalogId;
 
-    @Column(name = "product_type_pkId", nullable = false)
-	private int productTypePkId; 
+    //@Column(name = "product_type_pkId", nullable = false)
+	//private int productTypePkId; 
 	
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_type_pkId", nullable = false)
+	private ProductType productType; 
+   
+   
     @Column(name = "product_number", nullable = false)
 	private String productNumber; 
     

@@ -13,7 +13,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -22,23 +21,24 @@ import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.locuslink.dao.CustomerDao;
+import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.model.Customer;
+import com.locuslink.model.UniversalCatalog;
 
 /**
- * This is the DAO implementation class for Customer.
+ * This is the DAO implementation class for UniversalCatalog.
  *  
  * @author C.Sparks
  * @since 1.0.0 - Feb 01, 2023 - Initial version
  */
 @Transactional
-@Repository(CustomerDao.BEAN_NAME)
-public class CustomerDaoImpl extends DaoSupport implements CustomerDao, ApplicationContextAware {
+@Repository(UniversalCatalogDao.BEAN_NAME)
+public class UniversalCatalogDaoImpl extends DaoSupport implements UniversalCatalogDao, ApplicationContextAware {
     
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-    public CustomerDaoImpl() {
+    public UniversalCatalogDaoImpl() {
     }
     
 	@Override
@@ -50,30 +50,30 @@ public class CustomerDaoImpl extends DaoSupport implements CustomerDao, Applicat
 	}
 	
 	@Override
-	public Customer getById(int pkid) {	
-		return this.sessionFactory.getCurrentSession().get(Customer.class, pkid);				
+	public UniversalCatalog getById(int pkid) {	
+		return this.sessionFactory.getCurrentSession().get(UniversalCatalog.class, pkid);				
 	}
 	
 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<Customer>  getAll() {					
-		DetachedCriteria criteria= DetachedCriteria.forClass(Customer.class, "customer");  		
+	public  List<UniversalCatalog>  getAll() {					
+		DetachedCriteria criteria= DetachedCriteria.forClass(UniversalCatalog.class, "universalCatalog");  		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
 	//	criteria.addOrder(Order.asc ("customerPkId"));
-		return (List<Customer>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
+		return (List<UniversalCatalog>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
 	}
 	
 
 	@Override
-	public void saveOrUpdate(Customer customer) {
-		this.sessionFactory.getCurrentSession().saveOrUpdate(customer);
+	public void saveOrUpdate(UniversalCatalog universalCatalog) {
+		this.sessionFactory.getCurrentSession().saveOrUpdate(universalCatalog);
 	}	
 	
 	@Override
-	public void delete(Customer customer) {
-		this.sessionFactory.getCurrentSession().delete(customer);
+	public void delete(UniversalCatalog universalCatalog) {
+		this.sessionFactory.getCurrentSession().delete(universalCatalog);
 	}
 	
 }

@@ -14,12 +14,12 @@
      			
      			var table = $('#customerDataTable').DataTable( {
             	retrieve: true,
-     	 		searchHighlight: false,
+     	 		searchHighlight: true,
              	responsive: true,		        
              	"paging":   true,	
              	scrollCollapse: true,
              	scrollY: 'calc(100vh - 35rem)',	
-             	order: [1, 'asc' ],		        
+             	order: [0, 'asc' ],		        
          		//colReorder: true,		        
      
      	    	ajax: {
@@ -66,9 +66,9 @@
 
 	
  		// SEARCH FILTER
-/*  		$('#materialDataTable_filter input').keyup(function(){
+  		$('#customerDataTable_filter input').keyup(function(){
  			table.search($(this).val()).draw() ;
- 		}); */
+ 		}); 
 
  		
    		$('#previous').click(function() {					
@@ -122,8 +122,8 @@
 						 	</div>
 						 
 						 	<div class="datatable-toolbar-group">
-						 		<div id="materialDataTable_filter" class="dataTables_filter">
-						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="materialDataTable"></label>
+						 		<div id="customerDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="customerDataTable"></label>
 						 		</div>
 						 	</div>
 						 </div>	                     

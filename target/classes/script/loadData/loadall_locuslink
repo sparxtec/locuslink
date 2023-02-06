@@ -1,3 +1,91 @@
-INSERT INTO locuslink.customer
-(customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
-VALUES(1, 'Utility', 'Duke energy', 'Y', 'csparks', '2023-02-02', NULL, NULL);
+
+INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
+     VALUES(1, 'Utility', 'Duke Energy', 'Y', 'csparks', '2023-02-02', NULL, NULL);     
+INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
+     VALUES(2, 'Utility', 'Acme Utilities', 'Y', 'csparks', '2023-02-02', NULL, NULL);     
+INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
+     VALUES(3, 'Gas Utility', 'Piedmont Natural Gas', 'Y', 'csparks', '2023-02-02', NULL, NULL);
+            
+INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
+    VALUES(50, 'SouthEastern Wire', 'csparks', '2023-02-01', NULL, NULL);    
+INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
+    VALUES(51, 'Big Weld Transformer Mfg', 'csparks', '2023-02-01', NULL, NULL);    
+INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
+    VALUES(52, 'Cooper Valve Co', 'csparks', '2023-02-01', NULL, NULL);    
+INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
+    VALUES(53, 'United Materials', 'csparks', '2023-02-01', NULL, NULL);    
+INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
+    VALUES(54, 'Loose Nut Supply ', 'csparks', '2023-02-01', NULL, NULL);
+
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(3, 'WIRE', '14 AWG Twister Bare Copper', 'csparks', '2023-02-01', NULL, NULL);
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(4, 'WIRE', '18 AWG Wire Spool', 'csparks', '2023-02-01', NULL, NULL);
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(5, 'XFORMER', 'Over Head Transformer 440v', 'csparks', '2023-02-01', NULL, NULL);   
+            
+INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, project_name, add_by, add_ts, update_by, update_ts)
+   VALUES(100, 1, 'TRANS', 'Transmission Lines _ Install Hwy 378', 'csparks', '2023-02-01', NULL, NULL);     
+INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, project_name, add_by, add_ts, update_by, update_ts)
+   VALUES(101, 1, 'DISTR', 'Distribution Service - 111 Main Street', 'csparks', '2023-02-01', NULL, NULL);        
+INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, project_name, add_by, add_ts, update_by, update_ts)
+   VALUES(102, 1, 'DISTR', 'Distribution - Pole Replacement - 300 Main Street', 'csparks', '2023-02-01', NULL, NULL); 
+   
+INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_date, po_number, po_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(300, 1, 100, '2023-02-01', '1007100', 'Wire', 'csparks', '023-02-01', NULL, NULL);       
+INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_date, po_number, po_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(301, 1, 100, '2023-02-01', '1007100', 'Pole', 'csparks', '023-02-01', NULL, NULL);    
+INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_date, po_number, po_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(302, 1, 100, '2023-02-01', '1007100', 'Transformer', 'csparks', '023-02-01', NULL, NULL);  
+   
+    
+INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid,  product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(800, 'xxxx.xxxxx.xxxxxx', 3,  '10007200', 'Copper Wire', 'Bare Copper Wire 14 AWG Twisted Pair', 'csparks', NULL, NULL, NULL);
+INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid,  product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(801, 'xxxx.xxxxx.xxxxxx', 3,  '10007300', 'Shielded Wire', '4 AWG Shielded Wire', 'csparks', NULL, NULL, NULL);   
+INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid, product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(802, 'xxxx.xxxxx.xxxxxx', 3,  '20004100', 'Transformer', '440v Transformer', 'csparks', NULL, NULL, NULL);
+  
+INSERT INTO locuslink.traceability_type (traceability_type_pkid, traceability_type_code, traceability_type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(40, 'Heat', 'Heat Number', 'csparks', '2023-02-01', NULL, NULL);
+INSERT INTO locuslink.traceability_type (traceability_type_pkid, traceability_type_code, traceability_type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(41, 'Serial', 'Serial Number', 'csparks', '2023-02-01', NULL, NULL);   
+   
+   
+   
+   
+INSERT INTO locuslink.unique_asset (unique_asset_pkid, unique_asset_id, ucat_pkid, manufacturer_pkid, traceability_type_pkid, customer_pkid, trace_code, add_by, add_ts, update_by, update_ts)
+    VALUES(900, 'xxxx.xxxx.xxxxx.xxxxx', 800, 50, 41,  1, 'Serial_34343456', 'csparks', '2023-02-01', NULL, NULL); 
+
+INSERT INTO locuslink.unique_asset (unique_asset_pkid, unique_asset_id, ucat_pkid, manufacturer_pkid, traceability_type_pkid, customer_pkid, trace_code, add_by, add_ts, update_by, update_ts)
+    VALUES(901, 'xxxx.xxxx.xxxxx.xxxxx', 800, 50, 41,  1, 'Serial_1234567', 'csparks', '2023-02-01', NULL, NULL);   
+
+INSERT INTO locuslink.unique_asset (unique_asset_pkid, unique_asset_id, ucat_pkid, manufacturer_pkid, traceability_type_pkid, customer_pkid, trace_code, add_by, add_ts, update_by, update_ts)
+   VALUES(902, 'xxxx.xxxx.xxxxx.xxxxx', 801, 51, 41,  1, 'Serial_1234567', 'csparks', '2023-02-01', NULL, NULL);     
+
+INSERT INTO locuslink.unique_asset (unique_asset_pkid, unique_asset_id, ucat_pkid, manufacturer_pkid, traceability_type_pkid, customer_pkid, trace_code, add_by, add_ts, update_by, update_ts)
+    VALUES(903, 'xxxx.xxxx.xxxxx.xxxxx', 801, 52, 41,  1, 'Serial_1234567', 'csparks', '2023-02-01', NULL, NULL);     
+
+INSERT INTO locuslink.unique_asset (unique_asset_pkid, unique_asset_id, ucat_pkid, manufacturer_pkid, traceability_type_pkid, customer_pkid, trace_code, add_by, add_ts, update_by, update_ts)
+    VALUES(904, 'xxxx.xxxx.xxxxx.xxxxx', 802, 53, 40, 1, 'Heat_98765430', 'csparks', '2023-02-01', NULL, NULL);             
+   
+   
+   
+
+   
+   INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(600, 300, 900, '1', '14 AWG WIRE - 1000 feet', 'csparks', NULL, NULL);      
+INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(601, 300, 900, '2', '14 AWG WIRE - 250feet', 'csparks', NULL, NULL);      
+INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(602, 300, 901, '3', '04 AWG WIRE - 500 feet', 'csparks', NULL, NULL);      
+INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(603, 300, 902, '4', '04 AWG - 100 feet', 'csparks', NULL, NULL);      
+INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(604, 300, 903, '4', '08 AWG - 750 feet', 'csparks', NULL, NULL);     
+INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_pkid, po_line_number, po_line_desc, add_by, update_by, update_ts)
+   VALUES(605, 300, 904, '5', 'Over Head Transformer 440v', 'csparks', NULL, NULL);   
+   
+   
+   
+   

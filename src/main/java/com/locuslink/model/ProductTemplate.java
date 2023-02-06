@@ -26,8 +26,8 @@ public class ProductTemplate extends Common {
     @Column(name="product_template_pkId", unique=true, nullable = false)
     private int productTemplatePkId;
   
-    @Column(name="product_type_pkId", nullable = false)
-    private int productTypePkId;
+    @Column(name="ucat_pkId", unique=true, nullable = false)
+    private int ucatPkId;
 
     @Column(name = "product_template_desc", nullable = false)
 	private String productTemplateDesc; 

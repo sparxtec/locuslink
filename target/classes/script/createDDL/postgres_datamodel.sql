@@ -1,15 +1,5 @@
 
 
-Table product_test_type {
-  product_test_type_pkid int [pk] 
-  type_code varchar
-  type_desc varchar
-  add_by varchar
-  add_ts timestamp
-  update_by varchar
-  update_ts timestamp
-}
-
 Table product_type {
   product_type_pkid int [pk] 
   type_code varchar
@@ -44,7 +34,6 @@ Table universal_catalog {
   update_by varchar
   update_ts timestamp
 }
-
 Ref fk_ucat_pt { 
    product_type.(product_type_pkid) - universal_catalog.(product_type_pkid)
 }
@@ -53,40 +42,17 @@ Ref fk_ucat_pt {
 
 Table product_template {
   product_template_pkid int [pk, increment]
-  product_type_pkid int
+  ucat_pkid int 
   product_template_desc varchar
-  
   unique_attributes_json varchar 
   additional_attributes_json varchar
-  
   add_by varchar
   add_ts timestamp
   update_by varchar
   update_ts timestamp
 }
-
 Ref fk_ptemplate_pt { 
-   product_type.(product_type_pkid) - product_template.(product_type_pkid)
-}
-
-
-
-Table product_test {
-  product_test_pkid int [pk, increment] 
-  product_test_type_pkid int
-  ucat_pkid int 
-  test_desc varchar
-  attributes_json varchar
-  add_by varchar
-  add_ts timestamp
-  update_by varchar
-  update_ts timestamp
-}
-Ref fk_ptt_pt { 
-product_test_type.(product_test_type_pkid)  - product_test.(product_test_type_pkid) 
-}
-Ref fk_pt_ucat { 
-  product_test.(ucat_pkid) > universal_catalog.(ucat_pkid)
+   universal_catalog.(ucat_pkid) - product_template.(ucat_pkid)
 }
 
 
@@ -106,7 +72,7 @@ Ref fk_pa_ucat {
 
 Table product_attachment {
   product_attach_pkid int [pk, increment] 
-  ucat_pkid int
+  unique_asset_pkid int 
   doc_type_pkid int 
   attributes_json varchar
   add_by varchar
@@ -114,11 +80,12 @@ Table product_attachment {
   update_by varchar
   update_ts timestamp
 }
-Ref fk_attach_ucat { 
-  product_attachment.(ucat_pkid) > universal_catalog.(ucat_pkid)
-}
+
 Ref fk_dt_attach { 
     document_type.(doc_type_pkid)  - product_attachment.(doc_type_pkid) 
+}
+Ref fk_attach_ua { 
+  product_attachment.(unique_asset_pkid) > unique_asset.(unique_asset_pkid)
 }
 
 
@@ -145,14 +112,11 @@ Table traceability_type {
 Table unique_asset {
   unique_asset_pkid int [pk, increment] 
   unique_asset_id varchar
-  
   ucat_pkid int
   manufacturer_pkid int
   traceability_type_pkid int
-  asset_published_pkid int
-  
+  customer_pkid int
   trace_code varchar
-   
   add_by varchar
   add_ts timestamp
   update_by varchar
@@ -161,28 +125,31 @@ Table unique_asset {
 Ref fk_ua_ucat { 
   unique_asset.(ucat_pkid) > universal_catalog.(ucat_pkid)
 }
-Ref fk_ua_mfg { 
-   manufacturer.(manufacturer_pkid) - unique_asset.(manufacturer_pkid)
-}
 Ref fk_ua_tt { 
    traceability_type.(traceability_type_pkid) - unique_asset.(traceability_type_pkid)
 }
-
+Ref fk_ua_cust { 
+  unique_asset.(customer_pkid) > customer.(customer_pkid)
+}
+Ref kucat_mfg { 
+   manufacturer.(manufacturer_pkid) - unique_asset.(manufacturer_pkid)
+}
 
 
 Table asset_published {
     asset_published_pkid int [pk, increment]
-    
+    unique_asset_pkid int 
     published_date timestamp
-    
     active_flag varchar
+    comment varchar
 	  add_by varchar
 	  add_ts timestamp
     update_by varchar
   	update_ts timestamp
 }
-
-
+Ref fk_pa_ua { 
+   unique_asset.(unique_asset_pkid) - asset_published.(unique_asset_pkid)
+}
 
 
 Table purchase_order {
@@ -200,17 +167,17 @@ Table purchase_order {
   update_by varchar
   update_ts timestamp
 }
+Ref fk_po_proj { 
+  purchase_order.(project_pkid) > project.(project_pkid)
+}
 
 
 Table purchase_order_line {
   po_line_pkid int [pk, increment] 
-  
   po_pkid int
   unique_asset_pkid int
-  
   po_line_number varchar
   po_line_desc varchar
-  
   add_by varchar
   update_by varchar
   update_ts timestamp
@@ -255,9 +222,6 @@ Table project {
 Ref fk_project_customer { 
    customer.(customer_pkid) - project.(customer_pkid)
 }
-Ref fk_project_po { 
-  purchase_order.(project_pkid) > project.(project_pkid)
-}
 
 
 
@@ -273,4 +237,3 @@ Table user_locuslink {
     update_by varchar
   	update_ts timestamp
 }
-

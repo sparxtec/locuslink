@@ -22,8 +22,10 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.CustomerDao;
+import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.model.Customer;
+import com.locuslink.model.UniversalCatalog;
 /**
  * This is a Spring MVC Controller.
  *
@@ -47,6 +49,14 @@ public class MyWorkspaceController {
     @Autowired
     private CustomerDao customerDao;
 
+    @Autowired
+    private UniversalCatalogDao universalCatalogDao;
+    
+    
+    
+    
+    
+    
 	@PostMapping(value = "/initMyWorkspace")
 	public String initMyWorkspace (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initMyWorkspace()...");
@@ -57,7 +67,9 @@ public class MyWorkspaceController {
 	}
 
 
-	
+	//*************************************************************//
+	//********         C U S T O M E R               **************//
+	//*************************************************************//
 	
 	@PostMapping(value = "/initViewCustomerData")
 	public String initViewCustomerData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
@@ -72,8 +84,8 @@ public class MyWorkspaceController {
 	@RequestMapping(value = "/getAllCustomers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-		logger.debug("In getAllStagedUploads()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
+		logger.debug("In getAllCustomers()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllCustomers");
 	  			
 		List <Customer> customerList =  customerDao.getAll();
 		if (customerList == null) {
@@ -98,6 +110,12 @@ public class MyWorkspaceController {
 	
 	
 	
+	
+	
+	//*************************************************************//
+	//********      A C C E S S - for customers      **************//
+	//*************************************************************//
+	
 	@PostMapping(value = "/initViewCustomerPermissionData")
 	public String initViewCustomerPermissionData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initViewCustomerPermissionData()...");
@@ -109,16 +127,53 @@ public class MyWorkspaceController {
 	
 	
 	
+	
+	//*************************************************************//
+	//*******      U N I V E R S A L  C A T A L O G    ************//
+	//*************************************************************//
+		
 	@PostMapping(value = "/initViewCatalogData")
 	public String initViewCatalogData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initViewCatalogData()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/myworkspace";
+		return "fragments/myworkspace_catalog";
 	}
 	
+	@RequestMapping(value = "/getAllCatalog", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllCatalog(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
+		logger.debug("In getAllCatalog()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllCatalog");
+	  			
+		List <UniversalCatalog> universalCatalogList =  universalCatalogDao.getAll();
+		if (universalCatalogList == null) {
+			logger.debug("  Note:  No Data Found......");
+		}
+		
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(universalCatalogList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("universalcataloglist",  json);
+
+		return response;
+	 }
+	
+	
+	
+	
+	
+	//*************************************************************//
+	//*******            A S S E T  D A T A            ************//
+	//*************************************************************//
 
 	@PostMapping(value = "/initViewAssetData")
 	public String initViewAssetData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
@@ -130,7 +185,14 @@ public class MyWorkspaceController {
 	}
 	
 	
-
+	
+	
+	
+	
+	
+	//*************************************************************//
+	//*******         P U B L I S H E D                ************//
+	//*************************************************************//
 	@PostMapping(value = "/initViewPublishedData")
 	public String initViewPublishedData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initViewPublishedData()...");
