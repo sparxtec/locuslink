@@ -89,8 +89,9 @@ CREATE TABLE "unique_asset" (
   "unique_asset_id" varchar,
   "ucat_pkid" int,
   "manufacturer_pkid" int,
+  "customer_pkid" int,    
   "traceability_type_pkid" int,
-  "customer_pkid" int,
+    
   "trace_code" varchar,
   "add_by" varchar,
   "add_ts" timestamp,

@@ -22,9 +22,11 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.CustomerDao;
+import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.model.Customer;
+import com.locuslink.model.UniqueAsset;
 import com.locuslink.model.UniversalCatalog;
 /**
  * This is a Spring MVC Controller.
@@ -52,7 +54,8 @@ public class MyWorkspaceController {
     @Autowired
     private UniversalCatalogDao universalCatalogDao;
     
-    
+    @Autowired
+    private UniqueAssetDao uniqueAssetDao;
     
     
     
@@ -181,10 +184,34 @@ public class MyWorkspaceController {
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/myworkspace";
+		return "fragments/myworkspace_asset";
 	}
 	
-	
+	@RequestMapping(value = "/getAllAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllAsset()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
+	  			
+		List <UniqueAsset> uniqueAssetList =  uniqueAssetDao.getAll();
+		if (uniqueAssetList == null) {
+			logger.debug("  Note:  No Data Found......");
+		}
+		
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(uniqueAssetList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("uniqueassetlist",  json);
+
+		return response;
+	 }
 	
 	
 	
