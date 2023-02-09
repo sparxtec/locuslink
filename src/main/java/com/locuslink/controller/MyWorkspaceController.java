@@ -226,10 +226,12 @@ public class MyWorkspaceController {
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/myworkspace";
+		return "fragments/publish";
 	}
 	
 	
+	
+
 	
 	
 

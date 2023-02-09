@@ -1,0 +1,453 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Full page pdf viewer</title>
+
+    <!-- StyleSheets - ORDER IS IMPORTANT -->
+    <link href="css/de-fabrication-styles.css" rel="stylesheet">
+    
+    <style>
+    	body {
+    		overflow: hidden;
+    	}
+
+    </style>
+
+   
+<!-- 	<script type="text/javascript" src="js/jquery.hideseek.min.js"></script>  	
+	<script src="js/pdfobject.js"></script> -->
+	
+	<script>
+	$(document).ready(function() {
+		
+/* 		// Use this to toggle the Y/N buttons
+		//if($("#barcodeReviewContainer").css("visibility")=="visible"){
+		var screenId = $('#screenId').val();
+		console.log ("screenId ->: " + screenId);
+		
+		var poNumber = $('#poNumber').val();
+		var fileName = $('#fileName').val();
+		var isItem = $('#isItem').val();
+		console.log("poNumber = " + poNumber); 
+		console.log("fileName = " + fileName);
+		console.log("isItem = " + isItem); */
+		
+/* 		if(isItem == 'Y') {
+			PDFObject.embed('/pdfViewer/allItemUploads/' + fileName, '#pdf_fullpage');
+		} else {
+			PDFObject.embed('/pdfViewer/po' + poNumber + '/' + fileName, '#pdf_fullpage');
+		} */
+		
+		
+		
+		$('#buttonBackId').click(function() {													
+			showSpinner();		 		
+			submitFormAjaxHTML('initTestHarness', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");	 
+		});
+		
+		
+ 		$('#goBackToMTRCardList').click(function(e) {
+			console.log("goBackToMTRCardList clicked");
+			e.preventDefault();
+			var poNumber = $('#poNumber').val();
+			console.log("go to page2, poNumber ->:"  + poNumber);	
+			$('#pop').popover('hide');
+			//
+				
+			if (screenId == "manage_2") {
+				showSpinner();
+				submitFormAjaxHTML('initManage_2', $( "#barCodeFormDTO_pdf" ).serialize(), "commonResponse");
+			} else {
+				$('#barcodeReviewContainer').html("");
+				$('#barcodeReviewContainer').hide();//("visibility", "hidden");
+				$('#barcodePrint2Body').show({complete:function(){
+		        	if (typeof(Storage) !== "undefined") {
+					var el = sessionStorage.getItem("cardIndex") - 1;
+					$(".card").eq(el).css({"transition": "all 1s", "background-color": "#e0f6fb"});			
+					setTimeout(function(){ 
+						$(".card").eq(el).css("background-color", "white");
+					}, 2000);
+					if(el){
+					    $([document.documentElement, document.body]).animate({
+					    	scrollTop: $(".card").eq(el).offset().top - 200
+					    }, 1000);   
+					}else{
+						console.log("undeifned e1");
+					}
+					// $('.de-header-nav--simple .de-header-nav__item:nth-child(2) span').html("<span id='result' style='color: white;margin-left: 50px;'>" + el + "</span>");
+				} else {
+					console.log("no storage");
+				}
+				}});
+			}
+	
+		});
+		
+
+/* 		var mfgName = $('#mfgName').val();
+		var poItemDesc = $('#poItemDesc').val();
+        //console.log("mfgName = " + mfgName);
+        //console.log("poItemDesc = " + poItemDesc); */
+		
+		$('#pop').popover();
+		$('#pop').attr('data-content', 'Name: ' + mfgName + ' Description:' + poItemDesc);
+		
+		$('#metaName').text(mfgName);
+		$('#metaDesc').text(poItemDesc);
+
+		
+		// C.Sparks 4-3-2020
+		//   YES button for Accept modal , after entry, click SAVE will save to the back end, return to manage, and display green message in header
+		$('#confirmDocs').click(function() {  
+			console.log("click confirmDocs");
+			
+			$('#pop').popover('hide');
+			
+			showSpinner();			
+			
+       		var qDocReqLineId_2 = $('#qDocReqLineId_2').val();
+		    var qty = $('#qty').val();
+		    var unitOfMeasure = $('#unitOfMeasure').val();
+		    var isItem = $('#isItem').val();
+		    var fileName = $('#fileName').val();
+		    var contractorId = $('#contractorId').val();
+		    var filePath = $('#filePath').val();
+		    
+       		
+       		console.log("Yes/No button clicked qDocReqId = " + qDocReqLineId_2 + "; qty = " + qty);
+       		
+       		$.ajax({
+		        type: "POST",
+		        url: "pdfViewer_SetValidMTRFlag",
+		        data: {qDocReqLineId_2 : qDocReqLineId_2, approvedMTRFlag: 'Y', qty : qty, poNumber : poNumber, unitOfMeasure : unitOfMeasure, 
+		        		isItem : isItem, fileName: fileName, contractorId : contractorId, filePath : filePath},
+		        success: validateYesNoButtonsSuccess,
+				error: ajaxResponseError, 
+				complete: function() {
+					//console.log("updateValidMTRFlag complete"); 
+		         }
+			});	
+       		
+		});
+		
+		// C.Sparks 4-3-2020
+		//    NO Button clicked on the initial Accept/Reject UI, this calls another popup in this page, to collect the reasons.
+		$('#failDocsNoButton').click(function() { // NO button 
+			console.log("No button clicked");
+			//$('#pop').popover('hide');
+			$('#rejectModal').show();
+			$('#pdf_fullpage').css('display', 'none');
+			$('body').append("<div class='modal-backdrop fade show'></div>");
+		});
+			
+		
+		$('#rejectModalCancelId').click(function() { // Cancel button
+			$('#rejectModal').hide();
+			$('#pdf_fullpage').css('display', 'block');
+			$(".modal-backdrop").remove();
+		});
+		
+		$('#rejectModalXId').click(function() { // X button
+			$('#rejectModal').hide();
+			$('#pdf_fullpage').css('display', 'block');
+			$(".modal-backdrop").remove();
+		});
+			
+		
+		// C.Sparks 4-3-2020
+		//   SAVE button for reject modal , after entry, click SAVE will save to the back end, return to manage, and display green message in header
+		$('#failDocs').click(function() { 
+			 console.log("click failDocs");
+  	         
+			 showSpinner();
+			 
+			 var reasons = ""; 
+				
+			 if ($("#customCheck1").is(":checked")) {
+				reasons = "Not Legible";
+			 }
+				
+			 if ($("#customCheck2").is(":checked")) {
+				reasons = reasons + " Missing Information";
+			 } 
+
+			 if ($("#customCheck3").is(":checked")) {
+				reasons = reasons + " Incorrect quality document"; 
+			 } 
+
+			 var comment = $("#comment").val();
+			 var qDocReqLineId_2 = $('#qDocReqLineId_2').val();
+			 var fileName = $('#fileName').val();
+			 var isItem = $('#isItem').val();
+			 var filePath = $('#filePath').val();
+			 var contractorId = $('#contractorId').val();
+			 
+	       	 console.log("REJECT/SAVE clicked qDocReqLineId_2 = " + qDocReqLineId_2 + "; reasons = " + reasons + "; comment = " + comment);
+	       						
+	       	  $.ajax({
+			    type: "POST",
+			    url: "saveRejectReasons",
+			    data: {qDocReqLineId_2: qDocReqLineId_2, reasons: reasons, comment: comment, fileName: fileName, isItem : isItem, contractorId : contractorId, filePath : filePath},
+			   // success: saveReasonsSuccess,
+			    success: response_MTR_Rejected,
+				error: ajaxResponseError, 
+				complete: function() {  
+						//hideSpinner();
+			     }
+			});	 
+
+		  });
+		
+		//checkbox
+		var sum = 0;
+		var commentLength = 0; 
+		$('.custom-control-input').change(function() {
+			
+			sum = 0;
+			$(".modal .custom-control-input").each(function() {
+				if ($(this).is(":checked") === true) {
+					sum += Number(1);
+				}
+			});
+			if((sum > 0) && (commentLength > 0) ) {
+				$('#failDocs').prop("disabled", false); 
+			} else {
+				$('#failDocs').prop("disabled", true); 
+			}
+		});
+		
+		$('body').on('keyup', '#comment', function() {
+			
+			commentLength = $("#comment").val().trim().length;
+			
+			if((sum > 0) && (commentLength > 0) ) {
+				$('#failDocs').prop("disabled", false); 
+			} else {
+				$('#failDocs').prop("disabled", true); 
+			}
+		});
+		
+		//}
+	});
+	
+	function commonResponse(returnData) {
+		hideSpinner();
+		$('#mainBody').html(returnData);
+		//console.log("commonResponse()"); 
+	}
+	function processBarcodeReviewContainer(returnData) {
+		hideSpinner();
+		//console.log("processBarcodeReviewContainer()"); 
+		$("#barcodeReviewContainer").html("");
+		$("#barcodeReviewContainer").hide();
+		$('#barcodePrint2Body').html(returnData);
+		$('#barcodePrint2Body').show();
+	}
+	function removeBackdrop(returnData) {
+		
+		$('#rejectModal').hide();
+		hideSpinner();
+		
+		console.log ("CS in removeBackdrop() ") ;
+		console.log ("returnData ->: "); console.log(returnData); 
+		
+		$("div").remove( ".modal-backdrop");
+		$("#barcodeReviewContainer").html("");
+		$("#barcodeReviewContainer").hide();
+		$('#barcodePrint2Body').html(returnData);
+		$('#barcodePrint2Body').show();
+	}
+	
+	function validateYesNoButtonsSuccess(isSuccess) {
+		
+		console.log("validateYesNoButtonsSuccess() return value = "	+ isSuccess);
+		
+		if (isSuccess) {
+			showSpinner(); 
+			
+			var heatNumber = $('#heatNumber').val();
+			var serialNumber = $('#serialNumber').val();
+			if(heatNumber == 'null') {
+				var heatNumberForAlert = $('#heatNumberForAlert').val(serialNumber);
+			}
+			
+			
+			console.log("UUU III heatNumberForAlert = " + heatNumberForAlert); 
+
+
+			submitFormAjaxHTML('initReceive_2_Reviewed', $("#barCodeFormDTO_pdf").serialize(), "processBarcodeReviewContainer");
+		}
+	}
+	
+	
+	// CS 4-2-2020 - Another crappy name. This is the responseRoutineMtrRejected()
+	//function saveReasonsSuccess(isSuccess) {
+	function response_MTR_Rejected (isSuccess) {
+		
+		hideSpinner();
+		
+		var heatNumber = $('#heatNumber').val();
+		var serialNumber = $('#serialNumber').val();
+		if(heatNumber == 'null') {
+			var heatNumberForAlert = $('#heatNumberForAlert').val(serialNumber);
+		}
+		
+		console.log("saveReasonsSuccess() return value = "	+ isSuccess);
+		
+		if (isSuccess) {
+			showSpinner();
+			
+			console.log("Calling initBarcodePrint_Rejected()")
+			
+			submitFormAjaxHTML('initReceive_2_Rejected', $( "#barCodeFormDTO_pdf" ).serialize(), "removeBackdrop");
+			
+			console.log("Calling removeBackdrop() to display message in the header")
+			
+		}
+	}
+
+	
+	</script>
+	
+  </head>
+  
+  <body th:id="barcodeReviewBody">
+	<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+
+
+	    <form id="barCodeFormDTO_pdf" name="barCodeFormDTO_pdf" th:object="${barCodeFormDTO}"  method="post" class="position-absolute w-100 pdfobject-page"> 
+	    
+    	 	<!-- Work Fields -->
+	     	<input type="hidden" id="qDocReqLineId_2" name="qDocReqLineId_2" th:value="${qDocReqLineId_2}">
+	     	
+	     	<input type="hidden" id="heatNumberForAlert" name="heatNumberForAlert" th:value="${heatNumberForAlert}"> 
+	     	<input type="hidden" id="poNumber" name="poNumber" th:value="${poNumber}"> 
+	     	<input type="hidden" id="fileName" name="fileName" th:value="${fileName}">
+	     	<input type="hidden" id="filterCode" name="filterCode" th:value="${filterCode}">
+	     	<input type="hidden" id="mfgName" name="mfgName" th:value="${mfgName}">
+	     	<input type="hidden" id="qty" name="qty" th:value="${qty}">
+	     	<input type="hidden" id="poItemDesc" name="poItemDesc" th:value="${poItemDesc}">
+	     	<input type="hidden" id="poItemNumber" name="poItemNumber" th:value="${poItemNumber}">
+	     	<input type="hidden" id="qDocVersion" name="qDocVersion" th:value="${qDocVersion}">
+	     	<input type="hidden" id="heatNumber" name="heatNumber" th:value="${heatNumber}">
+	     	<input type="hidden" id="serialNumber" name="serialNumber" th:value="${serialNumber}">
+	     	<input type="hidden" id="unitOfMeasure" name="unitOfMeasure" th:value="${unitOfMeasure}">
+	     	<input type="hidden" id="isItem" name="isItem" th:value="${isItem}"> 
+	     	<input type="hidden" id="contractorId" name="contractorId" th:value="${contractorId}">
+	     	<input type="hidden" id="filePath" name="filePath" th:value="${filePath}"> 
+	     	
+	     	<!-- 5-29-2019 -->	     
+	      	<input type="hidden" id="screenId" name="screenId" th:value="${screenId}">		     		    
+		    <input type="hidden" id="selectedDocType" name="selectedDocType" th:value="${selectedDocType}">
+		 	<input type="hidden" id="inputSearch" name="inputSearch" th:value="${inputSearch}">
+		     
+		    <header class="de-header de-header--internal">
+		        <div class="de-header-bar"></div>
+		        <div class="de-header-main">
+		            
+		            <nav class="de-header-nav--simple">
+		                <ul class="de-header-nav__group">
+							<li class="de-header-nav__item">
+								<button id="buttonBackId" type="button" class="button button--secondary-reversed w-auto">Back</button>
+		                    </li>
+							<li class="de-header-nav__item" >
+							
+								<div th:switch="${serialNumber}">
+									<div th:case="null">
+										<span class="de-header-nav__page-header"><span class="d-inline">Heat/SN #: </span><strong><span class="d-inline" th:text="${heatNumber}">12345</span></strong></span>
+									</div>
+									<div th:case="'null'">
+										<span class="de-header-nav__page-header"><span class="d-inline">Heat/SN #: </span><strong><span class="d-inline" th:text="${heatNumber}">12345</span></strong></span>
+									</div>
+									<div th:case="''">
+										<span class="de-header-nav__page-header"><span class="d-inline">Heat/SN #: </span><strong><span class="d-inline" th:text="${heatNumber}">12345</span></strong></span>
+									</div>
+									<div th:case="*">
+										<span class="de-header-nav__page-header"><span class="d-inline">Heat/SN #: </span><strong><span class="d-inline" th:text="${serialNumber}">12345</span></strong></span>
+									</div>
+								</div>
+								<div class="de-header-nav__page-subheader"><strong th:text="'MFG:'+${mfgName}"></strong> <span th:text="', Item #:'+${poItemNumber}"></span> <span th:if="${poNumber != 'null'}" th:text="', PO #:'+${poNumber}"></span></div>
+
+		                    </li>
+							<li class="de-header-nav__item">
+								<!-- <button type="button" id="pop" class="border-0 bg-transparent p-0 w-auto" data-toggle="popover" title="PDF Metadata" data-content="And here's some amazing content. It's very engaging. Right?"><i class="fas fa-info-circle" style="color: #fff;font-size: 3rem"></i></button> -->
+		                    </li>
+		                </ul>
+		            </nav>     
+		        </div>
+		    </header>
+	     
+			<section class="de-component de-component--gray p-0 pdfobject-body">
+                <div class="de-component__container" th:classappend="${screenId == 'manage_2'} ? from-mm : from-bp">
+                	<div class="pdfobject-description"><p><strong>Description:</strong> <span th:text="${poItemDesc}"></span></p></div>
+					<div id="pdf_fullpage"></div>
+                </div>
+            </section>
+	            
+	            
+	      	<!-- 5-28-2019  display the Footer for BarCode Print, but don't display it for Material Management Viewer -->	            				
+			<section class="de-component de-component--gray pdfobject-footer" th:if="${screenId != 'manage_2'}">
+					<div class="de-component__container">
+						<header class="de-component-header mb-2">
+							<p class="de-component-header__intro">Is this document legible, accurate and complete?</p>
+						</header>
+						
+						<footer class="de-component-footer mt-2">
+							<div
+								class="de-component-footer__action btn-toggle button-group segment-control flex-row justify-content-start"
+								data-toggle="buttons">
+								<label id="confirmDocs" class="de-component-footer__button btn button">
+								       <input type="radio" autocomplete="off" value="YES">YES
+								 </label> 
+							     <label id="failDocsNoButton" class="de-component-footer__button btn button">
+									    <input type="radio" autocomplete="off" value="NO">NO
+							     </label>
+							</div>
+						</footer>
+					</div>
+	         </section>
+
+        </form>
+
+    
+	<!-- Modal -->
+	<div class="modal fade show" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header border-0">
+	        <h5 class="modal-title d-none" id="rejectModalLabel"></h5>
+	        <button id="rejectModalXId" type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+				<legend class="mb-3">Please select a reason for rejecting. (required)</legend>
+				<div class="d-flex flex-column mb-3">
+					<div class="custom-control custom-checkbox">
+                    	<input type="checkbox" class="custom-control-input" id="customCheck1">
+                        <label id="reject_NOTLEGIBLE" class="custom-control-label" for="customCheck1">Not Legible</label>
+                    </div>
+					<div class="custom-control custom-checkbox">
+                    	<input type="checkbox" class="custom-control-input" id="customCheck2">
+                        <label id="reject_MISSINGINFO" class="custom-control-label" for="customCheck2">Missing Information</label>
+                    </div>
+					<div class="custom-control custom-checkbox">
+                    	<input type="checkbox" class="custom-control-input" id="customCheck3">
+                        <label id="reject_INCORRECTDOC" class="custom-control-label" for="customCheck3">Incorrect quality document</label>
+                    </div>
+				</div>
+				<textarea id="comment" class="form-control mb-3" placeholder="Mandatory Comment: Please be specific on the issue you're experiencing."></textarea>
+	      </div>
+	      <div class="modal-footer">
+	      	<div class="button-group flex-row">
+		        <button id="rejectModalCancelId" type="button" class="button button--small button--text w-auto px-0 mx-5" data-dismiss="modal">Cancel</button>
+		        <button type="button" id="failDocs" class="button button--small button--submit" data-dismiss="modal" disabled>Save</button>
+	      	</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>    								
+	
+
+  </body>
+  
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Workspace</title>
+
+	<script>
+    	
+		$(document).ready(function() {
+			
+			hideSpinner();	
+			
+			$('#viewBarcodeId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initBarcodeView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+						
+			$('#viewPdfId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initPdfView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#viewExcelId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initExcelView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#viewTemplateId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initTemplateView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+		});
+		
+		function initCommonResponse(returnData) {	
+			console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData); 
+		}
+		
+
+	</script>
+	
+  </head>
+
+  <body id="Body" >
+	 			
+	 	
+	<form id="docUploadFormDTO" class="bg-light" name="docUploadFormDTO"   method="post"> 
+     				  
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">Testing Harness</h2>
+		        </header>
+		    </div>
+
+
+
+
+			<div  id="Barcodes" class="mt-5">
+						    
+		 		<div class="de-component__footer row">
+					<div class="col-12 col-md-4 pb-4">
+										
+						<div class="card mb-2" style = "text-align:center">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Barcode Testing</span></div>
+							<div class="card-body h-25">
+								<p class="mb-0">Select a barcode for viewing.</p>													
+							    <button th:id="viewBarcodeId" data-toggle="tooltip" data-placement="left" title="View the Barcode data." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboBarcodeId" name="comboBarcodeId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select a Barcode ---</option>
+									<option value="BARCODE_1">Barcode 1</option>	
+								    <option value="BARCODE_2">Barcode 2</option>
+								    <option value="BARCODE_3">Barcode 3</option>
+									<option value="BARCODE_4">Barcode 4</option>	
+								    <option value="BARCODE_5">Barcode 5</option>													
+								</select>
+							</div>											
+                      </div> 
+                      
+					</div>
+					
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>PDF Functionality</span></div>
+							
+							<div class="card-body h-25">
+								<p class="mb-0">Select a PDF for viewing.</p>													
+							    <button th:id="viewPdfId" data-toggle="tooltip" data-placement="left" title="View the PDF file." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboPdfId" name="comboPdfId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select a PDF ---</option>
+									<option value="PDF_1">PDF 1</option>	
+								    <option value="PDF_2">PDF 2</option>
+								    <option value="PDF_3">PDF 3</option>
+									<option value="PDF_4">PDF 4</option>	
+								    <option value="PDF_5">PDF 5</option>													
+								</select>
+							</div>	
+
+						</div>
+					</div>
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Excel Functionality</span></div>
+							
+							<div class="card-body h-25">
+								<p class="mb-0">Select an Excel file for viewing.</p>													
+							    <button th:id="viewExcelId" data-toggle="tooltip" data-placement="left" title="View the Excel file." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboExcelId" name="comboExcelId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select an Excel ---</option>
+									<option value="EXCEL_1">Excel 1</option>	
+								    <option value="EXCEL_2">Excel 2</option>
+								    <option value="EXCEL_3">Excel 3</option>														
+								</select>
+							</div>	
+
+						</div>
+					</div>
+						
+						
+						
+						
+					<div class="card mb-2" style = "text-align:center">
+						<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Template View</span></div>
+						<div class="card-body h-25">
+							<p class="mb-0">Select a template for viewing.</p>													
+						    <button th:id="viewTemplateId" data-toggle="tooltip" data-placement="left" title="View the Template data" 
+							        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+						   </button>								   
+							<select id="comboTemplatesId" name="comboTemplatesId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+								<option value="none" >-- Select a Template ---</option>
+							    <option value="TPL_1">Wire template 1</option>
+							    <option value="TPL_2">Pipe Template 2</option>
+								<option value="TPL_3">Transformer Template 3</option>																
+							</select>
+						</div>											
+                     </div> 
+	                      
+	                      
+	                      
+				</div>	
+								
+  				
+				</div>
+		
+		
+		
+
+
+		</section>
+	
+	</form>	
+
+	      
+  </body>
+  
+</html>

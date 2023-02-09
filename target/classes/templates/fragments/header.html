@@ -38,11 +38,13 @@
                         <a id="buttonHeaderUploadId" class="de-header-nav__link" href="#"><span>Upload</span></a>
                     </li>
 
-                    <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
+<!--                     <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
                         <a id="buttonHeaderPublishId" class="de-header-nav__link" href="#"><span>Publish</span></a>
-                    </li>
+                    </li> -->
                     
-
+                    <li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')" class="de-header-nav__item" >
+                        <a id="buttonHeaderTestHarnessId" class="de-header-nav__link" href="#"><span>Test Harness</span></a>
+                    </li>
 
 
 <!-- 			      <li  class="de-header-nav__item d-flex flex-row-reverse">

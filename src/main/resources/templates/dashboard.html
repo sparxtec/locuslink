@@ -54,8 +54,10 @@
 	<link href="//cdn.datatables.net/plug-ins/1.13.2/features/searchHighlight/dataTables.searchHighlight.css" rel="stylesheet">		
 	<script src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
 
-
-
+	<script type="text/javascript" src="js/jquery.hideseek.min.js"></script>  	
+	<script src="js/pdfobject.js"></script>
+	
+	
 <style>
 table.dataTable thead th {
   font-size: 1.2rem;
@@ -118,22 +120,23 @@ table.dataTable thead th {
 				$('#buttonHeaderUploadId').addClass('is-current');	
 			});
 
-			//  Publish
-			$('#buttonHeaderPublishId').click(function() {
+			
+			
+		    //  Testing Harness
+			$('#buttonHeaderTestHarnessId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initPublish', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initTestHarness', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderPublishId').addClass('is-current');	
+				$('#buttonHeaderBarcodeId').addClass('is-current');	
 			});
 			
-			$('#buttonPublishId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initPublish', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderPublishId').addClass('is-current');	
-			});
 
 
+
+
+			
+			
+			
 			/////////// ***********************************************************  //////////
 			/////////// **************      Account Events      *******************  //////////
 			/////////// ***********************************************************  //////////
@@ -313,12 +316,12 @@ table.dataTable thead th {
 
 
 							 	<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"    class="nav-cards__item"  >
-									<a id="buttonPublishId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+									<a id="buttonBarcodeId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<img src="images/electron/icons/icon-three-gears-ll.jpeg" alt="three gears">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>Publish</span></h3>
+									    	<h3 class="nav-card-body__title text-nowrap"><span>Barcode</span></h3>
 										</div>
 									</a>
 								</li>
