@@ -29,9 +29,10 @@ public class TestHarnessController {
 	private static final Logger logger = Logger.getLogger(TestHarnessController.class);
 
 
-    @Value("${app.logout.url}")
-    private String appLogoutUrl;
-
+    @Value("${barcode.print.barcode1}")
+    private String printBarcode1;
+    
+    
 	// 6-2-2022 C.Sparks
     @Autowired
     private SecurityContextManager securityContextManager;
@@ -63,6 +64,10 @@ public class TestHarnessController {
 	public String initBarcodeView (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initBarcodeView()...");
 
+		// Set the URL for the UI
+		dashboardFormDTO.setPrintBarcode1(printBarcode1);
+		
+		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/barcode_viewer";

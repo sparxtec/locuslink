@@ -10,6 +10,10 @@ import lombok.Data;
 @Data
 public class DashboardFormDTO {
 
+	
+	// Barcode Processing
+	private String printBarcode1;
+	
 	private String fileName;
 	private String responseText ="";
 	private String selectedDocType;
