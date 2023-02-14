@@ -1,0 +1,47 @@
+
+
+
+/*********************************************************************************************/
+/* C.Sparks 8-20-2019 This is the NEW Master CSS file for everything related to Data Tables  */
+/*         These things came from the test harness page 5, for the bomv2 table               */
+/*********************************************************************************************/
+
+		
+
+/*TOOLBAR*/
+.datatable-toolbar {
+    padding: .5rem !important;
+}		
+.datatable-toolbar-group,
+.datatable-toolbar-group label,
+.dataTables_wrapper .dataTables_filter {
+    color: white;
+}	
+/*DATA TABLE*/
+.datatable-toolbar + div > div:first-child {
+  		/* max-height: calc(100vh - 323px);
+  		    max-height: calc(100vh - 400px); */
+  		display: inline-block;
+  		overflow-x: hidden;
+  		width: 100%;
+}
+.datatable-toolbar + div > div:first-child table {
+	width: 100% !important;
+}
+@media (max-width: 768px) {
+	.datatable-toolbar + div > div:first-child {
+/* 	    max-height: calc(100vh - 390px);
+	    max-height: calc(100vh - 415px);
+ */	}		
+}
+table.dataTable tr.group td {			      
+    background-color: #ffffff; 
+    color: #005984;
+   	font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1.25px;
+    padding: .75rem .5rem .1rem;
+}	
+
+

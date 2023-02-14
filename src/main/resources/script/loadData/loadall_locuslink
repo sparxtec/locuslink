@@ -88,4 +88,15 @@ INSERT INTO locuslink.purchase_order_line (po_line_pkid, po_pkid, unique_asset_p
    
    
    
+INSERT INTO locuslink.product_attribute
+(product_attr_pkid, ucat_pkid, unique_attributes_json, additional_attributes_json, add_by, add_ts, update_by, update_ts)
+VALUES(90, 800, '{"attr1_key":"attr1_val","attr2_key":"attr2_val","attr3_key":"attr3_val"}', NULL, 'csparks', '023-02-14', NULL, NULL);
+   
+INSERT INTO locuslink.product_attribute
+(product_attr_pkid, ucat_pkid, unique_attributes_json, additional_attributes_json, add_by, add_ts, update_by, update_ts)
+VALUES(91, 801, '{"attr1_key":"attr1_val","attr2_key":"attr2_val","attr3_key":"attr3_val"}', NULL, 'csparks', '023-02-14', NULL, NULL);
+
+INSERT INTO locuslink.product_attribute
+(product_attr_pkid, ucat_pkid, unique_attributes_json, additional_attributes_json, add_by, add_ts, update_by, update_ts)
+VALUES(92, 802, '{"attr1_key":"attr1_val","attr2_key":"attr2_val","attr3_key":"attr3_val"}', NULL, 'csparks', '023-02-14', NULL, NULL);   
    

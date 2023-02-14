@@ -33,7 +33,7 @@ public class UniqueAsset extends Common {
 	private int manufacturerPkId;     
     
     @Column(name = "traceability_type_pkid", nullable = false)
-	private int traceabilityTypePkId; 
+	private int traceTypePkId; 
     
     @Column(name = "customer_pkid", nullable = false)
 	private int customerPkId; 

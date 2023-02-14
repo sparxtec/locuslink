@@ -2,7 +2,11 @@
 <html  xmlns:th="http://www.thymeleaf.org">
   <head> 
     <title>My Workspace</title>
-
+<style>
+	.datatable-toolbar {
+		padding: .20rem !important
+	}
+</style>
     <script>
 
 		var globalTable;		
@@ -15,11 +19,15 @@
      			var table = $('#assetDataTable').DataTable( {
             	retrieve: true,
      	 		searchHighlight: true,
-     	 		searching:true,
+     	 		
+     	 	//	searching:true,
+     	 		
              	responsive: true,		        
-             	"paging":   true,	
-             	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)',	
+             	"paging":   true,
+             	
+/*              	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)', */	
+             	
              	order: [0, 'asc' ],		        
          		//colReorder: true,		        
      
@@ -48,12 +56,18 @@
              columns: [	              	
                  { data: "uniqueAssetPkId" },
                  { data: "uniqueAssetId" },   
-                 { data: "ucatPkId" },                   
-                 { data: "manufacturerPkId" },                 
-                 { data: "customerPkId" },
-                 { data: "traceabilityTypePkId" },
+                 { data: "universaCatalogId" },                   
+                 { data: "manufacturerName" },                 
+                 { data: "productTypeCode" },
+                 { data: "productName" },
+                 { data: "productNumber" },
+                 { data: "traceTypeCode" },
                  { data: "traceCode" },
-                   
+                 
+                 { data: "customerName" },
+                 { data: "productDesc" },
+                 { data: "productTypeDesc" },
+                 { data: "uniqueAttributesJson" }
             	],
             	
 /*             	"createdRow": function( row, data, dataIndex ) {
@@ -122,7 +136,7 @@
 						 	
 						 	<div class="datatable-toolbar-group">
 						 		<div id="addbtn">
-						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+						 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
 						 		</div>
 						 	</div>
 						 
@@ -134,22 +148,33 @@
 						 </div>	                     
 	                     
 		                 <div id="xxxx">		                     
-	                        <table id="assetDataTable" class="bg-white border border-top-0">
-	                        
+	   	 <table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 
+	            
+	              		 
+	              		 
 	                           <thead class="thead-light">
 	                              <tr>
-	                                 <th scope="col">Asset Id</th>
+	                                 <th scope="col">Id</th>
 	                                 <th scope="col">Unique Asset ID</th>
 	                                 <th scope="col">Universal Catalog ID</th>	
 	                                 <th scope="col">Manufacturer</th>
-	                                 <th scope="col">Customer</th>
-	                                 <th scope="col">Trace Type</th>
-	                                 <th scope="col">Trace Code</th>	                                   
+	                                 <th scope="col">Product Type</th>
+	                                 <th scope="col">Product Name</th>
+	                                 <th scope="col">Product Number</th>	
+	                                 <th scope="col">Trace Type</th>	
+ 									 <th scope="col">Trace Number</th>		                                                                     
+	                             	                             
+	                              	 <th scope="col">Customer</th>
+	                                 <th scope="col">Product Desc</th>
+	                             	 <th scope="col">PType Description]</th>
+	                                 <th scope="col">Unique Attributes</th>
 	                              </tr>
 	                           </thead>
 	                        </table>
 		                 </div>		                     
-						
+
+                 
+                 
 					</div>
 										
 					<br><br>                               

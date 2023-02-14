@@ -25,8 +25,8 @@ import com.locuslink.dao.CustomerDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.Customer;
-import com.locuslink.model.UniqueAsset;
 import com.locuslink.model.UniversalCatalog;
 /**
  * This is a Spring MVC Controller.
@@ -192,17 +192,18 @@ public class MyWorkspaceController {
 
 		logger.debug("In getAllAsset()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
-	  			
-		List <UniqueAsset> uniqueAssetList =  uniqueAssetDao.getAll();
-		if (uniqueAssetList == null) {
+	  	
+		// TESTING
+		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
+		if (uniqueAssetListDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
-		
+			
         // Convert the POJO array to json, for the UI
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(uniqueAssetList);			
+			json = mapper.writeValueAsString(uniqueAssetListDTO);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

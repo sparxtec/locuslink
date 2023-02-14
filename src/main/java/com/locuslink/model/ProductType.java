@@ -24,10 +24,10 @@ public class ProductType extends Common {
     private int productTypePkId;
   
     @Column(name="type_code", nullable = false)
-    private String typeCode;
+    private String productTypeCode;
 
     @Column(name = "type_desc", nullable = false)
-	private String typeDesc; 
+	private String producTypeDesc; 
 	
 	
 

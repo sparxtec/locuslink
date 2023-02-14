@@ -10,6 +10,9 @@ package com.locuslink.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.UniqueAssetDao;
+import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.UniqueAsset;
 
 /**
@@ -53,7 +57,44 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 		return this.sessionFactory.getCurrentSession().get(UniqueAsset.class, pkid);				
 	}
 	
-
+	@PersistenceContext
+	EntityManager entityManager;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public  List<UniqueAssetDTO>  getAllDTO() 	{	
+		
+		 List <UniqueAssetDTO> dtoList = entityManager.createQuery("""
+			select new com.locuslink.dto.UniqueAssetDTO(
+				ua.uniqueAssetPkId,
+				ua.uniqueAssetId,
+		 		uc.universaCatalogId,			 		
+		 		mfg.name,		 							 										
+				pt.productTypeCode,				
+				uc.productName,					
+				uc.productNumber,
+				tt.traceTypeCode,
+				ua.traceCode,
+				
+				cus.customerName,
+				uc.productDesc,
+				pt.producTypeDesc,
+				pa.uniqueAttributesJson				
+			)
+			from UniqueAsset ua
+			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
+	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
+	        join Customer cus on cus.customerPkId = ua.customerPkId		        
+			join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
+			join ProductType pt on pt.productTypePkId = uc.productTypePkId					
+			left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId		
+			""", UniqueAssetDTO.class)
+		.getResultList();	
+		 
+		 return dtoList;
+	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override

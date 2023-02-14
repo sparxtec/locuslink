@@ -29,12 +29,12 @@ public class UniversalCatalog extends Common {
     @Column(name="universal_catalog_id", nullable = false)
     private String universaCatalogId;
 
-    //@Column(name = "product_type_pkId", nullable = false)
-	//private int productTypePkId; 
+    @Column(name = "product_type_pkId", nullable = false)
+	private int productTypePkId; 
 	
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_type_pkId", nullable = false)
-	private ProductType productType; 
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "product_type_pkId", nullable = false)
+//	private ProductType productType; 
    
    
     @Column(name = "product_number", nullable = false)
