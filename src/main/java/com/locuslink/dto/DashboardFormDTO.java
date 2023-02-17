@@ -3,7 +3,7 @@ package com.locuslink.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.locuslink.dto.uploadedFileObjects.ProductWire;
+import com.locuslink.dto.uploadedFileObjects.WireAttributes;
 
 import lombok.Data;
 
@@ -13,6 +13,7 @@ public class DashboardFormDTO {
 	
 	// Barcode Processing
 	private String printBarcode1;
+	private int uniqueAssetPkId;
 	
 	private String fileName;
 	private String responseText ="";
@@ -40,7 +41,7 @@ public class DashboardFormDTO {
 	// Upload Page 3
 	//private List <String[]> dataTableArray = new ArrayList<String[]>();
 		
-	private List <ProductWire> dataTableArray = new ArrayList<ProductWire>();
+	private List <WireAttributes> dataTableArray = new ArrayList<WireAttributes>();
 	
 	
 	

@@ -2,16 +2,9 @@ package com.locuslink.dto.uploadedFileObjects;
 
 import lombok.Data;
 
-/**
- * 
- * This class holds all the attributes for a product, both unique and additional.
- * 
- * The attribute type will be prefixed, so by convention we know where to put the
- * attribute in the data base
- *
- */
+
 @Data
-public class ProductWire extends Product {
+public class TransformerAttributes extends Product {
 	
 	//Unique Attributes - prefix with ua
 	private String uaWireSize;

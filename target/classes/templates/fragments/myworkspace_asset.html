@@ -6,6 +6,23 @@
 	.datatable-toolbar {
 		padding: .20rem !important
 	}
+	
+	div.action-buttons {
+        white-space: nowrap;
+    }
+ 
+    div.action-buttons span {
+        display: inline-block;
+        min-width: 18px;
+        cursor: pointer;
+    }
+     td.details-control sorting_1 dtr-control {
+		display: inline-block;
+        min-width: 18px;		
+	}   
+ 	#assetDataTable td:nth-child(6) { min-width: 240px; } 
+ 	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
+    
 </style>
     <script>
 
@@ -14,23 +31,13 @@
     	$(document).ready(function() {	
      		hideSpinner();	
      		
-     		if( $('#assetDataTable').length){
-     			
+     		if( $('#assetDataTable').length){     			
      			var table = $('#assetDataTable').DataTable( {
             	retrieve: true,
      	 		searchHighlight: true,
-     	 		
-     	 	//	searching:true,
-     	 		
              	responsive: true,		        
-             	"paging":   true,
-             	
-/*              	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)', */	
-             	
-             	order: [0, 'asc' ],		        
-         		//colReorder: true,		        
-     
+             	"paging":   true,          
+             	order: [2, 'asc' ],		        		             
      	    	ajax: {
            		    url: 'getAllAsset',
            		 	type: 'POST',
@@ -44,8 +51,7 @@
      	        }, 
      	        "dataSrc": function (json) {
      	        	uniqueassetlist = json.data.uniqueassetlist;	     	        	
-     	        	hideSpinner();		    		
-     	      	        	
+     	        	hideSpinner();		    		     	      	        	
      	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
      	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
      	        	console.log(JSON.parse(uniqueassetlist));
@@ -53,53 +59,116 @@
      	         }					       
         		},  
      
-             columns: [	              	
-                 { data: "uniqueAssetPkId" },
+             columns: [	                	 
+	 			 { "className": 'details-control',
+ 	               "orderable": false,
+ 	               "data":      null,
+ 	               "defaultContent": ''
+	 	         },	 	                       	      
+	 	         { title: "Details",
+	 	           data: null,
+ 	               className: "controlColumns",
+ 	               "render": function(data, type, row, meta){	            		
+                    	data ="<div class='action-buttons'>" 
+                    	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Doc Viewer'></i></button>&nbsp;"
+                    	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;"
+                    	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete'></i></button></div>";	                    
+	                return data;
+	 	         }}, 
+                   	         
+	             { data: "uniqueAssetPkId" },	               
                  { data: "uniqueAssetId" },   
-                 { data: "universaCatalogId" },                   
+                 { data: "universalCatalogId" },                   
                  { data: "manufacturerName" },                 
                  { data: "productTypeCode" },
                  { data: "productName" },
                  { data: "productNumber" },
                  { data: "traceTypeCode" },
-                 { data: "traceCode" },
-                 
+                 { data: "traceCode" },                 
                  { data: "customerName" },
                  { data: "productDesc" },
                  { data: "productTypeDesc" },
                  { data: "uniqueAttributesJson" }
             	],
             	
-/*             	"createdRow": function( row, data, dataIndex ) {
-            		//console.log(data.itemNumErrorFlag);            	
-            	    if ( data.activeStatus == "N" ) {
-            	    	 $(row).addClass('deactivated');
-            	    	 // $('tr', row).eq(9).addClass("checked"); 
-            	    }                	   
-            	  }, */
-             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
-            	          		
-           });
-        }  // end docready
-        
+        		
+             	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
 
-	
+/*                 buttons: [
+                    { extend: "create", editor: editor },
+                    { extend: "edit",   editor: editor },
+                    { extend: "remove", editor: editor }
+                ] */
+             	             	        		            	          	
+           });
+     	 }	// end datatable
+     			
+     			
+     	 
+     	 // Button Clicks on the Data table
+ 	    $('#assetDataTable tbody').on('click', 'button', function (e) {
+	    	console.log(this);
+	    	
+	    	var url='';
+	    	var whatWasClicked=$(this).attr("id").split("_")[0];
+	    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
+	    		    	
+	   	    e.preventDefault(); // ??
+	    	
+			showSpinner();
+	    	
+			if(whatWasClicked==="docs") {
+				url = "getAllDocsForAsset";						
+    		} else if(whatWasClicked==="barcode") {
+    			url = "getBarcodeForAsset";	
+    		} else if(whatWasClicked==="delete") {
+    			url = "deleteAsset";	
+    		}
+			
+	    //	alert ("clicked ->:" + whatWasClicked + "   for uniqueAssetId ->:" + uniqueAssetId + "   url ->: " + url) ;
+	    					
+	        // set the FORM value so the controller can get it.				
+			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+				
+	    						
+   			showSpinner();								
+   			submitFormAjaxHTML('getBarcodeForAsset2', $("#dashboardFormDTO").serialize(), "modalResponse");	
+   			
+ 			
+	    });   // end on click
+	    
+	    
+     	 
  		// SEARCH FILTER
   		$('#assetDataTable_filter input').keyup(function(){
  			table.search($(this).val()).draw() ;
  		}); 
-
  		
    		$('#previous').click(function() {					
    			showSpinner();								
    			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
-   		});	
+   		});	 		 		
  		
- 		
- 		
+	
    	 });  
     	
     	
+    	
+   	 function modalResponse(returnData) {	
+ 		hideSpinner();
+ 		console.log("finished returnData  ->: " + returnData);
+ 		
+ 		
+    //	$("#messageLogModal #messageLogList").val(returnData);
+    //	$("#messageLogModal").modal('show');
+    	
+    	
+		//	return JSON.stringify( myData );
+		
+ 		$('#modalBody').html(returnData); 			 
+ 	 }
+   	 
+   	 
 	 function commonResponse(returnData) {	
 		hideSpinner();
 		$('#mainBody').html(returnData); 
@@ -112,7 +181,9 @@
   </head>
 
   <body id="Body">
-	 						  
+	 	
+	 	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
+    	    						 
 		<section id="manage_1_mainBody" class="de-component de-component--gray">
 			
 			<div class="de-component__container">
@@ -123,17 +194,13 @@
 
             <div class="form-group text-center">
 				<div class="card">
-
   
-					<div class="card-header"><i class="fas fa-user mr-2"></i> Unique Asset Data:
-			
-					</div>
-				
+					<div class="card-header"><i class="fas fa-user mr-2"></i> Unique Asset Data:			
+					</div>				
 
 					<div class="de-component__container">				
 	                     
-						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
-						 	
+						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
 						 	<div class="datatable-toolbar-group">
 						 		<div id="addbtn">
 						 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
@@ -148,13 +215,12 @@
 						 </div>	                     
 	                     
 		                 <div id="xxxx">		                     
-	   	 <table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 
-	            
-	              		 
-	              		 
+	   	 					<table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
 	                           <thead class="thead-light">
 	                              <tr>
-	                                 <th scope="col">Id</th>
+       							     <th scope="col"></th>       
+       							     <th scope="col"></th>   
+	                                 <th scope="col">Id</th>	                                 	                          	                                 
 	                                 <th scope="col">Unique Asset ID</th>
 	                                 <th scope="col">Universal Catalog ID</th>	
 	                                 <th scope="col">Manufacturer</th>
@@ -162,8 +228,7 @@
 	                                 <th scope="col">Product Name</th>
 	                                 <th scope="col">Product Number</th>	
 	                                 <th scope="col">Trace Type</th>	
- 									 <th scope="col">Trace Number</th>		                                                                     
-	                             	                             
+ 									 <th scope="col">Trace Number</th>		                                                                     	                             	                             
 	                              	 <th scope="col">Customer</th>
 	                                 <th scope="col">Product Desc</th>
 	                             	 <th scope="col">PType Description]</th>
@@ -172,9 +237,7 @@
 	                           </thead>
 	                        </table>
 		                 </div>		                     
-
-                 
-                 
+                                  
 					</div>
 										
 					<br><br>                               
@@ -185,8 +248,13 @@
 				</div>
 				
 		    </div>
+				
+<!-- MODAL TEsting -->				
+<!-- <div th:replace="fragments/messageLogModal :: messageLogModal"></div>	 -->				
+				
+  <div id="modalBody">	
+  </div>			
 					
-
 		</section>
 	  
   </body>

@@ -42,7 +42,7 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.uploadedFileObjects.ProductWire;
+import com.locuslink.dto.uploadedFileObjects.WireAttributes;
 /**
  * This is a Spring MVC Controller.
  *
@@ -196,7 +196,7 @@ public class UploadController {
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
 	  
 			// Displays on the UI - Target format for the downloaded xls files from the S3 bucket.
-		List <ProductWire> wireObjectList =  new ArrayList<ProductWire>(); 
+		List <WireAttributes> wireObjectList =  new ArrayList<WireAttributes>(); 
 		
 		
 	    // Gets the list of just files, under the directory structure {tag name}
@@ -206,7 +206,7 @@ public class UploadController {
 	            .withMarker(fileStagingFullpath);
           
 	    
-		ProductWire productWire = new ProductWire();
+		WireAttributes wireAttributes = new WireAttributes();
         Row row = null;
         S3Object s3Object;
         ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
@@ -260,27 +260,27 @@ public class UploadController {
 						System.out.println();
 						
 						// Key Data
-						productWire = new ProductWire();
-						productWire.setUploadedFilename(tagFileName);
-						productWire.setProductType("WIRE");						
-						productWire.setProductNumber(row.getCell(1).toString());
-						productWire.setProductName(row.getCell(2).toString());		
-						productWire.setProductDesc(row.getCell(3).toString());	
+						wireAttributes = new WireAttributes();
+						wireAttributes.setUploadedFilename(tagFileName);
+						wireAttributes.setProductType("WIRE");						
+						wireAttributes.setProductNumber(row.getCell(1).toString());
+						wireAttributes.setProductName(row.getCell(2).toString());		
+						wireAttributes.setProductDesc(row.getCell(3).toString());	
 						
 						// Product Specific Data - Unique
-						productWire.setUaWireSize("4 awg");
-						productWire.setUa2("ua2");
-						productWire.setUa3("ua3");
-						productWire.setUa4("ua4");
-						productWire.setUa5("ua5");
+						wireAttributes.setUaWireSize("4 awg");
+						wireAttributes.setUa2("ua2");
+						wireAttributes.setUa3("ua3");
+						wireAttributes.setUa4("ua4");
+						wireAttributes.setUa5("ua5");
 						
 						// Product Specific Data - Additional
-						productWire.setAaVoltage("600v");
-						productWire.setAa21("aa21");
-						productWire.setAa22("aa22");
-						productWire.setAa23("aa23");
+						wireAttributes.setAaVoltage("600v");
+						wireAttributes.setAa21("aa21");
+						wireAttributes.setAa22("aa22");
+						wireAttributes.setAa23("aa23");
 						
-						wireObjectList.add(productWire);
+						wireObjectList.add(wireAttributes);
 		        	} 
 					
 		

@@ -1,0 +1,85 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>	
+ 	
+
+
+</head>
+<body>
+<div th:fragment="messageLogModal">
+<script>	
+
+	$(document).ready(function() {	
+		
+	   	$("#messageLogModal").modal('show');
+	   	
+		var dataSetMessageLog="{}";
+		
+		 var table=	$('#MessageLogTable').DataTable( {
+				 
+			retrieve: true,
+			searchHighlight: true,
+		    responsive: true,		        
+		    "paging":   true,	
+		    scrollCollapse: true,
+		    data:JSON.parse(dataSetMessageLog),
+		    scrollY: '50vh',	
+		    order: [0, 'desc' ],		        
+
+  	        dom: '<"datatable-toolbar border border-bottom-0 text-secondary p-2 d-flex justify-content-end align-items-center" <"datatable-toolbar-group" f> ><t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+	          	           	   	        
+	 		columns: [				
+	 		
+	 			{ title: "MessageLogId" ,data:"msgLogId" },
+	 			{ title: "MessageLogType" ,data:"messageLogType.description" },
+				{ title: "status" ,data:"status" },
+				{ title: "xmlMsgText",data:"xmlMsgText"},
+			    {title: "erroMsgText",data:"erroMsgText"},
+			    {title: "updateTs" ,data:"updateTs"},
+			 			  
+				],
+
+				columnDefs: [
+	        	        	
+	        	{ "width":"100px", "targets": 0 },
+	        	{ "width":"100px", "targets": 1 },
+	        	{ "width":"300px", "targets": 2},
+	        	{ "width":"100px", "targets": 3 },
+	        	{ "width":"100px", "targets": 4},				 
+		       
+        	]  
+		});
+		 			
+	});
+	
+</script>
+	
+	
+<div th:id="messageLogModal" class="modal " tabindex="-1" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
+  
+  <div class="modal-dialog modal-lg" >
+    
+    <div class="modal-content ">
+      
+      <div class="modal-header ">      
+	      <h1 class="modal-title w-100 text-center"><strong>Attachment Viewer</strong></h1>
+	      <button type="button" id="closeMessageLog" class="btn btn-primary" data-dismiss="modal">
+	          Close
+	       </button>
+      </div>
+      
+      <div class="modal-body " >      
+       	<table th:id="MessageLogTable" class="display" ></table>         
+      </div>
+      
+      <div class="modal-footer">
+      </div>
+      
+    </div>
+  </div>
+</div> 
+</div>  
+</body>
+</html>

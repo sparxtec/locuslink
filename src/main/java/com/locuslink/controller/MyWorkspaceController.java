@@ -27,6 +27,7 @@ import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.Customer;
+import com.locuslink.model.UniqueAsset;
 import com.locuslink.model.UniversalCatalog;
 /**
  * This is a Spring MVC Controller.
@@ -214,6 +215,8 @@ public class MyWorkspaceController {
 		return response;
 	 }
 	
+	
+
 	
 	
 	

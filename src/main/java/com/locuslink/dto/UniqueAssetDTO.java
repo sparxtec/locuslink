@@ -5,8 +5,11 @@ import lombok.Data;
 @Data
 public class UniqueAssetDTO {
 
+	public UniqueAssetDTO() {
 		
-	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, String universaCatalogId, 			
+	};
+		
+	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, String universalCatalogId, 			
 			               String manufacturerName, String productTypeCode, String productName, 
 			               String productNumber, String traceTypeCode, String traceCode,
 			               String customerName, String productDesc, String productTypeDesc,
@@ -14,7 +17,7 @@ public class UniqueAssetDTO {
 		
 		this.uniqueAssetPkId = uniqueAssetPkId; 
 		this.uniqueAssetId = uniqueAssetId; 
-		this.universaCatalogId = universaCatalogId;		
+		this.universalCatalogId = universalCatalogId;		
 		this.manufacturerName = manufacturerName;		
 		this.productTypeCode = productTypeCode;		
 		this.productName = productName;
@@ -52,7 +55,7 @@ public class UniqueAssetDTO {
 	
 	
 	// Universal Catalog
-	private String universaCatalogId;
+	private String universalCatalogId;
 	private String productNumber;
 	private String productName;
 	private String productDesc;
