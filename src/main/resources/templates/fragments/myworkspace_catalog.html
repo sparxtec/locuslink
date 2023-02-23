@@ -18,8 +18,8 @@
      	 		searching:true,
              	responsive: true,		        
              	"paging":   true,	
-             	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)',	
+             //	scrollCollapse: true,
+             //	scrollY: 'calc(100vh - 35rem)',	
              	order: [0, 'asc' ],		        
          		//colReorder: true,		        
      
@@ -48,20 +48,13 @@
              columns: [	              	
                  { data: "ucatPkId" },
                  { data: "universalCatalogId" },   
-                 { data: "productType.typeCode" },                   
+                 { data: "productTypePkId" },                   
                  { data: "productNumber" },                 
                  { data: "productName" },
                  { data: "productDesc" },
                    
             	],
             	
-/*             	"createdRow": function( row, data, dataIndex ) {
-            		//console.log(data.itemNumErrorFlag);            	
-            	    if ( data.activeStatus == "N" ) {
-            	    	 $(row).addClass('deactivated');
-            	    	 // $('tr', row).eq(9).addClass("checked"); 
-            	    }                	   
-            	  }, */
              	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
             	          		
            });

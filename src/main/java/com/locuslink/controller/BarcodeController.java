@@ -72,18 +72,12 @@ public class BarcodeController {
 		logger.debug("Starting getBarcodeForAsse2t()...");
 
 		
-		UniqueAsset uniqueAsset =  uniqueAssetDao.getById(dashboardFormDTO.getUniqueAssetPkId());
-		if (uniqueAsset == null) {
+		UniqueAssetDTO uniqueAssetDTO =  uniqueAssetDao.getDtoById(Integer.valueOf(dashboardFormDTO.getUniqueAssetPkId()));
+		if (uniqueAssetDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
-		
-		UniqueAssetDTO uniqueAssetDTO = new UniqueAssetDTO();
-		uniqueAssetDTO.setManufacturerName("ABC Manufacturing");
-		uniqueAssetDTO.setUniqueAssetId(dashboardFormDTO.getUniqueAssetPkId() + ".xxx.xxx.xxx");
-		uniqueAssetDTO.setUniversalCatalogId("zzz.zzz.zzz");
-		
-	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);
-		
+				
+	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/modal_barcode_viewer";

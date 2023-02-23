@@ -41,6 +41,10 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	@PersistenceContext
+	EntityManager entityManager;
+	
+	
     public UniqueAssetDaoImpl() {
     }
     
@@ -57,8 +61,41 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 		return this.sessionFactory.getCurrentSession().get(UniqueAsset.class, pkid);				
 	}
 	
-	@PersistenceContext
-	EntityManager entityManager;
+	@Override
+	public UniqueAssetDTO getDtoById(int pkid) {	
+
+		 UniqueAssetDTO dto = entityManager.createQuery("""
+			select new com.locuslink.dto.UniqueAssetDTO(
+				ua.uniqueAssetPkId,
+				ua.uniqueAssetId,
+		 		uc.universalCatalogId,			 		
+		 		mfg.name,		 							 										
+				pt.productTypeCode,				
+				uc.productName,					
+				uc.productNumber,
+				tt.traceTypeCode,
+				ua.traceCode,						
+				cus.customerName,
+				uc.productDesc,
+				pt.producTypeDesc,
+				pa.uniqueAttributesJson				
+			)
+			from UniqueAsset ua	
+				join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
+		        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
+		        join Customer cus on cus.customerPkId = ua.customerPkId		        
+				join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
+				join ProductType pt on pt.productTypePkId = uc.productTypePkId					
+				left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
+			where ua.uniqueAssetPkId = :pkid
+									
+			""", UniqueAssetDTO.class)
+				 .setParameter("pkid", pkid)
+				 .getSingleResult();				 
+		 return dto;		
+	}
+	
+
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,7 +105,7 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universaCatalogId,			 		
+		 		uc.universalCatalogId,			 		
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
 				uc.productName,					

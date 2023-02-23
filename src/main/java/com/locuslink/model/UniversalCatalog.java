@@ -27,7 +27,7 @@ public class UniversalCatalog extends Common {
     private int ucatPkId;
   
     @Column(name="universal_catalog_id", nullable = false)
-    private String universaCatalogId;
+    private String universalCatalogId;
 
     @Column(name = "product_type_pkId", nullable = false)
 	private int productTypePkId; 

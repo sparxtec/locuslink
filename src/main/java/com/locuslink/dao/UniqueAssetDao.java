@@ -14,6 +14,8 @@ public interface UniqueAssetDao  {
 	
 	public UniqueAsset getById (int id);
 	
+	public UniqueAssetDTO getDtoById (int id);
+	
 	public List<UniqueAsset>  getAll();
 	
 	public List<UniqueAssetDTO>  getAllDTO ();

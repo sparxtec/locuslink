@@ -13,7 +13,7 @@ public class DashboardFormDTO {
 	
 	// Barcode Processing
 	private String printBarcode1;
-	private int uniqueAssetPkId;
+	private String uniqueAssetPkId;
 	
 	private String fileName;
 	private String responseText ="";

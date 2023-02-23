@@ -2,7 +2,7 @@
 <html  xmlns:th="http://www.thymeleaf.org">
   <head> 
     <title>My Workspace</title>
-<style>
+ <style>
 	.datatable-toolbar {
 		padding: .20rem !important
 	}
@@ -23,7 +23,7 @@
  	#assetDataTable td:nth-child(6) { min-width: 240px; } 
  	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
     
-</style>
+</style> 
     <script>
 
 		var globalTable;		
@@ -52,8 +52,6 @@
      	        "dataSrc": function (json) {
      	        	uniqueassetlist = json.data.uniqueassetlist;	     	        	
      	        	hideSpinner();		    		     	      	        	
-     	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
-     	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
      	        	console.log(JSON.parse(uniqueassetlist));
      	        	return JSON.parse(uniqueassetlist);     	        	      	        	
      	         }					       
@@ -94,19 +92,14 @@
         		
              	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
 
-/*                 buttons: [
-                    { extend: "create", editor: editor },
-                    { extend: "edit",   editor: editor },
-                    { extend: "remove", editor: editor }
-                ] */
              	             	        		            	          	
            });
-     	 }	// end datatable
+     	 }	 
      			
      			
      	 
      	 // Button Clicks on the Data table
- 	    $('#assetDataTable tbody').on('click', 'button', function (e) {
+  	    $('#assetDataTable tbody').on('click', 'button', function (e) {
 	    	console.log(this);
 	    	
 	    	var url='';
@@ -130,19 +123,19 @@
 	        // set the FORM value so the controller can get it.				
 			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
 				
-	    						
+	    			
    			showSpinner();								
    			submitFormAjaxHTML('getBarcodeForAsset2', $("#dashboardFormDTO").serialize(), "modalResponse");	
    			
  			
-	    });   // end on click
+	    }); 
 	    
 	    
      	 
- 		// SEARCH FILTER
+  		// SEARCH FILTER
   		$('#assetDataTable_filter input').keyup(function(){
  			table.search($(this).val()).draw() ;
- 		}); 
+ 		});  
  		
    		$('#previous').click(function() {					
    			showSpinner();								
@@ -180,82 +173,79 @@
 	
   </head>
 
-  <body id="Body">
+  <body id="assetBody">
 	 	
-	 	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
+	 <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
     	    						 
-		<section id="manage_1_mainBody" class="de-component de-component--gray">
+	<section id="manage_1_mainBody" class="de-component de-component--gray"> 
 			
-			<div class="de-component__container">
-		    	<header class="de-component-header">
-		            <h2 class="de-component-header__title">My Workspace</h2>
-		        </header>
-		    </div>
+		<div class="de-component__container">
+	    	<header class="de-component-header">
+	            <h2 class="de-component-header__title">My Workspace</h2>
+	        </header>
+	    </div>
 
-            <div class="form-group text-center">
-				<div class="card">
-  
-					<div class="card-header"><i class="fas fa-user mr-2"></i> Unique Asset Data:			
-					</div>				
-
-					<div class="de-component__container">				
-	                     
-						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
-						 	<div class="datatable-toolbar-group">
-						 		<div id="addbtn">
-						 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
-						 		</div>
-						 	</div>
-						 
-						 	<div class="datatable-toolbar-group">
-						 		<div id="assetDataTable_filter" class="dataTables_filter">
-						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="assetDataTable"></label>
-						 		</div>
-						 	</div>
-						 </div>	                     
-	                     
-		                 <div id="xxxx">		                     
-	   	 					<table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
-	                           <thead class="thead-light">
-	                              <tr>
-       							     <th scope="col"></th>       
-       							     <th scope="col"></th>   
-	                                 <th scope="col">Id</th>	                                 	                          	                                 
-	                                 <th scope="col">Unique Asset ID</th>
-	                                 <th scope="col">Universal Catalog ID</th>	
-	                                 <th scope="col">Manufacturer</th>
-	                                 <th scope="col">Product Type</th>
-	                                 <th scope="col">Product Name</th>
-	                                 <th scope="col">Product Number</th>	
-	                                 <th scope="col">Trace Type</th>	
- 									 <th scope="col">Trace Number</th>		                                                                     	                             	                             
-	                              	 <th scope="col">Customer</th>
-	                                 <th scope="col">Product Desc</th>
-	                             	 <th scope="col">PType Description]</th>
-	                                 <th scope="col">Unique Attributes</th>
-	                              </tr>
-	                           </thead>
-	                        </table>
-		                 </div>		                     
-                                  
-					</div>
-										
-					<br><br>                               
-                    <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
-                         <button type="button" id="previous" class="button button--continue">Previous</button>
-                    </div>
-                                                               
-				</div>
+        <div class="form-group text-center">
+			<div class="card">
+	
+				<div class="card-header"><i class="fas fa-user mr-2"></i> Unique Asset Data:			
+				</div>				
+	
+				<div class="de-component__container">				
+	                    
+					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
+					 	<div class="datatable-toolbar-group">
+					 		<div id="addbtn">
+					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+					 		</div>
+					 	</div>
+					 
+					 	<div class="datatable-toolbar-group">
+					 		<div id="assetDataTable_filter" class="dataTables_filter">
+					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="assetDataTable"></label>
+					 		</div>
+					 	</div>
+					 </div>	                     
+	                  
+	                 <div id="xxxx">		                     
+	  	 					<table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
+	                          <thead class="thead-light">
+	                             <tr>
+	     							<th scope="col"></th>       
+	     							<th scope="col"></th>   
+	                                <th scope="col">Id</th>	                                 	                          	                                 
+	                                <th scope="col">Unique Asset ID</th>
+	                                <th scope="col">Universal Catalog ID</th>	
+	                                <th scope="col">Manufacturer</th>
+	                                <th scope="col">Product Type</th>
+	                                <th scope="col">Product Name</th>
+	                                <th scope="col">Product Number</th>	
+	                                <th scope="col">Trace Type</th>	
+									<th scope="col">Trace Number</th>		                                                                     	                             	                             
+	                             	<th scope="col">Customer</th>
+	                                <th scope="col">Product Desc</th>
+	                            	<th scope="col">PType Description]</th>
+	                                <th scope="col">Unique Attributes</th>
+	                             </tr>
+	                          </thead>
+	                       </table>
+	                 </div>		                                                       
+				</div> 
+									
+			<br><br>                               
+            <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                 <button type="button" id="previous" class="button button--continue">Previous</button>
+            </div>
+	                                                             
+			</div>
+		
+    </div>
 				
-		    </div>
 				
-<!-- MODAL TEsting -->				
-<!-- <div th:replace="fragments/messageLogModal :: messageLogModal"></div>	 -->				
-				
-  <div id="modalBody">	
-  </div>			
+	    <div id="modalBody">	
+	    </div>			
 					
-		</section>
+	</section>
 	  
   </body>
   
