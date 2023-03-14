@@ -1,10 +1,49 @@
 
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(3, 'WIRE', 'Wire', 'csparks', '2023-02-01', NULL, NULL);
+
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(4, 'CABLE', 'Cable', 'csparks', '2023-02-01', NULL, NULL);   
+   
+INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(5, 'TRANSFORMER', 'Over Head Transformer', 'csparks', '2023-02-01', NULL, NULL);   
+
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(6, 'SPLICE_KIT', 'Splice Kit', 'csparks', '2023-02-01', NULL, NULL);   
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(7, 'TERMINATION', 'Termination', 'csparks', '2023-02-01', NULL, NULL);   
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(8, 'VOLTAGE_REGULATOR', 'Voltage Regulator', 'csparks', '2023-02-01', NULL, NULL);   
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(9, 'SWITCH_GEAR', 'Switch Gear', 'csparks', '2023-02-01', NULL, NULL);   
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(10, 'RECLOSER', 'Recloser', 'csparks', '2023-02-01', NULL, NULL);   
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(11, 'CIRCUIT_BREAKER', 'Circuit Breaker', 'csparks', '2023-02-01', NULL, NULL);  
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(12, 'SECTIONALIZER', 'Sectionalizer', 'csparks', '2023-02-01', NULL, NULL);  
+   
+ INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(13, 'FAULT_INTERUPTER', 'Fault Interrupter', 'csparks', '2023-02-01', NULL, NULL);  
+   
+   
+   
+
+
 INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
      VALUES(1, 'Utility', 'Duke Energy', 'Y', 'csparks', '2023-02-02', NULL, NULL);     
 INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
      VALUES(2, 'Utility', 'Acme Utilities', 'Y', 'csparks', '2023-02-02', NULL, NULL);     
 INSERT INTO locuslink.customer (customer_pkid, customer_type_code, customer_name, active_flag, add_by, add_ts, update_by, update_ts)
      VALUES(3, 'Gas Utility', 'Piedmont Natural Gas', 'Y', 'csparks', '2023-02-02', NULL, NULL);
+            
+            
             
 INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
     VALUES(50, 'SouthEastern Wire', 'csparks', '2023-02-01', NULL, NULL);    
@@ -17,12 +56,7 @@ INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, u
 INSERT INTO locuslink.manufacturer (manufacturer_pkid, "name", add_by, add_ts, update_by, update_ts)
     VALUES(54, 'Loose Nut Supply ', 'csparks', '2023-02-01', NULL, NULL);
 
-INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
-   VALUES(3, 'WIRE', '14 AWG Twister Bare Copper', 'csparks', '2023-02-01', NULL, NULL);
-INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
-   VALUES(4, 'WIRE', '18 AWG Wire Spool', 'csparks', '2023-02-01', NULL, NULL);
-INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
-   VALUES(5, 'XFORMER', 'Over Head Transformer 440v', 'csparks', '2023-02-01', NULL, NULL);   
+
             
 INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, project_name, add_by, add_ts, update_by, update_ts)
    VALUES(100, 1, 'TRANS', 'Transmission Lines _ Install Hwy 378', 'csparks', '2023-02-01', NULL, NULL);     
@@ -30,6 +64,8 @@ INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, p
    VALUES(101, 1, 'DISTR', 'Distribution Service - 111 Main Street', 'csparks', '2023-02-01', NULL, NULL);        
 INSERT INTO locuslink.project (project_pkid, customer_pkid, project_type_code, project_name, add_by, add_ts, update_by, update_ts)
    VALUES(102, 1, 'DISTR', 'Distribution - Pole Replacement - 300 Main Street', 'csparks', '2023-02-01', NULL, NULL); 
+  
+  
    
 INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_date, po_number, po_desc, add_by, add_ts, update_by, update_ts)
    VALUES(300, 1, 100, '2023-02-01', '1007100', 'Wire', 'csparks', '023-02-01', NULL, NULL);       
@@ -38,6 +74,7 @@ INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_d
 INSERT INTO locuslink.purchase_order (po_pkid, customer_pkid, project_pkid, po_date, po_number, po_desc, add_by, add_ts, update_by, update_ts)
    VALUES(302, 1, 100, '2023-02-01', '1007100', 'Transformer', 'csparks', '023-02-01', NULL, NULL);  
    
+   
     
 INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid,  product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
    VALUES(800, 'xxxx.xxxxx.xxxxxx', 3,  '10007200', 'Copper Wire', 'Bare Copper Wire 14 AWG Twisted Pair', 'csparks', NULL, NULL, NULL);
@@ -45,6 +82,11 @@ INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, produc
    VALUES(801, 'xxxx.xxxxx.xxxxxx', 3,  '10007300', 'Shielded Wire', '4 AWG Shielded Wire', 'csparks', NULL, NULL, NULL);   
 INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid, product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
    VALUES(802, 'xxxx.xxxxx.xxxxxx', 3,  '20004100', 'Transformer', '440v Transformer', 'csparks', NULL, NULL, NULL);
+ 
+ INSERT INTO locuslink.universal_catalog (ucat_pkid, universal_catalog_id, product_type_pkid, product_number, product_name, product_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(803, 'xxxx.xxxxx.xxxxxx', 4,  '20007700', 'Under Ground Cable', 'Under Ground Cable Metallic Shielding', 'csparks', NULL, NULL, NULL);
+ 
+ 
   
 INSERT INTO locuslink.traceability_type (traceability_type_pkid, traceability_type_code, traceability_type_desc, add_by, add_ts, update_by, update_ts)
    VALUES(40, 'Heat', 'Heat Number', 'csparks', '2023-02-01', NULL, NULL);

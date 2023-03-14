@@ -244,6 +244,19 @@ table.dataTable thead th {
 
 	</script>
 
+
+
+<script>
+
+$('#accountLogout').click(function() {
+	showSpinner();
+	submitFormHTML('initLogout', 'dashboardFormDTO');
+});
+
+</script>
+
+
+
   </head>
 
 
@@ -337,6 +350,10 @@ table.dataTable thead th {
 	        </main>
         </form>
     </div>
+
+
+
+
 
 	<div th:replace="fragments/footer :: footer"></div>
   </body>

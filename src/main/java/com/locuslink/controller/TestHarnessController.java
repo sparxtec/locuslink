@@ -3,6 +3,8 @@ package com.locuslink.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,10 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.locuslink.common.SecurityContextManager;
-import com.locuslink.dao.CustomerDao;
-import com.locuslink.dao.UniqueAssetDao;
-import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.util.BartenderRestClient;
 /**
  * This is a Spring MVC Controller.
  *
@@ -37,18 +37,20 @@ public class TestHarnessController {
     @Autowired
     private SecurityContextManager securityContextManager;
 
+//    @Autowired
+//    private CustomerDao customerDao;
+//
+//    @Autowired
+//    private UniversalCatalogDao universalCatalogDao;
+//    
+//    @Autowired
+//    private UniqueAssetDao uniqueAssetDao;
+    
+    
     @Autowired
-    private CustomerDao customerDao;
+    private BartenderRestClient bartenderRestClient;
 
-    @Autowired
-    private UniversalCatalogDao universalCatalogDao;
     
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
-    
-    
-    
-
 	@PostMapping(value = "/initTestHarness")
 	public String initTestHarness (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initTestHarness()...");
@@ -86,7 +88,57 @@ public class TestHarnessController {
 	
 	
 	
+	@PostMapping(value = "/printBartenderCloud")
+	public String printBartenderCloud (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting printBartenderCloud()...");
+
+		
+		// Step 1 - Get the righ attached printer, maybe this needs to be a list or profile setting
+		bartenderRestClient.getPrinterList();
+
+		
+		
+		// Step 2 - Print Barcode
+		JSONObject jsonRequest = new JSONObject();
+		JSONObject jsonMainOptions = new JSONObject();
+		JSONObject jsonNamedDataSources = new JSONObject();
+
+		try {
+			jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
+			jsonMainOptions.put("Printer", "printer:Sparxtec_1/ZDesigner_ZD420-300dpi_ZPL");
+			jsonMainOptions.put("SaveAfterPrint", false);	
+			
+			jsonNamedDataSources.put("Ship_To_Name", "Bohak and BuddahConcheezy");
+			
+			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
+
+			jsonRequest.put("PrintBTWAction", jsonMainOptions);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		logger.debug("jsonREquest ->: " +jsonRequest.toString());
+		bartenderRestClient.printBarcode(jsonRequest.toString());
+				
+		
+		model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/testing_harness";
+	}
 	
+	
+	/**
+	 *   03-14-2023  Go to the Bartender Cloud, Populate and figure out best options for viewing
+	 *   Download may enable the print from the UI Printer list.
+	 */	 
+	@PostMapping(value = "/viewBartenderCloud")
+	public String viewBartenderCloud (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting viewBartenderCloud()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/testharness_modal_barcode_viewer";
+	}
 	
 
 }
