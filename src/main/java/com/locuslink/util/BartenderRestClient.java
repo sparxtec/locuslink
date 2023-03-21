@@ -58,10 +58,10 @@ public class BartenderRestClient {
 	 *   Step 2 - Get the encoded byte array for the PDF
 	 *   Step 3 - Return to UI for Viewing and/or local printing
 	 */
-	public String getBarcode_PDFEncodedStream(String wrk) {  
+	public String getBarcode_PDFEncodedStream(String barcodeTemplateName, String  uniqueAssetPkId) {  
 		
 		// Step 1 - Print to FILE - Barcode to PDF
-		String barcodePdfTempPath = btcBarcodePrintToFile("");
+		String barcodePdfTempPath = btcBarcodePrintToFile(barcodeTemplateName, uniqueAssetPkId);
 		
 		// Step 2 - Get the temp PDF Barcode, as an encoded 64 String
 		String encodedPDFBarcdeString = getPDFEncodedByteArray(barcodePdfTempPath);
@@ -75,7 +75,7 @@ public class BartenderRestClient {
 	/**
 	 * 
 	 */
-	public String btcBarcodePrintToFile(String wrk) {  
+	public String btcBarcodePrintToFile(String barcodeTemplateName, String  uniqueAssetPkId) {  
 		  
 		String  url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"	;
 				  
@@ -86,20 +86,21 @@ public class BartenderRestClient {
 
 		try {
 			// TODO
-			jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
+			//jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
+			jsonMainOptions.put("Document", "Librarian://main/" + barcodeTemplateName );
 			
 			jsonMainOptions.put("Printer", "PDF");			
 			jsonMainOptions.put("ReturnPrintData", "true");
-			jsonMainOptions.put("ReturnPrintSummary", "true");
+			jsonMainOptions.put("ReturnPrintSummary", "true");						
+			jsonMainOptions.put("PrintToFileFolder", "Librarian://main/output/pdf/");
 			
 			// TODO
-			jsonMainOptions.put("PrintToFileFolder", "Librarian://main/output/pdf/");
-			jsonMainOptions.put("PrintToFileFileName", "Output.pdf");	
+			//jsonMainOptions.put("PrintToFileFileName", "Output.pdf");	
+			jsonMainOptions.put("PrintToFileFileName", uniqueAssetPkId + "_output.pdf");				
 			
 			jsonMainOptions.put("PrintToFileNameVariable", "PrintToFileName");				
-			jsonMainOptions.put("SaveAfterPrint", false);	
-			
-			jsonNamedDataSources.put("Ship_To_Name", "Kracken");			
+			jsonMainOptions.put("SaveAfterPrint", false);				
+			jsonNamedDataSources.put("Ship_To_Name", "Kracken:" + uniqueAssetPkId);			
 			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
 
 			jsonRequest.put("PrintBTWAction", jsonMainOptions);
@@ -109,8 +110,7 @@ public class BartenderRestClient {
 		}
 		logger.debug("jsonREquest ->: " +jsonRequest.toString());
 		
-		
-	
+			
 		// Step 2 - Call the BTC API to print to file
 		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -122,19 +122,7 @@ public class BartenderRestClient {
 		ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
 		logger.debug(" status ->: " + responseEntity.getStatusCode());
 		logger.debug(" response ->: " + responseEntity.getBody());
-		
-		
-		
-//		   # Get the output PDF file path by querying the %PrintToFileName% variable value.
-//		   $status_url = ($response.Content | ConvertFrom-Json).StatusUrl
-//		   $get_pdf_path_url = "{0}/variables/PrintToFileName" -f $status_url
-//		   Write-Host ("Getting output pdf file path from {0}." -f $get_pdf_path_url)
-//
-//		   $headers = @{ "Authorization"=("Bearer {0}" -f $access_token) }
-//		   $response = Invoke-WebRequest -Uri $get_pdf_path_url `
-//		                                 -Method GET `
-//		                                 -Headers $headers
-		
+				
 		
 		// Step 3 = Get the ID and StatusURL Variables from the above response
 		JSONObject jsonObj = null;
@@ -148,8 +136,7 @@ public class BartenderRestClient {
 			e.printStackTrace();
 		}
 		
-		
-		
+				
 		
 		// Step 4 - Get the PDF output path, so we can stream it in the next step {could use ID or statusURL}
 		//     ex ->: Librarian://main/output/pdf/Output(2023-03-16T14.52.37.478).pdf
@@ -159,10 +146,7 @@ public class BartenderRestClient {
 		logger.debug(" status ->: " + responseEntity.getStatusCode());
 		logger.debug(" response ->: " + responseEntity.getBody());
 		
-		
-
-		// TODO Shorten this to just the path, return that
-		
+		// The body is the byte array
 	    return responseEntity.getBody();
 	}
 
@@ -174,7 +158,6 @@ public class BartenderRestClient {
 		String filePathEncoded = "";
         try {
         	
-        	// TODO
         	//filePathEncoded = URLEncoder.encode("Librarian://main/output/pdf/Output.pdf", StandardCharsets.UTF_8.toString());        
         	filePathEncoded = URLEncoder.encode(barcodePdfTempPath, StandardCharsets.UTF_8.toString());                    	        
         } catch (UnsupportedEncodingException ex) {
@@ -208,111 +191,41 @@ public class BartenderRestClient {
 	}
 	
 	
+
 	
-	
-//	/**
-//	 * 
-//	 */
-//	public String printBarcode(String json) {  
-//		  
-//		String  url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"	;
-//				  
-//		
-//
+
+	  
+//	public void put(String uri, String json) {
+//		 
+//		String url = btcServerLocation + "/api/xxxxx";
+//			
 //		RestTemplate rest = new RestTemplate();
 //		HttpHeaders headers = new HttpHeaders();
 //		headers.add("Content-Type", "application/json");
 //		headers.add("Accept", "*/*");
-//		headers.add("Authorization",  "Bearer " + bartenderAccessToken );				
-//		
-//		HttpEntity<String> requestEntity = new HttpEntity<String>(json, headers);
-//		ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
+//		headers.add("Authorization",  "Bearer " + bartenderAccessToken );
+//			
+//	    HttpEntity<String> requestEntity = new HttpEntity<String>(json, headers);
+//	    ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.PUT, requestEntity, String.class);  
 //		logger.debug(" status ->: " + responseEntity.getStatusCode());
 //		logger.debug(" response ->: " + responseEntity.getBody());
 //		
-//		
-//		
-////		   # Get the output PDF file path by querying the %PrintToFileName% variable value.
-////		   $status_url = ($response.Content | ConvertFrom-Json).StatusUrl
-////		   $get_pdf_path_url = "{0}/variables/PrintToFileName" -f $status_url
-////		   Write-Host ("Getting output pdf file path from {0}." -f $get_pdf_path_url)
-////
-////		   $headers = @{ "Authorization"=("Bearer {0}" -f $access_token) }
-////		   $response = Invoke-WebRequest -Uri $get_pdf_path_url `
-////		                                 -Method GET `
-////		                                 -Headers $headers
-//		
-//		// Get the ID and StatusURL
-//		JSONObject jsonObj = null;
-//		String id = "";
-//		String statusUrl = "";
-//		try {
-//			jsonObj = new JSONObject(responseEntity.getBody());
-//			
-//			id = (String) jsonObj.get("Id");
-//			statusUrl = (String) jsonObj.get("StatusUrl");
-//			
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		// WORKS 
-//		// response ->: Librarian://main/output/pdf/Output(2023-03-16T14.52.37.478).pdf
-//
-//		// Testing trying to determine the PDF output path
-//		url = statusUrl + "/variables/PrintToFileName";				    								
-//		requestEntity = new HttpEntity<String>("", headers);
-//		responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-//		logger.debug(" status ->: " + responseEntity.getStatusCode());
-//		logger.debug(" response ->: " + responseEntity.getBody());
-//		
-//		
-//		// Can also use the ID i think easily, without a variable
-//		
-//		
-//	    return responseEntity.getBody();
 //	}
-
-
-	
-	
-	
-	
-	
-	
-	  
-	public void put(String uri, String json) {
-		 
-		String url = btcServerLocation + "/api/xxxxx";
-			
-		RestTemplate rest = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json");
-		headers.add("Accept", "*/*");
-		headers.add("Authorization",  "Bearer " + bartenderAccessToken );
-			
-	    HttpEntity<String> requestEntity = new HttpEntity<String>(json, headers);
-	    ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.PUT, requestEntity, String.class);  
-		logger.debug(" status ->: " + responseEntity.getStatusCode());
-		logger.debug(" response ->: " + responseEntity.getBody());
-		
-	}
-
-	  public void delete(String uri) {
-		
-		String url = btcServerLocation + "/api/xxxx";
-			
-		RestTemplate rest = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json");
-		headers.add("Accept", "*/*");
-		headers.add("Authorization",  "Bearer " + bartenderAccessToken );
-			
-	    HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
-	    ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-		logger.debug(" status ->: " + responseEntity.getStatusCode());
-		logger.debug(" response ->: " + responseEntity.getBody());
-	  }
+//
+//	  public void delete(String uri) {
+//		
+//		String url = btcServerLocation + "/api/xxxx";
+//			
+//		RestTemplate rest = new RestTemplate();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.add("Content-Type", "application/json");
+//		headers.add("Accept", "*/*");
+//		headers.add("Authorization",  "Bearer " + bartenderAccessToken );
+//			
+//	    HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
+//	    ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
+//		logger.debug(" status ->: " + responseEntity.getStatusCode());
+//		logger.debug(" response ->: " + responseEntity.getBody());
+//	  }
 
 }

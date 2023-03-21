@@ -69,11 +69,15 @@ public class BarcodeController {
 		if (uniqueAssetDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
+		
+		
+		// Step 1b - TEMP BarCode Template Name
+		String barcodeTemplateName_1 = "locuslink_1.btw";
+		String barcodeTemplateName_2 = "pipe_poc2.btw";
 			
 		// Step 2 - {Print to File}  Barcode to PDF on the Cloud		
-		//bartenderRestClient.printBarcode(jsonRequest.toString());
-		
-		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream("todo");		
+		//bartenderRestClient.printBarcode(jsonRequest.toString());		
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName_2, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
 		
 		
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	

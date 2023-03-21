@@ -150,7 +150,7 @@ public class TestHarnessController {
 
 					
 		
-		bartenderRestClient.btcBarcodePrintToFile("todo");		
+	//	bartenderRestClient.btcBarcodePrintToFile("todo");		
 		
 						
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
