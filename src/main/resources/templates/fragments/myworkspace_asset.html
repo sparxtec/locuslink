@@ -105,29 +105,30 @@
 	    	var url='';
 	    	var whatWasClicked=$(this).attr("id").split("_")[0];
 	    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
-	    		    	
-	   	    e.preventDefault(); // ??
-	    	
+	    		 	    				
+	        // set the FORM value so the controller can get it.				
+			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+	        
+	        
+	        
+	   	    e.preventDefault(); // ??	    	
 			showSpinner();
-	    	
+	    		   	    
+		    //	alert ("clicked ->:" + whatWasClicked + "   for uniqueAssetId ->:" + uniqueAssetId + "   url ->: " + url) ;
+					    
 			if(whatWasClicked==="docs") {
 				url = "getAllDocsForAsset";						
     		} else if(whatWasClicked==="barcode") {
     			url = "getBarcodeForAsset";	
+    			
+    			// 3-21-2023
+       			showSpinner();								
+       			submitFormAjaxHTML('getBarcodeForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
+       			       			       			
     		} else if(whatWasClicked==="delete") {
     			url = "deleteAsset";	
     		}
-			
-	    //	alert ("clicked ->:" + whatWasClicked + "   for uniqueAssetId ->:" + uniqueAssetId + "   url ->: " + url) ;
-	    					
-	        // set the FORM value so the controller can get it.				
-			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
-				
-	    			
-   			showSpinner();								
-   			submitFormAjaxHTML('getBarcodeForAsset2', $("#dashboardFormDTO").serialize(), "modalResponse");	
-   			
- 			
+			 			
 	    }); 
 	    
 	    

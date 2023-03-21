@@ -66,6 +66,12 @@
 			
 			$('#btc_4').click(function() {		
 				showSpinner();			
+				submitFormAjaxHTML('writeBartenderCloudToPDF', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+			$('#btc_5').click(function() {		
+				showSpinner();			
 				submitFormAjaxHTML('viewBartenderCloud', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
@@ -287,11 +293,16 @@
 							   </button>
 							   
 							    <button th:id="btc_3" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
-								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Print Cloud Java
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Print Barcode
 							   </button>
 							   
 							   
 							   <button th:id="btc_4" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Barcode to PDF
+							   </button>
+							   
+							   
+							   <button th:id="btc_5" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
 								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View Barcode
 							   </button>
 							   

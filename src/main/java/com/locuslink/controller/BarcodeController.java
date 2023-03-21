@@ -3,6 +3,8 @@ package com.locuslink.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.UniqueAsset;
+import com.locuslink.util.BartenderRestClient;
 /**
  * This is a Spring MVC Controller.
  *
@@ -47,75 +50,41 @@ public class BarcodeController {
     @Autowired
     private UniqueAssetDao uniqueAssetDao;
     
-    
+    @Autowired
+    private BartenderRestClient bartenderRestClient;
     
 
 	//*************************************************************//
 	//********         C U S T O M E R               **************//
 	//*************************************************************//
 	
-	@PostMapping(value = "/xxxxinitBarcode")
-	public String xxxxinitBarcode (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting xxxxinitBarcode()...");
 
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-		return "fragments/xxxxbarcode";
-	}
-
-	
-	
-	
-	
-	@PostMapping(value = "/getBarcodeForAsset2")
-	public String getBarcodeForAsset2 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting getBarcodeForAsse2t()...");
+	@PostMapping(value = "/getBarcodeForAsset")
+	public String getBarcodeForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting getBarcodeForAsset()...");
 
 		
+		// Step 1 - Get the database data for the Asset clicked
 		UniqueAssetDTO uniqueAssetDTO =  uniqueAssetDao.getDtoById(Integer.valueOf(dashboardFormDTO.getUniqueAssetPkId()));
 		if (uniqueAssetDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
-				
+			
+		// Step 2 - {Print to File}  Barcode to PDF on the Cloud		
+		//bartenderRestClient.printBarcode(jsonRequest.toString());
+		
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream("todo");		
+		
+		
+	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
+		
 	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/modal_barcode_viewer";
 	}
 	
-	
-	
 
-//	@RequestMapping(value = "/getBarcodeForAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-//	public @ResponseBody GenericMessageResponse getBarcodeForAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
-//
-//		logger.debug("In getBarcodeForAsset()");
-//		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getBarcodeForAsset");
-//	  	
-//		// TESTING
-//		UniqueAsset uniqueAsset =  uniqueAssetDao.getById(900);
-//		if (uniqueAsset == null) {
-//			logger.debug("  Note:  No Data Found......");
-//		}
-//			
-//		
-//		
-//        // Convert the POJO array to json, for the UI
-//		ObjectMapper mapper = new ObjectMapper();		
-//		String json = "";			
-//		try {
-//			json = mapper.writeValueAsString(uniqueAsset);			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		logger.debug("json ->: " + json);		
-//		response.setField("uniqueAsset",  json);
-//
-//		return response;
-//	 }
-	
-	
 	
 
 }

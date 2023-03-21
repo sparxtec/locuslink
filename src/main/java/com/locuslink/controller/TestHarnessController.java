@@ -75,7 +75,9 @@ public class TestHarnessController {
 		return "fragments/barcode_viewer";
 	}
 
-	
+	/**
+	 *   Original pdf viewer, not used in BArtender Cloud testing
+	 */
 	@PostMapping(value = "/initPdfView")
 	public String initPdfView (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initPdfView()...");
@@ -88,43 +90,75 @@ public class TestHarnessController {
 	
 	
 	
-	@PostMapping(value = "/printBartenderCloud")
-	public String printBartenderCloud (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting printBartenderCloud()...");
+	
+	
+	
+	/**
+	 *   Test case to get the printer list from BTC, then use a selected printer, and print to that
+	 *   defined "networked" printer.
+	 *   
+	 *   Outlier Test Case I think,
+	 */
+	
+	
+//	@PostMapping(value = "/printBartenderCloud")
+//	public String printBartenderCloud (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+//		logger.debug("Starting printBartenderCloud()...");
+//
+//		
+//		// Step 1 - Get the right attached printer, maybe this needs to be a list or profile setting
+//		bartenderRestClient.getPrinterList();
+//
+//		
+//		
+//		// Step 2 - Print Barcode
+//		JSONObject jsonRequest = new JSONObject();
+//		JSONObject jsonMainOptions = new JSONObject();
+//		JSONObject jsonNamedDataSources = new JSONObject();
+//
+//		try {
+//			jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
+//			jsonMainOptions.put("Printer", "printer:Sparxtec_1/ZDesigner_ZD420-300dpi_ZPL");
+//			jsonMainOptions.put("SaveAfterPrint", false);	
+//			
+//			jsonNamedDataSources.put("Ship_To_Name", "Bohak and BuddahConcheezy");
+//			
+//			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
+//
+//			jsonRequest.put("PrintBTWAction", jsonMainOptions);
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		logger.debug("jsonREquest ->: " +jsonRequest.toString());
+//		bartenderRestClient.printBarcode(jsonRequest.toString());
+//				
+//		
+//		model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//
+//		return "fragments/testing_harness";
+//	}
+	
+	
+	/**
+	 *   Part 1 for BTC Barcode to File {print to file}, so it can be downloaded, viewed, 
+	 *   and printed locally
+	 */	 
+	@PostMapping(value = "/writeBartenderCloudToPDF")
+	public String writeBartenderCloudToPDF (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting writeBartenderCloudToPDF()...");
 
+					
 		
-		// Step 1 - Get the righ attached printer, maybe this needs to be a list or profile setting
-		bartenderRestClient.getPrinterList();
-
+		bartenderRestClient.btcBarcodePrintToFile("todo");		
 		
-		
-		// Step 2 - Print Barcode
-		JSONObject jsonRequest = new JSONObject();
-		JSONObject jsonMainOptions = new JSONObject();
-		JSONObject jsonNamedDataSources = new JSONObject();
-
-		try {
-			jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
-			jsonMainOptions.put("Printer", "printer:Sparxtec_1/ZDesigner_ZD420-300dpi_ZPL");
-			jsonMainOptions.put("SaveAfterPrint", false);	
-			
-			jsonNamedDataSources.put("Ship_To_Name", "Bohak and BuddahConcheezy");
-			
-			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
-
-			jsonRequest.put("PrintBTWAction", jsonMainOptions);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logger.debug("jsonREquest ->: " +jsonRequest.toString());
-		bartenderRestClient.printBarcode(jsonRequest.toString());
-				
-		
-		model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+						
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/testing_harness";
 	}
+	
+	
 	
 	
 	/**
@@ -135,6 +169,13 @@ public class TestHarnessController {
 	public String viewBartenderCloud (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting viewBartenderCloud()...");
 
+
+	//	bartenderRestClient.viewBarcodePDF();	
+		
+		
+		
+
+		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/testharness_modal_barcode_viewer";
