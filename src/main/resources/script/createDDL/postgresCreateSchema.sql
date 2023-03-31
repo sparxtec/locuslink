@@ -8,6 +8,20 @@ CREATE TABLE "product_type" (
   "update_ts" timestamp
 );
 
+
+CREATE TABLE "product_type_gs1" (
+  "product_type_gs1_pkid" int PRIMARY KEY,
+  "product_type_pkid" int,
+  "gs1_ai" int,
+  "gs1_dataName" varchar,
+  "gs1_barcodeLabel" varchar,
+  "add_by" varchar,
+  "add_ts" timestamp,
+  "update_by" varchar,
+  "update_ts" timestamp
+);
+
+
 CREATE TABLE "document_type" (
   "doc_type_pkid" int PRIMARY KEY,
   "doc_type_code" varchar,
@@ -175,6 +189,9 @@ ALTER TABLE "universal_catalog" ADD CONSTRAINT "fk_ucat_pt" FOREIGN KEY ("produc
 ALTER TABLE "product_template" ADD CONSTRAINT "fk_ptemplate_pt" FOREIGN KEY ("ucat_pkid") REFERENCES "universal_catalog" ("ucat_pkid");
 
 ALTER TABLE "product_attribute" ADD CONSTRAINT "fk_pa_ucat" FOREIGN KEY ("ucat_pkid") REFERENCES "universal_catalog" ("ucat_pkid");
+
+ALTER TABLE "product_type_gs1" ADD CONSTRAINT "fk_ptgs1_pt" FOREIGN KEY ("product_type_pkid") REFERENCES "product_type" ("product_type_pkid");
+
 
 ALTER TABLE "product_attachment" ADD CONSTRAINT "fk_dt_attach" FOREIGN KEY ("doc_type_pkid") REFERENCES "document_type" ("doc_type_pkid");
 

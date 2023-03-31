@@ -10,6 +10,21 @@ Table product_type {
   update_ts timestamp
 }
 
+Table product_type_gs1 {
+  product_type_gs1_pkid int [pk] 
+  product_type_pkid int
+  gs1_ai int
+  gs1_dataTitle varchar
+  gs1_dataContent_json varchar
+  add_by varchar
+  add_ts timestamp
+  update_by varchar
+  update_ts timestamp
+}
+Ref fk_ptgs1_pt { 
+  product_type_gs1.( product_type_pkid) > product_type.(product_type_pkid)
+}
+
 
 Table document_type {
   doc_type_pkid int [pk] 
