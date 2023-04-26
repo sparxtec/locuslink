@@ -8,10 +8,9 @@
 
 
 		var stepper1 = null;
-
-		var globalTable;
+	
+		var catalogObjectList;
 		
-			
     	$(document).ready(function() {	
      		hideSpinner();	
      		
@@ -41,13 +40,21 @@
                 		return JSON.stringify( myData );
      	        }, 
      	        "dataSrc": function (json) {
-     	        	wireObjectList = json.data.wireObjectList;	     	        	
+     	        	
+     	        	// 4-25-2023
+     	        //	wireObjectList = json.data.wireObjectList;	    
+     	        	catalogObjectList = json.data.catalogObjectList;	
+     	        	
      	        	hideSpinner();	// C.Sparks 1-19-19			    		
      	      	        	
      	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
      	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
-     	        	console.log(JSON.parse(wireObjectList));
-     	        	return JSON.parse(wireObjectList);     	        	      	        	
+     	      // 	console.log(JSON.parse(wireObjectList));
+     	      //  	return JSON.parse(wireObjectList);       	        
+     	       // 	console.log(JSON.parse(catalogObjectList));
+     	       
+     	        	return JSON.parse(catalogObjectList);     
+     	             	        
      	         }					       
         		},  
      
@@ -111,7 +118,16 @@
 		});	
 		
 		
+		// 04-25-2023  Submit Button hit, save the uploaded docs to the DB.
+		$('#submitDocsToDatabaseId').click(function() {					
+			showSpinner();			
+			//console.log (catalogObjectList) ;			
+			$('#jsonUploadedCatalogObjectList').val( catalogObjectList ); 				
+			submitFormAjaxHTML('processXlsFileSave', $("#dashboardFormDTO").serialize(), "commonResponse");														
+		});	
+		
    	 });  
+    	
     	
     	
 		function commonResponse(returnData) {	
@@ -128,96 +144,96 @@
   
   <body>
  
-<!-- 	 <input type="hidden" id="dashboardFormDTO"  name="dashboardFormDTO" th:value="${dashboardFormDTO}">  -->
+	   <input type="hidden" id="jsonUploadedCatalogObjectList"  name="jsonUploadedCatalogObjectList" th:value="suckit"> 
+     
+          <section class="de-component h-100">
+          
+           <!--    <div class="de-component__container"> -->
+              
+                  <header class="de-component-header mb-0">
+                      <h2 class="de-component-header__title">Upload Docs</h2>
+                  </header>
 
-           <section class="de-component h-100">
-           
-            <!--    <div class="de-component__container"> -->
-               
-                   <header class="de-component-header mb-0">
-                       <h2 class="de-component-header__title">Upload Docs</h2>
-                   </header>
-
-                   <div id="stepper1" class="bs-stepper">
-                   
-                       <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
-                           <div class="step" data-target="#step1">
-                               <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
-                                   <span class="bs-stepper-circle">1</span>
-                                   <span class="bs-stepper-label"></span>
-                               </button>
-                           </div>
-                           <div class="line"></div>
-                           <div class="step" data-target="#step2">
-                               <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2" aria-selected="false">
-                                   <span class="bs-stepper-circle">2</span>
-                                   <span class="bs-stepper-label"></span>
-                               </button>
-                           </div>
-                           <div class="line"></div>
-                           <div class="step active" data-target="#step3">
-                               <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3" aria-selected="false">
-                                   <span class="bs-stepper-circle">3</span>
-                                   <span class="bs-stepper-label"></span>
-                               </button>
-                           </div>
-                       </div>   
-                       
-                                    
-                       <div class="bs-stepper-content">
-                       
-                           <div id="step1" role="tabpanel" class="content" aria-labelledby="stepper1trigger1">
-                           </div>
-                           
-                           <div id="step2" role="tabpanel" class="content" aria-labelledby="stepper1trigger2">
-                           </div>
-                           
-                           
-                           <div id="step3" role="tabpanel" class="content active" aria-labelledby="stepper1trigger3">
-                              
-                               <div class="form-group text-center">
+                  <div id="stepper1" class="bs-stepper">
+                  
+                      <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
+                          <div class="step" data-target="#step1">
+                              <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
+                                  <span class="bs-stepper-circle">1</span>
+                                  <span class="bs-stepper-label"></span>
+                              </button>
+                          </div>
+                          <div class="line"></div>
+                          <div class="step" data-target="#step2">
+                              <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2" aria-selected="false">
+                                  <span class="bs-stepper-circle">2</span>
+                                  <span class="bs-stepper-label"></span>
+                              </button>
+                          </div>
+                          <div class="line"></div>
+                          <div class="step active" data-target="#step3">
+                              <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3" aria-selected="false">
+                                  <span class="bs-stepper-circle">3</span>
+                                  <span class="bs-stepper-label"></span>
+                              </button>
+                          </div>
+                      </div>   
+                      
+                                   
+                      <div class="bs-stepper-content">
+                      
+                          <div id="step1" role="tabpanel" class="content" aria-labelledby="stepper1trigger1">
+                          </div>
+                          
+                          <div id="step2" role="tabpanel" class="content" aria-labelledby="stepper1trigger2">
+                          </div>
+                          
+                          
+                          <div id="step3" role="tabpanel" class="content active" aria-labelledby="stepper1trigger3">
+                             
+                              <div class="form-group text-center">
+                                
                                  
-                                  
-				<div class="card">
+			<div class="card">
 
-					<div class="card-header"><i class="fas fa-user mr-2"></i> My Data:
-			
-					</div>
-
-					<div class="de-component__container">				
-	                     
-						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
-						 	<div class="datatable-toolbar-group">
-						 		<div id="addbtn">
-						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>
-						 		</div>
-						 	</div>
-						 	<div class="datatable-toolbar-group">
-						 		<div id="materialDataTable_filter" class="dataTables_filter">
-						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="materialDataTable"></label>
-						 		</div>
-						 	</div>
-						 </div>	                     
-	                     
-		                     <div id="editUserListHeaderId">
-		                     
-		                        <table id="materialDataTable" class="bg-white border border-top-0">
-		                        
-		                           <thead class="thead-light">
-		                              <tr>
-		                                 <th scope="col">Filename</th>
-		                                 <th scope="col">Product Type</th>
-		                                 <th scope="col">Number</th>
-		                                 <th scope="col">Name</th>
-		                                 <th scope="col">Description</th>
-		                                 <th scope="col">Action</th>
-		                              </tr>
-		                           </thead>
-		                        </table>
-		                     </div>		                     
-						
-					</div>
+				<div class="card-header"><i class="fas fa-user mr-2"></i> My Data:
+		
 				</div>
+
+				<div class="de-component__container">				
+                     
+					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+					 	<div class="datatable-toolbar-group">
+					 		<div id="addbtn">
+					 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>
+					 		</div>
+					 	</div>
+					 	<div class="datatable-toolbar-group">
+					 		<div id="materialDataTable_filter" class="dataTables_filter">
+					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="materialDataTable"></label>
+					 		</div>
+					 	</div>
+					 </div>	                     
+                     
+	                     <div id="editUserListHeaderId">
+	                     
+	                        <table id="materialDataTable" class="bg-white border border-top-0">
+	                        
+	                           <thead class="thead-light">
+	                              <tr>
+	                                 <th scope="col">Filename</th>
+	                                 <th scope="col">Product Type</th>
+	                                 <th scope="col">Number</th>
+	                                 <th scope="col">Name</th>
+	                                 <th scope="col">Description</th>
+	                                 <th scope="col">Action</th>
+	                              </tr>
+	                           </thead>
+	                        </table>
+	                     </div>		                     
+					
+				</div>
+			</div>
 
 
 
@@ -227,7 +243,7 @@
                                    <button type="button" id="previousGoToPage2" class="button button--previous" onclick="stepper1.previous();">Previous</button>
 
                                    <!-- C.Sparks 2-24-2020 -->
-                                  <button type="button" class="button button--submit ml-3" id="submitForm_NEW" disabled>Submit</button>
+                                  <button type="button" class="button button--submit ml-3" id="submitDocsToDatabaseId" >Submit</button>
 
                                </div>
                            </div>
@@ -306,8 +322,7 @@
 				</div>
 									
            </section>  
-	               
-<!--     </form> -->
+
 
   </body>
   

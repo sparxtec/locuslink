@@ -24,6 +24,18 @@
 			
 			
 			
+			$('#downloadTemplateId').click(function() {	
+				
+				// set the FORM value from the document combo box dropdown				
+				$('#selectedTemplate').val($('#comboTemplatesId').val().trim()); 		;
+				
+				alert ("selected template ->: " + $("#selectedTemplate").val() );
+				//showSpinner();								
+				//submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
+			});	
+			
+			
+			
 		});
 	
 		function commonResponse(returnData) {	
@@ -47,6 +59,7 @@
   <body>
   
     <input type="hidden" id="selectedDocType" name="selectedDocType"  th:value="${comboSelectedDocType}">
+    <input type="hidden" id="selectedTemplate" name="selectedTemplate"  th:value="${comboTemplatesId}">
     	 
  			<main>
 	            <section class="de-component h-100">
@@ -96,10 +109,10 @@
 											<div class="d-flex justify-content-between">
 		
 												<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" style="width: 260px">
-													<option value="PIPE" >Steel Pipe</option>
+													<option value="PIPE" selected >Steel Pipe 12"</option>
 													<option value="TRANSFORMER">Transformer</option>	
 												    <option value="VALVE">Valve</option>
-												    <option value="WIRE" selected>Wire</option>													
+												    <option value="WIRE" >Wire</option>													
 												</select>												
 											</div>
 										</div>
@@ -119,17 +132,12 @@
 								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Do you need a template to download ?</span></div>
 								<div class="card-body h-25">
 									<p class="mb-0">Select a template for download.</p>													
-								    <button th:id="viewCatalogDataId" data-toggle="tooltip" data-placement="left" title="View all the Catalog data" 
+								    <button th:id="downloadTemplateId" data-toggle="tooltip" data-placement="left" title="Download a material catalog template" 
 									        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Download
 								   </button>								   
 									<select id="comboTemplatesId" name="comboTemplatesId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
 										<option value="none" >-- Select a Template ---</option>
-										<option value="TPL_2">Wire template 2</option>	
-									    <option value="TPL_3">Wire template 3</option>
-									    <option value="TPL_4">Wire template 4</option>
-										<option value="TPL_5">Wire template 5</option>	
-									    <option value="TPL_6">Wire template 6</option>
-									    <option value="TPL_7">Wire template 7</option>															
+										<option value="STEEL_PIPE_12Inch">Steel Pipe 12"</option>														
 									</select>
 								</div>											
 	                      </div> 

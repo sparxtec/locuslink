@@ -8,17 +8,11 @@ import lombok.Setter;
 @Setter
 @Data
 public class WireUniqueAttr {
-
-
   
     private String nominalDiameter;
     
     private String outsideDiameter;
     
-
 	private String typeDesc; 
-	
-	
-
-
+		
 }

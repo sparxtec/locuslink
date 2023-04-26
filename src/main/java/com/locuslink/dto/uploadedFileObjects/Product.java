@@ -5,11 +5,8 @@ import lombok.Data;
 @Data
 public class Product {
 	
-	// UI Needs This
+	// UI Needs This upload page 3
 	private String uploadedFilename;
-	
-	// DB Needs This
-	private String productType;
 	
 	private String productNumber;
 	
@@ -19,5 +16,8 @@ public class Product {
 	
 	private String activeStatus;
 	
+	
+	// DB Needs This - ui page 3 submit
+	private String productTypeCode;
 	
 }

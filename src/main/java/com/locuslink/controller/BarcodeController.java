@@ -77,7 +77,7 @@ public class BarcodeController {
 			
 		// Step 2 - {Print to File}  Barcode to PDF on the Cloud		
 		//bartenderRestClient.printBarcode(jsonRequest.toString());		
-		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName_2, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName_1, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
 		
 		
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
