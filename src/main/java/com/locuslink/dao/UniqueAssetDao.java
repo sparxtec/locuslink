@@ -21,7 +21,7 @@ public interface UniqueAssetDao  {
 	public List<UniqueAssetDTO>  getAllDTO ();
 	
 	
-	
+	public void save(UniqueAsset uniqueAsset);
 	
 	public void saveOrUpdate(UniqueAsset uniqueAsset);
 	

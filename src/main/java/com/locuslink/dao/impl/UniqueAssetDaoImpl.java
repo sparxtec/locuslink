@@ -149,6 +149,12 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	}	
 	
 	@Override
+	public void save (UniqueAsset uniqueAsset) {
+		this.sessionFactory.getCurrentSession().save(uniqueAsset);
+	}	
+	
+	
+	@Override
 	public void delete(UniqueAsset uniqueAsset) {
 		this.sessionFactory.getCurrentSession().delete(uniqueAsset);
 	}

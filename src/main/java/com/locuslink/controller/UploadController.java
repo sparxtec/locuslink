@@ -42,10 +42,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.uploadedFileObjects.ProductDTO;
-import com.locuslink.dto.uploadedFileObjects.SteelPipeAttributesDTO;
-import com.locuslink.dto.uploadedFileObjects.WireAttributesDTO;
+import com.locuslink.model.UniqueAsset;
 /**
  * This is a Spring MVC Controller.
  *
@@ -59,6 +59,9 @@ public class UploadController {
 	private static final Logger logger = Logger.getLogger(UploadController.class);
     	
 	@Autowired
+	private UniqueAssetDao uniqueAssetDao;
+	
+	@Autowired
     private SecurityContextManager securityContextManager;
 	
 	@Autowired
@@ -66,9 +69,7 @@ public class UploadController {
 
 	@Value("${aws.s3.bucketName}")
 	private String awsS3BucketName;
-	
-		
-	
+				
 	@Value("${file.templates.fullpath}")
 	private String fileTemplatesFullpath;
 			  
@@ -316,8 +317,7 @@ public class UploadController {
 		logger.debug("Starting processXlsFileSave()...");
 		logger.debug("  data ->: " + dashboardFormDTO.getJsonUploadedProductObjectList());
 	
-		List <ProductDTO> productObjectList =  new ArrayList<ProductDTO>(); 
-		
+		List <ProductDTO> productObjectList =  new ArrayList<ProductDTO>();         
 		ObjectMapper mapper = new ObjectMapper();				
 		try {
 			productObjectList =  mapper.readValue(dashboardFormDTO.getJsonUploadedProductObjectList(), new TypeReference<ArrayList<ProductDTO>>() {});
@@ -327,42 +327,93 @@ public class UploadController {
 	
 		for (ProductDTO productDTO : productObjectList) {
 			
-			logger.debug("Found  fileName ->: " + productDTO.getUploadedFilename() + " :" +  productDTO.getProductTypeCode() + " :" + productDTO.getProductCatalogId() );
+			logger.debug("Found  fileName ->: " + productDTO.getUploadedFilename() );				
+			try {									
+				//String tagFilename = "local/files/upload/staging/Steel Pipe 0123001D015- MTR.xlsx";				
+				String tagFilename =fileStagingFullpath + productDTO.getUploadedFilename();
+								
+		        S3Object s3Object;
+		        s3Object = awsS3Client.getObject(awsS3BucketName, tagFilename );	
+	            S3ObjectInputStream s3is = s3Object.getObjectContent();     
 				
-			try {				
-		
-		//	        String fullpathFileName_keyName = fileStagingFullpath + inputfile.getOriginalFilename();	        
-		//	        logger.debug("    ->: " + fullpathFileName_keyName);
-		//        	        
-		//            final ObjectMetadata metaData = new ObjectMetadata();
-		//            metaData.setContentType(inputfile.getContentType());
-		//            metaData.setContentLength(inputfile.getSize());
-		//            
-		//            // create and call S3 request to create the new S3 object 
-		//            PutObjectRequest putObjectRequest = new PutObjectRequest(
-		//            	awsS3BucketName, 
-		//            	fullpathFileName_keyName, // file/object name in S3
-		//            	inputfile.getInputStream(), // input stream from the Multipart
-		//                metaData // created above, with the only content type and size
-		//            );
-		//            
-		//            // Tags for easier process on retrieval
-		//            List<Tag> tags = new ArrayList<Tag>();
-		//            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
-		//            putObjectRequest.setTagging(new ObjectTagging(tags));
-		//            
-		//            PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
-		//            	        		
-		//			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
-		//			
-		//			logger.debug(" CSV fileUpload Worked,  size ->: " + inputfile.getSize());
-		//			
-		//			//logger.debug("         result details ->: " + putObjectResult.g);
+	            // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
+	            try {
+					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+		            XSSFSheet sheet = workbook.getSheetAt(0);
+		            Iterator<Row> rowIterator = sheet.iterator();
+		            Row row = null;
+				
+		            // Loop thru the rows in this file
+		            UniqueAsset uniqueAsset = new UniqueAsset();
+		 		            
+		            boolean notFinished = true;            
+		        	while (rowIterator.hasNext() && notFinished) {	        	
+						row = rowIterator.next();												
+						int len = row.getLastCellNum();
+							
+						// Loop thru the cells on a row
+						if ( row.getCell(0) != null ) {						
+							// print out all the cells on this row
+							String rowCellValue = "";
+							for ( int i = 0; len > i ; i++) {								
+								rowCellValue = row.getCell(i).toString();
+								System.out.print(rowCellValue);							
+								if(len-1 == i) 	{
+									// do nothing
+								} else {
+									System.out.print(",");	
+									
+									// TODO Find CELLS we care about
+									
+									if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+										
+										// TODO add DB lookup to use text to get pkId
+										uniqueAsset.setUcatPkId(804);
+										uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+										uniqueAsset.setManufacturerPkId(55); // real value in the table
+										uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+										uniqueAsset.setTraceTypePkId(40); // heat	
+										
+										uniqueAsset.setTraceCode("535521");
+										uniqueAsset.setAddBy("digitalMtr");
+										
+									} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
+										
+										// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
+										uniqueAsset.setManufacturerPkId(55);
+															
+									} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
+										
+										uniqueAsset.setTraceCode(row.getCell(i+1).toString());
+										
+									} else if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+					
+									}     
+																											
+									
+								}							
+							}	
+							System.out.println();
+						}
+
+		        	}
+				
+		        	// Validate the required fields
+		        	if (uniqueAsset.getUcatPkId() > 0) {
+		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");
+		        				        		
+		        		uniqueAssetDao.save(uniqueAsset);
+		        		
+		        	}
+		        	
+		        	
+	            } catch (Exception e1) {
+					e1.printStackTrace();
+				}	     	            
 		
 			} catch (Exception e) {
 				logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
 			}
-
 			
 		}
 		
