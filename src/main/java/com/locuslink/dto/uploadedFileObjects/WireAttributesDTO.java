@@ -4,7 +4,7 @@ import lombok.Data;
 
 
 @Data
-public class WireAttributes extends Product {
+public class WireAttributesDTO extends ProductDTO {
 	
 	//Unique Attributes - prefix with ua
 	private String uaWireSize;

@@ -37,16 +37,15 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.Tag;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.uploadedFileObjects.SteelPipeAttributes;
-import com.locuslink.dto.uploadedFileObjects.WireAttributes;
+import com.locuslink.dto.uploadedFileObjects.ProductDTO;
+import com.locuslink.dto.uploadedFileObjects.SteelPipeAttributesDTO;
+import com.locuslink.dto.uploadedFileObjects.WireAttributesDTO;
 /**
  * This is a Spring MVC Controller.
  *
@@ -111,17 +110,9 @@ public class UploadController {
 	
 	@PostMapping(value = "/initUploadStep3")
 	public String initUploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initUploadStep3()...");
-
 		
-//		String[] wrkArray = {"1","2","3","4","5"};
-//		
-//		ArrayList <String []> wrkArrayList = new ArrayList<String []>();
-//		wrkArrayList.add(wrkArray);
-//				
-//		dashboardFormDTO.setDataTableArray(wrkArrayList);
-	
-
+		logger.debug("Starting initUploadStep3()...");
+			
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/uploadstep3";
@@ -192,7 +183,10 @@ public class UploadController {
 	
 	
 	
-
+	/**
+	 *   04-26-2023 C.Sparks
+	 *   Upload Page 3 calls this to display all files in the AWS S3 Staging bucket
+	 */
 	@RequestMapping(value = "/getAllStagedUploads", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse getAllStagedUploads(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
@@ -200,19 +194,15 @@ public class UploadController {
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllStagedUploads");
 	  
 		// Displays on the UI - Target format for the downloaded xls files from the S3 bucket.
-		List <WireAttributes> wireObjectList =  new ArrayList<WireAttributes>(); 
-		List <SteelPipeAttributes> steelPipeObjectList =  new ArrayList<SteelPipeAttributes>(); 
+		List <ProductDTO> productObjectList =  new ArrayList<ProductDTO>(); 
+		ProductDTO productDTO = new ProductDTO();
 		
 	    // Gets the list of just files, under the directory structure {tag name}
 	    ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
 	            .withBucketName(awsS3BucketName)
 	            .withPrefix(fileStagingFullpath)
 	            .withMarker(fileStagingFullpath);
-          
-	    
-		WireAttributes wireAttributes = new WireAttributes();
-		SteelPipeAttributes steelPipeAttributes = new SteelPipeAttributes();
-		
+          		
         Row row = null;
         S3Object s3Object;
         ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
@@ -232,113 +222,60 @@ public class UploadController {
             		tagFileName = tag.getValue();
             	}
             }
-            
-            
+                        
             s3Object = awsS3Client.getObject(awsS3BucketName, s3ObjectSummary.getKey());	            	            
             S3ObjectInputStream s3is = s3Object.getObjectContent();           	     	              
+            
+            // Create Workbook for each file in the staging folder
+            try {
+				XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+	            XSSFSheet sheet = workbook.getSheetAt(0);
+	            Iterator<Row> rowIterator = sheet.iterator();
+	            
+	            boolean notFinished = true;		            
+	        	while (rowIterator.hasNext() && notFinished) {	        	
+					row = rowIterator.next();												
+					int len = row.getLastCellNum();
 
-
-            // 04-24-2023 we dont need a entry on the UI for each row, just for each file.
-			steelPipeAttributes = new SteelPipeAttributes();
-			steelPipeAttributes.setUploadedFilename(tagFileName);
-			steelPipeAttributes.setProductTypeCode("STEEL_PIPE");				
-			steelPipeAttributes.setProductNumber(row.getCell(1).toString());
-			steelPipeAttributes.setProductName("Steel Pipe 12-Inch");		
-			steelPipeAttributes.setProductDesc("Steel Pipe");	
-            		
-			steelPipeObjectList.add(steelPipeAttributes);
-			
-			
-            
-//            // Create Workbook for each file in the staging folder
-//            try {
-//				XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
-//	            XSSFSheet sheet = workbook.getSheetAt(0);
-//	            Iterator<Row> rowIterator = sheet.iterator();
-//	            		            
-//	        	while (rowIterator.hasNext()) {
-//					row = rowIterator.next();
-//										
-//					// Columns				
-//					int len = row.getLastCellNum();
-//
-//				//	if ( row.getCell(0) != null &&(    row.getCell(0).toString() == "DATA" || row.getCell(0).toString().equals("DATA"))) {
-//					if ( row.getCell(0) != null ) {		
-//										
-//						for ( int i = 0; len > i ; i++) {							
-//							System.out.print(row.getCell(i).toString());							
-//							if(len-1 == i) 	{
-//								// print nothing
-//							} else {
-//								System.out.print(",");
-//							}							
-//						}	
-//						System.out.println();
-//						
-//						
-//						// 4-25-2023
-//						// TODO Check Product Type and load based on that.
-//						
-//						// Key Data
-//						steelPipeAttributes = new SteelPipeAttributes();
-//						steelPipeAttributes.setUploadedFilename(tagFileName);
-//						steelPipeAttributes.setProductTypeCode("STEEL_PIPE");	
-//						
-//
-//						steelPipeAttributes.setProductNumber(row.getCell(1).toString());
-//						steelPipeAttributes.setProductName("Steel Pipe 12-Inch");		
-//						steelPipeAttributes.setProductDesc("Steel Pipe");	
-//						
-//
-//						
-////						// Product Specific Data - Unique
-////						steelPipeAttributes.setUa1("ua1");
-////						steelPipeAttributes.setUa2("ua2");
-////						steelPipeAttributes.setUa3("ua3");
-////						steelPipeAttributes.setUa4("ua4");
-////						steelPipeAttributes.setUa5("ua5");
-////						
-////						// Product Specific Data - Additional
-////						steelPipeAttributes.setAa01("aa20");
-////						steelPipeAttributes.setAa02("aa21");
-////						steelPipeAttributes.setAa03("aa22");
-////						steelPipeAttributes.setAa04("aa23");
-//						
-//						steelPipeObjectList.add(steelPipeAttributes);
-//						
-//						
-////						// Key Data
-////						wireAttributes = new WireAttributes();
-////						wireAttributes.setUploadedFilename(tagFileName);
-////						wireAttributes.setProductType("WIRE");						
-////						wireAttributes.setProductNumber(row.getCell(1).toString());
-////						wireAttributes.setProductName(row.getCell(2).toString());		
-////						wireAttributes.setProductDesc(row.getCell(3).toString());	
-////						
-////						// Product Specific Data - Unique
-////						wireAttributes.setUaWireSize("4 awg");
-////						wireAttributes.setUa2("ua2");
-////						wireAttributes.setUa3("ua3");
-////						wireAttributes.setUa4("ua4");
-////						wireAttributes.setUa5("ua5");
-////						
-////						// Product Specific Data - Additional
-////						wireAttributes.setAaVoltage("600v");
-////						wireAttributes.setAa21("aa21");
-////						wireAttributes.setAa22("aa22");
-////						wireAttributes.setAa23("aa23");
-////						
-////						wireObjectList.add(wireAttributes);
-//		        	 } 
-//					
-//		
-//	        	}	
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}	   
-            
-            
-            
+					if ( row.getCell(0) != null ) {						
+						// print out all the cells on this row
+						String rowCellValue = "";
+						for ( int i = 0; len > i ; i++) {								
+							rowCellValue = row.getCell(i).toString();
+							System.out.print(rowCellValue);							
+							if(len-1 == i) 	{
+								// do nothing
+							} else {
+								System.out.print(",");								
+								if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+									
+									// The only value we need for now is the Catalog id for the UI, not the file contents										  																	
+									// 4-25-2023
+									// TODO Check Product Type and load based on that.									
+									// Key Data
+									productDTO = new ProductDTO();									
+									// the next cell contains the catalogID value
+									productDTO.setProductCatalogId(row.getCell(i + 1).toString());
+									
+									// should come from the data
+									productDTO.setProductNumber("AE-152D 4047-S");	
+									productDTO.setHeatNumber("535521");
+									
+									productDTO.setUploadedFilename(tagFileName);
+									productDTO.setProductTypeCode("STEEL_PIPE");																								
+									//productDTO.setProductName("Steel Pipe");		
+									productDTO.setProductDesc("FBE Steel Pipe 12-Inch API 5L PSL2 ");	
+									
+									productObjectList.add(productDTO);										
+								}								
+							}							
+						}	
+						System.out.println();						
+		        	 } 							
+	        	}	
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}	                                     
             
         }
         
@@ -346,16 +283,14 @@ public class UploadController {
         // Convert the POJO array to json, for the UI
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
-		try {
-			//json = mapper.writeValueAsString(wireObjectList);		
-			json = mapper.writeValueAsString(steelPipeObjectList);		
+		try {	
+			json = mapper.writeValueAsString(productObjectList);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		logger.debug("json ->: " + json);		
-		//response.setField("wireObjectList",  json);
-		response.setField("catalogObjectList",  json);
+		response.setField("productObjectList",  json);
 
 		return response;
 	 }
@@ -366,7 +301,8 @@ public class UploadController {
 	/**
 	 *  04-25-2023 - C.Sparks
 	 *  
-	 *  This method will write the "scrubbed" uploaded file on upload page 3, to the database.
+	 *  Called from Upload Page 3, Submit button.
+	 *  This method will write all uploaded files on upload page 3, to the database.
 	 *     tables to load ->:  unique_asset,  product_attachment 
 	 *     
 	 *  The files are also moved in AWS S3 from the stage folder to the storage folder.
@@ -374,22 +310,24 @@ public class UploadController {
 	@PostMapping(value = "/processXlsFileSave")
 	public String processXlsFileSave (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		
-		// [{"uploadedFilename":"Steel Pipe 0123001D015.xlsx","productType":"STEEL_PIPE","productNumber":"0123001D015","productName":"Steel Pipe 12-Inch","productDesc":"Steel Pipe","activeStatus":null,"ua1":"ua1","ua2":"ua2","ua3":"ua3","ua4":"ua4","ua5":"ua5","aa20":"ss20","aa21":"aa21","aa22":"aa22","aa23":"aa23"},{"uploadedFilename":"Steel Pipe 0123001D015.xlsx","productType":"STEEL_PIPE","productNumber":"0123001D015","productName":"Steel Pipe 12-Inch","productDesc":"Steel Pipe","activeStatus":null,"ua1":"ua1","ua2":"ua2","ua3":"ua3","ua4":"ua4","ua5":"ua5","aa20":"ss20","aa21":"aa21","aa22":"aa22","aa23":"aa23"}]
+//  [{"uploadedFilename":"Steel Pipe 0123001D015- MTR.xlsx","productCatalogId":"0123001D015","productNumber":"AE-152D 4047-S","productName":"Steel Pipe",
+//           "productDesc":"FBE Steel Pipe 12-Inch API 5L PSL2 ","activeStatus":null,"productTypeCode":"STEEL_PIPE"}]
+
 		logger.debug("Starting processXlsFileSave()...");
-		logger.debug("  dat ->: " + dashboardFormDTO.getJsonUploadedCatalogObjectList());
+		logger.debug("  data ->: " + dashboardFormDTO.getJsonUploadedProductObjectList());
 	
-		List <SteelPipeAttributes> steelPipeObjectList =  new ArrayList<SteelPipeAttributes>(); 
+		List <ProductDTO> productObjectList =  new ArrayList<ProductDTO>(); 
 		
 		ObjectMapper mapper = new ObjectMapper();				
 		try {
-			steelPipeObjectList =  mapper.readValue(dashboardFormDTO.getJsonUploadedCatalogObjectList(), new TypeReference<ArrayList<SteelPipeAttributes>>() {});
+			productObjectList =  mapper.readValue(dashboardFormDTO.getJsonUploadedProductObjectList(), new TypeReference<ArrayList<ProductDTO>>() {});
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	
-		for (SteelPipeAttributes steelPipeAttributes : steelPipeObjectList) {
+		for (ProductDTO productDTO : productObjectList) {
 			
-			logger.debug("Found  fileName ->: " + steelPipeAttributes.getUploadedFilename() +  steelPipeAttributes.getProductTypeCode());
+			logger.debug("Found  fileName ->: " + productDTO.getUploadedFilename() + " :" +  productDTO.getProductTypeCode() + " :" + productDTO.getProductCatalogId() );
 				
 			try {				
 		

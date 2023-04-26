@@ -4,7 +4,7 @@ import lombok.Data;
 
 
 @Data
-public class SteelPipeAttributes extends Product {
+public class SteelPipeAttributesDTO extends ProductDTO {
 	
 	// 04-25-2023 - Used by upload page 3, save to DB
 	private String jsonSteelPipeAttributeList;

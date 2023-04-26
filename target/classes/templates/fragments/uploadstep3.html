@@ -21,8 +21,10 @@
      	 		searchHighlight: true,
              	responsive: true,		        
              	"paging":   true,	
-             	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)',	
+             	
+            	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)',
+             	
              	order: [1, 'asc' ],		        
          		//colReorder: true,		        
      
@@ -43,7 +45,7 @@
      	        	
      	        	// 4-25-2023
      	        //	wireObjectList = json.data.wireObjectList;	    
-     	        	catalogObjectList = json.data.catalogObjectList;	
+     	        	productObjectList = json.data.productObjectList;	
      	        	
      	        	hideSpinner();	// C.Sparks 1-19-19			    		
      	      	        	
@@ -53,7 +55,7 @@
      	      //  	return JSON.parse(wireObjectList);       	        
      	       // 	console.log(JSON.parse(catalogObjectList));
      	       
-     	        	return JSON.parse(catalogObjectList);     
+     	        	return JSON.parse(productObjectList);     
      	             	        
      	         }					       
         		},  
@@ -61,9 +63,11 @@
              columns: [	 
              	
                  { data: "uploadedFilename" },
-                 { data: "productType" },
+                 { data: "productTypeCode" },
+                 { data: "productCatalogId" },                 
                  { data: "productNumber" },
-                 { data: "productName" },
+                 { data: "heatNumber" },
+              //   { data: "productName" },
                  { data: "productDesc" },
                  { data: "activeStatus" ,
                  	"render": function(data, type, row, meta){	
@@ -122,7 +126,7 @@
 		$('#submitDocsToDatabaseId').click(function() {					
 			showSpinner();			
 			//console.log (catalogObjectList) ;			
-			$('#jsonUploadedCatalogObjectList').val( catalogObjectList ); 				
+			$('#jsonUploadedProductObjectList').val( productObjectList ); 				
 			submitFormAjaxHTML('processXlsFileSave', $("#dashboardFormDTO").serialize(), "commonResponse");														
 		});	
 		
@@ -144,7 +148,7 @@
   
   <body>
  
-	   <input type="hidden" id="jsonUploadedCatalogObjectList"  name="jsonUploadedCatalogObjectList" th:value="suckit"> 
+	   <input type="hidden" id="jsonUploadedProductObjectList"  name="jsonUploadedProductObjectList" th:value="suckit"> 
      
           <section class="de-component h-100">
           
@@ -223,8 +227,12 @@
 	                              <tr>
 	                                 <th scope="col">Filename</th>
 	                                 <th scope="col">Product Type</th>
-	                                 <th scope="col">Number</th>
-	                                 <th scope="col">Name</th>
+	                                 <th scope="col">Catalog Id</th>
+	                                 <th scope="col">Product Number</th>
+	                                 
+	                                 <!--  <th scope="col">Name</th> -->
+     								 <th scope="col">Heat#</th>	                                 
+	                                 
 	                                 <th scope="col">Description</th>
 	                                 <th scope="col">Action</th>
 	                              </tr>

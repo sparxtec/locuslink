@@ -3,7 +3,7 @@ package com.locuslink.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.locuslink.dto.uploadedFileObjects.WireAttributes;
+import com.locuslink.dto.uploadedFileObjects.WireAttributesDTO;
 
 import lombok.Data;
 
@@ -38,17 +38,13 @@ public class DashboardFormDTO {
 	private String itemNumber;
 	
 		
-	// Upload Page 3
-	//private List <String[]> dataTableArray = new ArrayList<String[]>();
-		
-	//private List <WireAttributes> dataTableArray = new ArrayList<WireAttributes>();
-	
+	// Upload Page 3	
 	
 	// 04-25-2023
 	// The code in upload PAge 3, loops on all the fields in the uploaded file, string the json together in here, passed to back end.
 	// this json goes to the DB in product_attachment in its entirety
 	//  KEY fileds from the json are used to create the entries in Unique_asset table
-	private String jsonUploadedCatalogObjectList;
+	private String jsonUploadedProductObjectList;
 	
 	
 }
