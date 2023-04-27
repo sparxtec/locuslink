@@ -386,35 +386,30 @@ public class UploadController {
 										
 										uniqueAsset.setTraceCode(row.getCell(i+1).toString());
 										
-									} else if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+									} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
 					
 									}     
-																											
-									
+																																				
 								}							
 							}	
 							System.out.println();
 						}
-
 		        	}
 				
 		        	// Validate the required fields
 		        	if (uniqueAsset.getUcatPkId() > 0) {
-		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");
-		        				        		
+		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
 		        		uniqueAssetDao.save(uniqueAsset);
-		        		
+		        		logger.debug(" Unique Asset Table ->: saved.");	
 		        	}
-		        	
-		        	
+		        			        	
 	            } catch (Exception e1) {
 					e1.printStackTrace();
 				}	     	            
 		
 			} catch (Exception e) {
 				logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
-			}
-			
+			}			
 		}
 		
 		
