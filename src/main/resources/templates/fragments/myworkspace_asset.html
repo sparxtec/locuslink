@@ -52,7 +52,7 @@
      	        "dataSrc": function (json) {
      	        	uniqueassetlist = json.data.uniqueassetlist;	     	        	
      	        	hideSpinner();		    		     	      	        	
-     	        	console.log(JSON.parse(uniqueassetlist));
+     	        //	console.log(JSON.parse(uniqueassetlist));
      	        	return JSON.parse(uniqueassetlist);     	        	      	        	
      	         }					       
         		},  
@@ -100,7 +100,7 @@
      	 
      	 // Button Clicks on the Data table
   	    $('#assetDataTable tbody').on('click', 'button', function (e) {
-	    	console.log(this);
+	    	//console.log(this);
 	    	
 	    	var url='';
 	    	var whatWasClicked=$(this).attr("id").split("_")[0];
@@ -117,10 +117,13 @@
 		    //	alert ("clicked ->:" + whatWasClicked + "   for uniqueAssetId ->:" + uniqueAssetId + "   url ->: " + url) ;
 					    
 			if(whatWasClicked==="docs") {
-				url = "getAllDocsForAsset";						
+    			// 4-27-2023
+       			showSpinner();								
+       			submitFormAjaxHTML('getAttachmentForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
+				
+				
     		} else if(whatWasClicked==="barcode") {
-    			url = "getBarcodeForAsset";	
-    			
+
     			// 3-21-2023
        			showSpinner();								
        			submitFormAjaxHTML('getBarcodeForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
@@ -150,7 +153,7 @@
     	
    	 function modalResponse(returnData) {	
  		hideSpinner();
- 		console.log("finished returnData  ->: " + returnData);
+ 		//console.log("finished returnData  ->: " + returnData);
  		
  		
     //	$("#messageLogModal #messageLogList").val(returnData);

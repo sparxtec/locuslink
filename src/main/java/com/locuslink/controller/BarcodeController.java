@@ -94,6 +94,39 @@ public class BarcodeController {
 	}
 	
 
-	
+	@PostMapping(value = "/getAttachmentForAsset")
+	public String getAttachmentForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting getAttachmentForAsset()...");
+
+		
+////		// Step 1 - Get the database data for the Asset clicked
+////		UniqueAssetDTO uniqueAssetDTO =  uniqueAssetDao.getDtoById(Integer.valueOf(dashboardFormDTO.getUniqueAssetPkId()));
+////		if (uniqueAssetDTO == null) {
+////			logger.debug("  Note:  No Data Found......");
+////		}
+//		
+//		
+//		// Step 1b - TEMP BarCode Template Name
+//		String barcodeTemplateName_1 = "locuslink_1.btw";
+//		String barcodeTemplateName_2 = "pipe_poc2.btw";
+//			
+//		// Step 2 - {Print to File}  Barcode to PDF on the Cloud		
+//		//bartenderRestClient.printBarcode(jsonRequest.toString());		
+//		
+//		
+//		// 4-27-2023
+//		// TODO SPakrs License is expired, hard coding the Sparxtec PDF
+//	//	String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName_1, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
+//		String encodedPDFBarcdeString = "notused";
+//		
+//		
+//	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);			
+//	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);	
+	   	
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/modal_attachment_viewer";
+	}
 
 }
