@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.LoginFormDTO;
 
 
@@ -83,8 +84,64 @@ public class LoginController {
 		return "dashboard";
 	}
 
+  
+// 4-28-2023 demo settings
+	@RequestMapping(value = "/login", method=RequestMethod.GET)
+	public String loginGet(@ModelAttribute(name = "loginFormDTO") LoginFormDTO loginFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+
+		logger.debug("Starting loginGet()..." + headers);
+
+		loginFormDTO.setUsername("admin");
+		securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
+	   	model.addAttribute("appLogoutUrl",appLogoutUrl);
+
+	   	
+	   	// TODO
+	   	model.addAttribute("cameFromLocusViewBarCodeViewer","yes");
+	   	
+	   	
+		return "dashboard";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		// 4-28-2023 demo settings
+		@RequestMapping(value = "/viewAsset", method=RequestMethod.GET)
+		public String viewAsset(@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+
+			logger.debug("Starting viewAsset()..." + headers);
+
+			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
+		   	model.addAttribute("appLogoutUrl",appLogoutUrl);
+
+		   	// TODO
+		   	model.addAttribute("cameFromLocusViewBarCodeViewer","yes");
+		   			   	
+		   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		   				
+			return "dashboard";
+		}
+	
 
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	/**
 	 * 	C.Sparks  04-20-2022
 	 *  	This is the main entry point. If https is enabled, then we need the JWT token or its an error.

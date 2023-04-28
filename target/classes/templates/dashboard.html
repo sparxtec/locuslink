@@ -101,6 +101,20 @@ table.dataTable thead th {
 				$('#buttonHeaderMyWorkspaceId').addClass('is-current');
 			});
 
+		    
+		    // 04-28-2023 DEMO 
+	        var viewAssetFlag = $('input#cameFromLocusViewBarCodeViewer').val();
+			//console.log (viewAssetFlag);
+			if (viewAssetFlag === 'yes') {
+				 $('input#cameFromLocusViewBarCodeViewer').val("no");
+				showSpinner();
+				submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderMyWorkspaceId').addClass('is-current');		
+			}
+		    
+		    
+		    
 			$('#buttonMyWorkspaceId').click(function() {
 				showSpinner();
 				submitFormAjaxHTML('initMyWorkspace', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
@@ -270,6 +284,10 @@ $('#accountLogout').click(function() {
     <div class="de-content de-component--gray ">
 
 	    <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post" class="w-100">
+
+<!-- redirect to viewer when url clicked on the printer barcode -->
+		     <input type="hidden" th:value="${cameFromLocusViewBarCodeViewer}" name="cameFromLocusViewBarCodeViewer"  id="cameFromLocusViewBarCodeViewer" />
+
 
 		     <input type="hidden" th:value="${appLogoutUrl}" name="appLogoutUrl"  id="appLogoutUrl" />
 		     <!-- CSRF token -->
