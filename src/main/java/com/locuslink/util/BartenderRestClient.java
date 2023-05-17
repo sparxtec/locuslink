@@ -26,7 +26,10 @@ public class BartenderRestClient {
 	
 	private static final Logger logger = Logger.getLogger(BartenderRestClient.class);
 	
-	private static final String btcServerLocation = "https://bartendercloud.com";	
+	// 5-17-2023
+	//private static final String btcServerLocation = "https://bartendercloud.com";		
+	private static final String btcServerLocation = "https://am1.bartendercloud.com";	
+	
 	
 	@Value("${bartender.access.token}")
 	private String bartenderAccessToken;
@@ -42,7 +45,9 @@ public class BartenderRestClient {
 		headers.add("Accept", "*/*");
 		headers.add("Authorization",  "Bearer " + bartenderAccessToken );
 		    								 
-		HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
+		
+		HttpEntity<String> requestEntity = new HttpEntity<String>("body", headers);
+		
 		ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
 		logger.debug(" status ->: " + responseEntity.getStatusCode());
 		logger.debug(" response ->: " + responseEntity.getBody());
@@ -76,7 +81,7 @@ public class BartenderRestClient {
 	 * 
 	 */
 	public String btcBarcodePrintToFile(String barcodeTemplateName, String  uniqueAssetPkId) {  
-		  
+		  				
 		String  url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"	;
 				  
 		// Step 1 - Writer  Barcode to PDF on the Cloud
@@ -85,23 +90,20 @@ public class BartenderRestClient {
 		JSONObject jsonNamedDataSources = new JSONObject();
 
 		try {
-			// TODO
-			//jsonMainOptions.put("Document", "Librarian://main/locuslink_1.btw");
-			jsonMainOptions.put("Document", "Librarian://main/" + barcodeTemplateName );
-			
+			jsonMainOptions.put("Document", "Librarian://main/" + barcodeTemplateName );			
 			jsonMainOptions.put("Printer", "PDF");			
 			jsonMainOptions.put("ReturnPrintData", "true");
 			jsonMainOptions.put("ReturnPrintSummary", "true");						
-			jsonMainOptions.put("PrintToFileFolder", "Librarian://main/output/pdf/");
-			
-			// TODO
-			//jsonMainOptions.put("PrintToFileFileName", "Output.pdf");	
-			jsonMainOptions.put("PrintToFileFileName", uniqueAssetPkId + "_output.pdf");				
-			
+			jsonMainOptions.put("PrintToFileFolder", "Librarian://main/output/pdf/");			
+			jsonMainOptions.put("PrintToFileFileName", uniqueAssetPkId + "_output.pdf");							
 			jsonMainOptions.put("PrintToFileNameVariable", "PrintToFileName");				
 			jsonMainOptions.put("SaveAfterPrint", false);	
 			
-	//		jsonNamedDataSources.put("Ship_To_Name", "Kracken:" + uniqueAssetPkId);		
+			
+			// TODO 5-17-2023
+			//    Get the attributes from the DB, and populate them all here			
+			jsonNamedDataSources.put("Ship_To_Name", "Kracken:" + uniqueAssetPkId);
+			
 			
 			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
 
@@ -126,20 +128,7 @@ public class BartenderRestClient {
 		logger.debug(" response ->: " + responseEntity.getBody());
 				
 		
-		
-		
-//	///////////////////////////
-//		[DEBUG] 2023-04-21 16:32:32,585 - (BartenderRestClient.java:111) btcBarcodePrintToFile] jsonREquest ->: {"PrintBTWAction":{"Document":"Librarian:\/\/main\/pipe_poc2.btw","Printer":"PDF","ReturnPrintData":"true","ReturnPrintSummary":"true","PrintToFileFolder":"Librarian:\/\/main\/output\/pdf\/","PrintToFileFileName":"900_output.pdf","PrintToFileNameVariable":"PrintToFileName","SaveAfterPrint":false,"NamedDataSources":{"Ship_To_Name":"Kracken:900"}}}
-//		[DEBUG] 2023-04-21 16:32:44,847 - (BartenderRestClient.java:123) btcBarcodePrintToFile]  status ->: 302 FOUND
-//		[DEBUG] 2023-04-21 16:32:46,877 - (BartenderRestClient.java:124) btcBarcodePrintToFile]  response ->: <html>
-//		<head><title>302 Found</title></head>
-//		
-//		code for not found
-//		
-		
-		
-		
-		
+				
 		// Step 3 = Get the ID and StatusURL Variables from the above response
 		JSONObject jsonObj = null;
 		String id = "";

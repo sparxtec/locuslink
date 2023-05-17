@@ -119,8 +119,30 @@
 			if(whatWasClicked==="docs") {
     			// 4-27-2023
        			showSpinner();								
-       			submitFormAjaxHTML('getAttachmentForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
-				
+       	//		submitFormAjaxHTML('getAttachmentForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
+			
+       	
+       	
+/*        	        var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+ 	            var innerData = {};	  
+ 	            
+/*  	            innerData["poNumber"] = $('#poNumber').val();
+	        	innerData["woNumber"] = $('#woNumber').val();
+	        	innerData["projectNum"] = $('#projectNum').val() 
+	        	innerData["selectedDocType"] = $('#selectedDocType').val() 
+ 	        	innerData["itemNumber"] = $('#itemNumber').val() 
+	        	innerData["selectedContractorType"] = $('#selectedContractorType').val()   */
+	        	  	
+  	    //    	myData["data"] = innerData; 
+	        	
+        //		submitFormAjaxJSON("getAllAssetAttachments", myData, "modalResponse"); */
+        			 	
+     
+       	// 5-17-2023
+	submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	
+       			
+       	       	
+       	       	
 				
     		} else if(whatWasClicked==="barcode") {
 
@@ -153,7 +175,7 @@
     	
    	 function modalResponse(returnData) {	
  		hideSpinner();
- 		//console.log("finished returnData  ->: " + returnData);
+ 	//	console.log("finished returnData  ->: " + returnData);
  		
  		
     //	$("#messageLogModal #messageLogList").val(returnData);

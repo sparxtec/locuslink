@@ -216,9 +216,53 @@ public class MyWorkspaceController {
 	 }
 	
 	
+	
+	
+	/**
+	 *   5-17-2023   Get all the attachments for a clicked Asset.
+	 */		
+	@RequestMapping(value = "/getAllAssetAttachments", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllAssetAttachments(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllAsset()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
+	  	
+		// TESTING
+		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
+		if (uniqueAssetListDTO == null) {
+			logger.debug("  Note:  No Data Found......");
+		}
+			
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(uniqueAssetListDTO);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("assetAttachmentlist",  json);
+
+		return response;
+	 }
 
 	
 	
+	@PostMapping(value = "/initAssetAttachments")
+	public String getAllAssetAttachments (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting getAllAssetAttachments()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/modal_attachment_list";
+	//	return "fragments/modal_attachment_viewer";
+	}
+	
+	
+	
+
 	
 	
 	//*************************************************************//

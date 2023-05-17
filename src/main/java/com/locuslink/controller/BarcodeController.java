@@ -71,20 +71,23 @@ public class BarcodeController {
 		}
 		
 		
+		// 5-17-2023
+		String barcodeTemplateName = "tbd";
+		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
+			barcodeTemplateName = "pipe_poc2.btw";
+		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
+			barcodeTemplateName = "cable.btw";
+		} 
+		
+		
 		// Step 1b - TEMP BarCode Template Name
-		String barcodeTemplateName_1 = "locuslink_1.btw";
-		String barcodeTemplateName_2 = "pipe_poc2.btw";
-			
-		// Step 2 - {Print to File}  Barcode to PDF on the Cloud		
-		//bartenderRestClient.printBarcode(jsonRequest.toString());		
+		//String barcodeTemplateName_1 = "locuslink_1.btw";
+		//String barcodeTemplateName_2 = "pipe_poc2.btw";
 		
 		
-		// 4-27-2023
-		// TODO SPakrs License is expired, hard coding the Sparxtec PDF
-	//	String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName_1, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
-		String encodedPDFBarcdeString = "notused";
-		
-		
+		// 5-9-2023
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
+
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
 		
 	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
