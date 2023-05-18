@@ -1,10 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
  <head>
-   <meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>	 	
-</head>
-
 
 <script>	
 
@@ -12,18 +8,15 @@
 		        
 		hideSpinner();	
 	   	$("#modal_barcode_viewer").modal('show');	
-	   	
-    	$('#backButtonId').click(function() {													
-    		showSpinner();			
-    		submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
-    	});
-    	    	
-  
+	   	       
 		if( $('#attachmentDataTable').length){    
 			
  			var table = $('#attachmentDataTable').DataTable( {
         	retrieve: true,
  	 		searchHighlight: true,
+ 	 		
+ 	 		searching:true,
+ 	 		
          	responsive: true,		        
          	"paging":   true,          
          	order: [2, 'asc' ],		
@@ -35,17 +28,18 @@
         		data: function ( data ) {
         			showSpinner();            	
         			var myData = {version:"1.0", clientId:"locuslink"};
-        			var innerData = {};    
+        			var innerData = {};            			
+        			innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val()        			   
+        			uniqueAssetPkId
+        			
         			myData["data"] = innerData;	                  			
             		return JSON.stringify( myData );
  	        }, 
  	        
  	        "dataSrc": function (json) {
  	        	assetAttachmentlist = json.data.assetAttachmentlist;	     	        	
- 	        	hideSpinner();	
- 	        	
- 	        	console.log(JSON.parse(assetAttachmentlist));
- 	        	
+ 	        	hideSpinner();	 	        	
+ 	        	//console.log(JSON.parse(assetAttachmentlist)); 	        	
  	        	return JSON.parse(assetAttachmentlist);     	        	      	        	
  	         }					       
     		},  
@@ -61,25 +55,23 @@
 	               className: "controlColumns",
 	               "render": function(data, type, row, meta){	            		
                 	data ="<div class='action-buttons'>" 
-                	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Doc Viewer'></i></button>&nbsp;"
-                	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;"
+/*                 	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Doc Viewer'></i></button>&nbsp;"
+                	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;" */
+                	
+                	
+                	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attachment Viewer'></i></button>&nbsp;"
+                	
+                	
                 	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete'></i></button></div>";	                    
                 return data;
  	         }}, 
                	         
              { data: "uniqueAssetPkId" },	               
-             { data: "uniqueAssetId" },   
-             { data: "universalCatalogId" },                   
-             { data: "manufacturerName" },                 
-             { data: "productTypeCode" },
-             { data: "productName" },
-             { data: "productNumber" },
-             { data: "traceTypeCode" },
-             { data: "traceCode" },                 
-             { data: "customerName" },
-             { data: "productDesc" },
-             { data: "productTypeDesc" },
-             { data: "uniqueAttributesJson" }
+             { data: "uniqueAssetId" },            
+             { data: "manufacturerName" }, 
+             { data: "filenameFullpath" },  
+             { data: "docTypeDesc" },  
+             
         	],
         	    		
          	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
@@ -87,7 +79,18 @@
        });
  	 }
     	
+    	$('#backButtonId').click(function() {													
+    		showSpinner();			
+    		submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
+    	});    	    	
+  
     	
+ 		// SEARCH FILTER
+  		$('#attachmentDataTable_filter input').keyup(function(){
+ 			table.search($(this).val()).draw() ;
+ 		}); 
+
+ 		
     	
 	});
 	
@@ -100,8 +103,12 @@
     }
 	 
 </script>
+	</head>
 	
 <body>
+
+ <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetPkId}"> 
+
 
 	<div th:fragment="messageLogModal">
 		
@@ -130,9 +137,9 @@
 	                    
 					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
 					 	<div class="datatable-toolbar-group">
-					 		<div id="addbtn">
+<!-- 					 		<div id="addbtn">
 					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
-					 		</div>
+					 		</div> -->
 					 	</div>
 					 
 					 	<div class="datatable-toolbar-group">
@@ -149,18 +156,10 @@
 	     							<th scope="col"></th>       
 	     							<th scope="col"></th>   
 	                                <th scope="col">Id</th>	                                 	                          	                                 
-	                                <th scope="col">Unique Asset ID</th>
-	                                <th scope="col">Universal Catalog ID</th>	
+	                                <th scope="col">Unique Asset ID</th>	                            
 	                                <th scope="col">Manufacturer</th>
-	                                <th scope="col">Product Type</th>
-	                                <th scope="col">Product Name</th>
-	                                <th scope="col">Product Number</th>	
-	                                <th scope="col">Trace Type</th>	
-									<th scope="col">Trace Number</th>		                                                                     	                             	                             
-	                             	<th scope="col">Customer</th>
-	                                <th scope="col">Product Desc</th>
-	                            	<th scope="col">PType Description]</th>
-	                                <th scope="col">Unique Attributes</th>
+	                                <th scope="col">Attachment</th>
+	                                <th scope="col">Doc Type</th>                                                                     	                             	                             
 	                             </tr>
 	                          </thead>
 	                       </table>
