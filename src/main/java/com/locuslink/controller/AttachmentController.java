@@ -1,5 +1,6 @@
 package com.locuslink.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -15,8 +16,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
+import com.amazonaws.services.s3.model.GetObjectTaggingResult;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.ObjectTagging;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.Tag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
@@ -24,7 +40,7 @@ import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.ProductAttachmentDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.ProductAttachmentDTO;
-import com.locuslink.dto.UniqueAssetDTO;
+import com.locuslink.model.ProductAttachment;
 /**
  * This is a Spring MVC Controller.
  *
@@ -48,8 +64,20 @@ public class AttachmentController {
     @Autowired
     private ProductAttachmentDao productAttachmentDao;
     
-    
-    
+	@Autowired
+	private AmazonS3Client awsS3Client;
+
+	@Value("${aws.s3.bucketName}")
+	private String awsS3BucketName;
+				
+			  
+	@Value("${file.attachment.staging.fullpath}")
+	private String attachmentStagingFullpath;
+	
+	@Value("${file.attachment.storage.fullpath}")
+	private String attachmentStorageFullpath;
+	
+
     
 
 
@@ -134,5 +162,156 @@ public class AttachmentController {
 		return "fragments/modal_attachment_viewer";
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 *  05-19-2023 - C.Sparks
+	 *  
+	 *  This is a JSON method because we return to the same screen to display a status for the "dropped" files on the UI.
+	 *  This method will write the dropped files to a staging folder. The next step will save to the DB and permanent storage
+	 */		
+	@PostMapping(value = "/processAttachmentUpload", produces = "application/json")
+	public @ResponseBody GenericMessageResponse processXlsFileUpload(@RequestParam("file") MultipartFile inputfile,
+			Model model, @ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,
+			HttpSession session) {
+
+		logger.debug("Starting processAttachmentUpload()..inputfile ->:" + inputfile.getOriginalFilename());
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "trace - processXlsFileUpload");
+
+		try {			
+			if (inputfile.getOriginalFilename().contains(".pdf")) {
+				// do nothing, all good
+			} else {
+				logger.debug("  ERROR xlsFileUpload failed ->: Wrong File extension. " );
+				return response;
+			}
+
+			// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
+			String prefixUniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId()+ "_";
+			
+	        // String fullpathFileName_keyName = attachmentStagingFullpath + inputfile.getOriginalFilename();	
+			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
+			 
+			 
+	        logger.debug("    ->: " + fullpathFileName_keyName);
+        	        
+            final ObjectMetadata metaData = new ObjectMetadata();
+            metaData.setContentType(inputfile.getContentType());
+            metaData.setContentLength(inputfile.getSize());
+            
+            // create and call S3 request to create the new S3 object 
+            PutObjectRequest putObjectRequest = new PutObjectRequest(
+            	awsS3BucketName, 
+            	fullpathFileName_keyName, // file/object name in S3
+            	inputfile.getInputStream(), // input stream from the Multipart
+                metaData // created above, with the only content type and size
+            );
+            
+            // Tags for easier process on retrieval
+            List<Tag> tags = new ArrayList<Tag>();
+            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+            putObjectRequest.setTagging(new ObjectTagging(tags));
+            
+            //PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
+            awsS3Client.putObject(putObjectRequest);
+            	        		
+			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
+			
+			logger.debug(" Attachment Upload Worked,  size ->: " + inputfile.getSize());
+
+		} catch (Exception e) {
+			logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
+		}
+		return response;
+	}
+		
+	
+	
+	
+	
+	/**
+	 *   04-26-2023 C.Sparks
+	 *   Attachment List has an ADD function, after Dropzone already called, and it loaded Staging,
+	 *    it calls this to move the staging files to the  the AWS S3 Storage bucket, 
+	 *    and insert into the database an attachment record with the filename and path.
+	 */
+	@RequestMapping(value = "/saveAttachmentsFromStagingToStorage", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse saveAttachmentsFromStagingToStorage(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In saveAttachmentsFromStagingToStorage()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "saveAttachmentsFromStagingToStorage");
+	  		
+		String uniqueAssetPkId = request.getFieldAsString("uniqueAssetPkId");
+		if (uniqueAssetPkId == null || uniqueAssetPkId.length() < 1) {
+			logger.debug("Error ->: missing uniqueAssetPkId. ");
+		}
+		
+	    // Gets the list of just files, under the directory structure {tag name}
+	    ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+	            .withBucketName(awsS3BucketName)
+	            .withPrefix(attachmentStagingFullpath)
+	            .withMarker(attachmentStagingFullpath);
+          		
+       // Row row = null;
+        S3Object s3Object;
+        CopyObjectRequest copyObjRequest;
+        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+           
+        	System.out.println();
+        	logger.debug("    staging file found ->: " + s3ObjectSummary.getKey());	 
+        	        	
+            GetObjectTaggingRequest getTaggingRequest = new GetObjectTaggingRequest(awsS3BucketName, s3ObjectSummary.getKey());
+            GetObjectTaggingResult getTagsResult = awsS3Client.getObjectTagging(getTaggingRequest);
+                        
+            String sourceKey = s3ObjectSummary.getKey();                       
+            String destinationKey = sourceKey.replace("staging", "storage");            
+         	logger.debug("    moving  ->: " + sourceKey);	 
+         	logger.debug("       to   ->: " + destinationKey);	 
+            
+            copyObjRequest = new CopyObjectRequest(awsS3BucketName, sourceKey, awsS3BucketName, destinationKey);
+            awsS3Client.copyObject(copyObjRequest);
+            
+            // remove it from the staging folder
+            awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, sourceKey));
+            logger.debug("     remove the staging file successfully.");	
+            
+            // TODO Insert to DB for a successful copy
+     
+         	
+         	ProductAttachment productAttachment = new ProductAttachment();
+          	productAttachment.setUniqueAssetPkId(Integer.valueOf(uniqueAssetPkId));
+         	productAttachment.setAddBy("attachmentUpload");      
+         	
+         	// TODO maybe ADD just the filename, instead of the whole path for the UI
+         	productAttachment.setFilenameFullpath(destinationKey);   
+         	
+         	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
+         	productAttachment.setDocTypePkId(1);   
+         	productAttachmentDao.save(productAttachment);
+            logger.debug("     Inrested to the database successfully.");	
+        }
+
+		return response;
+	 }
+		 
+	
+	
+	
+	
 	
 }
