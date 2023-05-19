@@ -148,17 +148,16 @@
    	 });  
     	
     	
-    	
+    
    	 function modalResponse(returnData) {	
- 		hideSpinner();		
- 		$('#modalBody').html(returnData); 			 
- 	 }
-   	 
+ 		hideSpinner();			 		
+ 		$('#myworkspace_Asset_ModalBody').html(returnData); 	 		 		 		
+ 	 }   	 
    	 
 	 function commonResponse(returnData) {	
 		hideSpinner();
 		$('#mainBody').html(returnData); 
-		hideSpinner();			 
+		hideSpinner();			
 	 }
 					
 		
@@ -166,11 +165,11 @@
 	
   </head>
 
-  <body id="assetBody">
+  <body>
 	 	
 	 <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
     	    						 
-	<section id="manage_1_mainBody" class="de-component de-component--gray"> 
+	<section id="myworksoace_asset_section" class="de-component de-component--gray"> 
 			
 		<div class="de-component__container">
 	    	<header class="de-component-header">
@@ -188,15 +187,15 @@
 	                    
 					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
 					 	<div class="datatable-toolbar-group">
-					 		<div id="addbtn">
+<!-- 					 		<div id="addbtn">
 					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
-					 		</div>
+					 		</div> -->
 					 	</div>
 					 
 					 	<div class="datatable-toolbar-group">
 					 		<div id="assetDataTable_filter" class="dataTables_filter">
 					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="assetDataTable"></label>
-					 		</div>
+					 		</div> 
 					 	</div>
 					 </div>	                     
 	                  
@@ -235,7 +234,7 @@
     </div>
 				
 				
-	    <div id="modalBody">	
+	    <div id="myworkspace_Asset_ModalBody">	
 	    </div>			
 					
 	</section>

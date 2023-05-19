@@ -55,13 +55,7 @@
 	               className: "controlColumns",
 	               "render": function(data, type, row, meta){	            		
                 	data ="<div class='action-buttons'>" 
-/*                 	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Doc Viewer'></i></button>&nbsp;"
-                	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;" */
-                	
-                	
-                	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attachment Viewer'></i></button>&nbsp;"
-                	
-                	
+                	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attachment Viewer'></i></button>&nbsp;"                	                	
                 	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete'></i></button></div>";	                    
                 return data;
  	         }}, 
@@ -78,10 +72,24 @@
          	             	        		            	          	
        });
  	 }
+		
+    	$('#addAttachmentId').click(function() {	
+    		
+			alert ("TODO upload new attachments");		    		    		    		
+    	});   
     	
-    	$('#backButtonId').click(function() {													
-    		showSpinner();			
-    		submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
+    	
+    	
+    	$('#backButtonId').click(function() {	
+    		    		
+    		//showSpinner();			
+    		//submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
+    		
+    		// 5-19-2023
+    		//    just close the modal, dont go back to server for no reason      		
+    		$('.modal-backdrop').remove();    		
+    		var node = document.getElementById("myworkspace_Asset_ModalBody");
+    		node.parentNode.replaceChild(node.cloneNode(false), node);    		    		    		    		
     	});    	    	
   
     	
@@ -91,16 +99,41 @@
  		}); 
 
  		
+ 		// Upload Attachment
+  		//addAttachment
+ 		
+ 		
+  		
+    	 // Button Clicks on the Data table
+  	    $('#attachmentDataTable tbody').on('click', 'button', function (e) {
+
+	    	var url='';
+	    	var whatWasClicked=$(this).attr("id").split("_")[0];
+	    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
+	    		 	    				
+	        // set the FORM value so the controller can get it.				
+			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+	        	        	        
+	   	 //   e.preventDefault(); // ??	    	
+	    		   	    	    
+			if(whatWasClicked==="docs") {
+       			showSpinner();											 	   
+      			// 5-17-2023
+       			submitFormAjaxHTML('getAttachmentForAsset', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");	
+			
+    		} else if(whatWasClicked==="delete") {
+       			       			       			
+    		} 
+			 			
+	    }); 
     	
 	});
 	
-
+  	 function modalResponse_attachmentList (returnData) {	
+  		hideSpinner();		  	 
+  		$('#attachmentList_ModalBody').html(returnData); 	 		 		  		
+  	 }  
 	
- 	function commonResponse(returnData) {	
-		hideSpinner();
-		$('#mainBody').html(returnData); 
-		hideSpinner();			 
-    }
 	 
 </script>
 	</head>
@@ -126,52 +159,46 @@
 		      
 		      <div class="modal-body " >      
 
-
-        <div class="form-group text-center">
-			<div class="card">
-	
-				<div class="card-header"><i class="fas fa-user mr-2"></i> Asset Data:			
-				</div>				
-	
-				<div class="de-component__container">				
-	                    
-					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
-					 	<div class="datatable-toolbar-group">
-<!-- 					 		<div id="addbtn">
-					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
-					 		</div> -->
-					 	</div>
-					 
-					 	<div class="datatable-toolbar-group">
-					 		<div id="attachmentDataTable_filter" class="dataTables_filter">
-					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="attachmentDataTable"></label>
-					 		</div>
-					 	</div>
-					 </div>	                     
-	                  
-	                 <div id="xxxx">		                     
-	  	 					<table id="attachmentDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
-	                          <thead class="thead-light">
-	                             <tr>
-	     							<th scope="col"></th>       
-	     							<th scope="col"></th>   
-	                                <th scope="col">Id</th>	                                 	                          	                                 
-	                                <th scope="col">Unique Asset ID</th>	                            
-	                                <th scope="col">Manufacturer</th>
-	                                <th scope="col">Attachment</th>
-	                                <th scope="col">Doc Type</th>                                                                     	                             	                             
-	                             </tr>
-	                          </thead>
-	                       </table>
-	                 </div>		                                                       
-				</div> 
-									
-	                                                            
-			</div>
-		
-    </div>
-		          
-		        
+		        <div class="form-group text-center">
+					<div class="card">
+			
+						<div class="card-header"><i class="fas fa-user mr-2"></i> Asset Attachments:</div>				
+			
+						<div class="de-component__container">				
+			                    
+							 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
+							 	<div class="datatable-toolbar-group">
+							 		<div id="addbtn">
+							 			<button id="addAttachmentId" class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" > Add </button>
+							 		</div> 
+							 	</div>
+							 
+							 	<div class="datatable-toolbar-group">
+							 		<div id="attachmentDataTable_filter" class="dataTables_filter">
+							 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="attachmentDataTable"></label>
+							 		</div>
+							 	</div>
+							 </div>	                     
+			                  
+			                 <div id="xxxx">		                     
+			  	 					<table id="attachmentDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
+			                          <thead class="thead-light">
+			                             <tr>
+			     							<th scope="col"></th>       
+			     							<th scope="col"></th>   
+			                                <th scope="col">Id</th>	                                 	                          	                                 
+			                                <th scope="col">Unique Asset ID</th>	                            
+			                                <th scope="col">Manufacturer</th>
+			                                <th scope="col">Attachment</th>
+			                                <th scope="col">Doc Type</th>                                                                     	                             	                             
+			                             </tr>
+			                          </thead>
+			                       </table>
+			                 </div>		                                                       
+						</div> 	
+																			                                                          
+					</div>				
+		         </div>		          		        
 		      </div>
 		      
 		      
@@ -185,6 +212,9 @@
 	</div>  
 	
 	
+	
+	<div id="attachmentList_ModalBody">	
+	</div>	
 
 </body>
 </html>

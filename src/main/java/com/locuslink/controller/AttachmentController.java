@@ -24,6 +24,7 @@ import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.ProductAttachmentDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.ProductAttachmentDTO;
+import com.locuslink.dto.UniqueAssetDTO;
 /**
  * This is a Spring MVC Controller.
  *
@@ -109,6 +110,29 @@ public class AttachmentController {
 	 }
 
 	
+	@PostMapping(value = "/getAttachmentForAsset")
+	public String getBarcodeForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting getAttachmentForAsset()...");
 
+		
+//		// Step 1 - Get the database data for the Asset clicked
+//		UniqueAssetDTO uniqueAssetDTO =  uniqueAssetDao.getDtoById(Integer.valueOf(dashboardFormDTO.getUniqueAssetPkId()));
+//		if (uniqueAssetDTO == null) {
+//			logger.debug("  Note:  No Data Found......");
+//		}
+		
+		
 
+		
+		// 5-9-2023
+	//	String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
+	//   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
+		
+	  // 	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/modal_attachment_viewer";
+	}
+
+	
 }

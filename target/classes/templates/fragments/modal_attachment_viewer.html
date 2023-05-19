@@ -13,13 +13,13 @@
         var b64 = $('input#b64Id').val();
         
 		hideSpinner();	
-	   	$("#modal_barcode_viewer").modal('show');	
+	   	$("#attachment_viewer").modal('show');	
 	   	
 	 	loadEmbededPDF(b64);    
         
-    	$('#backButtonId').click(function() {													
-    		showSpinner();			
-    		submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
+    	$('#attachmentViewerBackButtonId').click(function() {	
+    		
+			// not sure why nothing is needed here to remove the modal, the modal dismiss maybe ?
     	});
     	    	
 	});
@@ -38,25 +38,17 @@
 	  //  PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
 	}   
 	
-	
- 	function commonResponse(returnData) {	
-		hideSpinner();
-		$('#mainBody').html(returnData); 
-		hideSpinner();			 
-    }
+
 	 
 </script>
 	
 <body>
 
-<form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}"  method="post" class="w-100">
-
- <input type="hidden" id="b64Id"  name="b64Id" th:value="${encodedPDFBarcdeString}">  
-
+   <input type="hidden" id="b64Id"  name="b64Id" th:value="${encodedPDFBarcdeString}">  
 
 	<div th:fragment="messageLogModal">
 		
-		<div th:id="modal_barcode_viewer" class="modal " tabindex="-1" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
+		<div th:id="attachment_viewer" class="modal " tabindex="1000" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
 		  
 		  <div class="modal-dialog modal-lg" >
 		    
@@ -64,7 +56,7 @@
 		      
 		      <div class="modal-header ">      
 			      <h1 class="modal-title w-100 text-center"><strong>Attachment Viewer</strong></h1>
-			      <button type="button" id="backButtonId" class="button button--continue ml-3" data-dismiss="modal" >Back</button>			       			        
+			      <button type="button" id="attachmentViewerBackButtonId" class="button button--continue ml-3" data-dismiss="modal" >Back</button>			       			        
 		      </div>
 		      
 		      
@@ -99,11 +91,8 @@
 		</div> 
 	</div>  
 	
+
 	
-		<p id="responseBartender"></p>	
-	
-	
-	
-</form>
+<!-- </form> -->
 </body>
 </html>
