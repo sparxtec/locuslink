@@ -205,6 +205,22 @@ public class AttachmentController {
 			
 	        // String fullpathFileName_keyName = attachmentStagingFullpath + inputfile.getOriginalFilename();	
 			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
+			
+			
+			
+			
+			// TODO 5-11-2023   Dont allow duplicate files uploaded to the same Asset.
+			if (!checkFileIsValideToUpload(prefixUniqueAssetPkId + inputfile.getOriginalFilename())) {
+				logger.debug("  ERROR duplicate file upload not allowed for the same asset. " );
+				response.setError(1);
+				response.setErrorMessage(" ERROR. You cannot upload duplicate file for the same asset.");				
+				response.setField("uploadedFilenameInError", inputfile.getOriginalFilename());
+				return response;				
+			}
+
+			
+			
+
 			 
 			 
 	        logger.debug("    ->: " + fullpathFileName_keyName);
@@ -225,8 +241,6 @@ public class AttachmentController {
             List<Tag> tags = new ArrayList<Tag>();
             tags.add(new Tag("filename", inputfile.getOriginalFilename()));
             putObjectRequest.setTagging(new ObjectTagging(tags));
-            
-            //PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
             awsS3Client.putObject(putObjectRequest);
             	        		
 			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
@@ -239,6 +253,108 @@ public class AttachmentController {
 		return response;
 	}
 		
+	
+	// Check for Duplicate File
+	public boolean checkFileIsValideToUpload (String fullpathFileName_keyName) {
+		
+		logger.debug("Starting checkFileIsValideToUpload()...");
+
+	    // Gets the list of just files, under the directory structure {tag name}
+	    ListObjectsRequest listObjectsRequest_staging = new ListObjectsRequest()
+	            .withBucketName(awsS3BucketName)
+	            .withPrefix(attachmentStagingFullpath)
+	            .withMarker(attachmentStagingFullpath);
+	    	              	
+       //Check Staging for Duplicate
+	    boolean dupFound = false;
+        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging)	 ;       		
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+        	
+        	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
+        		logger.debug("    STAGING duplicate file found ->: " + s3ObjectSummary.getKey());	
+        		dupFound = true;   
+        		return false;
+        	} 
+ 
+        }
+        
+        
+        // Check Storage for Duplicate
+	    ListObjectsRequest listObjectsRequest_storage = new ListObjectsRequest()
+	            .withBucketName(awsS3BucketName)
+	            .withPrefix(attachmentStorageFullpath)
+	            .withMarker(attachmentStorageFullpath);
+
+        s3ObjectList = awsS3Client.listObjects(listObjectsRequest_storage)	 ;       		
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+        	
+        	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
+        		logger.debug("    STORAGE duplicate file found ->: " + s3ObjectSummary.getKey());	
+        		dupFound = true;   
+        		return false;
+        	} 
+        	
+        }
+	    
+	    
+		return true;
+	}
+	
+	
+	
+	/**
+	 *   04-26-2023 C.Sparks
+	 *   Attachment List has an ADD function, after Dropzone already called, and it loaded Staging,
+	 *    it calls this to move the staging files to the  the AWS S3 Storage bucket, 
+	 *    and insert into the database an attachment record with the filename and path.
+	 */
+	@RequestMapping(value = "/deleteFileUpload", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse deleteFileUpload(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In deleteFileUpload()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "deleteFileUpload");
+		
+		
+		// Step 1 - One File or Many files to delete
+		String removeFilename =  request.getFieldAsString("removeFileName");
+		String uniqueAssetPkId =  request.getFieldAsString("uniqueAssetPkId");
+		String deleteAllFilesWithPk = request.getFieldAsString("deleteAllFilesWithPk");
+		
+		if (deleteAllFilesWithPk.toUpperCase().equals("YES")) {
+			
+			// Cancel Button Hit -  Delete from AWS Staging all files with this uniqueAssetPkID prefix
+    	    ListObjectsRequest listObjectsRequest_staging = new ListObjectsRequest()
+    	            .withBucketName(awsS3BucketName)
+    	            .withPrefix(attachmentStagingFullpath)
+    	            .withMarker(attachmentStagingFullpath);
+    	    
+        	
+			String fullpathWildCardFileName_keyName = attachmentStagingFullpath +  uniqueAssetPkId + "_" ;					
+            ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging)	 ;       		
+            for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
+            	
+            	if (s3ObjectSummary.getKey().contains(fullpathWildCardFileName_keyName)) {
+            		logger.debug("    STAGING file found ->: " + s3ObjectSummary.getKey());	                      
+                    awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName,  s3ObjectSummary.getKey()));            		                   
+                    logger.debug("     remove the staging file successfully.");	                    
+            	}
+
+            }
+                     
+		} else {			
+			// Remove Link on one file clicked from the UI - Delete from AWS Staging this file from AWS Staging
+			String fullpathFileName_keyName = attachmentStagingFullpath +  uniqueAssetPkId + "_" + removeFilename;					
+            awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, fullpathFileName_keyName));
+            logger.debug("     remove the staging file successfully.");	            
+			
+		}
+		
+
+		
+		
+		
+		return response;		
+	}
 	
 	
 	

@@ -4,9 +4,10 @@
 
 <script>	
 
+    var isDuplicateFileupload = false;
 	var stepper1 = null;		
 	Dropzone.autoDiscover = false;		
-	$('#tracedropzone').dropzone({
+	var traceDropzoneId = $('#tracedropzone').dropzone({
 		
 		   headers:{   'X-CSRFToken' : '{{ csrf_token }}' },				
 		   acceptedFiles: '.pdf',			 			 		
@@ -19,10 +20,24 @@
 		      });
 		     
 		     this.on("success", 
-		    	function(file) {
+		    	function(file,response) {
 		    	  $(".dz-success-mark svg").css("background", "green");
 		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
-		    	  document.getElementById("continueUpload").disabled = false;	 		    		    
+		    	  document.getElementById("continueUpload").disabled = false;	
+		    	  
+		    	  // Error Check - Duplicate Filename
+		    	  if (response.error != "0" ) {
+		    		  
+		    		 isDuplicateFileupload = true;
+		    		  
+		    	     $('#errorMessageId').show();	
+		    	     $('#errorMessageId').text(response.errorMessage);				    	      
+		    	  	 document.getElementById("continueUpload").disabled = true;
+		    	     this.removeFile(file);
+		    	     // display red error for 5 seconds, then remove he error message
+		    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
+		    	  }
+		    	  
 		      }); 		     		  
 		
 	     	this.on("error", 
@@ -33,18 +48,23 @@
 	     	
 	     	this.on("removedfile", 
 	     		function(file) {
+	     		
+				if (isDuplicateFileupload === true) {
+				    isDuplicateFileupload = false;
+				} else {
 	         		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
 	               	var innerData = {};
-	        		innerData["fileName"] = file.name;
-	        		innerData["userName"] = "TSpecte";
+	        		innerData["removeFileName"] = file.name;
+            		innerData["deleteAllFilesWithPk"] =	"NO";
+                  	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
 	        		myData["data"] = innerData;
-
-	        //		submitFormAjaxJSON("deleteFileUpload", myData, "deleteFileUploadResponse");
-	        		if (this.files[0] == null) {
-
-	 		   		document.getElementById("continueUpload").disabled = true;
-	 		    }
-	     		});		   
+	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+	        		//if (this.files[0] == null) {
+	 		   		//	document.getElementById("continueUpload").disabled = true;
+	 		   		// }
+				}
+				
+	     	});		   
 		   }
 		
 		}); 
@@ -65,6 +85,9 @@
 		  e.preventDefault();
 		},false);
 		document.getElementById("continueUpload").disabled = true;	
+		
+		
+		$('#errorMessageId').hide();	
 		
 		
 		hideSpinner();	
@@ -89,7 +112,7 @@
         		data: function ( data ) {
         			showSpinner();            	
         			var myData = {version:"1.0", clientId:"locuslink"};
-        			var innerData = {};            			
+        			var innerData = {};   
         			innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val()        			   
         			
         			myData["data"] = innerData;	                  			
@@ -140,9 +163,24 @@
     		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);
     		    		
 		   	$("#attachmentUploadId").show();		   
-    	});       	    
-    	$('#cancelUpload').click(function() {	    		
-    		$("#attachmentUploadId").hide();		    		    		    		
+    	});   
+		
+    	$('#cancelUpload').click(function() {	
+    		
+    		// clear files from the UI
+    		traceDropzoneId[0].dropzone.removeAllFiles();
+    		    		
+    		$("#attachmentUploadId").hide();
+    		
+     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+           	var innerData = {};
+    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+    		innerData["deleteAllFilesWithPk"] =	"YES";
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+    		
+    		
+    		
     	});     	    	
     	$('#continueUpload').click(function() {	
     		
@@ -152,7 +190,7 @@
         	var innerData = {};   	        		    	        	        	
           	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
      		myData["data"] = innerData;	      		  
-			submitFormAjaxJSON('saveAttachmentsFromStagingToStorage', myData, "attachmentSaveResponse");   
+			submitFormAjaxJSON('saveAttachmentsFromStagingToStorage', myData, "generalResponse");   
     		
 			hideSpinner();
 			$("#attachmentUploadId").hide();
@@ -160,7 +198,19 @@
     	
 
         // BACK
-    	$('#backButtonId').click(function() {	  		
+    	$('#backButtonId').click(function() {	
+    		
+    		// clear files from the UI
+    		traceDropzoneId[0].dropzone.removeAllFiles();    		    		
+    		
+     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+           	var innerData = {};
+    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+    		innerData["deleteAllFilesWithPk"] =	"YES";
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+    		
+    		
     		$('.modal-backdrop').remove();    		
     		var node = document.getElementById("myworkspace_Asset_ModalBody");
     		node.parentNode.replaceChild(node.cloneNode(false), node);    		    		    		    		
@@ -196,8 +246,8 @@
 	
 	});
 	
- 	 function attachmentSaveResponse (returnData) {	
-   		//hideSpinner();		  	 
+ 	 function generalResponse (returnData) {	
+   		hideSpinner();		  	 
    		//$('#attachmentList_ModalBody').html(returnData); 	 		 		  		
    	 }  
  	 
@@ -294,6 +344,13 @@
 						<div class="dz-default dz-message">
 							<span>Files must be less than 15MB and a '.xls' file</span>
 						</div>
+						
+						
+	    				<div id="errorMessageId"  style="display:none;color:red">
+		       				<span>Error Msg</span>
+		       			</div>
+						
+						
 					</form>
 				  </div>
  

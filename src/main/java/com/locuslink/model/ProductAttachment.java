@@ -23,6 +23,7 @@ public class ProductAttachment extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="product_attach_pkId", unique=true, nullable = false)
     private int productAttachPkId;
   
