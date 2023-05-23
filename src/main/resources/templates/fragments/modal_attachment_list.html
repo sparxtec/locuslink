@@ -26,10 +26,8 @@
 		    	  document.getElementById("continueUpload").disabled = false;	
 		    	  
 		    	  // Error Check - Duplicate Filename
-		    	  if (response.error != "0" ) {
-		    		  
-		    		 isDuplicateFileupload = true;
-		    		  
+		    	  if (response.error != "0" ) {		    		  
+		    		 isDuplicateFileupload = true;		    		  
 		    	     $('#errorMessageId').show();	
 		    	     $('#errorMessageId').text(response.errorMessage);				    	      
 		    	  	 document.getElementById("continueUpload").disabled = true;
@@ -59,9 +57,9 @@
                   	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
 	        		myData["data"] = innerData;
 	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
-	        		//if (this.files[0] == null) {
-	 		   		//	document.getElementById("continueUpload").disabled = true;
-	 		   		// }
+	        		if (this.files[0] == null) {
+	 		   			document.getElementById("continueUpload").disabled = true;
+	 		   		}
 				}
 				
 	     	});		   
@@ -88,8 +86,7 @@
 		
 		
 		$('#errorMessageId').hide();	
-		
-		
+				
 		hideSpinner();	
 	   	$("#modal_barcode_viewer").modal('show');	
 	   	       
@@ -97,14 +94,11 @@
 			
  			var table = $('#attachmentDataTable').DataTable( {
         	retrieve: true,
- 	 		searchHighlight: true,
- 	 		
- 	 		searching:true,
- 	 		
+ 	 		searchHighlight: true, 	 		
+ 	 		searching:true, 	 		
          	responsive: true,		        
          	"paging":   true,          
-         	order: [2, 'asc' ],		
-         	
+         	order: [2, 'asc' ],		         	
  	    	ajax: {
        		    url: 'getAllAssetAttachments',
        		 	type: 'POST',
@@ -117,16 +111,14 @@
         			
         			myData["data"] = innerData;	                  			
             		return JSON.stringify( myData );
- 	        }, 
- 	        
+ 	        },  	        
  	        "dataSrc": function (json) {
  	        	assetAttachmentlist = json.data.assetAttachmentlist;	     	        	
  	        	hideSpinner();	 	        	
  	        	//console.log(JSON.parse(assetAttachmentlist)); 	        	
  	        	return JSON.parse(assetAttachmentlist);     	        	      	        	
  	         }					       
-    		},  
- 
+    		},   
          columns: [	                	 
  			 { "className": 'details-control',
 	               "orderable": false,
@@ -138,21 +130,20 @@
 	               className: "controlColumns",
 	               "render": function(data, type, row, meta){	            		
                 	data ="<div class='action-buttons'>" 
-                	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attachment Viewer'></i></button>&nbsp;"                	                	
-                	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete'></i></button></div>";	                    
+                	+"<button id='docs_" + row.uniqueAssetPkId+ "_" +row.productAttachPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attachment Viewer'></i></button>&nbsp;"                	                	
+                	+"<button id='delete_" + row.uniqueAssetPkId+ "_" +row.productAttachPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Attachment'></i></button></div>";	                    
                 return data;
  	         }}, 
-               	         
-             { data: "uniqueAssetPkId" },	               
+               	   
+             { data: "productAttachPkId" },	      	         
+             { data: "uniqueAssetPkId" },	             
              { data: "uniqueAssetId" },            
              { data: "manufacturerName" }, 
              { data: "filenameFullpath" },  
              { data: "docTypeDesc" },  
              
-        	],
-        	    		
-         	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
-         	             	        		            	          	
+        	],        	    		
+         	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',         	             	        		            	          	
        });
  	 }
 		
@@ -160,8 +151,7 @@
     	$('#addAttachmentId').click(function() {	    		
     		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
     		pkId = $('input#uniqueAssetPkId').val();
-    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);
-    		    		
+    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
 		   	$("#attachmentUploadId").show();		   
     	});   
 		
@@ -226,18 +216,25 @@
   		
     	 // Button Clicks on the Data table
   	    $('#attachmentDataTable tbody').on('click', 'button', function (e) {
-
+  	    	
 	    	var whatWasClicked=$(this).attr("id").split("_")[0];
 	    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
-	    		 	    				
+	    	var productAttachPkId =$(this).attr("id").split("_")[2];
+	    	
 	        // set the FORM value so the controller can get it.				
-			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
-	        	        	        
+			$('#productAttachPkId').val(productAttachPkId);
+	        	
+		   	
 			if(whatWasClicked==="docs") {
        			showSpinner();											 	   
        			submitFormAjaxHTML('getAttachmentForAsset', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");				
     		} else if(whatWasClicked==="delete") {
-       			       			       			
+       			 
+       			showSpinner();											 	
+       	     
+       			// 5-17-2023
+				submitFormAjaxHTML('deleteAssetAttachment', $("#dashboardFormDTO").serialize(), "modalResponse");	    			
+    			    			
     		} 			 		
 	    }); 
     	
@@ -245,7 +242,7 @@
 	    $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
 	
 	});
-	
+		
  	 function generalResponse (returnData) {	
    		hideSpinner();		  	 
    		//$('#attachmentList_ModalBody').html(returnData); 	 		 		  		
@@ -263,7 +260,7 @@
 <body>
 
 <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetPkId}"> 
-
+<input type="hidden" id="productAttachPkId"  name="productAttachPkId" th:value="${productAttachPkId}"> 
 
 	<div th:fragment="messageLogModal">
 		
@@ -291,7 +288,7 @@
 							 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
 							 	<div class="datatable-toolbar-group">
 							 		<div id="addbtn">
-							 			<button id="addAttachmentId" class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" > Add </button>
+										<button id="addAttachmentId" class="button button--continue ml-3 w-auto" title="Add Attachments to this Asset."  type="button" data-toggle="modal" data-target="#addUserModal" > Add </button>							 	
 							 		</div> 
 							 	</div>
 							 
@@ -308,7 +305,8 @@
 			                             <tr>
 			     							<th scope="col"></th>       
 			     							<th scope="col"></th>   
-			                                <th scope="col">Id</th>	                                 	                          	                                 
+			                                <th scope="col">Id</th>	 			     							
+			                                <th scope="col">uId</th>	 
 			                                <th scope="col">Unique Asset ID</th>	                            
 			                                <th scope="col">Manufacturer</th>
 			                                <th scope="col">Attachment</th>

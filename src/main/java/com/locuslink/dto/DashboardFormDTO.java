@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class DashboardFormDTO {
 
+	// Attachment Processing
+	private String productAttachPkId;
 	
 	// Barcode Processing
 	private String printBarcode1;

@@ -17,8 +17,7 @@
 	   	
 	 	loadEmbededPDF(b64);    
         
-    	$('#attachmentViewerBackButtonId').click(function() {	
-    		
+    	$('#attachmentViewerBackButtonId').click(function() {	    		
 			// not sure why nothing is needed here to remove the modal, the modal dismiss maybe ?
     	});
     	    	
@@ -34,8 +33,8 @@
    		        search: 'lorem ipsum'
    		    }
     	};      
-   	     PDFObject.embed("samplefiles/mtr.pdf", "#pdfContainerId_1", options );	
-	  //  PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
+   	  //   PDFObject.embed("samplefiles/mtr.pdf", "#pdfContainerId_1", options );	
+	    PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
 	}   
 	
 

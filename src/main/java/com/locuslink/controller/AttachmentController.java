@@ -1,6 +1,10 @@
 package com.locuslink.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -8,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingResult;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
@@ -31,6 +37,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.Tag;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,9 +45,11 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.ProductAttachmentDao;
+import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.ProductAttachmentDTO;
 import com.locuslink.model.ProductAttachment;
+
 /**
  * This is a Spring MVC Controller.
  *
@@ -64,13 +73,17 @@ public class AttachmentController {
     @Autowired
     private ProductAttachmentDao productAttachmentDao;
     
+    @Autowired
+    private UniqueAssetDao uniqueAssetDao;
+
+    
+    
 	@Autowired
 	private AmazonS3Client awsS3Client;
 
 	@Value("${aws.s3.bucketName}")
 	private String awsS3BucketName;
-				
-			  
+							 
 	@Value("${file.attachment.staging.fullpath}")
 	private String attachmentStagingFullpath;
 	
@@ -97,7 +110,34 @@ public class AttachmentController {
 	}
 	
 	
-			
+    
+	@PostMapping(value = "/deleteAssetAttachment")
+	public String deleteAssetAttachment (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting deleteAssetAttachment()...");
+
+		
+		// TODO Delete the clicked on ROW from AWS and the Database
+		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(dashboardFormDTO.getProductAttachPkId()));
+		if (productAttachment == null) {
+			logger.debug("  Error:  Product Attachment Lookup failed...");
+		}
+		
+		// AWS Remove the attachment from the Storge Area			
+        awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, productAttachment.getFilenameFullpath()));
+        logger.debug("     remove the AWS STORAGE file successfully.");	 
+        
+        // Database
+        productAttachmentDao.delete(productAttachment);
+		
+        
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/modal_attachment_list";
+	}
+	
+	
+	
 	
 	/**
 	 *   5-17-2023   Get all the attachments for a clicked Asset.
@@ -138,25 +178,36 @@ public class AttachmentController {
 	 }
 
 	
+	
+	
+	
 	@PostMapping(value = "/getAttachmentForAsset")
-	public String getBarcodeForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	public String getAttachmentForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	
 		logger.debug("Starting getAttachmentForAsset()...");
 
-		
-//		// Step 1 - Get the database data for the Asset clicked
-//		UniqueAssetDTO uniqueAssetDTO =  uniqueAssetDao.getDtoById(Integer.valueOf(dashboardFormDTO.getUniqueAssetPkId()));
-//		if (uniqueAssetDTO == null) {
-//			logger.debug("  Note:  No Data Found......");
-//		}
-		
-		
-
-		
-		// 5-9-2023
-	//	String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
-	//   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
-		
-	  // 	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
+		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(dashboardFormDTO.getProductAttachPkId()));
+		if (productAttachment == null) {
+			logger.debug("  Error:  Product Attachment Lookup failed...");
+		}
+					
+        GetObjectRequest request = new GetObjectRequest(
+        	awsS3BucketName, 
+        	productAttachment.getFilenameFullpath() );
+                
+        S3Object s3Object = awsS3Client.getObject(request);
+        S3ObjectInputStream inputStream = s3Object.getObjectContent();
+          
+		ByteArrayResource byteArrayResource = null;
+		try {
+			byteArrayResource = new ByteArrayResource( inputStream.readAllBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}				
+		String encodedPDFBarcdeString = Base64.getEncoder().encodeToString(byteArrayResource.getByteArray());
+				
+	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);		   	
+	   	model.addAttribute("productAttachPkId", productAttachment.getProductAttachPkId());		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/modal_attachment_viewer";
