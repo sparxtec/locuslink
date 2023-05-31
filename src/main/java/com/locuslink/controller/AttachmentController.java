@@ -73,8 +73,6 @@ public class AttachmentController {
     @Autowired
     private ProductAttachmentDao productAttachmentDao;
     
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
 
     
     
@@ -252,14 +250,10 @@ public class AttachmentController {
 			}
 
 			// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
-			String prefixUniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId()+ "_";
-			
-	        // String fullpathFileName_keyName = attachmentStagingFullpath + inputfile.getOriginalFilename();	
+			String prefixUniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId()+ "_";	
 			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
 			
-			
-			
-			
+						
 			// TODO 5-11-2023   Dont allow duplicate files uploaded to the same Asset.
 			if (!checkFileIsValideToUpload(prefixUniqueAssetPkId + inputfile.getOriginalFilename())) {
 				logger.debug("  ERROR duplicate file upload not allowed for the same asset. " );
@@ -269,10 +263,7 @@ public class AttachmentController {
 				return response;				
 			}
 
-			
-			
-
-			 
+				 
 			 
 	        logger.debug("    ->: " + fullpathFileName_keyName);
         	        
@@ -319,14 +310,13 @@ public class AttachmentController {
        //Check Staging for Duplicate
 	    boolean dupFound = false;
         ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging)	 ;       		
-        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
-        	
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {        	
         	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
         		logger.debug("    STAGING duplicate file found ->: " + s3ObjectSummary.getKey());	
         		dupFound = true;   
         		return false;
         	} 
- 
+
         }
         
         
@@ -337,16 +327,13 @@ public class AttachmentController {
 	            .withMarker(attachmentStorageFullpath);
 
         s3ObjectList = awsS3Client.listObjects(listObjectsRequest_storage)	 ;       		
-        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
-        	
+        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {        	
         	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
         		logger.debug("    STORAGE duplicate file found ->: " + s3ObjectSummary.getKey());	
         		dupFound = true;   
         		return false;
-        	} 
-        	
-        }
-	    
+        	}         	
+        }	    
 	    
 		return true;
 	}
@@ -378,8 +365,7 @@ public class AttachmentController {
     	            .withBucketName(awsS3BucketName)
     	            .withPrefix(attachmentStagingFullpath)
     	            .withMarker(attachmentStagingFullpath);
-    	    
-        	
+    	            	
 			String fullpathWildCardFileName_keyName = attachmentStagingFullpath +  uniqueAssetPkId + "_" ;					
             ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging)	 ;       		
             for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
@@ -389,21 +375,15 @@ public class AttachmentController {
                     awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName,  s3ObjectSummary.getKey()));            		                   
                     logger.debug("     remove the staging file successfully.");	                    
             	}
-
             }
                      
 		} else {			
 			// Remove Link on one file clicked from the UI - Delete from AWS Staging this file from AWS Staging
 			String fullpathFileName_keyName = attachmentStagingFullpath +  uniqueAssetPkId + "_" + removeFilename;					
             awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, fullpathFileName_keyName));
-            logger.debug("     remove the staging file successfully.");	            
-			
+            logger.debug("     remove the staging file successfully.");	            			
 		}
-		
-
-		
-		
-		
+								
 		return response;		
 	}
 	
@@ -417,12 +397,15 @@ public class AttachmentController {
 	 *    and insert into the database an attachment record with the filename and path.
 	 */
 	@RequestMapping(value = "/saveAttachmentsFromStagingToStorage", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse saveAttachmentsFromStagingToStorage(@RequestBody GenericMessageRequest request, HttpSession session)  {
-
+	//public @ResponseBody GenericMessageResponse saveAttachmentsFromStagingToStorage(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	public String saveAttachmentsFromStagingToStorage (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
 		logger.debug("In saveAttachmentsFromStagingToStorage()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "saveAttachmentsFromStagingToStorage");
+		//GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "saveAttachmentsFromStagingToStorage");
 	  		
-		String uniqueAssetPkId = request.getFieldAsString("uniqueAssetPkId");
+		//String uniqueAssetPkId = request.getFieldAsString("uniqueAssetPkId");
+		String uniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId();
+		
 		if (uniqueAssetPkId == null || uniqueAssetPkId.length() < 1) {
 			logger.debug("Error ->: missing uniqueAssetPkId. ");
 		}
@@ -473,12 +456,23 @@ public class AttachmentController {
             logger.debug("     Inrested to the database successfully.");	
         }
 
-		return response;
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		return "fragments/modal_attachment_list";
+        
+		//return response;
 	 }
 		 
 	
 	
 	
+	
+//	@PostMapping(value = "/deleteAssetAttachment")
+//	public String deleteAssetAttachment (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+//		        
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//
+//		return "fragments/modal_attachment_list";
+//	}
 	
 	
 }

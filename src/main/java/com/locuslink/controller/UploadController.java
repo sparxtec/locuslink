@@ -43,9 +43,11 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.UniqueAssetDao;
+import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.uploadedFileObjects.ProductDTO;
 import com.locuslink.model.UniqueAsset;
+import com.locuslink.model.UniversalCatalog;
 /**
  * This is a Spring MVC Controller.
  *
@@ -60,6 +62,9 @@ public class UploadController {
     	
 	@Autowired
 	private UniqueAssetDao uniqueAssetDao;
+	
+	@Autowired
+	private UniversalCatalogDao universalCatalogDao;
 	
 	@Autowired
     private SecurityContextManager securityContextManager;
@@ -91,6 +96,12 @@ public class UploadController {
 	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initUpload()...");
 
+		
+		// TODO make a distinct list based on the product type
+		// Build the drop down on the UI for uploading
+		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();
+		
+	   	model.addAttribute("ucatList", ucatList);	   	
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/upload";

@@ -32,7 +32,7 @@
 		    	     $('#errorMessageId').text(response.errorMessage);				    	      
 		    	  	 document.getElementById("continueUpload").disabled = true;
 		    	     this.removeFile(file);
-		    	     // display red error for 5 seconds, then remove he error message
+		    	     // display red error for 5 seconds, then remove the error message
 		    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
 		    	  }
 		    	  
@@ -66,8 +66,6 @@
 		   }
 		
 		}); 
-
-
 
 
 
@@ -176,12 +174,18 @@
     		
     		showSpinner();	
     		
-        	var myData = {version:"1.0", clientId:"trace"};
+/*         	var myData = {version:"1.0", clientId:"trace"};
         	var innerData = {};   	        		    	        	        	
           	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
      		myData["data"] = innerData;	      		  
-			submitFormAjaxJSON('saveAttachmentsFromStagingToStorage', myData, "generalResponse");   
+			submitFormAjaxJSON('saveAttachmentsFromStagingToStorage', myData, "generalResponse");  */  
     		
+   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");	
+			
+	
+			
+			
+			
 			hideSpinner();
 			$("#attachmentUploadId").hide();
     	}); 

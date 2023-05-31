@@ -108,12 +108,24 @@
 										<div class="de-component-footer__action">
 											<div class="d-flex justify-content-between">
 		
-												<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" style="width: 260px">
+<!-- 												<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" style="width: 260px">
 													<option value="PIPE" selected >Steel Pipe :0123001D015</option>
 													<option value="TRANSFORMER">Transformer</option>	
 												    <option value="VALVE">Valve</option>
-												    <option value="WIRE" >Wire</option>													
-												</select>												
+												    <option value="WIRE" >Wire</option>													      												
+												</select>	 -->
+												
+											<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" th:field="*{ucatList}" style="width: 260px">
+												<!-- <select th:field="*{ucatList}"> -->
+							                         <option value=""> -- Select a Type of Asset</option>
+							                         <option th:each="ucat : ${ucatList}"  th:value="${ucat.productName}"  th:utext="${ucat.productName} + ' : ' + ${ucat.productNumber}"/>
+							                    </select>
+                  
+                  
+
+
+                  
+                  											
 											</div>
 										</div>
 	                                </div>
