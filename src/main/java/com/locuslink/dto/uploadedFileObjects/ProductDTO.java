@@ -22,6 +22,10 @@ public class ProductDTO {
 	
 	// TODO For Demo This needs to be in Steel DTO, temp gere for now due to time constraint
 	
+	private String traceTypeCode;
+	
 	private String heatNumber;
+	
+	private String serialNumber;
 	
 }

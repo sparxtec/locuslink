@@ -1,5 +1,6 @@
 package com.locuslink.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -88,9 +89,6 @@ public class UploadController {
 	private String fileErrorFullpath;			
 			
 
-//	@Autowired
-//	private FileStorageService fileStorageService;
-
 
 	@PostMapping(value = "/initUpload")
 	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
@@ -143,10 +141,7 @@ public class UploadController {
 			Model model, @ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,
 			HttpSession session) {
 
-//		UserTrace user = (UserTrace) session.getAttribute("userTrace");
-//		if (user == null) {
-//			logger.debug(" userTrace in session does not exist");
-//		}
+
 		logger.debug("Starting processFileUpload()..inputfile ->:" + inputfile.getOriginalFilename());
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "trace - processXlsFileUpload");
 
@@ -177,6 +172,15 @@ public class UploadController {
             // Tags for easier process on retrieval
             List<Tag> tags = new ArrayList<Tag>();
             tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+            
+            
+            if (fullpathFileName_keyName.toUpperCase().contains("MTR")) {
+                tags.add(new Tag("product_type", "STEEL"));
+            } else if (fullpathFileName_keyName.toUpperCase().contains("CABLE")) {
+                tags.add(new Tag("product_type", "CABLE"));
+            }
+            
+            
             putObjectRequest.setTagging(new ObjectTagging(tags));
             
             PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
@@ -207,7 +211,7 @@ public class UploadController {
 	  
 		// Displays on the UI - Target format for the downloaded xls files from the S3 bucket.
 		List <ProductDTO> productObjectList =  new ArrayList<ProductDTO>(); 
-		ProductDTO productDTO = new ProductDTO();
+
 		
 	    // Gets the list of just files, under the directory structure {tag name}
 	    ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
@@ -215,7 +219,7 @@ public class UploadController {
 	            .withPrefix(fileStagingFullpath)
 	            .withMarker(fileStagingFullpath);
           		
-        Row row = null;
+
         S3Object s3Object;
         ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest)	 ;       		
         for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {
@@ -227,71 +231,32 @@ public class UploadController {
             GetObjectTaggingResult getTagsResult = awsS3Client.getObjectTagging(getTaggingRequest);
             
             String tagFileName = "unknown";
+            String tagProductType = "unknown";
             List <Tag> tagList = getTagsResult.getTagSet();
             for (Tag tag :tagList ) {
             	logger.debug("    s3 tags found ->: " + tag.getKey() + " : " + tag.getValue());	 
             	if (tag.getKey().equals("filename")) {
             		tagFileName = tag.getValue();
             	}
+            	// 6-12-2023
+            	if (tag.getKey().equals("product_type")) {
+            		tagProductType = tag.getValue();
+            	}
             }
                         
             s3Object = awsS3Client.getObject(awsS3BucketName, s3ObjectSummary.getKey());	            	            
             S3ObjectInputStream s3is = s3Object.getObjectContent();           	     	              
-            
-            // Create Workbook for each file in the staging folder
-            try {
-				XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
-	            XSSFSheet sheet = workbook.getSheetAt(0);
-	            Iterator<Row> rowIterator = sheet.iterator();
-	            
-	            boolean notFinished = true;		            
-	        	while (rowIterator.hasNext() && notFinished) {	        	
-					row = rowIterator.next();												
-					int len = row.getLastCellNum();
-
-					if ( row.getCell(0) != null ) {						
-						// print out all the cells on this row
-						String rowCellValue = "";
-						for ( int i = 0; len > i ; i++) {								
-							rowCellValue = row.getCell(i).toString();
-							System.out.print(rowCellValue);							
-							if(len-1 == i) 	{
-								// do nothing
-							} else {
-								System.out.print(",");								
-								if (rowCellValue.equalsIgnoreCase("catalog_id")) {
-									
-									// The only value we need for now is the Catalog id for the UI, not the file contents										  																	
-									// 4-25-2023
-									// TODO Check Product Type and load based on that.									
-									// Key Data
-									productDTO = new ProductDTO();									
-									// the next cell contains the catalogID value
-									productDTO.setProductCatalogId(row.getCell(i + 1).toString());
-									
-									// should come from the data
-									productDTO.setProductNumber("AE-152D 4047-S");	
-									productDTO.setHeatNumber("535521");
-									
-									productDTO.setUploadedFilename(tagFileName);
-									productDTO.setProductTypeCode("STEEL_PIPE");																								
-									//productDTO.setProductName("Steel Pipe");		
-									productDTO.setProductDesc("FBE Steel Pipe 12-Inch API 5L PSL2 ");	
-									
-									productObjectList.add(productDTO);										
-								}								
-							}							
-						}	
-						System.out.println();						
-		        	 } 							
-	        	}	
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}	                                     
-            
+                        
+            // TODO 6-12-2023
+            if (tagProductType.toUpperCase().equals("STEEL")) {            	
+            	processgetStagedSteel(productObjectList,  tagFileName, s3is );            	
+            } else if (tagProductType.toUpperCase().equals("CABLE")) {            	
+            	processgetStagedCable(productObjectList,  tagFileName, s3is );            	
+            } else {
+            	logger.error("Error: The product type for the file was not found, cant process the STAGED FILE, delet it from AWS S3 Bucket.");
+            }            
         }
         
-
         // Convert the POJO array to json, for the UI
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
@@ -308,6 +273,145 @@ public class UploadController {
 	 }
 		 
 		 
+	
+	private  boolean processgetStagedSteel( List <ProductDTO> productObjectList, String tagFileName, S3ObjectInputStream s3is ) {
+		
+		ProductDTO productDTO = new ProductDTO();
+        Row row = null;
+        
+        // Create Workbook for each file in the staging folder
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            
+            boolean notFinished = true;		            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();												
+				int len = row.getLastCellNum();
+
+				if ( row.getCell(0) != null ) {						
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {	
+						
+						// 6-12-2023
+						if (!row.getCell(i).equals(null) && row.getCell(i) != null ) {
+							rowCellValue = row.getCell(i).toString();
+							System.out.print(rowCellValue);	
+						}								
+					
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");								
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+								
+								// The only value we need for now is the Catalog id for the UI, not the file contents										  																	
+								// 4-25-2023
+								// TODO Check Product Type and load based on that.									
+								// Key Data
+								productDTO = new ProductDTO();									
+								// the next cell contains the catalogID value
+								productDTO.setProductCatalogId(row.getCell(i + 1).toString());
+								
+								// should come from the data
+								productDTO.setProductNumber("AE-152D 4047-S");	
+								productDTO.setHeatNumber("535521");
+								
+								productDTO.setUploadedFilename(tagFileName);
+								productDTO.setProductTypeCode("STEEL_PIPE");																								
+								//productDTO.setProductName("Steel Pipe");		
+								productDTO.setProductDesc("FBE Steel Pipe 12-Inch API 5L PSL2 ");	
+								
+								productObjectList.add(productDTO);										
+							}								
+						}							
+					}	
+					System.out.println();						
+	        	 } 							
+        	}	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				s3is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+        
+		return true;
+	}
+	
+	
+	private  boolean processgetStagedCable( List <ProductDTO> productObjectList, String tagFileName, S3ObjectInputStream s3is ) {
+		
+		ProductDTO productDTO = new ProductDTO();
+        Row row = null;
+        
+        // Create Workbook for each file in the staging folder
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            
+            boolean notFinished = true;		            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();												
+				int len = row.getLastCellNum();
+
+				if ( row.getCell(0) != null ) {						
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {	
+						
+						// 6-12-2023
+						if ( row.getCell(i) != null ) {
+							rowCellValue = row.getCell(i).toString();
+							System.out.print(rowCellValue);	
+						}								
+					
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");								
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+															
+								// Key Data
+								productDTO = new ProductDTO();									
+								productDTO.setProductCatalogId(row.getCell(i + 1).toString());
+																
+								productDTO.setUploadedFilename(tagFileName);
+								productDTO.setProductTypeCode("CABLE");		
+								productDTO.setProductDesc("Under ground Cable Medium Voltage");	
+								
+								// should come from the data
+								productDTO.setProductNumber("ELEC-DISTR-UC-MV");	
+								productDTO.setTraceTypeCode("SERIAL");
+								productDTO.setSerialNumber("ser12345");
+								
+								productObjectList.add(productDTO);										
+							}								
+						}							
+					}	
+					System.out.println();						
+	        	 } 							
+        	}	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				s3is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+        
+		return true;
+	}
+	
+	
 	
 	
 	/**
@@ -347,89 +451,283 @@ public class UploadController {
 		        s3Object = awsS3Client.getObject(awsS3BucketName, tagFilename );	
 	            S3ObjectInputStream s3is = s3Object.getObjectContent();     
 				
-	            // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
-	            try {
-					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
-		            XSSFSheet sheet = workbook.getSheetAt(0);
-		            Iterator<Row> rowIterator = sheet.iterator();
-		            Row row = null;
-				
-		            // Loop thru the rows in this file
-		            UniqueAsset uniqueAsset = new UniqueAsset();
-		 		            
-		            boolean notFinished = true;            
-		        	while (rowIterator.hasNext() && notFinished) {	        	
-						row = rowIterator.next();												
-						int len = row.getLastCellNum();
-							
-						// Loop thru the cells on a row
-						if ( row.getCell(0) != null ) {						
-							// print out all the cells on this row
-							String rowCellValue = "";
-							for ( int i = 0; len > i ; i++) {								
-								rowCellValue = row.getCell(i).toString();
-								System.out.print(rowCellValue);							
-								if(len-1 == i) 	{
-									// do nothing
-								} else {
-									System.out.print(",");	
-									
-									// TODO Find CELLS we care about
-									
-									if (rowCellValue.equalsIgnoreCase("catalog_id")) {
-										
-										// TODO add DB lookup to use text to get pkId
-										uniqueAsset.setUcatPkId(804);
-										uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
-										uniqueAsset.setManufacturerPkId(55); // real value in the table
-										uniqueAsset.setCustomerPkId(2);  // ACME Utilities
-										uniqueAsset.setTraceTypePkId(40); // heat	
-										
-										uniqueAsset.setTraceCode("535521");
-										uniqueAsset.setAddBy("digitalMtr");
-										
-									} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
-										
-										// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
-										uniqueAsset.setManufacturerPkId(55);
-															
-									} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
-										
-										uniqueAsset.setTraceCode(row.getCell(i+1).toString());
-										
-									} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
-					
-									}     
-																																				
-								}							
-							}	
-							System.out.println();
-						}
-		        	}
-				
-		        	// Validate the required fields
-		        	if (uniqueAsset.getUcatPkId() > 0) {
-		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
-		        		uniqueAssetDao.save(uniqueAsset);
-		        		logger.debug(" Unique Asset Table ->: saved.");	
-		        	}
-		        			        	
-	            } catch (Exception e1) {
-					e1.printStackTrace();
-				}	     	            
+	            
+	            // TODO 6-12-2023
+	            if (productDTO.getProductTypeCode().equals("STEEL")) {
+	            	if (processSaveToDB_Steel( s3is )) {
+	            		logger.debug("Successfull Save to DB, Unique Asset Created");
+	            	}
+	            } else if (productDTO.getProductTypeCode().equals("CABLE")) {
+	             	if (processSaveToDB_Cable(  s3is )) {
+	             		logger.debug("Successfull Save to DB, Unique Asset Created");
+	             	}
+	            } else {
+	              	logger.error("Error: The product type for the file was not found, cant save to DB.");
+	            }
+	            
+	            
+	            
+//	            // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
+//	            try {
+//					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+//		            XSSFSheet sheet = workbook.getSheetAt(0);
+//		            Iterator<Row> rowIterator = sheet.iterator();
+//		            Row row = null;
+//				
+//		            // Loop thru the rows in this file
+//		            UniqueAsset uniqueAsset = new UniqueAsset();
+//		 		            
+//		            boolean notFinished = true;            
+//		        	while (rowIterator.hasNext() && notFinished) {	        	
+//						row = rowIterator.next();												
+//						int len = row.getLastCellNum();
+//							
+//						// Loop thru the cells on a row
+//						if ( row.getCell(0) != null ) {						
+//							// print out all the cells on this row
+//							String rowCellValue = "";
+//							for ( int i = 0; len > i ; i++) {								
+//								rowCellValue = row.getCell(i).toString();
+//								System.out.print(rowCellValue);							
+//								if(len-1 == i) 	{
+//									// do nothing
+//								} else {
+//									System.out.print(",");	
+//									
+//									// TODO Find CELLS we care about
+//									
+//									if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+//										
+//										// TODO add DB lookup to use text to get pkId
+//										uniqueAsset.setUcatPkId(804);
+//										uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+//										uniqueAsset.setManufacturerPkId(55); // real value in the table
+//										uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+//										uniqueAsset.setTraceTypePkId(40); // heat	
+//										
+//										uniqueAsset.setTraceCode("535521");
+//										uniqueAsset.setAddBy("digitalMtr");
+//										
+//									} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
+//										
+//										// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
+//										uniqueAsset.setManufacturerPkId(55);
+//															
+//									} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
+//										
+//										uniqueAsset.setTraceCode(row.getCell(i+1).toString());
+//										
+//									} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
+//					
+//									}     
+//																																				
+//								}							
+//							}	
+//							System.out.println();
+//						}
+//		        	}
+//				
+//		        	// Validate the required fields
+//		        	if (uniqueAsset.getUcatPkId() > 0) {
+//		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
+//		        		uniqueAssetDao.save(uniqueAsset);
+//		        		logger.debug(" Unique Asset Table ->: saved.");	
+//		        	}
+//		        			        	
+//	            } catch (Exception e1) {
+//					e1.printStackTrace();
+//				}	     	            
 		
 			} catch (Exception e) {
 				logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
 			}			
 		}
 		
-		
+		// 6-14-2023
+		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();		
+	   	model.addAttribute("ucatList", ucatList);	
+	   	
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/upload";
 	}
-	
-	
 
+	
+	
+	
+	
+	
+	/**
+	 * 	6-14-2023
+	 *   The Uploaded File was Under Ground Cable, this is the routine to parse thru that file and create the database entries from that.
+	 *   The step after this would be to save the uploaded file to the attachments table.
+	 */
+	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is ) {
+		
+        // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            Row row = null;
+		
+            // Loop thru the rows in this file
+            UniqueAsset uniqueAsset = new UniqueAsset();
+ 		            
+            boolean notFinished = true;            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();												
+				int len = row.getLastCellNum();
+					
+				// Loop thru the cells on a row
+				if ( row.getCell(0) != null ) {						
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {								
+						rowCellValue = row.getCell(i).toString();
+						System.out.print(rowCellValue);							
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");	
+							
+							// TODO Find CELLS we care about
+							
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+								
+								// TODO add DB lookup to use text to get pkId
+								uniqueAsset.setUcatPkId(804); // Steel
+								
+								uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+								uniqueAsset.setManufacturerPkId(55); // real value in the table
+								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+								uniqueAsset.setTraceTypePkId(40); // heat	
+								
+								uniqueAsset.setTraceCode("535521");
+								uniqueAsset.setAddBy("digitalMtr");
+								
+							} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
+								
+								// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
+								uniqueAsset.setManufacturerPkId(55);
+													
+							} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
+								
+								uniqueAsset.setTraceCode(row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
+			
+							}     
+																																		
+						}							
+					}	
+					System.out.println();
+				}
+        	}
+		
+        	// Validate the required fields
+        	if (uniqueAsset.getUcatPkId() > 0) {
+        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
+        		uniqueAssetDao.save(uniqueAsset);
+        		logger.debug(" Unique Asset Table ->: saved.");	
+        	}
+        			        	
+        } catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
+        
+		return true;
+	}
+
+	
+	
+	
+	/**
+	 * 	6-14-2023
+	 *   The Uploaded File was Under Ground Cable, this is the routine to parse thru that file and create the database entries from that.
+	 *   The step after this would be to save the uploaded file to the attachments table.
+	 */
+	private boolean processSaveToDB_Cable( S3ObjectInputStream s3is ) {
+				
+	    // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            Row row = null;
+		
+            // Loop thru the rows in this file
+            UniqueAsset uniqueAsset = new UniqueAsset();
+ 		            
+            boolean notFinished = true;            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();
+				
+				// 6-14-2023
+				//int len = row.getLastCellNum();
+				int len = 2;;
+					
+				// Loop thru the cells on a row
+				if ( row.getCell(0) != null ) {						
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {								
+						rowCellValue = row.getCell(i).toString();
+						System.out.print(rowCellValue);							
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");	
+							
+							// TODO Find CELLS we care about
+							
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+								
+								// TODO add DB lookup to use text to get pkId
+								uniqueAsset.setUcatPkId(800); // Under ground Cable
+								
+								uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+								uniqueAsset.setTraceTypePkId(40); // heat									
+								uniqueAsset.setAddBy("digitalAssetCable");
+								
+							} else if (rowCellValue.equalsIgnoreCase("Manufacturer")) {
+								
+								// TODO 6-14-2023   The value from the upload files, needs to read from the DB, to set the PkID,
+								// and default to unknown if not found
+								uniqueAsset.setManufacturerPkId(50); // SouthEastern Wire
+													
+							} else if (rowCellValue.equalsIgnoreCase("lot_code")) {								
+								uniqueAsset.setTraceCode(row.getCell(i+1).toString());								
+							}   
+																																		
+						}							
+					}	
+					System.out.println();
+				}
+        	}
+		
+        	// Validate the required fields
+        	if (uniqueAsset.getUcatPkId() > 0) {
+        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
+        		uniqueAssetDao.save(uniqueAsset);
+        		logger.debug(" Unique Asset Table ->: saved.");	
+        	}
+        			        	
+        } catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
+        
+        
+		return true;
+	}
+
+	
+	private boolean processSaveAttachmentToDB(  ) {
+		
+		return true;
+	}
 
 }
