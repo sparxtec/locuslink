@@ -12,6 +12,8 @@ public class DashboardFormDTO {
 
 	// Attachment Processing
 	private String productAttachPkId;
+	private boolean isPdf;
+	
 	
 	// Barcode Processing
 	private String printBarcode1;

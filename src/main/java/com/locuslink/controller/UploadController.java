@@ -1,16 +1,27 @@
 package com.locuslink.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingResult;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
@@ -43,12 +56,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.ProductAttachmentDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.uploadedFileObjects.ProductDTO;
+import com.locuslink.model.ProductAttachment;
 import com.locuslink.model.UniqueAsset;
 import com.locuslink.model.UniversalCatalog;
+
 /**
  * This is a Spring MVC Controller.
  *
@@ -67,6 +83,10 @@ public class UploadController {
 	@Autowired
 	private UniversalCatalogDao universalCatalogDao;
 	
+    @Autowired
+    private ProductAttachmentDao productAttachmentDao;
+    
+    
 	@Autowired
     private SecurityContextManager securityContextManager;
 	
@@ -88,7 +108,12 @@ public class UploadController {
 	@Value("${file.upload.error.fullpath}")
 	private String fileErrorFullpath;			
 			
-
+	 
+	@Value("${file.attachment.staging.fullpath}")
+	private String attachmentStagingFullpath;
+	
+	@Value("${file.attachment.storage.fullpath}")
+	private String attachmentStorageFullpath;
 
 	@PostMapping(value = "/initUpload")
 	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
@@ -129,6 +154,37 @@ public class UploadController {
 	}
 	
 
+	
+	// TODO 6-15-2023   
+// FIX THIS
+	
+	@PostMapping(value = "/deleteUploadStagedFile")
+	public String deleteUploadStagedFile (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting deleteUploadStagedFile()...");
+
+		
+//		// TODO Delete the clicked on ROW from AWS and the Database
+//		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(dashboardFormDTO.getProductAttachPkId()));
+//		if (productAttachment == null) {
+//			logger.debug("  Error:  Product Attachment Lookup failed...");
+//		}
+//		
+//		// AWS Remove the attachment from the Storge Area			
+//        awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, productAttachment.getFilenameFullpath()));
+//        logger.debug("     remove the AWS STORAGE file successfully.");	 
+//        
+//        // Database
+//        productAttachmentDao.delete(productAttachment);
+		
+        
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/uploadstep3";
+	}
+	
+	
+	
 	
 	/**
 	 *  02-23-2023 - C.Sparks
@@ -412,6 +468,16 @@ public class UploadController {
 	}
 	
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
 	
 	
 	/**
@@ -450,16 +516,23 @@ public class UploadController {
 		        S3Object s3Object;
 		        s3Object = awsS3Client.getObject(awsS3BucketName, tagFilename );	
 	            S3ObjectInputStream s3is = s3Object.getObjectContent();     
-				
+	            UniqueAsset uniqueAsset = new UniqueAsset();
 	            
 	            // TODO 6-12-2023
 	            if (productDTO.getProductTypeCode().equals("STEEL")) {
-	            	if (processSaveToDB_Steel( s3is )) {
+	            	if (processSaveToDB_Steel( s3is, uniqueAsset )) {
 	            		logger.debug("Successfull Save to DB, Unique Asset Created");
+	            	} else {
+	            		// ERROR
+	            		logger.error("Error - saving file to Database, bypassing.");
+	            		continue;
 	            	}
 	            } else if (productDTO.getProductTypeCode().equals("CABLE")) {
-	             	if (processSaveToDB_Cable(  s3is )) {
+	             	if (processSaveToDB_Cable(  s3is, uniqueAsset  )) {
 	             		logger.debug("Successfull Save to DB, Unique Asset Created");
+	             	} else {
+	             		logger.error("Error - saving file to Database, bypassing.");
+	             		continue;
 	             	}
 	            } else {
 	              	logger.error("Error: The product type for the file was not found, cant save to DB.");
@@ -467,81 +540,34 @@ public class UploadController {
 	            
 	            
 	            
-//	            // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
-//	            try {
-//					XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
-//		            XSSFSheet sheet = workbook.getSheetAt(0);
-//		            Iterator<Row> rowIterator = sheet.iterator();
-//		            Row row = null;
-//				
-//		            // Loop thru the rows in this file
-//		            UniqueAsset uniqueAsset = new UniqueAsset();
-//		 		            
-//		            boolean notFinished = true;            
-//		        	while (rowIterator.hasNext() && notFinished) {	        	
-//						row = rowIterator.next();												
-//						int len = row.getLastCellNum();
-//							
-//						// Loop thru the cells on a row
-//						if ( row.getCell(0) != null ) {						
-//							// print out all the cells on this row
-//							String rowCellValue = "";
-//							for ( int i = 0; len > i ; i++) {								
-//								rowCellValue = row.getCell(i).toString();
-//								System.out.print(rowCellValue);							
-//								if(len-1 == i) 	{
-//									// do nothing
-//								} else {
-//									System.out.print(",");	
-//									
-//									// TODO Find CELLS we care about
-//									
-//									if (rowCellValue.equalsIgnoreCase("catalog_id")) {
-//										
-//										// TODO add DB lookup to use text to get pkId
-//										uniqueAsset.setUcatPkId(804);
-//										uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
-//										uniqueAsset.setManufacturerPkId(55); // real value in the table
-//										uniqueAsset.setCustomerPkId(2);  // ACME Utilities
-//										uniqueAsset.setTraceTypePkId(40); // heat	
-//										
-//										uniqueAsset.setTraceCode("535521");
-//										uniqueAsset.setAddBy("digitalMtr");
-//										
-//									} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
-//										
-//										// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
-//										uniqueAsset.setManufacturerPkId(55);
-//															
-//									} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
-//										
-//										uniqueAsset.setTraceCode(row.getCell(i+1).toString());
-//										
-//									} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
-//					
-//									}     
-//																																				
-//								}							
-//							}	
-//							System.out.println();
-//						}
-//		        	}
-//				
-//		        	// Validate the required fields
-//		        	if (uniqueAsset.getUcatPkId() > 0) {
-//		        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
-//		        		uniqueAssetDao.save(uniqueAsset);
-//		        		logger.debug(" Unique Asset Table ->: saved.");	
-//		        	}
-//		        			        	
-//	            } catch (Exception e1) {
-//					e1.printStackTrace();
-//				}	     	            
+	            	            	           
+	            // The Upload File saved successfully to create an Asset in the DB
+	            //  1.) Clean up AWS, move stage to Storage
+	            //  2.) Save Storage File to the Asset Attachments Table in the DB
+	            
+	            
+	            String sourceKey = s3Object.getKey();                       
+	            String destinationKey = sourceKey.replace("staging", "storage");  
+	            
+	            
+	            
+	            // 1.) All Done Clean Up AWS - Move from Staging to Storage
+	            processCopyStageToStorage(s3Object);
+	            
+	            
+	            // 2.) All Done Clean Up AWS - Move from Staging to Storage
+	           // saveUploadStorageToAttachment(productDTO, s3is, destinationKey, uniqueAsset);
+	            
+	            saveCopyUploadStorageToAttachment(s3Object, uniqueAsset);
+	                 	            
 		
 			} catch (Exception e) {
 				logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
 			}			
 		}
+		
+		
+
 		
 		// 6-14-2023
 		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();		
@@ -562,7 +588,7 @@ public class UploadController {
 	 *   The Uploaded File was Under Ground Cable, this is the routine to parse thru that file and create the database entries from that.
 	 *   The step after this would be to save the uploaded file to the attachments table.
 	 */
-	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is ) {
+	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is, UniqueAsset uniqueAsset ) {
 		
         // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
         try {
@@ -572,7 +598,7 @@ public class UploadController {
             Row row = null;
 		
             // Loop thru the rows in this file
-            UniqueAsset uniqueAsset = new UniqueAsset();
+            //UniqueAsset uniqueAsset = new UniqueAsset();
  		            
             boolean notFinished = true;            
         	while (rowIterator.hasNext() && notFinished) {	        	
@@ -648,7 +674,7 @@ public class UploadController {
 	 *   The Uploaded File was Under Ground Cable, this is the routine to parse thru that file and create the database entries from that.
 	 *   The step after this would be to save the uploaded file to the attachments table.
 	 */
-	private boolean processSaveToDB_Cable( S3ObjectInputStream s3is ) {
+	private boolean processSaveToDB_Cable( S3ObjectInputStream s3is,  UniqueAsset uniqueAsset ) {
 				
 	    // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
         try {
@@ -657,8 +683,10 @@ public class UploadController {
             Iterator<Row> rowIterator = sheet.iterator();
             Row row = null;
 		
+
+            
             // Loop thru the rows in this file
-            UniqueAsset uniqueAsset = new UniqueAsset();
+           // UniqueAsset uniqueAsset = new UniqueAsset();
  		            
             boolean notFinished = true;            
         	while (rowIterator.hasNext() && notFinished) {	        	
@@ -724,10 +752,145 @@ public class UploadController {
 		return true;
 	}
 
+
+    // The Upload saved to the database correctly, so now Clean up AWS
+	//  move the staged file to storage.
+	private boolean processCopyStageToStorage( S3Object s3Object ) {
 	
-	private boolean processSaveAttachmentToDB(  ) {
+        CopyObjectRequest copyObjRequest;
+        
+        String sourceKey = s3Object.getKey();                       
+        String destinationKey = sourceKey.replace("staging", "storage");            
+     	logger.debug("    moving  ->: " + sourceKey);	 
+     	logger.debug("       to   ->: " + destinationKey);	
 		
+        copyObjRequest = new CopyObjectRequest(awsS3BucketName, sourceKey, awsS3BucketName, destinationKey);
+        awsS3Client.copyObject(copyObjRequest);
+        
+        // remove it from the staging folder
+        awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, sourceKey));
+        logger.debug("     remove the staging file successfully.");	
+                        
 		return true;
 	}
 
+	
+	
+	// 6-19-2023
+    // The Upload File saved successfully to create an Asset in the DB
+    //     - Save Storage File to the Asset Attachments Table in the DB
+	
+	private boolean saveCopyUploadStorageToAttachment(S3Object s3Object, UniqueAsset uniqueAsset ) {
+		
+	   	logger.debug("   saveCopyUploadStorageToAttachment" );	
+	   	
+	
+	   	
+	   	
+        CopyObjectRequest copyObjRequest;
+        
+        String sourceKey = s3Object.getKey();                       
+        sourceKey = sourceKey.replace("staging", "storage");  
+        String destinationKey = sourceKey.replace("upload", "attachment");  
+        
+     	logger.debug("    moving  ->: " + sourceKey);	 
+     	logger.debug("       to   ->: " + destinationKey);	
+		
+        copyObjRequest = new CopyObjectRequest(awsS3BucketName, sourceKey, awsS3BucketName, destinationKey);
+        awsS3Client.copyObject(copyObjRequest);
+        
+        logger.debug("     saved to AWS attachments successfully.");
+	   	
+        
+                        
+        // TODO Insert to DB for a successful copy
+             	
+     	ProductAttachment productAttachment = new ProductAttachment();
+      	productAttachment.setUniqueAssetPkId(Integer.valueOf(uniqueAsset.getUniqueAssetPkId()));
+     	productAttachment.setAddBy("fileUpload");      
+     	
+     	// TODO maybe ADD just the filename, instead of the whole path for the UI
+     	productAttachment.setFilenameFullpath(destinationKey);   
+     	
+     	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
+     	productAttachment.setDocTypePkId(1);   
+     	productAttachmentDao.save(productAttachment);
+        logger.debug("     Inrested to the database successfully.");	
+	   	
+	   	
+//	 //   JSONObject data = convertExcelToJson( s3is );
+//	   	
+//	   	
+//	   	
+//	   	
+//	   	
+//	   	
+//	   	ByteArrayOutputStream pdfOutStream = new ByteArrayOutputStream();
+//	   	
+//	   	
+//	   //	com.spire.xls.Workbook workbook = new com.spire.xls.Workbook();		 
+//	//   	com.spire.xls.Workbook workbook = new com.spire.xls.Workbook();
+//	   	
+//	   	workbook.loadFromStream(s3is);  
+//	    workbook.getConverterSetting().setSheetFitToPage(true);
+//	 //   workbook.saveToFile("output/ExcelToPdf.pdf", com.spire.xls.FileFormat.PDF);
+//
+//	       	    	    
+//	  //  workbook.saveToStream( pdfOutStream,   com.spire.xls.FileFormat.PDF);
+//	    
+//	    InputStream pdfInputStream = new ByteArrayInputStream(pdfOutStream.toByteArray());
+//
+//	    
+//	    
+//        String fullpathFileName_keyName = attachmentStorageFullpath + productDTO.getUploadedFilename();	        
+//        logger.debug("    ->: " + fullpathFileName_keyName);
+//    	        
+//        final ObjectMetadata metaData = new ObjectMetadata();
+//        //metaData.setContentType(inputfile.getContentType());
+//       // metaData.setContentLength(inputfile.getSize());
+//        metaData.setContentType("application/pdf");
+//        metaData.setContentLength(pdfOutStream.size());
+//        
+//        
+//        // create and call S3 request to create the new S3 object 
+//        PutObjectRequest putObjectRequest = new PutObjectRequest(
+//        	awsS3BucketName, 
+//        	attachmentStorageFullpath + "sparks.pdf", 
+//        	//inputfile.getInputStream(), // input stream from the Multipart
+//        	
+//        	pdfInputStream,
+//        	
+//            metaData // created above, with the only content type and size
+//        );
+//        
+//        // Tags for easier process on retrieval
+//        List<Tag> tags = new ArrayList<Tag>();
+//        tags.add(new Tag("filename", "sparks.pdf"));
+//        
+//        
+////        if (fullpathFileName_keyName.toUpperCase().contains("MTR")) {
+////            tags.add(new Tag("product_type", "STEEL"));
+////        } else if (fullpathFileName_keyName.toUpperCase().contains("CABLE")) {
+////            tags.add(new Tag("product_type", "CABLE"));
+////        }
+//
+//        
+//        putObjectRequest.setTagging(new ObjectTagging(tags));
+//        
+//        PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
+//	    
+//	    
+//	    logger.debug("result ->: " + putObjectResult.getMetadata());
+
+
+		return true;
+	}
+	
+	
+
+
+	
+	
+	    
+	    
 }

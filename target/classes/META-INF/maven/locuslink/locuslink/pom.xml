@@ -42,6 +42,13 @@
         <id>jitpack.io</id>
         <url>https://jitpack.io</url>
     </repository>
+    
+   <repository>
+        <id>com.e-iceblue</id>
+        <name>e-iceblue</name>
+        <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+    </repository>
+    
 </repositories>
     
 
@@ -318,6 +325,31 @@
 		</dependency>
 
 
+		<!-- Excel to PDF Convertion Options-->
+<!--	    <dependency>
+		    <groupId>e-iceblue</groupId>
+		    <artifactId>spire.xls.free</artifactId>
+		    <version>5.1.0</version>
+	    </dependency>-->
+    
+<!--        <dependency>
+	        <groupId>e-iceblue</groupId>
+	        <artifactId>spire.xls</artifactId>
+	        <version>13.6.5</version>
+	    </dependency>-->
+
+<dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>com.lowagie</groupId>
+    <artifactId>itext</artifactId>
+    <version>2.1.7</version>
+</dependency>
 
 	</dependencies>
 
