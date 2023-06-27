@@ -1,8 +1,9 @@
 package com.locuslink.controller;
 
-import java.awt.Color;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
@@ -11,12 +12,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jettison.json.JSONObject;
@@ -222,7 +219,10 @@ public class AttachmentController {
 		if (s3Object.getKey().contains("xls")) {
 			dashboardFormDTO.setPdf(false);		
 			
-			boolean result = convertExcelToJson( s3is );
+			//boolean result = convertExcelToPDF( s3is );			
+			//InputStream in = new ByteArrayInputStream(convertExcelToPDF( s3is ).toByteArray());
+
+			byteArrayResource = new ByteArrayResource( convertExcelToPDF( s3is ).toByteArray());
 			
 			
 		} else if (s3Object.getKey().contains("pdf"))  {
@@ -234,14 +234,11 @@ public class AttachmentController {
 				e.printStackTrace();
 			}	
 			
-			encodedPDFBarcdeString = Base64.getEncoder().encodeToString(byteArrayResource.getByteArray());
+			//encodedPDFBarcdeString = Base64.getEncoder().encodeToString(byteArrayResource.getByteArray());
 		}
 		
 		
-		
-		
-		
-	   	model.addAttribute("xlsJson", xlsJson);
+		encodedPDFBarcdeString = Base64.getEncoder().encodeToString(byteArrayResource.getByteArray());	
 				
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);		   	
 	   	model.addAttribute("productAttachPkId", productAttachment.getProductAttachPkId());		
@@ -507,11 +504,11 @@ public class AttachmentController {
 	
 	
 	
-	private boolean convertExcelToJson( S3ObjectInputStream s3is ) {	
+	private ByteArrayOutputStream convertExcelToPDF( S3ObjectInputStream s3is ) {	
 	
 		int nbrColsInExcelSheet = 3;
 		
-	    Document iText_xls_2_pdf = new Document();
+	    Document document = new Document();
 	    PdfPTable my_table = new PdfPTable(nbrColsInExcelSheet);
 	    PdfPCell table_cell;
 
@@ -519,41 +516,48 @@ public class AttachmentController {
 	    boolean notFinished = true;  
 	   	   
 	    
-	   // com.itextpdf.layout.Document;
-	    
+	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
 	    
 	    try {	    	
 			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rowIterator = sheet.iterator();
 					    
-		    PdfWriter.getInstance(iText_xls_2_pdf, new FileOutputStream("Excel2PDF_Output.pdf"));
-		    iText_xls_2_pdf.open();
+		    //PdfWriter.getInstance(document, new FileOutputStream("Excel2PDF_Output.pdf"));
+			
+			PdfWriter.getInstance(document, byteArrayOutputStream);
+			
+		    document.open();
 	    	
 	    	while (rowIterator.hasNext() && notFinished) {
 				
 				row = rowIterator.next();												
 				int len = nbrColsInExcelSheet;
 
+				
+//				// 6-27-2023  TODO Remove blank rows
+//				if ((row.getCell(0) != null &&  row.getCell(0).toString().length() > 0) ||
+//					(row.getCell(1) != null &&  row.getCell(1).toString().length() > 0) ||
+//					(row.getCell(2) != null &&  row.getCell(2).toString().length() > 0)) {
+//						break;				
+//				}
+				
+				
 				// Loop thru the cells on a row
 				if ( row.getCell(0) != null ) {						
 					String rowCellValue = "";
 					
 					CellStyle cellStyle = null;
-					XSSFCellStyle xssfCellStyle = null;
-	
+					//XSSFCellStyle xssfCellStyle = null;	
 					
 					for ( int i = 0; len > i ; i++) {		
 						
 						// 6-22-2023
 						if (row.getCell(i) != null ) {
-							rowCellValue = row.getCell(i).toString();
-							
-							cellStyle = row.getCell(i).getCellStyle();
-							
-							xssfCellStyle = (XSSFCellStyle) row.getCell(i).getCellStyle();
-							
-														
+							rowCellValue = row.getCell(i).toString();							
+							cellStyle = row.getCell(i).getCellStyle();							
+							//xssfCellStyle = (XSSFCellStyle) row.getCell(i).getCellStyle();																				
 						}	else {
 							rowCellValue = "";
 						}												
@@ -564,8 +568,7 @@ public class AttachmentController {
 						}	
 								
 						//logger.debug(" cell Fore Color ->:" + cellStyle.getFillForegroundColor() );
-	
-						
+							
 						//cellStyle.getFillBackgroundColor()
 						table_cell=new PdfPCell(new Phrase(  rowCellValue ));
 						
@@ -573,11 +576,8 @@ public class AttachmentController {
 //						if ( cellStyle.getFillForegroundColor() == 0) {
 //							table_cell.setBackgroundColor( Color.lightGray );
 //						}
-						
-						
-						
-                        my_table.addCell(table_cell);
-                       
+																		
+                        my_table.addCell(table_cell);                       
 						
 					}	
 					System.out.println();
@@ -594,17 +594,14 @@ public class AttachmentController {
 	    
 	    //Finally add the table to PDF document
 	    try {
-			iText_xls_2_pdf.add(my_table);
+	    	document.add(my_table);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}                       
-	    iText_xls_2_pdf.close();  
+	    document.close();  
 	    
-	    //we created our pdf file..
-	   // input_document.close(); //close xls
-	
-	
-	return true;
+	    
+	return byteArrayOutputStream;
 }
 	
 	

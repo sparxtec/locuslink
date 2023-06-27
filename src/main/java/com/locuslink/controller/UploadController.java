@@ -1,27 +1,16 @@
 package com.locuslink.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.sl.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -519,7 +508,7 @@ public class UploadController {
 	            UniqueAsset uniqueAsset = new UniqueAsset();
 	            
 	            // TODO 6-12-2023
-	            if (productDTO.getProductTypeCode().equals("STEEL")) {
+	            if (productDTO.getProductTypeCode().toUpperCase().contains("STEEL")) {
 	            	if (processSaveToDB_Steel( s3is, uniqueAsset )) {
 	            		logger.debug("Successfull Save to DB, Unique Asset Created");
 	            	} else {
@@ -527,7 +516,7 @@ public class UploadController {
 	            		logger.error("Error - saving file to Database, bypassing.");
 	            		continue;
 	            	}
-	            } else if (productDTO.getProductTypeCode().equals("CABLE")) {
+	            } else if (productDTO.getProductTypeCode().toUpperCase().contains("CABLE")) {
 	             	if (processSaveToDB_Cable(  s3is, uniqueAsset  )) {
 	             		logger.debug("Successfull Save to DB, Unique Asset Created");
 	             	} else {
@@ -546,10 +535,7 @@ public class UploadController {
 	            //  2.) Save Storage File to the Asset Attachments Table in the DB
 	            
 	            
-	            String sourceKey = s3Object.getKey();                       
-	            String destinationKey = sourceKey.replace("staging", "storage");  
-	            
-	            
+	            //String sourceKey = s3Object.getKey();                       	            	            
 	            
 	            // 1.) All Done Clean Up AWS - Move from Staging to Storage
 	            processCopyStageToStorage(s3Object);
@@ -784,9 +770,7 @@ public class UploadController {
 		
 	   	logger.debug("   saveCopyUploadStorageToAttachment" );	
 	   	
-	
-	   	
-	   	
+		   		   	
         CopyObjectRequest copyObjRequest;
         
         String sourceKey = s3Object.getKey();                       
@@ -801,9 +785,8 @@ public class UploadController {
         
         logger.debug("     saved to AWS attachments successfully.");
 	   	
-        
-                        
-        // TODO Insert to DB for a successful copy
+                               
+        // Insert to DB for a successful copy
              	
      	ProductAttachment productAttachment = new ProductAttachment();
       	productAttachment.setUniqueAssetPkId(Integer.valueOf(uniqueAsset.getUniqueAssetPkId()));
@@ -815,74 +798,9 @@ public class UploadController {
      	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
      	productAttachment.setDocTypePkId(1);   
      	productAttachmentDao.save(productAttachment);
-        logger.debug("     Inrested to the database successfully.");	
+     	
+        logger.debug("     Inserted to the database successfully.");	
 	   	
-	   	
-//	 //   JSONObject data = convertExcelToJson( s3is );
-//	   	
-//	   	
-//	   	
-//	   	
-//	   	
-//	   	
-//	   	ByteArrayOutputStream pdfOutStream = new ByteArrayOutputStream();
-//	   	
-//	   	
-//	   //	com.spire.xls.Workbook workbook = new com.spire.xls.Workbook();		 
-//	//   	com.spire.xls.Workbook workbook = new com.spire.xls.Workbook();
-//	   	
-//	   	workbook.loadFromStream(s3is);  
-//	    workbook.getConverterSetting().setSheetFitToPage(true);
-//	 //   workbook.saveToFile("output/ExcelToPdf.pdf", com.spire.xls.FileFormat.PDF);
-//
-//	       	    	    
-//	  //  workbook.saveToStream( pdfOutStream,   com.spire.xls.FileFormat.PDF);
-//	    
-//	    InputStream pdfInputStream = new ByteArrayInputStream(pdfOutStream.toByteArray());
-//
-//	    
-//	    
-//        String fullpathFileName_keyName = attachmentStorageFullpath + productDTO.getUploadedFilename();	        
-//        logger.debug("    ->: " + fullpathFileName_keyName);
-//    	        
-//        final ObjectMetadata metaData = new ObjectMetadata();
-//        //metaData.setContentType(inputfile.getContentType());
-//       // metaData.setContentLength(inputfile.getSize());
-//        metaData.setContentType("application/pdf");
-//        metaData.setContentLength(pdfOutStream.size());
-//        
-//        
-//        // create and call S3 request to create the new S3 object 
-//        PutObjectRequest putObjectRequest = new PutObjectRequest(
-//        	awsS3BucketName, 
-//        	attachmentStorageFullpath + "sparks.pdf", 
-//        	//inputfile.getInputStream(), // input stream from the Multipart
-//        	
-//        	pdfInputStream,
-//        	
-//            metaData // created above, with the only content type and size
-//        );
-//        
-//        // Tags for easier process on retrieval
-//        List<Tag> tags = new ArrayList<Tag>();
-//        tags.add(new Tag("filename", "sparks.pdf"));
-//        
-//        
-////        if (fullpathFileName_keyName.toUpperCase().contains("MTR")) {
-////            tags.add(new Tag("product_type", "STEEL"));
-////        } else if (fullpathFileName_keyName.toUpperCase().contains("CABLE")) {
-////            tags.add(new Tag("product_type", "CABLE"));
-////        }
-//
-//        
-//        putObjectRequest.setTagging(new ObjectTagging(tags));
-//        
-//        PutObjectResult putObjectResult = awsS3Client.putObject(putObjectRequest);
-//	    
-//	    
-//	    logger.debug("result ->: " + putObjectResult.getMetadata());
-
-
 		return true;
 	}
 	

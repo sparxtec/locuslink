@@ -17,10 +17,8 @@
 		hideSpinner();	
 	   	$("#attachment_viewer").modal('show');	
 	   	
-	 	//loadEmbededPDF(b64);    
+	 	loadEmbededPDF(b64);    
 	 	
-	 	loadEmbededXLS(xlsJson);    
-        
     	$('#attachmentViewerBackButtonId').click(function() {	    		
 			// not sure why nothing is needed here to remove the modal, the modal dismiss maybe ?
     	});
@@ -40,27 +38,13 @@
    	  //   PDFObject.embed("samplefiles/mtr.pdf", "#pdfContainerId_1", options );	
 	    PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
 	}   
-	
-	function loadEmbededXLS(xlsJson) {
-		
-     	// This make the BarCode open to the size of the container, instead of a small image inside it.
-     	var options = {
-   		 pdfOpenParams: {
-   		        view: 'FitV',
-   		        pagemode: 'thumbs',
-   		        search: 'lorem ipsum'
-   		    }
-    	};      
-   	  //   PDFObject.embed("samplefiles/mtr.pdf", "#pdfContainerId_1", options );	
-	    PDFObject.embed('data:application/vnd.ms-excel;base64,' + xlsJson , "#pdfContainerId_1", options );		    
-	}   
+	  
 	 
 </script>
 	
 <body>
 
    <input type="hidden" id="b64Id"  name="b64Id" th:value="${encodedPDFBarcdeString}">  
-   <input type="hidden" id="xlsJsonId"  name="xlsJsonId" th:value="xlsJson">  
    
 	<div th:fragment="messageLogModal">
 		
