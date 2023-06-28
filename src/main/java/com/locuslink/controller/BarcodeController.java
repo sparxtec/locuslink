@@ -76,7 +76,7 @@ public class BarcodeController {
 		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
 			barcodeTemplateName = "pipe_poc2.btw";
 		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
-			barcodeTemplateName = "cable.btw";
+			barcodeTemplateName = "SCATE4.btw";
 		} 
 		
 		
