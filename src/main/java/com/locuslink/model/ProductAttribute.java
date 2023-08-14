@@ -29,12 +29,14 @@ public class ProductAttribute extends Common {
     @Column(name="ucat_pkid", unique=true, nullable = false)
     private int ucatPkId;
 
-    @Column(name = "unique_attributes_json", nullable = false)
-	private String uniqueAttributesJson; 
-	
- 
-    @Column(name = "additional_attributes_json", nullable = false)
-	private String additionalAttributesJson; 
+    
+    @Column(name = "attributes_json", nullable = false)
+	private String attributesJson; 
+    
+//    @Column(name = "unique_attributes_json", nullable = false)
+//	private String uniqueAttributesJson; 
+//    @Column(name = "additional_attributes_json", nullable = false)
+//	private String additionalAttributesJson; 
 
 
 }

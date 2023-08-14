@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -46,11 +47,13 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.ProductAttachmentDao;
+import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.uploadedFileObjects.ProductDTO;
 import com.locuslink.model.ProductAttachment;
+import com.locuslink.model.ProductAttribute;
 import com.locuslink.model.UniqueAsset;
 import com.locuslink.model.UniversalCatalog;
 
@@ -74,6 +77,9 @@ public class UploadController {
 	
     @Autowired
     private ProductAttachmentDao productAttachmentDao;
+    
+    @Autowired
+    private ProductAttributeDao productAttributeDao;
     
     
 	@Autowired
@@ -592,7 +598,7 @@ public class UploadController {
 				int len = row.getLastCellNum();
 					
 				// Loop thru the cells on a row
-				if ( row.getCell(0) != null ) {						
+				if (( row.getCell(0) != null ) && ( row.getCell(1) != null )   ){					
 					// print out all the cells on this row
 					String rowCellValue = "";
 					for ( int i = 0; len > i ; i++) {								
@@ -662,28 +668,26 @@ public class UploadController {
 	 */
 	private boolean processSaveToDB_Cable( S3ObjectInputStream s3is,  UniqueAsset uniqueAsset ) {
 				
+		
+		JSONObject jsonObject = new JSONObject();
+		
 	    // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
         try {
 			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
             Row row = null;
-		
-
-            
-            // Loop thru the rows in this file
-           // UniqueAsset uniqueAsset = new UniqueAsset();
- 		            
+		 		            
             boolean notFinished = true;            
         	while (rowIterator.hasNext() && notFinished) {	        	
 				row = rowIterator.next();
 				
 				// 6-14-2023
-				//int len = row.getLastCellNum();
 				int len = 2;;
 					
-				// Loop thru the cells on a row
-				if ( row.getCell(0) != null ) {						
+				// 8-14-2023
+				// Loop thru the cells on a row		
+				if (( row.getCell(0) != null ) && ( row.getCell(1) != null )   ){		
 					// print out all the cells on this row
 					String rowCellValue = "";
 					for ( int i = 0; len > i ; i++) {								
@@ -693,27 +697,42 @@ public class UploadController {
 							// do nothing
 						} else {
 							System.out.print(",");	
-							
-							// TODO Find CELLS we care about
-							
 							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
 								
 								// TODO add DB lookup to use text to get pkId
-								uniqueAsset.setUcatPkId(800); // Under ground Cable
-								
-								uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+								uniqueAsset.setUcatPkId(800); // Under ground Cable															
 								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
 								uniqueAsset.setTraceTypePkId(40); // heat									
 								uniqueAsset.setAddBy("digitalAssetCable");
+								jsonObject.put("catalog_id", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("unique_asset_id")) {
+								
+								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
+								jsonObject.put("unique_asset_id", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("reel_ID")) {
+								
+								jsonObject.put("reel_ID", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("customer_part_number")) {
+								
+								jsonObject.put("customer_part_number", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("customer_PO_Number")) {
+								
+								jsonObject.put("customer_PO_Number", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("Manufacturer")) {
 								
 								// TODO 6-14-2023   The value from the upload files, needs to read from the DB, to set the PkID,
 								// and default to unknown if not found
 								uniqueAsset.setManufacturerPkId(50); // SouthEastern Wire
-													
+								jsonObject.put("Manufacturer", row.getCell(i+1).toString());
+								
 							} else if (rowCellValue.equalsIgnoreCase("lot_code")) {								
-								uniqueAsset.setTraceCode(row.getCell(i+1).toString());								
+								uniqueAsset.setTraceCode(row.getCell(i+1).toString());	
+								jsonObject.put("lot_code", row.getCell(i+1).toString());
 							}   
 																																		
 						}							
@@ -727,6 +746,21 @@ public class UploadController {
         		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
         		uniqueAssetDao.save(uniqueAsset);
         		logger.debug(" Unique Asset Table ->: saved.");	
+        		
+        		
+        		// TODO 8-24-2023
+        		// Save all the stripped off attributes to the attributes table as json string.
+                // Convert the POJO array to json, for the UI
+
+        		
+        		ProductAttribute productAttribute = new ProductAttribute();
+        		productAttribute.setUcatPkId(800); // Under ground Cable        		
+        		productAttribute.setAddBy("digitalAssetCable");        		
+        		productAttribute.setAttributesJson(jsonObject.toString());
+        	
+        		productAttributeDao.delete(productAttribute);        		
+        		productAttributeDao.save(productAttribute);
+        		
         	}
         			        	
         } catch (Exception e1) {

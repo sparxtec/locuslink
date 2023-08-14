@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import com.locuslink.dto.UniqueAssetDTO;
+
 @Controller
 @Service
 public class BartenderRestClient {
@@ -63,10 +65,10 @@ public class BartenderRestClient {
 	 *   Step 2 - Get the encoded byte array for the PDF
 	 *   Step 3 - Return to UI for Viewing and/or local printing
 	 */
-	public String getBarcode_PDFEncodedStream(String barcodeTemplateName, String  uniqueAssetPkId) {  
+	public String getBarcode_PDFEncodedStream(UniqueAssetDTO uniqueAssetDTO) {  
 		
 		// Step 1 - Print to FILE - Barcode to PDF
-		String barcodePdfTempPath = btcBarcodePrintToFile(barcodeTemplateName, uniqueAssetPkId);
+		String barcodePdfTempPath = btcBarcodePrintToFile(uniqueAssetDTO);
 		
 		// Step 2 - Get the temp PDF Barcode, as an encoded 64 String
 		String encodedPDFBarcdeString = getPDFEncodedByteArray(barcodePdfTempPath);
@@ -80,8 +82,8 @@ public class BartenderRestClient {
 	/**
 	 * 
 	 */
-	public String btcBarcodePrintToFile(String barcodeTemplateName, String  uniqueAssetPkId) {  
-		  				
+	public String btcBarcodePrintToFile(UniqueAssetDTO uniqueAssetDTO) {  
+		  		
 		String  url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"	;
 				  
 		// Step 1 - Writer  Barcode to PDF on the Cloud
@@ -89,21 +91,46 @@ public class BartenderRestClient {
 		JSONObject jsonMainOptions = new JSONObject();
 		JSONObject jsonNamedDataSources = new JSONObject();
 
+		//   6-29-2029		
+		String barcodeTemplateName = "tbd";
+		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
+			barcodeTemplateName = "pipe_prod.btw";			
+			try {
+				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}						
+		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
+			//barcodeTemplateName = "scate3_prod.btw";
+			
+			barcodeTemplateName = "undergroundcable_prod.btw";
+			
+			try {
+				
+				jsonNamedDataSources.put("Catalog_ID",    uniqueAssetDTO.getUniqueAssetId().substring(0,10));
+				jsonNamedDataSources.put("Manufacturer",  uniqueAssetDTO.getManufacturerName().substring(0,10));
+				
+		//  jsonNamedDataSources.put("Customer_Catalog_ID",  uniqueAssetDTO.getUniqueAssetId().substring(0, 10));
+					// does nothing 	jsonNamedDataSources.put("Customer_CatalogID",  uniqueAssetDTO.getUniqueAssetId());
+		//				jsonNamedDataSources.put("Header",  "Scate");
+
+		//	jsonNamedDataSources.put("Manufacturer", "yo");
+		//				jsonNamedDataSources.put("Reel_ID",  "RLID240");
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+		}
+		} 
+		
 		try {
 			jsonMainOptions.put("Document", "Librarian://main/" + barcodeTemplateName );			
 			jsonMainOptions.put("Printer", "PDF");			
 			jsonMainOptions.put("ReturnPrintData", "true");
 			jsonMainOptions.put("ReturnPrintSummary", "true");						
 			jsonMainOptions.put("PrintToFileFolder", "Librarian://main/output/pdf/");			
-			jsonMainOptions.put("PrintToFileFileName", uniqueAssetPkId + "_output.pdf");							
+			jsonMainOptions.put("PrintToFileFileName", uniqueAssetDTO.getUniqueAssetPkId() + "_output.pdf");							
 			jsonMainOptions.put("PrintToFileNameVariable", "PrintToFileName");				
 			jsonMainOptions.put("SaveAfterPrint", false);	
-			
-			
-			// TODO 5-17-2023
-			//    Get the attributes from the DB, and populate them all here			
-			jsonNamedDataSources.put("Ship_To_Name", "Kracken:" + uniqueAssetPkId);
-			
 			
 			jsonMainOptions.put("NamedDataSources", jsonNamedDataSources);			
 

@@ -78,7 +78,7 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 				cus.customerName,
 				uc.productDesc,
 				pt.producTypeDesc,
-				pa.uniqueAttributesJson				
+				pa.attributesJson				
 			)
 			from UniqueAsset ua	
 				join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
@@ -116,7 +116,7 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 				cus.customerName,
 				uc.productDesc,
 				pt.producTypeDesc,
-				pa.uniqueAttributesJson				
+				pa.attributesJson				
 			)
 			from UniqueAsset ua
 			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		

@@ -70,23 +70,20 @@ public class BarcodeController {
 			logger.debug("  Note:  No Data Found......");
 		}
 		
+//   6-29-2029 moved lower		
+//		// 5-17-2023
+//		String barcodeTemplateName = "tbd";
+//		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
+//			barcodeTemplateName = "pipe_poc2.btw";
+//		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
+//			barcodeTemplateName = "SCATE4.btw";
+//		} 
 		
-		// 5-17-2023
-		String barcodeTemplateName = "tbd";
-		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
-			barcodeTemplateName = "pipe_poc2.btw";
-		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
-			barcodeTemplateName = "SCATE4.btw";
-		} 
 		
-		
-		// Step 1b - TEMP BarCode Template Name
-		//String barcodeTemplateName_1 = "locuslink_1.btw";
-		//String barcodeTemplateName_2 = "pipe_poc2.btw";
 		
 		
 		// 5-9-2023
-		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(barcodeTemplateName, String.valueOf(uniqueAssetDTO.getUniqueAssetPkId()));		
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(uniqueAssetDTO);		
 
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
 		

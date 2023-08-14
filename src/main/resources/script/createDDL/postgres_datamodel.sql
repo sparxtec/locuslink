@@ -74,8 +74,11 @@ Ref fk_ptemplate_pt {
 Table product_attribute {
   product_attr_pkid int [pk, increment] 
   ucat_pkid int
-  unique_attributes_json varchar 
-  additional_attributes_json varchar
+  
+   attributes_json varchar
+  //unique_attributes_json varchar 
+ // additional_attributes_json varchar
+  
   add_by varchar
   add_ts timestamp
   update_by varchar

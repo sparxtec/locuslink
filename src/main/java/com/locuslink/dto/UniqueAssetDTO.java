@@ -13,7 +13,7 @@ public class UniqueAssetDTO {
 			               String manufacturerName, String productTypeCode, String productName, 
 			               String productNumber, String traceTypeCode, String traceCode,
 			               String customerName, String productDesc, String productTypeDesc,
-			               String uniqueAttributesJson	) {
+			               String attributesJson	) {
 		
 		this.uniqueAssetPkId = uniqueAssetPkId; 
 		this.uniqueAssetId = uniqueAssetId; 
@@ -28,7 +28,7 @@ public class UniqueAssetDTO {
 		this.customerName = customerName;
 		this.productDesc = productDesc;		
 		this.productTypeDesc = productTypeDesc;		
-		this.uniqueAttributesJson = uniqueAttributesJson;			
+		this.attributesJson = attributesJson;			
 	}
 
 
@@ -65,7 +65,7 @@ public class UniqueAssetDTO {
 	private String productTypeDesc; 
 	
 	// Product Attributes	
-	private String uniqueAttributesJson; 
+	private String attributesJson; 
 
 
 }

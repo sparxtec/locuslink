@@ -9,6 +9,9 @@ import lombok.Setter;
 @Data
 public class UndergroundCableUniqueAttr {
 	
+	// TODO 8-13-2024 not sure we need 2 attribute lists, regular and unique.
+	// maybe list product_attributes would be enough
+	
 	private String ConductorSize;	
 	private String VoltageRating;
 	private String ConductorMaterial;
