@@ -616,7 +616,7 @@ public class UploadController {
 								// TODO add DB lookup to use text to get pkId
 								uniqueAsset.setUcatPkId(804); // Steel
 								
-								uniqueAsset.setUniqueAssetId("xxx." + row.getCell(i+1).toString());
+								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());
 								uniqueAsset.setManufacturerPkId(55); // real value in the table
 								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
 								uniqueAsset.setTraceTypePkId(40); // heat	
@@ -711,24 +711,24 @@ public class UploadController {
 								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
 								jsonObject.put("unique_asset_id", row.getCell(i+1).toString());
 								
-							} else if (rowCellValue.equalsIgnoreCase("reel_ID")) {
+							} else if (rowCellValue.equalsIgnoreCase("reel_id")) {
 								
-								jsonObject.put("reel_ID", row.getCell(i+1).toString());
+								jsonObject.put("reel_id", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("customer_part_number")) {
 								
 								jsonObject.put("customer_part_number", row.getCell(i+1).toString());
 								
-							} else if (rowCellValue.equalsIgnoreCase("customer_PO_Number")) {
+							} else if (rowCellValue.equalsIgnoreCase("customer_po_number")) {
 								
-								jsonObject.put("customer_PO_Number", row.getCell(i+1).toString());
+								jsonObject.put("customer_po_number", row.getCell(i+1).toString());
 								
-							} else if (rowCellValue.equalsIgnoreCase("Manufacturer")) {
+							} else if (rowCellValue.equalsIgnoreCase("manufacturer")) {
 								
 								// TODO 6-14-2023   The value from the upload files, needs to read from the DB, to set the PkID,
 								// and default to unknown if not found
 								uniqueAsset.setManufacturerPkId(50); // SouthEastern Wire
-								jsonObject.put("Manufacturer", row.getCell(i+1).toString());
+								jsonObject.put("manufacturer", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("lot_code")) {								
 								uniqueAsset.setTraceCode(row.getCell(i+1).toString());	

@@ -13,7 +13,7 @@ public interface ProductAttributeDao  {
 	
 	public ProductAttribute getById (int id);
 	
-	public List<ProductAttribute>  getByUniversalCatalogId (int Id);
+	public ProductAttribute  getByUniversalCatalogId (int Id);
 	
 	
 	public void save(ProductAttribute productAttribute);

@@ -64,15 +64,21 @@ public class ProductAttributeDaoImpl extends DaoSupport implements ProductAttrib
 	}
 	
 
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public  List<ProductAttribute>  getByUniversalCatalogId(int id) {					
-		DetachedCriteria criteria= DetachedCriteria.forClass(ProductAttribute.class, "productAttribute");  		
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
-	//	criteria.addOrder(Order.asc ("customerPkId"));
-		return (List<ProductAttribute>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
+	public ProductAttribute getByUniversalCatalogId(int ucatPkId) {
+		String sql = "select pa from ProductAttribute pa where pa.ucatPkId = :ucatPkId  ";		
+		return (ProductAttribute) this.sessionFactory.getCurrentSession().createQuery(sql).setParameter("ucatPkId", ucatPkId).uniqueResult();
 	}
+	
+	
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public  List<ProductAttribute>  getByUniversalCatalogId(int id) {					
+//		DetachedCriteria criteria= DetachedCriteria.forClass(ProductAttribute.class, "productAttribute");  		
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+//	//	criteria.addOrder(Order.asc ("customerPkId"));
+//		return (List<ProductAttribute>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
+//	}
 	
 	
 	

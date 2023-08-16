@@ -16,8 +16,8 @@ public class UndergroundCableAttr extends CommonAttr{
 	private String cable_configuration;
 	private String phase_conductor_material;
 	private String conductor_stranding_Class;
-	private String conductor_stranding_Type;
-	private String Conductor_Shield;
+	private String conductor_stranding_type;
+	private String conductor_shield;
 	private String insulation_material;
 	private String insulation_shield;
 	private String insulation_level;
@@ -29,15 +29,15 @@ public class UndergroundCableAttr extends CommonAttr{
 	private String installation_type;
 	private String submersable;
 	private String maximum_temperature;
-	private String BIL_rating ;
+	private String bil_rating ;
 
 	private String lot_code;
 	private String country_of_origin;
 	private String date_of_manufacture;
 	private String reel_ID;
-	private String manufacturer_catalog_ID;
+	private String manufacturer_catalog_id;
 	private String customer_part_number;
-	private String customer_PO_Number;
+	private String customer_po_number;
 	private String reel_volume;
 	private String fault_current_rating;
 	private String frequency;
@@ -46,8 +46,8 @@ public class UndergroundCableAttr extends CommonAttr{
 	private String nominal_outside_diameter;
 	private String nominal_insulation_thickness ;
 	private String nominal_diameter_over_insulation;
-	private String Jacket_Thickness;
-	private String Size_of_neutral ;
+	private String jacket_thickness;
+	private String size_of_neutral ;
 	private String percent_overlap;
 	private String filling_material;
 	private String pulling_tension ;

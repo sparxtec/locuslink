@@ -10,11 +10,11 @@ import lombok.Setter;
 public class CommonAttr {
   
 
-	private String Industry;
-	private String Sub_Industry;
-	private String Asset_Type;
-	private String Asset_Subtype;
-	private String Version;
+	private String industry;
+	private String sub_industry;
+	private String asset_type;
+	private String asset_subtype;
+	private String version;
 	
 	private String catalog_id;
 	private String unique_asset_id	;

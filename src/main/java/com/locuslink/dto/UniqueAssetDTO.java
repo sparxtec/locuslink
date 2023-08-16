@@ -9,7 +9,7 @@ public class UniqueAssetDTO {
 		
 	};
 		
-	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, String universalCatalogId, 			
+	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, String universalCatalogId,int ucatPkId, 			
 			               String manufacturerName, String productTypeCode, String productName, 
 			               String productNumber, String traceTypeCode, String traceCode,
 			               String customerName, String productDesc, String productTypeDesc,
@@ -17,7 +17,8 @@ public class UniqueAssetDTO {
 		
 		this.uniqueAssetPkId = uniqueAssetPkId; 
 		this.uniqueAssetId = uniqueAssetId; 
-		this.universalCatalogId = universalCatalogId;		
+		this.universalCatalogId = universalCatalogId;				
+		this.ucatPkId = ucatPkId;			
 		this.manufacturerName = manufacturerName;		
 		this.productTypeCode = productTypeCode;		
 		this.productName = productName;

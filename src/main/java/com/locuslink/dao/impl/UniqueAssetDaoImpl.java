@@ -68,7 +68,8 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,			 		
+		 		uc.universalCatalogId,		
+		 		uc.ucatPkId,			 			 		
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
 				uc.productName,					
@@ -105,7 +106,10 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,			 		
+		 		uc.universalCatalogId,		
+		 		
+		 	    uc.ucatPkId,	
+		 			 				 		
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
 				uc.productName,					

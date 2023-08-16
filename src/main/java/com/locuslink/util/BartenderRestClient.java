@@ -3,12 +3,12 @@ package com.locuslink.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
@@ -17,10 +17,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dto.UniqueAssetDTO;
+import com.locuslink.model.ProductAttribute;
 
 @Controller
 @Service
@@ -36,6 +37,8 @@ public class BartenderRestClient {
 	@Value("${bartender.access.token}")
 	private String bartenderAccessToken;
 	
+    @Autowired
+    private ProductAttributeDao productAttributeDao;
 	  
 	public String getPrinterList() {
 		
@@ -87,10 +90,12 @@ public class BartenderRestClient {
 		String  url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"	;
 				  
 		// Step 1 - Writer  Barcode to PDF on the Cloud
+		JSONObject jsonAttributes = null;
 		JSONObject jsonRequest = new JSONObject();
 		JSONObject jsonMainOptions = new JSONObject();
 		JSONObject jsonNamedDataSources = new JSONObject();
 
+		
 		//   6-29-2029		
 		String barcodeTemplateName = "tbd";
 		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
@@ -101,25 +106,24 @@ public class BartenderRestClient {
 				e.printStackTrace();
 			}						
 		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
-			//barcodeTemplateName = "scate3_prod.btw";
-			
-			barcodeTemplateName = "undergroundcable_prod.btw";
+
+			barcodeTemplateName = "ucable_prod.btw";
 			
 			try {
 				
-				jsonNamedDataSources.put("Catalog_ID",    uniqueAssetDTO.getUniqueAssetId().substring(0,10));
-				jsonNamedDataSources.put("Manufacturer",  uniqueAssetDTO.getManufacturerName().substring(0,10));
+				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());							
+				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());
 				
-		//  jsonNamedDataSources.put("Customer_Catalog_ID",  uniqueAssetDTO.getUniqueAssetId().substring(0, 10));
-					// does nothing 	jsonNamedDataSources.put("Customer_CatalogID",  uniqueAssetDTO.getUniqueAssetId());
-		//				jsonNamedDataSources.put("Header",  "Scate");
-
-		//	jsonNamedDataSources.put("Manufacturer", "yo");
-		//				jsonNamedDataSources.put("Reel_ID",  "RLID240");
+				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
+				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());
+				
+				jsonNamedDataSources.put("lot_lode", jsonAttributes.get("lot_code"));
+				jsonNamedDataSources.put("reel_id", jsonAttributes.get("reel_id"));
+				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
-		}
+			}
 		} 
 		
 		try {
