@@ -229,6 +229,8 @@ public class UploadController {
                 tags.add(new Tag("product_type", "STEEL"));
             } else if (fullpathFileName_keyName.toUpperCase().contains("CABLE")) {
                 tags.add(new Tag("product_type", "CABLE"));
+            }else if (fullpathFileName_keyName.toUpperCase().contains("SPLICE")) {
+                tags.add(new Tag("product_type", "SPLICE"));
             }
             
             
@@ -302,7 +304,9 @@ public class UploadController {
             if (tagProductType.toUpperCase().equals("STEEL")) {            	
             	processgetStagedSteel(productObjectList,  tagFileName, s3is );            	
             } else if (tagProductType.toUpperCase().equals("CABLE")) {            	
-            	processgetStagedCable(productObjectList,  tagFileName, s3is );            	
+            	processgetStagedCable(productObjectList,  tagFileName, s3is );   
+            } else if (tagProductType.toUpperCase().equals("SPLICE")) {            	
+            	processgetStagedSplice(productObjectList,  tagFileName, s3is );            	
             } else {
             	logger.error("Error: The product type for the file was not found, cant process the STAGED FILE, delet it from AWS S3 Bucket.");
             }            
@@ -463,6 +467,73 @@ public class UploadController {
 	}
 	
 	
+	
+private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, String tagFileName, S3ObjectInputStream s3is ) {
+		
+		ProductDTO productDTO = new ProductDTO();
+        Row row = null;
+        
+        // Create Workbook for each file in the staging folder
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            
+            boolean notFinished = true;		            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();												
+				int len = row.getLastCellNum();
+
+				if ( row.getCell(0) != null ) {						
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {	
+						
+						// 6-12-2023
+						if ( row.getCell(i) != null ) {
+							rowCellValue = row.getCell(i).toString();
+							System.out.print(rowCellValue);	
+						}								
+					
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");								
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+															
+								// Key Data
+								productDTO = new ProductDTO();									
+								productDTO.setProductCatalogId(row.getCell(i + 1).toString());
+																
+								productDTO.setUploadedFilename(tagFileName);
+								productDTO.setProductTypeCode("SPLICE");		
+								productDTO.setProductDesc("Joint Splice");	
+								
+								// should come from the data
+								productDTO.setProductNumber("ELEC-DISTR-SPLICE-DJ");	
+								productDTO.setTraceTypeCode("SERIAL");
+								productDTO.setSerialNumber("ser12345");
+								
+								productObjectList.add(productDTO);										
+							}								
+						}							
+					}	
+					System.out.println();						
+	        	 } 							
+        	}	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				s3is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+        
+		return true;
+	}
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -529,6 +600,15 @@ public class UploadController {
 	             		logger.error("Error - saving file to Database, bypassing.");
 	             		continue;
 	             	}
+	             	
+	            } else if (productDTO.getProductTypeCode().toUpperCase().contains("SPLICE")) {
+	             	if (processSaveToDB_Splice(  s3is, uniqueAsset  )) {
+	             		logger.debug("Successfull Save to DB, Unique Asset Created");
+	             	} else {
+	             		logger.error("Error - saving file to Database, bypassing.");
+	             		continue;
+	             	}   	
+	             	
 	            } else {
 	              	logger.error("Error: The product type for the file was not found, cant save to DB.");
 	            }
@@ -772,6 +852,126 @@ public class UploadController {
 		return true;
 	}
 
+	
+	
+	
+	/**
+	 * 	8-17-2023
+	 * 		Splice
+	 */
+	private boolean processSaveToDB_Splice( S3ObjectInputStream s3is,  UniqueAsset uniqueAsset ) {
+				
+		
+		JSONObject jsonObject = new JSONObject();
+		
+	    // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
+        try {
+			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            Row row = null;
+		 		            
+            boolean notFinished = true;            
+        	while (rowIterator.hasNext() && notFinished) {	        	
+				row = rowIterator.next();			
+				int len = 2;;
+					
+				// Loop thru the cells on a row		
+				if (( row.getCell(0) != null ) && ( row.getCell(1) != null )   ){		
+					// print out all the cells on this row
+					String rowCellValue = "";
+					for ( int i = 0; len > i ; i++) {								
+						rowCellValue = row.getCell(i).toString();
+						System.out.print(rowCellValue);							
+						if(len-1 == i) 	{
+							// do nothing
+						} else {
+							System.out.print(",");	
+							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
+								
+								// TODO add DB lookup to use text to get pkId
+								uniqueAsset.setUcatPkId(805); // Splice														
+								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+								uniqueAsset.setTraceTypePkId(40); // heat									
+								uniqueAsset.setAddBy("digitalAssetSplice");
+								jsonObject.put("catalog_id", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("unique_asset_id")) {
+								
+								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
+								jsonObject.put("unique_asset_id", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("reel_id")) {
+								
+								jsonObject.put("reel_id", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("customer_part_number")) {
+								
+								jsonObject.put("customer_part_number", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("customer_po_number")) {
+								
+								jsonObject.put("customer_po_number", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("manufacturer")) {
+								
+								// TODO 6-14-2023   The value from the upload files, needs to read from the DB, to set the PkID,
+								// and default to unknown if not found
+								uniqueAsset.setManufacturerPkId(56); // Richards
+								jsonObject.put("manufacturer", row.getCell(i+1).toString());
+								
+							} else if (rowCellValue.equalsIgnoreCase("lot_code")) {								
+								uniqueAsset.setTraceCode(row.getCell(i+1).toString());	
+								jsonObject.put("lot_code", row.getCell(i+1).toString());
+							}   
+																																		
+						}							
+					}	
+					System.out.println();
+				}
+        	}
+		
+        	// Validate the required fields
+        	if (uniqueAsset.getUcatPkId() > 0) {
+        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
+        		uniqueAssetDao.save(uniqueAsset);
+        		logger.debug(" Unique Asset Table ->: saved.");	
+        		
+        		
+        		// TODO 8-24-2023
+        		// Save all the stripped off attributes to the attributes table as json string.
+                // Convert the POJO array to json, for the UI
+
+        		
+        		ProductAttribute productAttribute = new ProductAttribute();
+        		productAttribute.setUcatPkId(805); // Under ground Cable        		
+        		productAttribute.setAddBy("digitalAssetSplice");        		
+        		productAttribute.setAttributesJson(jsonObject.toString());
+        	
+        		productAttributeDao.delete(productAttribute);        		
+        		productAttributeDao.save(productAttribute);
+        		
+        	}
+        			        	
+        } catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
+        
+        
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
     // The Upload saved to the database correctly, so now Clean up AWS
 	//  move the staged file to storage.

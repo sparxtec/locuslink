@@ -19,10 +19,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.ProductAttribute;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true) 
 @Controller
 @Service
 public class BartenderRestClient {
@@ -105,20 +108,32 @@ public class BartenderRestClient {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}						
-		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
+		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE"))  {
 
-			barcodeTemplateName = "ucable_prod.btw";
-			
-			try {
-				
+			barcodeTemplateName = "ucable_prod.btw";			
+			try {				
 				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());							
-				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());
-				
+				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
 				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
-				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());
-				
-				jsonNamedDataSources.put("lot_lode", jsonAttributes.get("lot_code"));
+				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
+				jsonNamedDataSources.put("lot_code", jsonAttributes.get("lot_code"));
 				jsonNamedDataSources.put("reel_id", jsonAttributes.get("reel_id"));
+				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+	
+		} else if (uniqueAssetDTO.getProductTypeCode().contains("SPLICE"))  {
+	
+			barcodeTemplateName = "ucable_prod.btw";			
+			try {				
+				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());							
+				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
+				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
+				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
+				jsonNamedDataSources.put("lot_code", "");
+				jsonNamedDataSources.put("reel_id", "");
 				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
 				
 			} catch (JSONException e) {
@@ -159,7 +174,7 @@ public class BartenderRestClient {
 		logger.debug(" response ->: " + responseEntity.getBody());
 				
 		
-				
+		 		
 		// Step 3 = Get the ID and StatusURL Variables from the above response
 		JSONObject jsonObj = null;
 		String id = "";
