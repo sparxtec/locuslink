@@ -111,8 +111,11 @@ public class BartenderRestClient {
 		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE"))  {
 
 			barcodeTemplateName = "ucable_prod.btw";			
-			try {				
-				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());							
+			try {	
+				
+				//jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());	
+				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniversalCatalogId().trim());	
+				
 				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
 				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
 				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
@@ -128,7 +131,9 @@ public class BartenderRestClient {
 	
 			barcodeTemplateName = "ucable_prod.btw";			
 			try {				
-				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());							
+				//jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());	
+				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniversalCatalogId().trim());	
+				
 				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
 				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
 				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
