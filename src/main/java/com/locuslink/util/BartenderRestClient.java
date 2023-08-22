@@ -118,8 +118,12 @@ public class BartenderRestClient {
 				
 				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
 				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
-				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
-				jsonNamedDataSources.put("lot_code", jsonAttributes.get("lot_code"));
+				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());	
+				
+				// put serial number in lot code
+				//jsonNamedDataSources.put("lot_code", jsonAttributes.get("lot_code"));
+				jsonNamedDataSources.put("lot_code", jsonAttributes.get("serial_number"));
+				
 				jsonNamedDataSources.put("reel_id", jsonAttributes.get("reel_id"));
 				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
 				
@@ -137,7 +141,7 @@ public class BartenderRestClient {
 				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
 				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
 				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
-				jsonNamedDataSources.put("lot_code", "");
+				jsonNamedDataSources.put("lot_code", jsonAttributes.get("serial_number"));
 				jsonNamedDataSources.put("reel_id", "");
 				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
 				

@@ -887,6 +887,12 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 							// do nothing
 						} else {
 							System.out.print(",");	
+							
+							//  8-22-2023 TODO This should just handle them all ? 								
+							jsonObject.put(rowCellValue, row.getCell(i+1).toString());
+							
+							
+							
 							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
 								
 								// TODO add DB lookup to use text to get pkId
@@ -894,36 +900,43 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
 								uniqueAsset.setTraceTypePkId(40); // heat									
 								uniqueAsset.setAddBy("digitalAssetSplice");
-								jsonObject.put("catalog_id", row.getCell(i+1).toString());
+								//jsonObject.put("catalog_id", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("unique_asset_id")) {
 								
 								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
-								jsonObject.put("unique_asset_id", row.getCell(i+1).toString());
+								//jsonObject.put("unique_asset_id", row.getCell(i+1).toString());
 								
-							} else if (rowCellValue.equalsIgnoreCase("reel_id")) {
-								
-								jsonObject.put("reel_id", row.getCell(i+1).toString());
-								
-							} else if (rowCellValue.equalsIgnoreCase("customer_part_number")) {
-								
-								jsonObject.put("customer_part_number", row.getCell(i+1).toString());
-								
-							} else if (rowCellValue.equalsIgnoreCase("customer_po_number")) {
-								
-								jsonObject.put("customer_po_number", row.getCell(i+1).toString());
+//							} else if (rowCellValue.equalsIgnoreCase("reel_id")) {
+//								
+//								jsonObject.put("reel_id", row.getCell(i+1).toString());
+//								
+//							} else if (rowCellValue.equalsIgnoreCase("customer_part_number")) {
+//								
+//								jsonObject.put("customer_part_number", row.getCell(i+1).toString());
+//								
+//							} else if (rowCellValue.equalsIgnoreCase("customer_po_number")) {
+//								
+//								jsonObject.put("customer_po_number", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("manufacturer")) {
 								
 								// TODO 6-14-2023   The value from the upload files, needs to read from the DB, to set the PkID,
 								// and default to unknown if not found
 								uniqueAsset.setManufacturerPkId(56); // Richards
-								jsonObject.put("manufacturer", row.getCell(i+1).toString());
+								//jsonObject.put("manufacturer", row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("lot_code")) {								
 								uniqueAsset.setTraceCode(row.getCell(i+1).toString());	
-								jsonObject.put("lot_code", row.getCell(i+1).toString());
-							}   
+								//jsonObject.put("lot_code", row.getCell(i+1).toString());
+								
+							}  else if (rowCellValue.equalsIgnoreCase("serial_number")) {	
+								
+								// Put serial number in lot_code
+								uniqueAsset.setTraceCode(row.getCell(i+1).toString());	
+								//jsonObject.put("lot_code", row.getCell(i+1).toString());
+								
+							}  
 																																		
 						}							
 					}	
