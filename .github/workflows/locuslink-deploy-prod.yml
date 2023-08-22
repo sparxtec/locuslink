@@ -21,7 +21,7 @@ env:
   VERSION: prod
      
   ECS_CLUSTER: cluster-locuslink-prod   
-  ECS_SERVICE: service-locuslnk-prod                        
+  ECS_SERVICE: service-locuslink-prod                        
     
 jobs:
   build:
