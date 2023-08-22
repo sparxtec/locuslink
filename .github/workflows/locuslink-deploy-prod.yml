@@ -50,8 +50,8 @@ jobs:
         docker pull $IMAGE_ID:$PULL_VERSION.${BUILD_NUMBER_TO_DEPLOY}     
         
         # push the build number as build.latest for reference and DR, and redeploy
-        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest        
-        docker tag $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest  
+        echo Image to push to ghcr ->: $IMAGE_ID:$PULL_VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest        
+        docker tag $IMAGE_ID:$PULL_VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest  
         docker push $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest
  
         # push as latest for AWS ECS configuration
