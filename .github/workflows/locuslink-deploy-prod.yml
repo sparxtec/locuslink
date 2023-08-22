@@ -1,23 +1,22 @@
-
 # This workflow will:
-#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter  xxxxxxxxxx.dev.4 
-#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.4.latest  {for reference for redeploy, backout, etc} 
-#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
-#        - update the AWS Cluster & Service, will will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
+#  - compile Java using Maven
+#  - build Docker Image, tagged with Build Number  
+#  - store Docker Image on GitHub Container Registry  - GHCR
+# -  store Docker Image as latest
+# -  update AWS ECS Service to run the newly created latest
 
-name: Deploy AWS PROD {from dev}
 
-on: 
-  workflow_dispatch:
-    
+name: Deploy AWS PROD {from dev} 
+
+on: [workflow_dispatch]
+
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}                           
-  BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
+  IMAGE_NAME: ${{ github.repository }}
   VERSION: dev
   
-  ECS_CLUSTER: cluster-locuslink-prod   
-  ECS_SERVICE: service-locuslink-prod
+  ECS_CLUSTER: sparks-default-cluster   
+  ECS_SERVICE: container-sparks-service   
   
 jobs:
   build:
@@ -26,14 +25,52 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        
 
-           
+    - name: Store the Docker Image
+      run: |      
+        IMAGE_ID=ghcr.io/$IMAGE_NAME
+        
+        # Change all uppercase to lowercase
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')        
+        echo IMAGE_ID=$IMAGE_ID               
+                
+        # Strip git ref prefix from version
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+                 
+        echo IMAGE_ID=$IMAGE_ID        
+        echo VERSION=$VERSION
+        echo GITHUB_RUN_ID=${GITHUB_RUN_ID}
+        echo GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER}
+          
+        # Push the image just built,   example:  dev.5
+        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER} 
+        docker tag $IMAGE_NAME $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}
+        docker push $IMAGE_ID:$VERSION.${GITHUB_RUN_NUMBER}          
+
+        BUILD_NUMBER_TO_DEPLOY=${GITHUB_RUN_NUMBER}
+
+        # push the build number as build.latest for reference and DR, and redeploy  example:  dev.5.latest
+        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest        
+        docker tag $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest  
+        docker push $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest
  
+        # push as latest for AWS ECS configuration    example:  dev.latest
+        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.latest
+        docker tag $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.latest          
+        docker push $IMAGE_ID:$VERSION.latest
+
+
+    - name: AWS Dev Deploy - Update Service with latest Image
+      run: |
+          aws ecs update-service --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} --force-new-deployment
+          
+          echo Service Update Completed, Waiting for the deployment to Finish ....
+          aws ecs wait services-stable --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} 
+          
+      env:
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          AWS_ACCESS_KEY_ID: AKIA5MSVXCMPY7CNJTEP
+          AWS_SECRET_ACCESS_KEY: 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            
+          AWS_DEFAULT_REGION: us-east-1 
