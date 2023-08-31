@@ -1,4 +1,8 @@
 
+INSERT INTO locuslink.industry (industry_pkid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(1, 'EG', 'Electric Grid', 'csparks', '2023-02-01', NULL, NULL);
+
+
 INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
    VALUES(3, 'WIRE', 'Wire', 'csparks', '2023-02-01', NULL, NULL);
 

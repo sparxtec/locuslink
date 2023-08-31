@@ -1,3 +1,15 @@
+
+CREATE TABLE "industry" (
+  "industry_pkid" int PRIMARY KEY,
+  "industry_code" varchar,
+  "industry_desc" varchar,
+  "add_by" varchar,
+  "add_ts" timestamp,
+  "update_by" varchar,
+  "update_ts" timestamp
+);
+
+
 CREATE TABLE "product_type" (
   "product_type_pkid" int PRIMARY KEY,
   "type_code" varchar,

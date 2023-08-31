@@ -1,0 +1,99 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Workspace</title>
+
+	<script>
+    	
+		$(document).ready(function() {
+	
+			hideSpinner();	
+			
+			$('#viewBarcodeId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initBarcodeView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+		
+			
+			$('#comboSelectedProductType').change(function () {
+				/* alert ("Product Type Selected ->: " + $("#comboSelectedProductType").val()) ; */
+									
+				// set the UID on the DTO 				
+				$('#selectedProductType').val($('#comboSelectedProductType').val().trim());
+				
+				// Add the Value to the UID being Generated		
+				$('#uidGenString').val($('#selectedProductType').val().trim());
+				
+				// Add the UID Gen value to the UI for display	
+				$('#uidGenLabel').val($('#selectedProductType').val().trim());
+				
+				
+			});	
+			
+			
+			
+		});
+		
+		
+		function initCommonResponse(returnData) {	
+			//	console.log("initCommonResponse()");
+				hideSpinner();
+				$('#mainBody').html( returnData); 
+		}
+		
+		
+	</script>
+	
+  </head>
+
+  <body id="Body" >
+	 			
+	 	
+	<form id="uidGeneratorFormDTO" class="bg-light" name="uidGeneratorFormDTO"   method="post"> 
+    
+ 	 		
+     <input type="hidden" id="selectedProductType" name="selectedProductType"  th:value="${comboSelectedProductType}">
+     		    		  
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">Testing Harness</h2>
+		        </header>		        
+		        <header class="de-component-header">
+		            <h2 class="de-component-header__title">UID Generation - Decision Tree</h2>
+		        </header>		        
+		    </div>
+
+            <label class="d-inline-block mb-3" >generated UID : 
+              <input  id="uidGenString" name="uidGenString" disabled> 
+            </label>
+					
+<br>
+<br>
+
+ 		<div class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{industryList}" style="width: 260px">
+            	<option value=""> -- Select Industry</option>
+                <option th:each="entry : ${industryList}"  th:value="${entry.industryCode}"  th:utext="${entry.industryDesc} "/>
+            </select> 
+		</div>
+	
+		
+		<div class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{productTypeList}" style="width: 260px">
+            	<option value=""> -- Select a Type of Asset</option>
+                <option th:each="entry : ${productTypeList}"  th:value="${entry.productTypeCode}"  th:utext="${entry.producTypeDesc} "/>
+            </select> 
+		</div>
+		
+		
+
+		</section>
+	
+	</form>	
+
+	      
+  </body>
+  
+</html>
