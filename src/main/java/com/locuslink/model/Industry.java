@@ -23,6 +23,9 @@ public class Industry extends Common {
     @Column(name="industry_pkId", unique=true, nullable = false)
     private int industryPkId;
   
+    @Column(name="uid", nullable = false)
+    private String uid;
+    
     @Column(name="industry_code", nullable = false)
     private String industryCode;
 

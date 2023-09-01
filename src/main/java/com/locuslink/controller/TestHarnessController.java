@@ -17,11 +17,13 @@ import com.locuslink.dao.IndustryDao;
 import com.locuslink.dao.ProductAttachmentDao;
 import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dao.ProductTypeDao;
+import com.locuslink.dao.SubIndustryDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.UidGeneratorFormDTO;
 import com.locuslink.model.Industry;
 import com.locuslink.model.ProductType;
+import com.locuslink.model.SubIndustry;
 /**
  * This is a Spring MVC Controller.
  *
@@ -52,6 +54,9 @@ public class TestHarnessController {
     @Autowired
     private IndustryDao industryDao;
     
+    @Autowired
+    private SubIndustryDao subIndustryDao;
+    
     
 	// 6-2-2022 C.Sparks
     @Autowired
@@ -64,11 +69,16 @@ public class TestHarnessController {
 	public String initTestHarness (@ModelAttribute(name = "uidGeneratorFormDTO") UidGeneratorFormDTO uidGeneratorFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initTestHarness()...");
 
+		List <Industry> industryList = industryDao.getAll();	
+	   	model.addAttribute("industryList", industryList);	 
+	   		   		   
+		List <SubIndustry> subIndustryList = subIndustryDao.getAll();	
+	   	model.addAttribute("subIndustryList", subIndustryList);	 
+	   		   	
 		List <ProductType> productTypeList = productTypeDao.getAll();	
 	   	model.addAttribute("productTypeList", productTypeList);		   	
 	   	
-		List <Industry> industryList = industryDao.getAll();	
-	   	model.addAttribute("industryList", industryList);	 
+
 		
    	
 	   	model.addAttribute("dashboardFormDTO", uidGeneratorFormDTO);

@@ -79,6 +79,13 @@
             </select> 
 		</div>
 	
+	 	<div class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{subIndustryList}" style="width: 260px">
+            	<option value=""> -- Select Sub Industry</option>
+                <option th:each="entry : ${subIndustryList}"  th:value="${entry.subIndustryCode}"  th:utext="${entry.subIndustryDesc} "/>
+            </select> 
+		</div>
+		
 		
 		<div class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{productTypeList}" style="width: 260px">

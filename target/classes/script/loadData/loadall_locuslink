@@ -1,11 +1,29 @@
 
-INSERT INTO locuslink.industry (industry_pkid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
-   VALUES(1, 'EG', 'Electric Grid', 'csparks', '2023-02-01', NULL, NULL);
+INSERT INTO locuslink.industry (industry_pkid, uid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(1, 'NG', '1', 'Natural Gas', 'csparks', '2023-02-01', NULL, NULL);
+
+INSERT INTO locuslink.industry (industry_pkid, uid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(2, 'OIL', '2', 'Oil', 'csparks', '2023-02-01', NULL, NULL);
+   
+INSERT INTO locuslink.industry (industry_pkid, uid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(3, 'EG', '3', 'Electric Grid', 'csparks', '2023-02-01', NULL, NULL);
+
+INSERT INTO locuslink.industry (industry_pkid, uid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
+   VALUES(4, 'HYDR', '8', 'Hydrogen', 'csparks', '2023-02-01', NULL, NULL);
+   
+   
+   
+  
+  
+ INSERT INTO locuslink.sub_industry   (sub_industry_pkid, industry_pkid, uid, sub_industry_code, sub_industry_desc, add_by, add_ts, update_by, update_ts)
+     VALUES(1, 3, '1', 'TRANS', 'Transmission', 'csparks', '2023-09-01', '', '');
 
 
-INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
-   VALUES(3, 'WIRE', 'Wire', 'csparks', '2023-02-01', NULL, NULL);
 
+ 
+   
+   
+   
 INSERT INTO locuslink.product_type (product_type_pkid, type_code, type_desc, add_by, add_ts, update_by, update_ts)
    VALUES(4, 'CABLE', 'Cable', 'csparks', '2023-02-01', NULL, NULL);   
    

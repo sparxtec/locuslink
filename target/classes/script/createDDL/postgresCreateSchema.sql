@@ -1,6 +1,7 @@
 
 CREATE TABLE "industry" (
   "industry_pkid" int PRIMARY KEY,
+  "uid" varchar,
   "industry_code" varchar,
   "industry_desc" varchar,
   "add_by" varchar,
@@ -9,11 +10,36 @@ CREATE TABLE "industry" (
   "update_ts" timestamp
 );
 
+CREATE TABLE "sub_industry" (
+  "sub_industry_pkid" int PRIMARY KEY,
+   "industry_pkid" int,
+   "uid" varchar,      
+  "sub_industry_code" varchar,
+  "sub_industry_desc" varchar,
+  "add_by" varchar,
+  "add_ts" timestamp,
+  "update_by" varchar,
+  "update_ts" timestamp
+);
 
 CREATE TABLE "product_type" (
   "product_type_pkid" int PRIMARY KEY,
+   "sub_industry_pkid" int,
+  "uid" varchar,   
   "type_code" varchar,
   "type_desc" varchar,
+  "add_by" varchar,
+  "add_ts" timestamp,
+  "update_by" varchar,
+  "update_ts" timestamp
+);
+
+CREATE TABLE "product_sub_type" (
+  "product_sub_type_pkid" int PRIMARY KEY,
+  "product_type_pkid" int,
+  "uid" varchar,   
+  "sub_type_code" varchar,
+  "sub_type_desc" varchar,
   "add_by" varchar,
   "add_ts" timestamp,
   "update_by" varchar,
@@ -195,6 +221,15 @@ CREATE TABLE "user_locuslink" (
   "update_by" varchar,
   "update_ts" timestamp
 );
+
+
+
+
+ALTER TABLE "product_type" ADD CONSTRAINT "fk_pt_si" FOREIGN KEY ("sub_industry_pkid") REFERENCES "sub_industry" ("sub_industry_pkid");
+
+ALTER TABLE "sub_industry" ADD CONSTRAINT "fk_si_i" FOREIGN KEY ("industry_pkid") REFERENCES "industry" ("industry_pkid");
+
+ALTER TABLE "product_sub_type" ADD CONSTRAINT "fk_pst_pt" FOREIGN KEY ("product_type_pkid") REFERENCES "product_type" ("product_type_pkid");
 
 ALTER TABLE "universal_catalog" ADD CONSTRAINT "fk_ucat_pt" FOREIGN KEY ("product_type_pkid") REFERENCES "product_type" ("product_type_pkid");
 
