@@ -23,6 +23,12 @@ public class ProductType extends Common {
     @Column(name="product_type_pkId", unique=true, nullable = false)
     private int productTypePkId;
   
+    @Column(name = "sub_industry_pkid", nullable = false)
+	private int subIndustryPkId; 
+    
+    @Column(name="uid", nullable = false)
+    private String uid;
+    
     @Column(name="type_code", nullable = false)
     private String productTypeCode;
 

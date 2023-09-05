@@ -8,26 +8,51 @@
 		$(document).ready(function() {
 	
 			hideSpinner();	
+						
+			$('#comboSelectedIndustry').val($('#selectedIndustry').val().trim());	
+			$('#comboSelectedSubIndustry').val($('#selectedSubIndustry').val().trim());	
 			
-			$('#viewBarcodeId').click(function() {		
-				showSpinner();			
-				submitFormAjaxHTML('initBarcodeView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-			});
-		
-			
-			$('#comboSelectedProductType').change(function () {
-				/* alert ("Product Type Selected ->: " + $("#comboSelectedProductType").val()) ; */
+			// Industry
+			$('#comboSelectedIndustry').change(function () {
 									
 				// set the UID on the DTO 				
-				$('#selectedProductType').val($('#comboSelectedProductType').val().trim());
-				
+				$('#selectedIndustry').val($('#comboSelectedIndustry').val().trim());				
 				// Add the Value to the UID being Generated		
-				$('#uidGenString').val($('#selectedProductType').val().trim());
+				$('#uidGenString').val($('#selectedIndustry').val().trim());					
+ 				// Add the UID Gen value to the UI for display	
+				$('#uidGenLabel').val($('#selectedIndustry').val().trim());	 
 				
+				showSpinner();			
+				submitFormAjaxHTML('processIndustrySelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");
+								
+			});	
+			
+			
+			// Sub Industry
+			$('#comboSelectedSubIndustry').change(function () {
+								
+				// set the UID on the DTO 				
+				$('#selectedSubIndustry').val($('#comboSelectedSubIndustry').val().trim());				
+				// Add the Value to the UID being Generated		
+				$('#uidGenString').val($('#selectedSubIndustry').val().trim());				
 				// Add the UID Gen value to the UI for display	
-				$('#uidGenLabel').val($('#selectedProductType').val().trim());
+				$('#uidGenLabel').val($('#selectedSubIndustry').val().trim());	
+								
+				showSpinner();			
+				submitFormAjaxHTML('processSubIndustrySelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");				
 				
-				
+			});	
+			
+			
+			
+			$('#comboSelectedProductType').change(function () {
+				/* alert ("Product Type Selected ->: " + $("#comboSelectedProductType").val()) ; */								
+				// set the UID on the DTO 				
+				$('#selectedProductType').val($('#comboSelectedProductType').val().trim());				
+				// Add the Value to the UID being Generated		
+				$('#uidGenString').val($('#selectedProductType').val().trim());				
+				// Add the UID Gen value to the UI for display	
+				$('#uidGenLabel').val($('#selectedProductType').val().trim());								
 			});	
 			
 			
@@ -47,13 +72,16 @@
   </head>
 
   <body id="Body" >
-	 			
 	 	
-	<form id="uidGeneratorFormDTO" class="bg-light" name="uidGeneratorFormDTO"   method="post"> 
-    
- 	 		
-     <input type="hidden" id="selectedProductType" name="selectedProductType"  th:value="${comboSelectedProductType}">
-     		    		  
+	 	
+ 			
+	 	
+	<form id="uidGeneratorFormDTO" class="bg-light" name="uidGeneratorFormDTO"  th:value="${uidGeneratorFormDTO}" method="post"> 
+  	 	    	 		
+       <input  id="selectedIndustry" name="selectedIndustry" th:value="${uidGeneratorFormDTO.selectedIndustry}">     
+       <input id="selectedSubIndustry" name="selectedSubIndustry"  th:value="${uidGeneratorFormDTO.selectedSubIndustry}">     
+       <input  id="selectedProductType" name="selectedProductType"  th:value="${uidGeneratorFormDTO.selectedProductType}">
+          		    		  
 		<section id="manage_1_mainBody" class="de-component de-component--gray">
 			
 			<div class="de-component__container">
@@ -71,28 +99,42 @@
 					
 <br>
 <br>
-
- 		<div class="d-flex justify-content-between">
+	
+		
+ 		<div id="industryId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{industryList}" style="width: 260px">
             	<option value=""> -- Select Industry</option>
-                <option th:each="entry : ${industryList}"  th:value="${entry.industryCode}"  th:utext="${entry.industryDesc} "/>
+                <option th:each="entry : ${industryList}"  th:value="${entry.uid}"  th:utext="${entry.industryDesc} "/>
             </select> 
-		</div>
-	
-	 	<div class="d-flex justify-content-between">
+		</div> 
+		
+		 	<div id="subIndustryId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{subIndustryList}" style="width: 260px">
             	<option value=""> -- Select Sub Industry</option>
-                <option th:each="entry : ${subIndustryList}"  th:value="${entry.subIndustryCode}"  th:utext="${entry.subIndustryDesc} "/>
+                <option th:each="entry : ${subIndustryList}"  th:value="${entry.uid}"  th:utext="${entry.subIndustryDesc} "/>
             </select> 
-		</div>
+		</div>  
 		
-		
-		<div class="d-flex justify-content-between">
+		<div  id="versionId"  class="d-flex justify-content-between">	
+			<select class="form-control mb-3" id="comboSelectedVersion" name="comboSelectedVersion" style="width: 260px">
+				<option value=""> -- Select Version</option>
+				<option value="10" >Version 1.0</option>
+				<option value="11">Version 1.1</option>	
+			    <option value="12" >Version 1.2</option>
+				<option value="13">Version 1.3</option>	
+				<option value="20" >Version 2.0</option>
+				<option value="21">Version 2.1</option>												      											
+			</select>	
+		</div> 
+												
+												
+												
+ 		<div  id="productTypeId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{productTypeList}" style="width: 260px">
             	<option value=""> -- Select a Type of Asset</option>
                 <option th:each="entry : ${productTypeList}"  th:value="${entry.productTypeCode}"  th:utext="${entry.producTypeDesc} "/>
             </select> 
-		</div>
+		</div> 
 		
 		
 
@@ -104,3 +146,21 @@
   </body>
   
 </html>
+
+
+
+
+
+<!--  		<div id="industryId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{uidDtoList}" style="width: 260px">
+            	<option value=""> -- Select Industry</option>
+                <option th:each="entry : ${uidDtoList}"  th:value="${entry.industryUid}"  th:utext="${entry.industryDesc} "/>
+            </select> 
+		</div>
+		
+	 	<div id="subIndustryId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{uidDtoList}" style="width: 260px">
+            	<option value=""> -- Select Sub Industry</option>
+                <option th:each="entry : ${uidDtoList}"  th:value="${entry.industryUid}"  th:utext="${entry.industryDesc} "/>
+            </select> 
+		</div> -->

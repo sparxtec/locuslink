@@ -20,7 +20,7 @@ public class Industry extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="industry_pkId", unique=true, nullable = false)
+    @Column(name="industry_pkid", unique=true, nullable = false)
     private int industryPkId;
   
     @Column(name="uid", nullable = false)

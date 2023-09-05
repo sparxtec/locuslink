@@ -17,6 +17,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -71,8 +72,17 @@ public class SubIndustryDaoImpl extends DaoSupport implements SubIndustryDao, Ap
 		return (List<SubIndustry>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
 	}
 	
+
 	
-		
+	@SuppressWarnings("unchecked")
+	public  List<SubIndustry>  getByIndustry (int industryPkId) 	{	
+		DetachedCriteria criteria= DetachedCriteria.forClass(SubIndustry.class, "subIndustry");		
+		criteria.add(Restrictions.eq("industryPkId", industryPkId));
+		criteria.addOrder(Order.asc ("subIndustryCode"));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+		return (List<SubIndustry>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
+	}
+	
 
 	@Override
 	public void saveOrUpdate(SubIndustry subIndustry) {
@@ -89,5 +99,5 @@ public class SubIndustryDaoImpl extends DaoSupport implements SubIndustryDao, Ap
 	public void delete(SubIndustry subIndustry) {
 		this.sessionFactory.getCurrentSession().delete(subIndustry);
 	}
-	
+
 }

@@ -15,6 +15,8 @@ public interface SubIndustryDao  {
 		
 	public List<SubIndustry>  getAll();
 	
+	public List<SubIndustry>  getByIndustry(int industryPkId);
+	
 	
 	public void save(SubIndustry subIndustry);
 	

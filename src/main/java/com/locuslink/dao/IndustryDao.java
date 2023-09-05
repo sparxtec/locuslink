@@ -15,6 +15,9 @@ public interface IndustryDao  {
 		
 	public List<Industry>  getAll();
 	
+	//public List<UidDTO>  getUidDTO(int industryPkId);
+	
+	
 	
 	public void save(Industry industry);
 	

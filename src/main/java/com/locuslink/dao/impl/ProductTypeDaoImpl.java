@@ -17,6 +17,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -71,6 +72,17 @@ public class ProductTypeDaoImpl extends DaoSupport implements ProductTypeDao, Ap
 		criteria.addOrder(Order.asc ("productTypeCode"));
 		return (List<ProductType>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public  List<ProductType>  getBySubIndustry (int subIndustryPkId) 	{	
+		DetachedCriteria criteria= DetachedCriteria.forClass(ProductType.class, "productType");  			
+		criteria.add(Restrictions.eq("subIndustryPkId", subIndustryPkId));
+		criteria.addOrder(Order.asc ("productTypeCode"));		
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+		return (List<ProductType>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
+	}
+	
 	
 	
 		

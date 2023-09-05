@@ -62,6 +62,35 @@ public class IndustryDaoImpl extends DaoSupport implements IndustryDao, Applicat
 	}
 	
 	
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public  List<UidDTO>  getUidDTO (int iPkId) 	{	
+//		
+//		String filterClause = "";
+//		String sql = "Select   "				 
+//			 	+ " industry.industry_pkid as " + '"' + "industryPkId" + '"' 			
+//			 	+ ", industry.uid as " + '"' + "industryUid" + '"'
+//			 	
+//				+ ", industry.industry_code as " + '"' + "industryCode" + '"' 
+//				+ ", industry.industry_desc as " + '"' + "industryDesc" + '"' 	
+//				
+//				+ " from Industry industry "	
+//				+ " where industry.industry_pkId = :industryPkId"
+//				+ filterClause				
+//				+ " order by industry.industry_pkId asc";
+//		
+//		@SuppressWarnings("rawtypes")
+//		Query query = this.sessionFactory.getCurrentSession().createSQLQuery(sql)			
+//			.setParameter("industryPkId", iPkId);	
+//			 query.setResultTransformer(new AliasToBeanResultTransformer(UidDTO.class));
+//			
+//		return (List<UidDTO>) ( query).list();		
+//	}
+	
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public  List<Industry>  getAll () 	{	
@@ -70,6 +99,7 @@ public class IndustryDaoImpl extends DaoSupport implements IndustryDao, Applicat
 		criteria.addOrder(Order.asc ("industryCode"));
 		return (List<Industry>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
 	}
+	
 	
 	
 		

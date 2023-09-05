@@ -14,10 +14,10 @@ public interface ProductTypeDao  {
     
 	
 	public ProductType getById (int id);
-	
-	//public ProductAttachmentDTO getDtoById (int id);
-		
+			
 	public List<ProductType>  getAll();
+	
+	public List<ProductType>  getBySubIndustry(int subIndustryPkId);
 	
 	
 	public void save(ProductType productType);
