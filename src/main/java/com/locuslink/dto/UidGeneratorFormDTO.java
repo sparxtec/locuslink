@@ -7,12 +7,16 @@ public class UidGeneratorFormDTO {
 
 	private String uidGenString;
 	
-	private String selectedIndustry;
-	
-	private String selectedSubIndustry;
-	
-	private String selectedVersion;	
+	private String selectedIndustryPkId;
+	private String selectedIndustryUid;
 
-	private String selectedProductType;
+	private String selectedSubIndustryPkId;
+	private String selectedSubIndustryUid;
+	
+	private String selectedVersionPkId;	
+	private String selectedVersionUid;	
+
+	private String selectedProductTypePkId;
+	private String selectedProductTypeUid;
 
 }
