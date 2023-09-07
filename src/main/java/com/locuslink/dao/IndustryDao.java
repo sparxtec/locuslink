@@ -3,6 +3,7 @@ package com.locuslink.dao;
 
 import java.util.List;
 
+import com.locuslink.dto.UidDTO;
 import com.locuslink.model.Industry;
 
 
@@ -15,7 +16,7 @@ public interface IndustryDao  {
 		
 	public List<Industry>  getAll();
 	
-	//public List<UidDTO>  getUidDTO(int industryPkId);
+	public List<UidDTO>  getUidDTO(int iPkId, int siPkId, int vPkId, int ptPkId, int pstPkId);
 	
 	
 	

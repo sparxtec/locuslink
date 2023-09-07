@@ -56,6 +56,17 @@
 			});	
 			
 			
+			// Product Sub Type
+			$('#comboSelectedProductSubType').change(function () {	
+				var wrkIdArray =  $('#comboSelectedProductSubType').val().trim().split("_");	
+				$('#selectedProductSubTypePkId').val( wrkIdArray[0] );			
+				$('#selectedProductSubTypeUid').val( wrkIdArray[1] );		
+				$('#uidGenString').val( $('#uidGenString').val() + wrkIdArray[1]);				
+				showSpinner();			
+				submitFormAjaxHTML('processProductSubTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	
+			});	
+			
+			
 			
 		});
 		
@@ -89,6 +100,9 @@
        
        <input  type=hidden id="selectedProductTypePkId" name="selectedProductTypePkId"  th:value="${uidGeneratorFormDTO.selectedProductTypePkId}" readonly>
        <input  type=hidden id="selectedProductTypeUid" name="selectedProductTypeUid"  th:value="${uidGeneratorFormDTO.selectedProductTypeUid}" readonly>       
+          		  
+       <input  type=hidden id="selectedProductSubTypePkId" name="selectedProductSubTypePkId"  th:value="${uidGeneratorFormDTO.selectedProductSubTypePkId}" readonly>
+       <input  type=hidden id="selectedProductSubTypeUid" name="selectedProductSubTypeUid"  th:value="${uidGeneratorFormDTO.selectedProductSubTypeUid}" readonly>              		  
           		    		  
 		<section id="manage_1_mainBody" class="de-component de-component--gray">
 			
@@ -108,8 +122,24 @@
 <br>
 <br>
 	
+	
+		<div id="industryId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{uidDtoIndustryList}" style="width: 260px">
+	           	<option value="_"> -- Select Industry</option>            	
+	               <option th:each="entry : ${uidDtoIndustryList}"  th:value="${entry.industryPkId}+'_'+${entry.industryUid}"  th:utext="${entry.industryDesc} "/>              
+	           </select> 
+		</div>
 		
- 		<div id="industryId"  class="d-flex justify-content-between">
+		
+		<div id="subIndustryId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{uidDtoSubIndustryList}" style="width: 260px">
+            	<option value="_"> -- Select Sub Industry</option>
+                <option th:each="entry : ${uidDtoSubIndustryList}"  th:value="${entry.subIndustryPkId}+'_'+${entry.subIndustryUid}"   th:utext=" ${entry.industryCode}+':'+${entry.subIndustryDesc} "/>
+            </select> 
+		</div>  
+		
+		
+<!--  		<div id="industryId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{industryList}" style="width: 260px">
             	<option value="_"> -- Select Industry</option>
                 <option th:each="entry : ${industryList}"  th:value="${entry.industryPkId}+'_'+${entry.uid}"  th:utext="${entry.industryDesc} "/>              
@@ -139,12 +169,20 @@
 												
  		<div  id="productTypeId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{productTypeList}" style="width: 260px">
-            	<option value="_"> -- Select a Type of Asset</option>
+            	<option value="_"> -- Select Asset Type</option>
                 <option th:each="entry : ${productTypeList}"  th:value="${entry.productTypePkId}+'_'+${entry.uid}"   th:utext="${entry.producTypeDesc} "/>
             </select> 
 		</div> 
 		
+	 	<div  id="productSubTypeId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductSubType" name="comboSelectedProductSubType" th:field="*{productSubTypeList}" style="width: 260px">
+            	<option value="_"> -- Select Asset Sub Type</option>
+                <option th:each="entry : ${productSubTypeList}"  th:value="${entry.productSubTypePkId}+'_'+${entry.uid}"   th:utext="${entry.producSubTypeDesc} "/>
+            </select> 
+		</div>  -->
 		
+		
+			
 
 		</section>
 	
@@ -157,18 +195,3 @@
 
 
 
-
-
-<!--  		<div id="industryId"  class="d-flex justify-content-between">
-			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{uidDtoList}" style="width: 260px">
-            	<option value=""> -- Select Industry</option>
-                <option th:each="entry : ${uidDtoList}"  th:value="${entry.industryUid}"  th:utext="${entry.industryDesc} "/>
-            </select> 
-		</div>
-		
-	 	<div id="subIndustryId"  class="d-flex justify-content-between">
-			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{uidDtoList}" style="width: 260px">
-            	<option value=""> -- Select Sub Industry</option>
-                <option th:each="entry : ${uidDtoList}"  th:value="${entry.industryUid}"  th:utext="${entry.industryDesc} "/>
-            </select> 
-		</div> -->

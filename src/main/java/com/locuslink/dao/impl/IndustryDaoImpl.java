@@ -14,9 +14,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
+import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.IndustryDao;
+import com.locuslink.dto.UidDTO;
 import com.locuslink.model.Industry;
 
 /**
@@ -62,32 +65,65 @@ public class IndustryDaoImpl extends DaoSupport implements IndustryDao, Applicat
 	}
 	
 	
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public  List<UidDTO>  getUidDTO (int iPkId) 	{	
-//		
-//		String filterClause = "";
-//		String sql = "Select   "				 
-//			 	+ " industry.industry_pkid as " + '"' + "industryPkId" + '"' 			
-//			 	+ ", industry.uid as " + '"' + "industryUid" + '"'
-//			 	
-//				+ ", industry.industry_code as " + '"' + "industryCode" + '"' 
-//				+ ", industry.industry_desc as " + '"' + "industryDesc" + '"' 	
-//				
-//				+ " from Industry industry "	
-//				+ " where industry.industry_pkId = :industryPkId"
-//				+ filterClause				
-//				+ " order by industry.industry_pkId asc";
-//		
-//		@SuppressWarnings("rawtypes")
-//		Query query = this.sessionFactory.getCurrentSession().createSQLQuery(sql)			
-//			.setParameter("industryPkId", iPkId);	
-//			 query.setResultTransformer(new AliasToBeanResultTransformer(UidDTO.class));
-//			
-//		return (List<UidDTO>) ( query).list();		
-//	}
+
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	@Override
+	public  List<UidDTO>  getUidDTO (int iPkId, int siPkId, int vPkId, int ptPkId, int pstPkId) 	{	
+		
+		String whereClause = uidSqlBuilder( iPkId,  siPkId,  vPkId,  ptPkId,  pstPkId);
+
+		
+		String sql = "Select   "				 
+			 	+ " i.industry_pkid as " + '"' + "industryPkId" + '"' 			
+			 	+ ", i.uid as " + '"' + "industryUid" + '"'
+			 	+ ", i.industry_code as " + '"' + "industryCode" + '"'
+			 	+ ", i.industry_desc as " + '"' + "industryDesc" + '"'
+			 	
+			 	+ ", si.sub_industry_pkid as " + '"' + "subIndustryPkId" + '"' 			
+			 	+ ", si.uid as " + '"' + "subIndustryUid" + '"'
+			 	+ ", si.sub_industry_code as " + '"' + "subIndustryCode" + '"'
+			 	+ ", si.sub_industry_desc as " + '"' + "subIndustryDesc" + '"'
+			 	
+				
+				+ " from Industry i "					
+				+ " left  join sub_industry si       on i.industry_pkid = si.industry_pkid "	
+				+ " left  join product_type pt       on si.sub_industry_pkid = pt.sub_industry_pkid  "	
+				+ " left  join product_sub_type pst  on pt.product_type_pkid = pst.product_type_pkid "	
+				
+				/* + " where i.industry_pkId between :industryPkId_lo and :industryPkId_hi " */
+				+ whereClause					
+				+ " order by i.uid asc, si.uid asc, pt.uid asc, pst.uid asc";
+		
+
+		@SuppressWarnings("rawtypes")
+		Query query = this.sessionFactory.getCurrentSession().createSQLQuery(sql)	;		
+		//	.setParameter("industryPkId", iPkId);	
+			 query.setResultTransformer(new AliasToBeanResultTransformer(UidDTO.class));
+			
+		return (List<UidDTO>) ( query).list();		
+	}
 	
 	
+	private  String  uidSqlBuilder (int iPkId, int siPkId, int vPkId, int ptPkId, int pstPkId) 	{	
+		String whereClause = "";
+			
+		// Industry
+		if (iPkId > 0) {
+			whereClause = " where i.industry_pkId = " + iPkId ;
+		} else {
+			whereClause = " where i.industry_pkId between 0 and 99999 " ;
+		}
+		
+		// Sub Industry
+		//    and (si.sub_industry_pkid between 0 and 99999 or si.sub_industry_pkid is null)
+		if (siPkId > 0) {
+			whereClause = whereClause + " and si.sub_industry_pkid =  " + siPkId;
+		} else {
+			whereClause = whereClause + " and si.sub_industry_pkid between 0  and 99999" ;	
+		}
+		
+	    return whereClause;
+	}
 	
 	
 	

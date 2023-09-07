@@ -18,5 +18,8 @@ public class UidGeneratorFormDTO {
 
 	private String selectedProductTypePkId;
 	private String selectedProductTypeUid;
+	
+	private String selectedProductSubTypePkId;
+	private String selectedProductSubTypeUid;
 
 }
