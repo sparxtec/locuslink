@@ -8,28 +8,28 @@ import lombok.Setter;
 public class UidDTO {
 
 
-    private int industryPkId;   
+    private Integer industryPkId;   
     private String industryUid;    
     private String industryCode;
 	private String industryDesc; 
 	
 	
-    private int subIndustryPkId;
+    private Integer subIndustryPkId;
     private String subIndustryUid;
     private String subIndustryCode;
 	private String subIndustryDesc; 
     
-    private int versionPkId;
+    private Integer versionPkId;
     private String versionUid;
     private String versionCode;
     private String versionDesc;
 
-    private int productTypePkId;
+    private Integer productTypePkId;
     private String productTypeUid;
     private String productTypeCode;
 	private String productTypeDesc; 
     
-    private int productSubTypePkId;
+    private Integer productSubTypePkId;
     private String productSubTypeUid;
     private String productSubTypeCode;
 	private String productSubTypeDesc;  

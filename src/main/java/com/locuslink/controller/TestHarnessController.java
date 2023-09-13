@@ -95,28 +95,25 @@ public class TestHarnessController {
 		    .toJavaList();
 		model.addAttribute("uidDtoSubIndustryList", uidDtoSubIndustryList);	 
 		logger.debug("uidDtoSubIndustryList size ->: " + uidDtoSubIndustryList.size());
-		   	
+		   					
+		// Product Type List
+	    List<UidDTO> uidDtoProductTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductTypePkId)
+		    .filter(f -> !(f.getProductTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductTypeList", uidDtoProductTypeList);	 
+		logger.debug("uidDtoProductTypeList size ->: " + uidDtoProductTypeList.size());
+		
+		// Sub Product Type List
+	    List<UidDTO> uidDtoProductSubTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductSubTypePkId)
+		    .filter(f -> !(f.getProductSubTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductSubTypeList", uidDtoProductSubTypeList);	 
+		logger.debug("uidDtoProductSubTypeList size ->: " + uidDtoProductSubTypeList.size());
 		
 		
-//		List <Industry> industryList = industryDao.getAll();	
-//	   	model.addAttribute("industryList", industryList);	 
-//		logger.debug("industryList size ->: " + industryList.size());
 		
-		
-		
-//  		   	
-//		List <SubIndustry> subIndustryList = subIndustryDao.getAll();	
-//	   	model.addAttribute("subIndustryList", subIndustryList);	 
-//		logger.debug("subIndustryList size ->:  " +  subIndustryList.size());
-//	   	
-//		List <ProductType> productTypeList = productTypeDao.getAll();	
-//	   	model.addAttribute("productTypeList", productTypeList);		   	
-//	   	logger.debug("productTypeList size ->: " + productTypeList.size());
-//		   		   		   	
-//		List <ProductSubType> productSubTypeList = productSubTypeDao.getAll();	
-//	   	model.addAttribute("productSubTypeList", productSubTypeList);		   	
-//	   	logger.debug("productSubTypeList size ->: " + productSubTypeList.size());
-		   	
 
 	   	model.addAttribute("uidGeneratorFormDTO", uidGeneratorFormDTO);
 	   	
@@ -132,36 +129,43 @@ public class TestHarnessController {
 		 
 		// Get the Industry Selected
 		int wrkIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryPkId());
-		int wrkIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryUid());
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////		
-		Industry industry = industryDao.getById(wrkIndustryPkId);			
-		List <Industry> industryList = new ArrayList<Industry> ();
-		if (industry != null) {
-			industryList.add(industry);
-		    logger.debug("industry ->:   pkId: " +  wrkIndustryPkId + "  uid:" + wrkIndustryUid);
-		}
-	  	model.addAttribute("industryList", industryList);	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	  	
-	  	
-	  	// Use PArent PK
-	  	// Get List of Sub Industries for the Selected Industry   	
-		List <SubIndustry> subIndustryList = subIndustryDao.getByIndustry(wrkIndustryPkId);	
-	   	model.addAttribute("subIndustryList", subIndustryList);	 
-		logger.debug("subIndustryList size ->:  " + subIndustryList.size());
-	   	
-	   	// Get List of Product Types, not selected yet so we need to display them all
-		List <ProductType> productTypeList = productTypeDao.getAll();
-	   	model.addAttribute("productTypeList", productTypeList);		   	
-	   	logger.debug("productTypeList size ->: " + productTypeList.size());
-		   		
-	   	// Get List of Product Sub Types, not selected yet so we need to display them all
-		List <ProductSubType> productSubTypeList = productSubTypeDao.getAll();	
-	   	model.addAttribute("productSubTypeList", productSubTypeList);		   	
-	   	logger.debug("productSubTypeList size ->: " + productSubTypeList.size());
-	   	
-	   	
+	
+	   	// SELECTED Industry 
+		List <UidDTO> uidDtoList = industryDao.getUidDTO(wrkIndustryPkId, 0, 0, 0, 0);
+		logger.debug("uidDtoList size ->: " + uidDtoList.size());
+	   	model.addAttribute("uidDtoList", uidDtoList);		 
+	   			
+	   	// Industry List
+	    List<UidDTO> uidDtoIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+	    	.distinctBy(UidDTO::getIndustryPkId)
+	    	.toJavaList();
+	   	model.addAttribute("uidDtoIndustryList", uidDtoIndustryList);	 
+		logger.debug("uidDtoIndustryList size ->: " + uidDtoIndustryList.size());
+	   			
+		// Sub Industry List
+	    List<UidDTO> uidDtoSubIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getSubIndustryPkId)
+		    .toJavaList();
+		model.addAttribute("uidDtoSubIndustryList", uidDtoSubIndustryList);	 
+		logger.debug("uidDtoSubIndustryList size ->: " + uidDtoSubIndustryList.size());
+		   					
+		// Product Type List
+	    List<UidDTO> uidDtoProductTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductTypePkId)
+		    .filter(f -> !(f.getProductTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductTypeList", uidDtoProductTypeList);	 
+		logger.debug("uidDtoProductTypeList size ->: " + uidDtoProductTypeList.size());
+		
+		// Sub Product Type List
+	    List<UidDTO> uidDtoProductSubTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductSubTypePkId)
+		    .filter(f -> !(f.getProductSubTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductSubTypeList", uidDtoProductSubTypeList);	 
+		logger.debug("uidDtoProductSubTypeList size ->: " + uidDtoProductSubTypeList.size());
+		
+   	
 	   	model.addAttribute("uidGeneratorFormDTO", uidGeneratorFormDTO);
 	   	
 		return "fragments/testing_harness2";
@@ -176,50 +180,47 @@ public class TestHarnessController {
 		 
 		// Get the Industry Selected
 		int wrkIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryPkId());
-		int wrkIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryUid());
-		
 		int wrkSubIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryPkId());
-		int wrkSubIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryUid());	
 		
 		
-
-		// Get the Selected Industry  
-		Industry industry = industryDao.getById(wrkIndustryPkId);			
-		List <Industry> industryList = new ArrayList<Industry> ();
-		if (industry != null) {
-			industryList.add(industry);
-		    logger.debug("industry ->:   pkId: " +  wrkIndustryPkId + "  uid:" + wrkIndustryUid);
-		}
-	  	model.addAttribute("industryList", industryList);
-	  	
-	  	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	  		  	
-	  	// Get the selected Sub Industry for the Selected Industry   	
-		SubIndustry subIndustry = subIndustryDao.getById(wrkSubIndustryPkId);	
-		List <SubIndustry> subIndustryList = new ArrayList<SubIndustry> ();
-		if (subIndustry != null) {
-			subIndustryList.add(subIndustry);
-		    logger.debug("sub industry ->:   pkId: " +  wrkSubIndustryPkId + "  uid:" + wrkSubIndustryUid);
-		}
-	   	model.addAttribute("subIndustryList", subIndustryList);	 
+	   	// SELECTED Industry & SUB INDUSTRY
+		List <UidDTO> uidDtoList = industryDao.getUidDTO(wrkIndustryPkId, wrkSubIndustryPkId, 0, 0, 0);
+		logger.debug("uidDtoList size ->: " + uidDtoList.size());
+	   	model.addAttribute("uidDtoList", uidDtoList);		 
+	   			
+	   	// Industry List
+	    List<UidDTO> uidDtoIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+	    	.distinctBy(UidDTO::getIndustryPkId)
+	    	.toJavaList();
+	   	model.addAttribute("uidDtoIndustryList", uidDtoIndustryList);	 
+		logger.debug("uidDtoIndustryList size ->: " + uidDtoIndustryList.size());
+	   			
+		// Sub Industry List
+	    List<UidDTO> uidDtoSubIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getSubIndustryPkId)
+		    .toJavaList();
+		model.addAttribute("uidDtoSubIndustryList", uidDtoSubIndustryList);	 
+		logger.debug("uidDtoSubIndustryList size ->: " + uidDtoSubIndustryList.size());
+		   					
+		// Product Type List
+	    List<UidDTO> uidDtoProductTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductTypePkId)
+		    .filter(f -> !(f.getProductTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductTypeList", uidDtoProductTypeList);	 
+		logger.debug("uidDtoProductTypeList size ->: " + uidDtoProductTypeList.size());
 		
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	   	
-	   	
-	   	// Use PArent PkId
-	   	// Get the selected Products for the Selected Sub Industry   	
-	   	List <ProductType> productTypeList = productTypeDao.getBySubIndustry(wrkSubIndustryPkId);	   	
-		logger.debug("productTypeList size ->: " + productTypeList.size());	
-	   	model.addAttribute("productTypeList", productTypeList);		   	
-
-	   	
-	   	// Get List of Product Sub Types, not selected yet so we need to display them all
-		List <ProductSubType> productSubTypeList = productSubTypeDao.getAll();	
-	   	model.addAttribute("productSubTypeList", productSubTypeList);		   	
-	   	logger.debug("productSubTypeList size ->: " + productSubTypeList.size());
-	   	
-	   			   	
+		// Sub Product Type List
+	    List<UidDTO> uidDtoProductSubTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductSubTypePkId)
+		    .filter(f -> !(f.getProductSubTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductSubTypeList", uidDtoProductSubTypeList);	 
+		logger.debug("uidDtoProductSubTypeList size ->: " + uidDtoProductSubTypeList.size());
+		
+		
+		
+   			   	
 	   	model.addAttribute("uidGeneratorFormDTO", uidGeneratorFormDTO);
 	   	
 		return "fragments/testing_harness2";
@@ -235,52 +236,47 @@ public class TestHarnessController {
 		logger.debug("Starting processProductTypeSelected()...");
 		 
 		// Get the Industry Selected
-		int wrkIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryPkId());
-		int wrkIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryUid());		
-		int wrkSubIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryPkId());
-		int wrkSubIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryUid());		
+		int wrkIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryPkId());	
+		int wrkSubIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryPkId());	
 		int wrkProductTypePkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductTypePkId());
-		int wrkProductTypeUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductTypeUid());		
-
-
-		// Get the Selected Industry  
-		Industry industry = industryDao.getById(wrkIndustryPkId);			
-		List <Industry> industryList = new ArrayList<Industry> ();
-		if (industry != null) {
-			industryList.add(industry);
-		    logger.debug("industry ->:   pkId: " +  wrkIndustryPkId + "  uid:" + wrkIndustryUid);
-		}
-	  	model.addAttribute("industryList", industryList);		
-	  	
-	  	// Get the selected Sub Industry for the Selected Industry   	
-		SubIndustry subIndustry = subIndustryDao.getById(wrkIndustryPkId);	
-		List <SubIndustry> subIndustryList = new ArrayList<SubIndustry> ();
-		if (subIndustry != null) {
-			subIndustryList.add(subIndustry);
-		    logger.debug("sub industry ->:   pkId: " +  wrkSubIndustryPkId + "  uid:" + wrkSubIndustryUid);
-		}
-	   	model.addAttribute("subIndustryList", subIndustryList);	 
-		 	
-	   	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////	   	
-	   	// Get the selected Product {Asset Type } 
-	   	ProductType productType = productTypeDao.getById(wrkProductTypePkId)	;
-	   	List <ProductType> productTypeList = new ArrayList<ProductType> ();	
-		if (productTypeList != null) {
-			productTypeList.add(productType);
-		    logger.debug("ProductType ->:   pkId: " +  wrkProductTypePkId + "  uid:" + wrkProductTypeUid);
-		}		
-	   	model.addAttribute("productTypeList", productTypeList);		   	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	   	
-	   	
-	   	// Use Parent Pk
-	   	// Get List of Product Sub Types based on the Product Type selected
-		List <ProductSubType> productSubTypeList = productSubTypeDao.getByProductType(wrkProductTypePkId);
-	   	model.addAttribute("productSubTypeList", productSubTypeList);		   	
-	   	logger.debug("productSubTypeList size ->: " + productSubTypeList.size());	   	
-	   	
-	   	
+	
+		
+		
+	   	// SELECTED Industry & SUB INDUSTRY & Product Type
+		List <UidDTO> uidDtoList = industryDao.getUidDTO(wrkIndustryPkId, wrkSubIndustryPkId, 0, wrkProductTypePkId, 0);
+		logger.debug("uidDtoList size ->: " + uidDtoList.size());
+	   	model.addAttribute("uidDtoList", uidDtoList);		 
+	   			
+	   	// Industry List
+	    List<UidDTO> uidDtoIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+	    	.distinctBy(UidDTO::getIndustryPkId)
+	    	.toJavaList();
+	   	model.addAttribute("uidDtoIndustryList", uidDtoIndustryList);	 
+		logger.debug("uidDtoIndustryList size ->: " + uidDtoIndustryList.size());
+	   			
+		// Sub Industry List
+	    List<UidDTO> uidDtoSubIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getSubIndustryPkId)
+		    .toJavaList();
+		model.addAttribute("uidDtoSubIndustryList", uidDtoSubIndustryList);	 
+		logger.debug("uidDtoSubIndustryList size ->: " + uidDtoSubIndustryList.size());
+		   					
+		// Product Type List
+	    List<UidDTO> uidDtoProductTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductTypePkId)
+		    .filter(f -> !(f.getProductTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductTypeList", uidDtoProductTypeList);	 
+		logger.debug("uidDtoProductTypeList size ->: " + uidDtoProductTypeList.size());
+		
+		// Sub Product Type List
+	    List<UidDTO> uidDtoProductSubTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductSubTypePkId)
+		    .filter(f -> !(f.getProductSubTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductSubTypeList", uidDtoProductSubTypeList);	 
+		logger.debug("uidDtoProductSubTypeList size ->: " + uidDtoProductSubTypeList.size());
+   	
 	   	model.addAttribute("uidGeneratorFormDTO", uidGeneratorFormDTO);
 	   	
 		return "fragments/testing_harness2";
@@ -298,56 +294,47 @@ public class TestHarnessController {
 		 
 		// Get the Industry Selected
 		int wrkIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryPkId());
-		int wrkIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedIndustryUid());		
-		int wrkSubIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryPkId());
-		int wrkSubIndustryUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryUid());		
-		int wrkProductTypePkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductTypePkId());
-		int wrkProductTypeUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductTypeUid());		
-
+		int wrkSubIndustryPkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedSubIndustryPkId());		
+		int wrkProductTypePkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductTypePkId());	
 		int wrkProductSubTypePkId = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductSubTypePkId());
-		int wrkProductSubTypeUid = Integer.valueOf(uidGeneratorFormDTO.getSelectedProductSubTypeUid());	
 
-		// Get the Selected Industry  
-		Industry industry = industryDao.getById(wrkIndustryPkId);			
-		List <Industry> industryList = new ArrayList<Industry> ();
-		if (industry != null) {
-			industryList.add(industry);
-		    logger.debug("industry ->:   pkId: " +  wrkIndustryPkId + "  uid:" + wrkIndustryUid);
-		}
-	  	model.addAttribute("industryList", industryList);		
-	  	
-	  	// Get the selected Sub Industry for the Selected Industry   	
-		SubIndustry subIndustry = subIndustryDao.getById(wrkIndustryPkId);	
-		List <SubIndustry> subIndustryList = new ArrayList<SubIndustry> ();
-		if (subIndustry != null) {
-			subIndustryList.add(subIndustry);
-		    logger.debug("sub industry ->:   pkId: " +  wrkSubIndustryPkId + "  uid:" + wrkSubIndustryUid);
-		}
-	   	model.addAttribute("subIndustryList", subIndustryList);	 
-	   	
-		 	
-	   	// Get the selected Product {Asset Type } 
-	   	ProductType productType = productTypeDao.getById(wrkProductTypePkId);
-	   	List <ProductType> productTypeList = new ArrayList<ProductType> ();	
-		if (productTypeList != null) {
-			productTypeList.add(productType);
-		    logger.debug("ProductType ->:   pkId: " +  wrkProductTypePkId + "  uid:" + wrkProductTypeUid);
-		}		
-	   	model.addAttribute("productTypeList", productTypeList);	
-	   	
-		   		   		   	
-	   	// Get List of Product Sub Types based on the Product Type selected
-	   	ProductSubType productSubType = productSubTypeDao.getById(wrkProductSubTypePkId);
-		List <ProductSubType> productSubTypeList = new ArrayList<ProductSubType> ();	
 		
-		if (productSubTypeList != null) {
-			productSubTypeList.add(productSubType);
-		    logger.debug("ProductSubType ->:   pkId: " +  wrkProductSubTypePkId + "  uid:" + wrkProductSubTypeUid);
-		}	
-	   	model.addAttribute("productSubTypeList", productSubTypeList);		   	
-	   	logger.debug("productSubTypeList size ->: " + productSubTypeList.size());	   	
-	   	
-	   	
+	   	// SELECTED Industry & SUB INDUSTRY & Product Type
+		List <UidDTO> uidDtoList = industryDao.getUidDTO(wrkIndustryPkId, wrkSubIndustryPkId, 0, wrkProductTypePkId, wrkProductSubTypePkId);
+		logger.debug("uidDtoList size ->: " + uidDtoList.size());
+	   	model.addAttribute("uidDtoList", uidDtoList);		 
+	   			
+	   	// Industry List
+	    List<UidDTO> uidDtoIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+	    	.distinctBy(UidDTO::getIndustryPkId)
+	    	.toJavaList();
+	   	model.addAttribute("uidDtoIndustryList", uidDtoIndustryList);	 
+		logger.debug("uidDtoIndustryList size ->: " + uidDtoIndustryList.size());
+	   			
+		// Sub Industry List
+	    List<UidDTO> uidDtoSubIndustryList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getSubIndustryPkId)
+		    .toJavaList();
+		model.addAttribute("uidDtoSubIndustryList", uidDtoSubIndustryList);	 
+		logger.debug("uidDtoSubIndustryList size ->: " + uidDtoSubIndustryList.size());
+		   					
+		// Product Type List
+	    List<UidDTO> uidDtoProductTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductTypePkId)
+		    .filter(f -> !(f.getProductTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductTypeList", uidDtoProductTypeList);	 
+		logger.debug("uidDtoProductTypeList size ->: " + uidDtoProductTypeList.size());
+		
+		// Sub Product Type List
+	    List<UidDTO> uidDtoProductSubTypeList = io.vavr.collection.List.ofAll(uidDtoList)	   			
+		    .distinctBy(UidDTO::getProductSubTypePkId)
+		    .filter(f -> !(f.getProductSubTypePkId() == null) )	
+		    .toJavaList();
+		model.addAttribute("uidDtoProductSubTypeList", uidDtoProductSubTypeList);	 
+		logger.debug("uidDtoProductSubTypeList size ->: " + uidDtoProductSubTypeList.size());
+		
+ 	
 	   	model.addAttribute("uidGeneratorFormDTO", uidGeneratorFormDTO);
 	   	
 		return "fragments/testing_harness2";

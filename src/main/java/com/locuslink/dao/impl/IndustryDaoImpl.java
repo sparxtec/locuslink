@@ -83,8 +83,17 @@ public class IndustryDaoImpl extends DaoSupport implements IndustryDao, Applicat
 			 	+ ", si.uid as " + '"' + "subIndustryUid" + '"'
 			 	+ ", si.sub_industry_code as " + '"' + "subIndustryCode" + '"'
 			 	+ ", si.sub_industry_desc as " + '"' + "subIndustryDesc" + '"'
+			 					
+			 	+ ", pt.product_type_pkid as " + '"' + "productTypePkId" + '"' 			
+			 	+ ", pt.uid as " + '"' + "productTypeUid" + '"'
+			 	+ ", pt.type_code as " + '"' + "productTypeCode" + '"'
+			 	+ ", pt.type_desc as " + '"' + "productTypeDesc" + '"'
 			 	
-				
+			 	+ ", pst.product_sub_type_pkId as " + '"' + "productSubTypePkId" + '"' 			
+			 	+ ", pst.uid as " + '"' + "productSubTypeUid" + '"'
+			 	+ ", pst.sub_type_code as " + '"' + "productSubTypeCode" + '"'
+			 	+ ", pst.sub_type_desc as " + '"' + "productSubTypeDesc" + '"'
+			 				 	
 				+ " from Industry i "					
 				+ " left  join sub_industry si       on i.industry_pkid = si.industry_pkid "	
 				+ " left  join product_type pt       on si.sub_industry_pkid = pt.sub_industry_pkid  "	
@@ -119,8 +128,27 @@ public class IndustryDaoImpl extends DaoSupport implements IndustryDao, Applicat
 		if (siPkId > 0) {
 			whereClause = whereClause + " and si.sub_industry_pkid =  " + siPkId;
 		} else {
-			whereClause = whereClause + " and si.sub_industry_pkid between 0  and 99999" ;	
+			whereClause = whereClause + " and (si.sub_industry_pkid between 0 and 99999 or si.sub_industry_pkid is null) " ;	
 		}
+		
+		
+		// Product Type
+		//    and (pt.product_type_pkid between 0 and 99999 or pt.product_type_pkid is null)
+		if (ptPkId > 0) {
+			whereClause = whereClause + " and pt.product_type_pkid =  " + ptPkId;
+		} else {
+			whereClause = whereClause + " and (pt.product_type_pkid between 0 and 99999 or pt.product_type_pkid is null)" ;	
+		}
+		
+		
+		// Product Sub Type
+		//    and (pst.product_sub_type_pkid between 0 and 99999 or pst.product_sub_type_pkid is null)
+		if (pstPkId > 0) {
+			whereClause = whereClause + " and pst.product_sub_type_pkid =  " + pstPkId;
+		} else {
+			whereClause = whereClause + " and (pst.product_sub_type_pkid between 0 and 99999 or pst.product_sub_type_pkid is null)" ;	
+		}
+		
 		
 	    return whereClause;
 	}

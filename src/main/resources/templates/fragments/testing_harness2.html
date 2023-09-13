@@ -11,7 +11,7 @@
 						
 			$('#comboSelectedIndustry').val( $('#selectedIndustryPkId').val().trim() + '_' + $('#selectedIndustryUid').val().trim() );	
 			$('#comboSelectedSubIndustry').val( $('#selectedSubIndustryPkId').val().trim()  + '_' +$('#selectedSubIndustryUid').val().trim()   );	
-			$('#comboSelectedVersion').val($('#selectedVersionPkId').val().trim()  + '_' + $('#selectedVersionUid').val().trim() );
+ 			$('#comboSelectedVersion').val($('#selectedVersionPkId').val().trim()  + '_' + $('#selectedVersionUid').val().trim() );
 			$('#comboSelectedProductType').val($('#selectedProductTypePkId').val().trim() + '_' +$('#selectedProductTypeUid').val().trim() );	
 			
 			// Industry
@@ -129,14 +129,43 @@
 	               <option th:each="entry : ${uidDtoIndustryList}"  th:value="${entry.industryPkId}+'_'+${entry.industryUid}"  th:utext="${entry.industryDesc} "/>              
 	           </select> 
 		</div>
-		
-		
+				
 		<div id="subIndustryId"  class="d-flex justify-content-between">
 			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{uidDtoSubIndustryList}" style="width: 260px">
             	<option value="_"> -- Select Sub Industry</option>
                 <option th:each="entry : ${uidDtoSubIndustryList}"  th:value="${entry.subIndustryPkId}+'_'+${entry.subIndustryUid}"   th:utext=" ${entry.industryCode}+':'+${entry.subIndustryDesc} "/>
             </select> 
 		</div>  
+		
+		<div  id="versionId"  class="d-flex justify-content-between">	
+			<select class="form-control mb-3" id="comboSelectedVersion" name="comboSelectedVersion" style="width: 260px">
+				<option value="_"> -- Select Version</option>
+				<option value="1_10" >Version 1.0</option>
+				<option value="2_11">Version 1.1</option>	
+			    <option value="3_12" >Version 1.2</option>
+				<option value="4_13">Version 1.3</option>	
+				<option value="5_20">Version 2.0</option>
+				<option value="6_21">Version 2.1</option>												      											
+			</select>	
+		</div> 
+				
+		
+ 		<div  id="productTypeId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{uidDtoProductTypeList}" style="width: 260px">
+            	<option value="_"> -- Select Asset Type</option>
+                <option th:each="entry : ${uidDtoProductTypeList}"  th:value="${entry.productTypePkId}+'_'+${entry.productTypeUid}"   th:utext="${entry.productTypeDesc} "/>           
+            </select> 
+		</div> 
+		
+	 	<div  id="productSubTypeId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductSubType" name="comboSelectedProductSubType" th:field="*{uidDtoProductSubTypeList}" style="width: 260px">
+            	<option value="_"> -- Select Asset Sub Type</option>
+                <option th:each="entry : ${uidDtoProductSubTypeList}"  th:value="${entry.productSubTypePkId}+'_'+${entry.productSubTypeUid}"   th:utext="${entry.productSubTypeDesc} "/>
+            </select> 
+		</div>		
+		
+		
+		
 		
 		
 <!--  		<div id="industryId"  class="d-flex justify-content-between">
