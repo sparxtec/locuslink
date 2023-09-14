@@ -78,7 +78,7 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 				ua.traceCode,						
 				cus.customerName,
 				uc.productDesc,
-				pt.producTypeDesc,
+				pt.productTypeDesc,
 				pa.attributesJson				
 			)
 			from UniqueAsset ua	
@@ -119,7 +119,7 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 				
 				cus.customerName,
 				uc.productDesc,
-				pt.producTypeDesc,
+				pt.productTypeDesc,
 				pa.attributesJson				
 			)
 			from UniqueAsset ua

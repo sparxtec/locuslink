@@ -1,6 +1,5 @@
 package com.locuslink.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -12,7 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.locuslink.common.GenericMessageRequest;
+import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.IndustryDao;
 import com.locuslink.dao.ProductAttachmentDao;
@@ -20,14 +26,12 @@ import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dao.ProductSubTypeDao;
 import com.locuslink.dao.ProductTypeDao;
 import com.locuslink.dao.SubIndustryDao;
+import com.locuslink.dao.UidProductAttributeListDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
+import com.locuslink.dto.UidProductAttributeListDTO;
 import com.locuslink.dto.UidDTO;
 import com.locuslink.dto.UidGeneratorFormDTO;
-import com.locuslink.model.Industry;
-import com.locuslink.model.ProductSubType;
-import com.locuslink.model.ProductType;
-import com.locuslink.model.SubIndustry;
 /**
  * This is a Spring MVC Controller.
  *
@@ -64,6 +68,10 @@ public class TestHarnessController {
     
     @Autowired
     private ProductSubTypeDao productSubTypeDao;
+    
+    @Autowired
+    private UidProductAttributeListDao uidProductAttributeListDao;   
+    
     
     
     
@@ -343,7 +351,32 @@ public class TestHarnessController {
 	
 	
 	
-	
+	@RequestMapping(value = "/getUidProductAttributes", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getUidProductAttributes(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getUidProductAttributes()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getUidProductAttributes");
+	  	
+		// TESTING
+		List <UidProductAttributeListDTO> uidProductAttributeList_List =  uidProductAttributeListDao.getAllDTO();
+		if (uidProductAttributeList_List == null) {
+			logger.debug("  Note:  No Data Found......");
+		}
+			
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(uidProductAttributeList_List);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("uidProductAttributeList_List",  json);
+
+		return response;
+	 }
 	
 	
 	

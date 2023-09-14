@@ -33,7 +33,7 @@ public class ProductType extends Common {
     private String productTypeCode;
 
     @Column(name = "type_desc", nullable = false)
-	private String producTypeDesc; 
+	private String productTypeDesc; 
 	
 	
 

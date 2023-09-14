@@ -1,4 +1,28 @@
 
+CREATE TABLE "uid_product_attribute_list" (
+  "uid_pal_pkid" int PRIMARY KEY,
+  
+  "industry_pkid" int not null,
+  "sub_industry_pkid" int not null,  
+  "product_type_pkid" int not null,
+  "product_sub_type_pkid" int NULL,   
+  "uid_gen_seq" int not NULL, 
+  
+  "uid_pal_name" varchar,
+  "uid_pal_attributes_json" varchar,
+ 
+  "add_by" varchar,
+  "add_ts" timestamp,
+  "update_by" varchar,
+  "update_ts" timestamp
+);
+
+ALTER TABLE "uid_product_attribute_list" ADD CONSTRAINT "fk_upal_si" FOREIGN KEY ("sub_industry_pkid") REFERENCES "sub_industry" ("sub_industry_pkid");
+ALTER TABLE "uid_product_attribute_list" ADD CONSTRAINT "fk_upal_i" FOREIGN KEY ("industry_pkid") REFERENCES "industry" ("industry_pkid");
+ALTER TABLE "uid_product_attribute_list" ADD CONSTRAINT "fk_upal_pt" FOREIGN KEY ("product_type_pkid") REFERENCES "product_type" ("product_type_pkid");
+
+
+
 CREATE TABLE "industry" (
   "industry_pkid" int PRIMARY KEY,
   "uid" varchar,
