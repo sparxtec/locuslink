@@ -21,8 +21,9 @@
 		display: inline-block;
         min-width: 18px;		
 	}   
- 	#assetDataTable td:nth-child(6) { min-width: 240px; } 
- 	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
+ 	#attributeDataTable td:nth-child(6) { min-width: 50px; } -- sI
+ 	#attributeDataTable td:nth-child(7) { min-width: 50px; } 
+  	#attributeDataTable td:nth-child(17) { min-width: 200px; }  -- attr name
     
 </style> 
 
@@ -32,31 +33,15 @@
 	
 			hideSpinner();	
 			
-			if( $('#assetDataTable').length){     			
-     			var table = $('#assetDataTable').DataTable( {
+			if( $('#attributeDataTable').length){     			
+     			var attributeTable = $('#attributeDataTable').DataTable( {
             	retrieve: true,
-     	 		searchHighlight: true,
+     	 		//searchHighlight: true,
              	responsive: true,		        
              	"paging":   true,          
-             	order: [2, 'asc' ],		        		             
-     	    	ajax: {
-           		    url: 'getUidProductAttributes',
-           		 	type: 'POST',
-            		contentType: 'application/json',
-            		data: function ( data ) {
-            			showSpinner();            	
-            			var myData = {version:"1.0", clientId:"locuslink"};
-            			var innerData = {};    
-            			myData["data"] = innerData;	                  			
-                		return JSON.stringify( myData );
-     	        }, 
-     	        "dataSrc": function (json) {
-     	        	uidProductAttributeList_List = json.data.uidProductAttributeList_List;	     	        	
-     	        	hideSpinner();		    		     	      	        	
-     	        //	console.log(JSON.parse(uniqueassetlist));
-     	        	return JSON.parse(uidProductAttributeList_List);     	        	      	        	
-     	         }					       
-        		},       
+             	order: [2, 'asc' ],	
+             	data: [],
+
              columns: [	                	 
 	 			 { "className": 'details-control',
  	               "orderable": false,
@@ -70,36 +55,63 @@
                     	data ="<div class='action-buttons'>" 
 /*                     	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Attachment List Viewer'></i></button>&nbsp;"
                     	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;" */
-                    	+"<button id='detail_" + row.uidPalPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Attribute Viewer'></i></button></div>";	                    
+                    	+"<button id='detail_" + row.uidPalPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attribute Viewer'></i></button></div>";	                    
 	                return data;
 	 	         }},      
-	 	         { data: "industryPkId" },	 
-	             { data: "industryDesc" },	
-	             { data: "subIndustryPkId" },   	             
-                 { data: "subIndustryDesc" },   
-                 { data: "productTypePkId" },        
+	 	         { data: "industryPkId" },	
+	 	         { data: "industryUid" },	
+	             { data: "industryDesc" },
+	             
+	             { data: "subIndustryPkId" },  
+	             { data: "subIndustryUid" },   	             
+                 { data: "subIndustryDesc" },
+                 
+                 { data: "productTypePkId" }, 
+                 { data: "productTypeUid" },                    
                  { data: "productTypeDesc" }, 
                  
-                 { data: "productSubTypePkId" },        
+                 { data: "productSubTypePkId" },      
+                 { data: "productSubTypeUid" },                     
                  { data: "productSubTypeDesc" }, 
                  
-                 { data: "uidPalPkId" },                 
+                 { data: "uidPalPkId" },        
                  { data: "uidGenSeq" },
                  { data: "uidPalName" },
                  { data: "uidPalAttributesJson" }
-
-            	],
-            	        		
-             	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
-             	             	        		            	          
-           });
-     	 }	
+            	 ],            	        		
+             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',             	             	        		            	          
+               });
+     	    }	
+					
 			
-						
+		    $("#load-dt").click(function () {
+		       // if ($('.table-responsive').hasClass("hidden")) {
+		        //    $('.table-responsive').removeClass('hidden');		         			    	 	
+      			var myData = {version:"1.0", clientId:"locuslink"};
+    			var innerData = {};    
+    			myData["data"] = innerData;	     			
+ 			    $.ajax({ 			    	
+		           type: "POST",
+		           url: 'getUidProductAttributes',
+		           data: JSON.stringify(myData),
+		           contentType: 'application/json',
+		     	   dataType: "json",	     	        
+		           success: function (json) {	
+		               uidProductAttributeList_List =  JSON.parse( json.data.uidProductAttributeList_List ) ;				           
+		        	   attributeTable.clear().draw();
+		        	   attributeTable.rows.add(uidProductAttributeList_List).draw();			        
+				   },
+				   error: ajaxResponseError
+			    }); 		        
+			});			
+			
+			
+			
 			$('#comboSelectedIndustry').val( $('#selectedIndustryPkId').val().trim() + '_' + $('#selectedIndustryUid').val().trim() );	
 			$('#comboSelectedSubIndustry').val( $('#selectedSubIndustryPkId').val().trim()  + '_' +$('#selectedSubIndustryUid').val().trim()   );	
  			$('#comboSelectedVersion').val($('#selectedVersionPkId').val().trim()  + '_' + $('#selectedVersionUid').val().trim() );
 			$('#comboSelectedProductType').val($('#selectedProductTypePkId').val().trim() + '_' +$('#selectedProductTypeUid').val().trim() );	
+			$('#comboSelectedProductSubType').val($('#selectedProductSubTypePkId').val().trim() + '_' +$('#selectedProductSubTypeUid').val().trim() );				
 			
 			// Industry
 			$('#comboSelectedIndustry').change(function () {	
@@ -117,7 +129,7 @@
 				var wrkIdArray =  $('#comboSelectedSubIndustry').val().trim().split("_");	
 				$('#selectedSubIndustryPkId').val( wrkIdArray[0] );		
 				$('#selectedSubIndustryUid').val( wrkIdArray[1] );					
-				$('#uidGenString').val( $('#uidGenString').val() + wrkIdArray[1]);									
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);									
 				showSpinner();			
 				submitFormAjaxHTML('processSubIndustrySelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");								
 			});	
@@ -128,7 +140,7 @@
 				var wrkIdArray =  $('#comboSelectedVersion').val().trim().split("_");	
 				$('#selectedVersionPkId').val( wrkIdArray[0] );		
 				$('#selectedVersionUid').val( wrkIdArray[1] );						
-				$('#uidGenString').val( $('#uidGenString').val() + wrkIdArray[1]);
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);
 				
 			});	
 			
@@ -137,7 +149,7 @@
 				var wrkIdArray =  $('#comboSelectedProductType').val().trim().split("_");	
 				$('#selectedProductTypePkId').val( wrkIdArray[0] );			
 				$('#selectedProductTypeUid').val( wrkIdArray[1] );		
-				$('#uidGenString').val( $('#uidGenString').val() + wrkIdArray[1]);				
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);				
 				showSpinner();			
 				submitFormAjaxHTML('processProductTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	
 			});	
@@ -148,7 +160,7 @@
 				var wrkIdArray =  $('#comboSelectedProductSubType').val().trim().split("_");	
 				$('#selectedProductSubTypePkId').val( wrkIdArray[0] );			
 				$('#selectedProductSubTypeUid').val( wrkIdArray[1] );		
-				$('#uidGenString').val( $('#uidGenString').val() + wrkIdArray[1]);				
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);				
 				showSpinner();			
 				submitFormAjaxHTML('processProductSubTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	
 			});	
@@ -157,8 +169,8 @@
 			
 			
 	  		// SEARCH FILTER
-	  		$('#assetDataTable_filter input').keyup(function(){
-	 			table.search($(this).val()).draw() ;
+	  		$('#attributeDataTable_filter input').keyup(function(){
+	  			attributeTable.search($(this).val()).draw() ;
 	 		});  
 	  		
 	  		
@@ -208,8 +220,8 @@
 	        </header>		        
 	    </div>
 
-       <label class="d-inline-block mb-3" >generated UID : 
-         <input  id="uidGenString" name="uidGenString" th:value="${uidGeneratorFormDTO.uidGenString}" readonly> 
+       <label class="d-inline-block mb-3" > Generated UID : 
+         <input  style="width:400px" id="uidGenString" name="uidGenString" th:value="${uidGeneratorFormDTO.uidGenString}" readonly> 
        </label>
 					
 		<br>
@@ -256,6 +268,10 @@
 		</div>		
 		
 
+            <div class="text-center">
+                <button type="button" class="btn mb-1 btn-primary" id="load-dt">Click to load DataTable</button>
+            </div>
+            
 
  	<section id="myworksoace_asset_section" class="de-component de-component--gray">  
 			
@@ -275,28 +291,32 @@
 					 	</div>
 					 
 					 	<div class="datatable-toolbar-group">
-					 		<div id="assetDataTable_filter" class="dataTables_filter">
-					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="assetDataTable"></label>
+					 		<div id="attributeDataTable_filter" class="dataTables_filter">
+					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="attributeDataTable"></label>
 					 		</div> 
 					 	</div>
 					 </div>	                     
 	                  
 	                 <div id="xxxx">		                     
-	  	 					<table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
+	  	 					<table id="attributeDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
 	                          <thead class="thead-light">
 	                             <tr>	                             
 	     							<th scope="col"></th>       
 	     							<th scope="col"></th>   
-	                                <th scope="col">iId</th>	                                 	                          	                                 
-	                                <th scope="col">industryDesc</th>
-	                                <th scope="col">siId</th>	
-	                                <th scope="col">subIndustryDesc</th>	                                
-                                    <th scope="col">ptId</th>	                                 	                          	                                 
-	                                <th scope="col">productTypeDesc</th>
-	                                <th scope="col">pstId</th>	
-	                                <th scope="col">productSubTypeDesc</th>
-	                                <th scope="col">upalId</th>	
-	                                <th scope="col">UID Seq</th>
+	                                <th scope="col">i</th>	
+	                                <th scope="col">uid</th>	
+	                                <th scope="col">industry</th>
+	                                <th scope="col">si</th>	
+      								<th scope="col">uid</th>		                                
+	                                <th scope="col">sub Industry</th>	                                
+                                    <th scope="col">pt</th>	 
+                                    <th scope="col">uid</th>	
+	                                <th scope="col">Asset Type</th>
+	                                <th scope="col">pst</th>
+	                                <th scope="col">uid</th>	
+	                                <th scope="col">asset Sub Type</th>
+	                                <th scope="col">pal</th>	
+	                                <th scope="col">Attr Seq</th>
 	                                <th scope="col">Attr Name</th>
 	                                <th scope="col">Attr Values</th>	                                	                               
 	                             </tr>
@@ -330,3 +350,5 @@
 
 
 
+
+        	
