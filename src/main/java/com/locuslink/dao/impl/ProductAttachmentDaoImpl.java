@@ -85,7 +85,7 @@ public class ProductAttachmentDaoImpl extends DaoSupport implements ProductAttac
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
 				tt.traceTypeCode,
-				pt.producTypeDesc
+				pt.productTypeDesc
 						
 			)
 			from ProductAttachment attach

@@ -18,7 +18,7 @@ public interface UidProductAttributeListDao  {
 	
 	public List<UidProductAttributeList>  getAll();
 	
-	public List<UidProductAttributeListDTO>  getAllDTO ();
+	public List<UidProductAttributeListDTO>  getDtoByProductType (int iPkId, int siPkId, int ptPkId, int sptPkId);
 	
 	
 	public void save(UidProductAttributeList uidProductAttributeList);

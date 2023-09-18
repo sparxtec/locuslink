@@ -32,8 +32,8 @@ public class UidProductAttributeList extends Common {
     @Column(name="product_type_pkid", nullable = false)
     private int productTypePkId;
 
-    @Column(name="product_sub_type_pkid", nullable = false)
-    private int productSubTypePkId;
+    @Column(name="product_sub_type_pkid")
+    private Integer productSubTypePkId;
     
     @Column(name = "uid_gen_seq", nullable = false)
 	private int uidGenSeq; 

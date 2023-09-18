@@ -65,43 +65,56 @@ public class UidProductAttributeListDaoImpl extends DaoSupport implements UidPro
 	public UidProductAttributeListDTO getDtoById(int pkid) {	
 
 		return null;
-//		 UniqueAssetDTO dto = entityManager.createQuery("""
-//			select new com.locuslink.dto.UniqueAssetDTO(
-//				ua.uniqueAssetPkId,
-//				ua.uniqueAssetId,
-//		 		uc.universalCatalogId,		
-//		 		uc.ucatPkId,			 			 		
-//		 		mfg.name,		 							 										
-//				pt.productTypeCode,				
-//				uc.productName,					
-//				uc.productNumber,
-//				tt.traceTypeCode,
-//				ua.traceCode,						
-//				cus.customerName,
-//				uc.productDesc,
-//				pt.producTypeDesc,
-//				pa.attributesJson				
+	
+//		UidProductAttributeListDTO dto = entityManager.createQuery("""
+//			select new com.locuslink.dto.UidProductAttributeListDTO(
+//			
+//		 		i.industryPkId,  
+//		 		i.uid,   
+//		 		i.industryCode,
+//		 		i.industryDesc,
+//		 		 	
+//		 		si.subIndustryPkId,  
+//		 		si.uid,   
+//		 		si.subIndustryCode,
+//		 		si.subIndustryDesc,
+//		 		 				 
+//		 		pt.productTypePkId,
+//		 		pt.uid,			 				
+//		 		pt.productTypeCode,				 						
+//		 		pt.productTypeDesc,
+//		 		 				 										
+//		 		pst.productSubTypePkId,
+//		 		pst.uid,			 				
+//		 		pst.productSubTypeCode,				 						
+//		 		pst.productSubTypeDesc,
+//		 		
+//		 		upal.uidPalPkId,
+//		 		upal.uidGenSeq,			 				
+//		 		upal.uidPalName,				 						
+//		 		upal.uidPalAttributesJson		 										
 //			)
-//			from UniqueAsset ua	
-//				join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
-//		        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
-//		        join Customer cus on cus.customerPkId = ua.customerPkId		        
-//				join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
-//				join ProductType pt on pt.productTypePkId = uc.productTypePkId					
-//				left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
-//			where ua.uniqueAssetPkId = :pkid
-//									
-//			""", UniqueAssetDTO.class)
-//				 .setParameter("pkid", pkid)
-//				 .getSingleResult();				 
-//		 return dto;		
+//					from UidProductAttributeList upal			
+//			    left  join Industry i            on i.industryPkId = upal.industryPkId  
+//		 		left  join SubIndustry si       on si.subIndustryPkId = upal.subIndustryPkId 
+//		 		left  join ProductType pt       on pt.productTypePkId = upal.productTypePkId
+//		 		left join  ProductSubType pst  on pst.productSubTypePkId = upal.productSubTypePkId 				 			
+//				where upal.industryPkId = :iPkId  
+//				  and upal.subIndustryPkId =  :siPkId 
+//				  and upal.productTypePkId =  :ptPkId			
+//				  and (upal.productSubTypePkId = :sptPkId or upal.productSubTypePkId is null)  				 				
+//			""", UidProductAttributeListDTO.class)
+//				 .setParameter("iPkId", iPkId)
+//				 .getSingleResult();
+			
+			
 	}
 	
 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<UidProductAttributeListDTO>  getAllDTO() 	{	
+	public  List<UidProductAttributeListDTO>  getDtoByProductType(int iPkId, int siPkId, int ptPkId, int sptPkId) 	{	
 
 		 List <UidProductAttributeListDTO> dtoList = entityManager.createQuery("""
 			select new com.locuslink.dto.UidProductAttributeListDTO(
@@ -136,11 +149,15 @@ public class UidProductAttributeListDaoImpl extends DaoSupport implements UidPro
 		 		left  join SubIndustry si       on si.subIndustryPkId = upal.subIndustryPkId 
 		 		left  join ProductType pt       on pt.productTypePkId = upal.productTypePkId
 		 		left join  ProductSubType pst  on pst.productSubTypePkId = upal.productSubTypePkId 				 			
-				where upal.industryPkId = 8 
-				  and upal.subIndustryPkId =  3 
-				  and upal.productTypePkId =  5				
-				  and (upal.productSubTypePkId = 18 or upal.productSubTypePkId is null)  				 				
+				where upal.industryPkId = :iPkId  
+				  and upal.subIndustryPkId =  :siPkId 
+				  and upal.productTypePkId =  :ptPkId			
+				  and (upal.productSubTypePkId = :sptPkId or upal.productSubTypePkId is null)  				 				
 			""", UidProductAttributeListDTO.class)
+				 .setParameter("iPkId", iPkId)
+				 .setParameter("siPkId", siPkId)
+				 .setParameter("ptPkId", ptPkId)
+				 .setParameter("sptPkId", sptPkId)
 		.getResultList();	
 		 
 		 return dtoList;

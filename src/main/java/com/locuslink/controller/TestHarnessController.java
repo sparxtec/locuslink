@@ -357,8 +357,17 @@ public class TestHarnessController {
 		logger.debug("In getUidProductAttributes()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getUidProductAttributes");
 	  	
+		int industryPkId = request.getFieldAsInt("industryPkId");
+		int subIndustryPkId = request.getFieldAsInt("subIndustryPkId");
+		int productTypePkId = request.getFieldAsInt("productTypePkId");
+		int productSubTypePkId = request.getFieldAsInt("productSubTypePkId");
+		logger.debug(" industryPkId ->: " + industryPkId);
+		logger.debug(" subIndustryPkId ->: " + subIndustryPkId);
+		logger.debug(" productTypePkId ->: " + productTypePkId);
+		logger.debug(" productSubTypePkId ->: " + productSubTypePkId);
+		
 		// TESTING
-		List <UidProductAttributeListDTO> uidProductAttributeList_List =  uidProductAttributeListDao.getAllDTO();
+		List <UidProductAttributeListDTO> uidProductAttributeList_List =  uidProductAttributeListDao.getDtoByProductType(industryPkId,subIndustryPkId,productTypePkId,productSubTypePkId ) ;
 		if (uidProductAttributeList_List == null) {
 			logger.debug("  Note:  No Data Found......");
 		}

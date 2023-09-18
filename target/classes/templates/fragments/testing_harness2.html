@@ -84,26 +84,6 @@
      	    }	
 					
 			
-		    $("#load-dt").click(function () {
-		       // if ($('.table-responsive').hasClass("hidden")) {
-		        //    $('.table-responsive').removeClass('hidden');		         			    	 	
-      			var myData = {version:"1.0", clientId:"locuslink"};
-    			var innerData = {};    
-    			myData["data"] = innerData;	     			
- 			    $.ajax({ 			    	
-		           type: "POST",
-		           url: 'getUidProductAttributes',
-		           data: JSON.stringify(myData),
-		           contentType: 'application/json',
-		     	   dataType: "json",	     	        
-		           success: function (json) {	
-		               uidProductAttributeList_List =  JSON.parse( json.data.uidProductAttributeList_List ) ;				           
-		        	   attributeTable.clear().draw();
-		        	   attributeTable.rows.add(uidProductAttributeList_List).draw();			        
-				   },
-				   error: ajaxResponseError
-			    }); 		        
-			});			
 			
 			
 			
@@ -160,9 +140,36 @@
 				var wrkIdArray =  $('#comboSelectedProductSubType').val().trim().split("_");	
 				$('#selectedProductSubTypePkId').val( wrkIdArray[0] );			
 				$('#selectedProductSubTypeUid').val( wrkIdArray[1] );		
-				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);				
-				showSpinner();			
-				submitFormAjaxHTML('processProductSubTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);	
+				
+				// 9-15-2023  leave all the sub type in there, so we can pick thru them easily to see all the attribute lists in the data table
+	/* 			showSpinner();			
+				submitFormAjaxHTML('processProductSubTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	 */
+				
+				
+				
+	     		var myData = {version:"1.0", clientId:"locuslink"};
+	   			var innerData = {};      			    			
+	       		innerData["industryPkId"] = $('#selectedIndustryPkId').val();
+	            innerData["subIndustryPkId"] = $('#selectedSubIndustryPkId').val();
+	            innerData["productTypePkId"] = $('#selectedProductTypePkId').val();
+	            innerData["productSubTypePkId"] = $('#selectedProductSubTypePkId').val();
+	             	
+	   			myData["data"] = innerData;	     			
+				    $.ajax({ 			    	
+		           type: "POST",
+		           url: 'getUidProductAttributes',
+		           data: JSON.stringify(myData),
+		           contentType: 'application/json',
+		     	   dataType: "json",	     	        
+		           success: function (json) {	
+		               uidProductAttributeList_List =  JSON.parse( json.data.uidProductAttributeList_List ) ;				           
+		        	   attributeTable.clear().draw();
+		        	   attributeTable.rows.add(uidProductAttributeList_List).draw();			        
+				   },
+				   error: ajaxResponseError
+			    }); 
+				
 			});	
 			
 			
@@ -172,11 +179,49 @@
 	  		$('#attributeDataTable_filter input').keyup(function(){
 	  			attributeTable.search($(this).val()).draw() ;
 	 		});  
+	  	
 	  		
+	  		
+	  		
+	     	 // Button Clicks on the Data table
+	  	    $('#attributeDataTable tbody').on('click', 'button', function (e) {
+		    	//console.log(this);
+		    	
+		    	var url='';
+		    	var whatWasClicked=$(this).attr("id").split("_")[0];
+		    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
+		    		 	    				
+		        // set the FORM value so the controller can get it.				
+				//$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+		        
+		        	        
+		   	    e.preventDefault(); // ??	    	
+				showSpinner();
+		    		   	    	    
+				if(whatWasClicked==="detail") {
+
+	       			showSpinner();											 	
+	     
+	       			// 5-17-2023
+					submitFormAjaxHTML('initProductAttributeDetail', $("#uidGeneratorFormDTO").serialize(), "modalResponse");	       			       	       	       	       
+					
+	    		} else if(whatWasClicked==="xxxxx") {
+
+	       			       			       			
+	    		} 
+				 			
+		    }); 
+	     	 
+	     	 
 	  		
 			
 		});
 		
+
+	   	 function modalResponse(returnData) {	
+	  		hideSpinner();			 		
+	  		$('#productAttribute_ModalBody').html(returnData); 	 		 		 		
+	  	 }  
 		
 		function initCommonResponse(returnData) {	
 			//	console.log("initCommonResponse()");
@@ -268,9 +313,6 @@
 		</div>		
 		
 
-            <div class="text-center">
-                <button type="button" class="btn mb-1 btn-primary" id="load-dt">Click to load DataTable</button>
-            </div>
             
 
  	<section id="myworksoace_asset_section" class="de-component de-component--gray">  
@@ -326,9 +368,9 @@
 				</div> 
 									
 			<br><br>                               
-            <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+<!--             <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
                  <button type="button" id="previous" class="button button--continue">Previous</button>
-            </div>
+            </div> -->
 	                                                             
 			</div>
 		
@@ -337,6 +379,8 @@
 	</section>
 	
 	
+	<div id="productAttribute_ModalBody">	
+	</div>		
 	
 	
 </section>
