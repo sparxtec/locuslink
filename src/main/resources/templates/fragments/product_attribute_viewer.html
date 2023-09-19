@@ -10,6 +10,8 @@
 
 	$(document).ready(function() {	
 		
+		jQuery('#mydiv').css("overflow-y", "scroll");
+		
         //var b64 = $('input#b64Id').val();
         
         //var xlsJson = $('input#xlsJsonId').val();
@@ -74,43 +76,18 @@
 		          
 		          <br>
 				 <section class="de-component de-component--gray p-0 pdfobject-body">				
-				   	<div class="card-text-wrapper flexprop-none" style="height:640px">			  
-						<div style="height:640px;width:720px;margin: 0 auto" th:id="pdfContainerId_1" > 
-						
-						
-										<legend class="mb-3">Please select a reason for rejecting. (required)</legend>
-				<div class="d-flex flex-column mb-3">
-					<div class="custom-control custom-checkbox">
-                    	<input type="checkbox" class="custom-control-input" id="customCheck1">
-                        <label id="reject_NOTLEGIBLE" class="custom-control-label" for="customCheck1">Not Legible</label>
-                    </div>
-					<div class="custom-control custom-checkbox">
-                    	<input type="checkbox" class="custom-control-input" id="customCheck2">
-                        <label id="reject_MISSINGINFO" class="custom-control-label" for="customCheck2">Missing Information</label>
-                    </div>
-					<div class="custom-control custom-checkbox">
-                    	<input type="checkbox" class="custom-control-input" id="customCheck3">
-                        <label id="reject_INCORRECTDOC" class="custom-control-label" for="customCheck3">Incorrect quality document</label>
-                    </div>
-				</div>
-						
-					
-					
-<div th:each="keyName : ${uidPalAttributesJson_object.keys()}">
+				   	<div id="mydiv" class="card-text-wrapper flexprop-none" style="height:480px">			  
+						<div style="height:480px;width:640px;margin: 0 auto" th:id="pdfContainerId_1" > 
+												
+							<legend class="mb-3">Please select a kva Rating</legend>				
+							<div class="d-flex flex-column mb-3" th:each="keyName : ${uidPalAttributesJson_object.keys()}" >				
+								<div class="custom-control custom-checkbox">
+			                    	<input type="checkbox" class="custom-control-input" th:id=" 'UID:' + ${uidPalAttributesJson_object.get(keyName)}">
+			                        <label  class="custom-control-label" th:attr="for = 'UID:' + ${uidPalAttributesJson_object.get(keyName)} "  th:text= " ${keyName}" ></label>
+			                    </div>
+			                    
+							</div> 
 
-
-
- <label    th:text= " ${keyName} + ' : ' +${uidPalAttributesJson_object.get(keyName)}"  /> 
-
-
-
-
-
-  </div>
-    
-    	
-					
-						
 						</div>		
 					</div>   
 			      </section>
