@@ -9,25 +9,35 @@ public class UniqueAssetDTO {
 		
 	};
 		
-	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, String universalCatalogId,int ucatPkId, 			
-			               String manufacturerName, String productTypeCode, String productName, 
-			               String productNumber, String traceTypeCode, String traceCode,
-			               String customerName, String productDesc, String productTypeDesc,
+	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, 
+						   String universalCatalogId, int ucatPkId, 
+						   
+			               String manufacturerName, 
+			               String productTypeCode, 
+			               // String productName,    String productNumber, 
+			               String traceTypeCode, String traceCode,
+			               String customerName, 
+			               //String productDesc, 
+			               String productTypeDesc,
 			               String attributesJson	) {
 		
 		this.uniqueAssetPkId = uniqueAssetPkId; 
 		this.uniqueAssetId = uniqueAssetId; 
 		this.universalCatalogId = universalCatalogId;				
 		this.ucatPkId = ucatPkId;			
-		this.manufacturerName = manufacturerName;		
-		this.productTypeCode = productTypeCode;		
-		this.productName = productName;
-		this.productNumber = productNumber;		
+		this.manufacturerName = manufacturerName;	
+		
+		// 9-27-2023
+		this.productTypeCode = productTypeCode;	
+		
+//		this.productName = productName;
+//		this.productNumber = productNumber;		
+		
 		this.traceTypeCode = traceTypeCode;		
 		this.traceCode = traceCode;		
 		
 		this.customerName = customerName;
-		this.productDesc = productDesc;		
+	//	this.productDesc = productDesc;		
 		this.productTypeDesc = productTypeDesc;		
 		this.attributesJson = attributesJson;			
 	}
@@ -57,9 +67,9 @@ public class UniqueAssetDTO {
 	
 	// Universal Catalog
 	private String universalCatalogId;
-	private String productNumber;
-	private String productName;
-	private String productDesc;
+//	private String productNumber;
+//	private String productName;
+//	private String productDesc;
 		
 	// Product Type	
     private String productTypeCode;

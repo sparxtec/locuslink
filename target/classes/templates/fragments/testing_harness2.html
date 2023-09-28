@@ -76,6 +76,7 @@
                  
                  { data: "uidPalPkId" },        
                  { data: "uidGenSeq" },
+               //  { data: "uidSelected" },                 
                  { data: "uidPalName" },
                  { data: "uidPalAttributesJson" }
             	 ],            	        		
@@ -85,7 +86,7 @@
 					
 			
 			
-			
+			$('#uidGenString').val("x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15.x16.x17.x18.x19.x20.x21.x22.x23.x24.x25");	
 			
 			$('#comboSelectedIndustry').val( $('#selectedIndustryPkId').val().trim() + '_' + $('#selectedIndustryUid').val().trim() );	
 			$('#comboSelectedSubIndustry').val( $('#selectedSubIndustryPkId').val().trim()  + '_' +$('#selectedSubIndustryUid').val().trim()   );	
@@ -266,7 +267,7 @@
 	    </div>
 
        <label class="d-inline-block mb-3" > Generated UID : 
-         <input  style="width:400px" id="uidGenString" name="uidGenString" th:value="${uidGeneratorFormDTO.uidGenString}" readonly> 
+         <input  style="width:640px" id="uidGenString" name="uidGenString" th:value="${uidGeneratorFormDTO.uidGenString}" readonly> 
        </label>
 					
 		<br>
@@ -359,6 +360,7 @@
 	                                <th scope="col">asset Sub Type</th>
 	                                <th scope="col">pal</th>	
 	                                <th scope="col">Attr Seq</th>
+	                         <!--        <th scope="col">UID Selected</th> -->
 	                                <th scope="col">Attr Name</th>
 	                                <th scope="col">Attr Values</th>	                                	                               
 	                             </tr>

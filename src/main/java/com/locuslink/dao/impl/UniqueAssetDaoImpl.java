@@ -64,29 +64,34 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	@Override
 	public UniqueAssetDTO getDtoById(int pkid) {	
 
+		//join ProductType pt on pt.productTypePkId = uc.productTypePkId	
+
+		//pt.productTypeDesc,
+		
 		 UniqueAssetDTO dto = entityManager.createQuery("""
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,		
-		 		uc.ucatPkId,			 			 		
+		 		uc.universalCatalogId,	
+		 		uc.ucatPkId,				 			 			 	
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
-				uc.productName,					
-				uc.productNumber,
 				tt.traceTypeCode,
 				ua.traceCode,						
-				cus.customerName,
-				uc.productDesc,
-				pt.productTypeDesc,
-				pa.attributesJson				
+				cus.customerName,				
+				pt.productTypeDesc,				
+				pa.attributesJson					
 			)
 			from UniqueAsset ua	
 				join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
 		        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
 		        join Customer cus on cus.customerPkId = ua.customerPkId		        
 				join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
-				join ProductType pt on pt.productTypePkId = uc.productTypePkId					
+				
+				join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId				
+			    join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId				
+			    join ProductType pt on pt.productTypePkId = upal.productTypePkId	
+														
 				left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
 			where ua.uniqueAssetPkId = :pkid
 									
@@ -102,33 +107,42 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	@Override
 	public  List<UniqueAssetDTO>  getAllDTO() 	{	
 		
+//		uc.productName,					
+//		uc.productNumber,
+		//uc.productDesc,
+		
+		//pt.productTypeCode,	
+		//pt.productTypeDesc,
+		//uc.ucatPkId,	
+		
+		//join ProductType pt on pt.productTypePkId = uc.productTypePkId		
+		
 		 List <UniqueAssetDTO> dtoList = entityManager.createQuery("""
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,		
-		 		
-		 	    uc.ucatPkId,	
-		 			 				 		
+		 		uc.universalCatalogId,	
+		 		uc.ucatPkId,				 			 			 		
 		 		mfg.name,		 							 										
 				pt.productTypeCode,				
-				uc.productName,					
-				uc.productNumber,
 				tt.traceTypeCode,
-				ua.traceCode,
-				
-				cus.customerName,
-				uc.productDesc,
-				pt.productTypeDesc,
+				ua.traceCode,						
+				cus.customerName,				
+				pt.productTypeDesc,				
 				pa.attributesJson				
 			)
 			from UniqueAsset ua
 			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
 	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
 	        join Customer cus on cus.customerPkId = ua.customerPkId		        
-			join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
-			join ProductType pt on pt.productTypePkId = uc.productTypePkId					
-			left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId		
+			join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
+			
+			join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId				
+			join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId				
+			join ProductType pt on pt.productTypePkId = upal.productTypePkId							
+																											
+			left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId	
+																
 			""", UniqueAssetDTO.class)
 		.getResultList();	
 		 

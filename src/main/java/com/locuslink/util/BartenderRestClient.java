@@ -117,15 +117,23 @@ public class BartenderRestClient {
 				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniversalCatalogId().trim());	
 				
 				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());				
-				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
-				jsonAttributes = new JSONObject(productAttribute.getAttributesJson());	
+				ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());
+				if (productAttribute != null) {
+					jsonAttributes = new JSONObject(productAttribute.getAttributesJson());	
+					// put serial number in lot code
+					jsonNamedDataSources.put("lot_code", jsonAttributes.get("serial_number"));				
+					jsonNamedDataSources.put("reel_id", jsonAttributes.get("reel_id"));
+					jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));	
+				} else {							
+					// put serial number in lot code
+					jsonNamedDataSources.put("lot_code", "serial_na");				
+					jsonNamedDataSources.put("reel_id", "reel_na");
+					jsonNamedDataSources.put("customer_part_number", "part_na");	
+					
+				}
+			
 				
-				// put serial number in lot code
-				//jsonNamedDataSources.put("lot_code", jsonAttributes.get("lot_code"));
-				jsonNamedDataSources.put("lot_code", jsonAttributes.get("serial_number"));
-				
-				jsonNamedDataSources.put("reel_id", jsonAttributes.get("reel_id"));
-				jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));								
+							
 				
 			} catch (JSONException e) {
 				e.printStackTrace();

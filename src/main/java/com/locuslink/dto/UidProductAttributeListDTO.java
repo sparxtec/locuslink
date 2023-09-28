@@ -13,7 +13,7 @@ public class UidProductAttributeListDTO {
 			 int subIndustryPkId, String subIndustryUid, String subIndustryCode, String subIndustryDesc,
 			 int productTypePkId, String productTypeUid, String productTypeCode, String productTypeDesc,			 
 			 Integer productSubTypePkId, String productSubTypeUid, String productSubTypeCode, String productSubTypeDesc,			 
-			 Integer uidPalPkId, int uidGenSeq, String uidPalName, String uidPalAttributesJson	) {	
+			 Integer uidPalPkId, int uidGenSeq,  String uidPalName, String uidPalAttributesJson	) {	
 		
 		this.industryPkId = industryPkId; this.industryUid = industryUid; 
 		this.industryCode = industryCode;	this.industryDesc = industryDesc;		
@@ -28,6 +28,7 @@ public class UidProductAttributeListDTO {
 		this.productSubTypeCode = productSubTypeCode;	this.productSubTypeDesc = productSubTypeDesc;
 			
 		this.uidPalPkId = uidPalPkId; this.uidGenSeq = uidGenSeq; 
+		//this.uidSelected = uidSelected; 
 		this.uidPalName = uidPalName;	this.uidPalAttributesJson = uidPalAttributesJson;
 	}
 
@@ -58,6 +59,7 @@ public class UidProductAttributeListDTO {
 	// Sub Asset - Product Sub Type
     private Integer uidPalPkId;
     private int uidGenSeq;
+   // private Integer uidSelected;
     private String uidPalName;
 	private String uidPalAttributesJson;
 	

@@ -140,7 +140,8 @@ public class UidProductAttributeListDaoImpl extends DaoSupport implements UidPro
 		 		pst.productSubTypeDesc,
 		 		
 		 		upal.uidPalPkId,
-		 		upal.uidGenSeq,			 				
+		 		upal.uidGenSeq,		
+	 				
 		 		upal.uidPalName,				 						
 		 		upal.uidPalAttributesJson		 										
 			)

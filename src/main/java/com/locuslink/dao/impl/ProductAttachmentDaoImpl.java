@@ -90,11 +90,16 @@ public class ProductAttachmentDaoImpl extends DaoSupport implements ProductAttac
 			)
 			from ProductAttachment attach
 			join DocumentType doc on doc.docTypePkId = attach.docTypePkId							
-			join UniqueAsset ua on ua.uniqueAssetPkId = attach.uniqueAssetPkId			
-			join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId																																			
+			join UniqueAsset ua on ua.uniqueAssetPkId = attach.uniqueAssetPkId																																							
 			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
-	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId				
-			join ProductType pt on pt.productTypePkId = uc.productTypePkId	
+	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
+	        
+	        join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
+	        
+			join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId				
+			join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId				
+			join ProductType pt on pt.productTypePkId = upal.productTypePkId	
+				
 			
 			where attach.uniqueAssetPkId = :uniqueAssetPkId																
 					
