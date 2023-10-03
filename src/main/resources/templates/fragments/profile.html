@@ -13,6 +13,21 @@
 				$('#dbUtility').show();
 			} */
 
+			
+			
+			$('#user_profile_edit_users').on('click',function(e) {			
+				showSpinner();	
+				submitFormAjaxHTML('editUser', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+				 
+
+			$('#user_profile_edit_roles').off('click').on('click',function(e) {					
+				e.preventDefault();
+				showSpinner();	
+				submitFormAjaxHTML('editRoles', $( "#docUploadFormDTO" ).serialize(), "initCommonResponse");				
+			});
+			
+			
 		});
 
 		function initCommonResponse(returnData) {
@@ -66,6 +81,55 @@
 						</div>
 					</div>
 				</div>
+
+
+
+
+			<div  id="Manageusers" class="mt-5">
+			    
+			    <div class="nav-card-body">
+	   				<h3 class="nav-card-body__title" style="text-align:center"><span>Manage Users & Access</span></h3>
+				</div>
+				<br>
+			    
+			    		
+		 		<div class="de-component__footer row">
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Users</span></div>
+							<div class="card-body h-25">
+								<p>Add new users and Manage existing users</p>
+								<a id="user_profile_edit_users" href=""  class="text-left clearfix" oncontextmenu="return false;">Manage Users</a>
+	<!-- 							<a href="" class="text-left clearfix" data-toggle="modal" data-target="#addUserModal" id="addUserlink">Add User</a> -->
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Access</span></div>
+							<div class="card-body h-25">
+								<p>Adjust roles and permissions for all users.</p>
+								<a href="" id="user_profile_edit_roles" class="text-left clearfix">Manage User Roles</a>
+							</div>
+						</div>
+					</div>
+				</div>	
+								
+					<div th:replace="fragments/addUser :: addUser"></div>	
+					<!-- <div th:replace="fragments/editUser :: editUser"></div> -->
+					<!-- Error Messaging -->    				
+				</div>
+
+
+
+
+
+
+
+
+
+
 
 			</div>
 

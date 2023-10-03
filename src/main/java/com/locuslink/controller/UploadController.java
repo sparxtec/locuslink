@@ -301,11 +301,11 @@ public class UploadController {
             S3ObjectInputStream s3is = s3Object.getObjectContent();           	     	              
                         
             // TODO 6-12-2023
-            if (tagProductType.toUpperCase().equals("STEEL")) {            	
+            if (tagProductType.toUpperCase().contains("STEEL")) {            	
             	processgetStagedSteel(productObjectList,  tagFileName, s3is );            	
-            } else if (tagProductType.toUpperCase().equals("CABLE")) {            	
+            } else if (tagProductType.toUpperCase().contains("CABLE")) {            	
             	processgetStagedCable(productObjectList,  tagFileName, s3is );   
-            } else if (tagProductType.toUpperCase().equals("SPLICE")) {            	
+            } else if (tagProductType.toUpperCase().contains("SPLICE")) {            	
             	processgetStagedSplice(productObjectList,  tagFileName, s3is );            	
             } else {
             	logger.error("Error: The product type for the file was not found, cant process the STAGED FILE, delet it from AWS S3 Bucket.");
@@ -342,7 +342,7 @@ public class UploadController {
             
             boolean notFinished = true;		            
         	while (rowIterator.hasNext() && notFinished) {	        	
-				row = rowIterator.next();												
+				row = rowIterator.next();									 			
 				int len = row.getLastCellNum();
 
 				if ( row.getCell(0) != null ) {						

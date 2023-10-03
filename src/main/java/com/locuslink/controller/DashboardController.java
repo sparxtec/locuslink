@@ -73,15 +73,7 @@ public class DashboardController {
 	}
 
 
-	@PostMapping(value = "/initProfile")
-	public String initProfile (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initProfile()...");
 
-		model.addAttribute("appLogoutUrl",appLogoutUrl);
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-		return "fragments/profile";
-	}
 
 
 }

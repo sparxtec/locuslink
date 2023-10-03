@@ -1,4 +1,7 @@
 
+
+
+
 INSERT INTO locuslink.industry (industry_pkid, uid, industry_code, industry_desc, add_by, add_ts, update_by, update_ts)
    VALUES(1, 'NG', '1', 'Natural Gas', 'csparks', '2023-02-01', NULL, NULL);
 
