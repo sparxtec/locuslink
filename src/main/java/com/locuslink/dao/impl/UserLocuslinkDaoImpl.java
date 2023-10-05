@@ -10,6 +10,9 @@ package com.locuslink.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
@@ -24,14 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.locuslink.dao.UserLocuslinkDao;
+import com.locuslink.dto.UniqueAssetDTO;
+import com.locuslink.dto.UserDTO;
 import com.locuslink.model.UserLocuslink;
 
-/**
- * This is the DAO implementation class for UserLocuslink.
- *  
- * @author C.Sparks
- * @since 1.0.0 - December 31, 2022 - Initial version
- */
+
 @Transactional
 @Repository(UserLocuslinkDao.BEAN_NAME)
 public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao, ApplicationContextAware {
@@ -39,10 +39,9 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-    /**
-     * Default constructor. Provides ability to specify the session factory in the Application Context file
-     * as a reference.
-     */
+	@PersistenceContext
+	EntityManager entityManager;
+	
     public UserLocuslinkDaoImpl() {
     }
     
@@ -54,6 +53,8 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 	}
 	
+	
+	
 	@Override
 	public UserLocuslink getById(int pkid) {	
 		return this.sessionFactory.getCurrentSession().get(UserLocuslink.class, pkid);				
@@ -64,8 +65,8 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	@Override
 	public UserLocuslink getUserByLanId(String lanId) {
 		UserLocuslink usrData = null;
-		DetachedCriteria criteria= DetachedCriteria.forClass(UserLocuslink.class, "usrTrace");
-		criteria.add(Restrictions.eq("usrTrace.loginId",lanId));
+		DetachedCriteria criteria= DetachedCriteria.forClass(UserLocuslink.class, "userLocuslink");
+		criteria.add(Restrictions.eq("userLocuslink.loginId",lanId));
 		List<UserLocuslink> usrs = (List<UserLocuslink>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();
 		if (!CollectionUtils.isEmpty(usrs)) {
 			usrData = usrs.get(0);
@@ -73,29 +74,56 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 		return usrData;
 	}
 	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<UserLocuslink>  getAll() {			
-		
-		DetachedCriteria criteria= DetachedCriteria.forClass(UserLocuslink.class, "usrTrace");  		
-		//criteria.add(Restrictions.ne("usrTrace.firstName", TraceConstants.defaultTemplateUserName));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+	public  List<UserDTO>  getAllDTO() 	{	
 
+		 List <UserDTO> dtoList = entityManager.createQuery("""
+			select new com.locuslink.dto.UserDTO(			
+				ul.userLocusLinkPkId,
+				ul.userTypeCode,
+		 		ul.loginName,	
+		 		ul.firstName,				 			 			 		
+		 		ul.lastNameBusName,		 							 										
+				ul.activeFlag						
+			)
+			from UserLocuslink ul
+															
+			""", UserDTO.class)
+		.getResultList();	
+		 
+		 return dtoList;
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public  List<UserLocuslink>  getAll() {					
+		DetachedCriteria criteria= DetachedCriteria.forClass(UserLocuslink.class, "userLocuslink");  		
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
 		return (List<UserLocuslink>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
 	}
 	
 
+	
+	
+	@Override
+	public void save(UserLocuslink userLocuslink) {
+		this.sessionFactory.getCurrentSession().saveOrUpdate(userLocuslink);
+	}	
 
 	@Override
-	public void saveOrUpdate(UserLocuslink newProfile) {
-		// TODO Auto-generated method stub
-		this.sessionFactory.getCurrentSession().saveOrUpdate(newProfile);
+	public void saveOrUpdate(UserLocuslink userLocuslink) {
+		this.sessionFactory.getCurrentSession().saveOrUpdate(userLocuslink);
 	}	
 	
 	@Override
-	public void delete(UserLocuslink UserLocuslink) {
-		// TODO Auto-generated method stub
-		this.sessionFactory.getCurrentSession().delete(UserLocuslink);
+	public void delete(UserLocuslink userLocuslink) {
+		this.sessionFactory.getCurrentSession().delete(userLocuslink);
 	}
 
 	

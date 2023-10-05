@@ -102,7 +102,7 @@ table.dataTable thead th {
 			});
 
 		    
-		    // 04-28-2023 DEMO 
+/* 		    // 04-28-2023 DEMO 
 	        var viewAssetFlag = $('input#cameFromLocusViewBarCodeViewer').val();
 			//console.log (viewAssetFlag);
 			if (viewAssetFlag === 'yes') {
@@ -111,7 +111,7 @@ table.dataTable thead th {
 				submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
 				$('#buttonHeaderMyWorkspaceId').addClass('is-current');		
-			}
+			} */
 		    
 		    
 		    
@@ -140,11 +140,11 @@ table.dataTable thead th {
 			
 			
 		    //  Testing Harness
-			$('#buttonHeaderTestHarnessId').click(function() {
+			$('#buttonUidGenerationId').click(function() {
 				showSpinner();
 				submitFormAjaxHTML('initTestHarness', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 				$('.is-current').removeClass('is-current');
-				$('#buttonHeaderBarcodeId').addClass('is-current');	
+				$('#buttonUidGenerationId').addClass('is-current');	
 			});
 			
 
@@ -285,8 +285,8 @@ $('#accountLogout').click(function() {
 
 	    <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post" class="w-100">
 
-<!-- redirect to viewer when url clicked on the printer barcode -->
-		     <input type="hidden" th:value="${cameFromLocusViewBarCodeViewer}" name="cameFromLocusViewBarCodeViewer"  id="cameFromLocusViewBarCodeViewer" />
+			<!-- redirect to viewer when url clicked on the printer barcode -->
+		   <!--   <input type="hidden" th:value="${cameFromLocusViewBarCodeViewer}" name="cameFromLocusViewBarCodeViewer"  id="cameFromLocusViewBarCodeViewer" /> -->
 
 
 		     <input type="hidden" th:value="${appLogoutUrl}" name="appLogoutUrl"  id="appLogoutUrl" />
@@ -350,12 +350,12 @@ $('#accountLogout').click(function() {
 
 
 							 	<li sec:authorize="hasAnyRole('LOCUSLINK-ADMIN')"    class="nav-cards__item"  >
-									<a id="buttonBarcodeId"  href="#" target="_self" class="nav-card nav-card--big-icon">
+									<a id="buttonUidGenerationId"  href="#" target="_self" class="nav-card nav-card--big-icon">
 										<picture class="nav-card-media">
 											<img src="images/electron/icons/icon-three-gears-ll.jpeg" alt="three gears">
 										</picture>
 										<div class="nav-card-body">
-									    	<h3 class="nav-card-body__title text-nowrap"><span>Barcode</span></h3>
+									    	<h3 class="nav-card-body__title text-nowrap"><span>UID Generation</span></h3>
 										</div>
 									</a>
 								</li>

@@ -24,6 +24,7 @@ import com.locuslink.dao.UserLocuslinkDao;
 import com.locuslink.dao.UserMembershipDao;
 import com.locuslink.dao.UserRoleTypeDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.UserDTO;
 import com.locuslink.model.UserLocuslink;
 import com.locuslink.model.UserMembership;
 
@@ -68,6 +69,45 @@ public class ProfileController {
 	}
 
     
+	
+	@PostMapping(value = "/getAllUser", produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	
+		logger.debug("In getAllUser()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "Trace", "getAllUser");
+
+		List<UserDTO> userDTOList =userLocuslinkDao.getAllDTO();
+			
+		response.setField("userList",userDTOList);
+		return response;
+	}
+	
+	
+	
+	@PostMapping(value = "/editUser")
+	public String editUser (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+//	@RequestMapping(value = "/editUser")	
+   // public String editUser (Model model, HttpSession session) {
+		logger.debug("In editUser()");
+		
+//		UserLocuslink user=(UserLocuslink)session.getAttribute ("userLocuslink");
+//		 
+//		 if (user == null) {
+//				logger.debug(" userLocuslink in session does not exist");
+//				return "login";
+//			} 
+//		
+//		 logger.debug(user.getLoginId());
+//
+//		List<UserRoleType> roleList=userRoleTypeDao.getAllUserRoles();
+//		model.addAttribute("roleList",roleList);
+		  
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	
+		return "fragments/edit_user";
+      
+    }	
 
 	
 	
@@ -113,25 +153,8 @@ public class ProfileController {
    
     }
 	
-	@RequestMapping(value = "/editUser")	
-    public String editUser (Model model, HttpSession session) {
-		logger.debug("In editUser()");
-		
-//		UserLocuslink user=(UserLocuslink)session.getAttribute ("userLocuslink");
-//		 
-//		 if (user == null) {
-//				logger.debug(" userLocuslink in session does not exist");
-//				return "login";
-//			} 
-//		
-//		 logger.debug(user.getLoginId());
-//
-//		List<UserRoleType> roleList=userRoleTypeDao.getAllUserRoles();
-//		model.addAttribute("roleList",roleList);
-		  
-		return "fragments/editUser";
-      
-    }
+	
+
     
     
 	@RequestMapping(value = "/editRoles")	
@@ -141,20 +164,7 @@ public class ProfileController {
     }
 	
 	
-	@RequestMapping(value = "/getAllUser", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
-	
-		logger.debug("In getAllUser()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "Trace", "getAllUser");
-//	 
-//		List<UserLocuslink> userLocuslinkList =userLocuslinkService.getAll();
-//		List<UserFormDTO> userFormDtoList = new ArrayList<UserFormDTO>();	
-//	
-//		getUserList(userLocuslinkList,userFormDtoList);
-//		
-//		response.setField("userList",userFormDtoList);
-		return response;
-	}
+
 	 
 	 
 	@RequestMapping(value = "/getAllActiveUsers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -379,94 +389,6 @@ public class ProfileController {
 		    
 	}
 	
-	public void getUserList (List<UserLocuslink> userLocuslinkList,List<DashboardFormDTO> userFormDtoList) {
-		
-//		for (UserLocuslink userLocuslink:userLocuslinkList) {
-//			
-//			UserFormDTO UserFormDTO = new UserFormDTO();
-//			
-//			UserMembership userMembership = userMembershipDao.getByUser(userLocuslink);
-//			
-//			if (userLocuslink.getExternalContractorCompanyName() == null || userLocuslink.getExternalContractorCompanyName().isEmpty()) {
-//
-//			} else {
-//
-//			}
-//			
-//			if (userLocuslink.getDiscipline().getDescription() == null || userLocuslink.getDiscipline().getDescription().isEmpty()) {
-//	
-//			} else {
-//				UserFormDTO.setDiscipline(userLocuslink.getDiscipline().getDescription());
-//			}
-//			
-//			if (userLocuslink.getFirstName() == null || userLocuslink.getFirstName().isEmpty()) {
-//			
-//			} else {
-//				UserFormDTO.setFirstName(userLocuslink.getFirstName());
-//			}
-//			
-//			if (userLocuslink.getLastName() == null || userLocuslink.getLastName().isEmpty()) {
-//			
-//			} else {
-//				UserFormDTO.setLastName(userLocuslink.getLastName());
-//				if (StringUtils.equalsIgnoreCase("guest", userLocuslink.getFirstName())
-//						&& StringUtils.equalsIgnoreCase("guest", userLocuslink.getLastName())) {
-//					UserFormDTO.setLastName(userLocuslink.getLoginId());
-//					userLocuslink.setLastName(userLocuslink.getLoginId());
-//				}
-//			}
-//			
-//			if (userLocuslink.getLoginId() == null || userLocuslink.getLoginId().isEmpty()) {
-//			
-//			} else {
-//				UserFormDTO.setLanId(userLocuslink.getLoginId());
-//			}
-//			
-//			if (userLocuslink.getRegion().getDescription() == null || userLocuslink.getRegion().getDescription().isEmpty()) {
-//			
-//			} else {
-//				UserFormDTO.setRegion(userLocuslink.getRegion().getDescription());
-//			}
-//			
-//			if (userLocuslink.getRegion().getState() == null || userLocuslink.getRegion().getState().isEmpty()) {
-//			
-//			} else {
-//				UserFormDTO.setState(userLocuslink.getRegion().getState());
-//			}
-//			
-//			if (userLocuslink.getActiveFlag() == ' ' || userLocuslink.getActiveFlag() == 0) {
-//				
-//			} else {
-//				UserFormDTO.setActiveStatus(userLocuslink.getActiveFlag());
-//			}
-//
-//			if (userLocuslink.getFirstName() == null && userLocuslink.getLastName() == null) {
-//			
-//			} else if (userLocuslink.getFirstName() == null) {
-//				UserFormDTO.setFullName(userLocuslink.getFirstName());
-//			} else if (userLocuslink.getLastName() == null) {
-//				UserFormDTO.setFullName(userLocuslink.getLastName());
-//			} else {
-//				UserFormDTO.setFullName(userLocuslink.getFirstName().concat(" ").concat(userLocuslink.getLastName()));
-//			}
-//
-//			if (userMembership.getUserRoleType().getDescription() == null || userMembership.getUserRoleType().getDescription().isEmpty()) {
-//
-//			} else {
-//				UserFormDTO.setRole(userMembership.getUserRoleType().getDescription());
-//			}
-//			
-//			if(userMembership.getContractor() == null) {
-//				UserFormDTO.setContractor("Not Assigned");
-//			} else {
-//				UserFormDTO.setContractor(userMembership.getContractor().getContractorName());
-//			}
-//			
-//			UserFormDTO.setUserMembershipId(userMembership.getUserMembershipId());
-//			UserFormDTO.setUsertraceId(userLocuslink.getUserLocuslinkId());
-//			userFormDtoList.add(UserFormDTO);
-//		}
-		
-	}
+	
  
 }

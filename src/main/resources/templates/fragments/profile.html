@@ -15,16 +15,16 @@
 
 			
 			
-			$('#user_profile_edit_users').on('click',function(e) {			
+			$('#manageUsersButtonId').on('click',function(e) {			
 				showSpinner();	
 				submitFormAjaxHTML('editUser', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 				 
 
-			$('#user_profile_edit_roles').off('click').on('click',function(e) {					
+			$('#manageUserRolesButtonId').on('click',function(e) {					
 				e.preventDefault();
 				showSpinner();	
-				submitFormAjaxHTML('editRoles', $( "#docUploadFormDTO" ).serialize(), "initCommonResponse");				
+				submitFormAjaxHTML('editRoles', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");				
 			});
 			
 			
@@ -99,7 +99,12 @@
 							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Users</span></div>
 							<div class="card-body h-25">
 								<p>Add new users and Manage existing users</p>
-								<a id="user_profile_edit_users" href=""  class="text-left clearfix" oncontextmenu="return false;">Manage Users</a>
+								
+								<button th:id="manageUsersButtonId" data-toggle="tooltip" data-placement="left" title="VManage Users" 
+									   class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Manage Users
+								</button>
+																		
+						<!-- 		<a id="user_profile_edit_users" href=""  class="text-left clearfix">Manage Users</a> -->
 	<!-- 							<a href="" class="text-left clearfix" data-toggle="modal" data-target="#addUserModal" id="addUserlink">Add User</a> -->
 							</div>
 						</div>
@@ -110,19 +115,24 @@
 							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Access</span></div>
 							<div class="card-body h-25">
 								<p>Adjust roles and permissions for all users.</p>
-								<a href="" id="user_profile_edit_roles" class="text-left clearfix">Manage User Roles</a>
+								
+								<button th:id="manageUserRolesButtonId" data-toggle="tooltip" data-placement="left" title="Manage User Roles" 
+									   class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Manage User Roles
+								</button>
+								
+<!-- 								<a href="" id="user_profile_edit_roles" class="text-left clearfix">Manage User Roles</a> -->
 							</div>
 						</div>
 					</div>
 				</div>	
 								
-					<div th:replace="fragments/addUser :: addUser"></div>	
-					<!-- <div th:replace="fragments/editUser :: editUser"></div> -->
-					<!-- Error Messaging -->    				
+<!-- 				<div th:replace="fragments/add_user :: addUser"></div>	
+					<div th:replace="fragments/editUser :: editUser"></div>
+					Error Messaging    				
 				</div>
 
 
-
+ -->
 
 
 
