@@ -110,7 +110,7 @@ public class ProfileController {
     }	
 
 	
-	
+// TODO
 	
 	@RequestMapping(value = "/addUser" , method = {RequestMethod.POST,RequestMethod.GET})
     public @ResponseBody String addUser (@ModelAttribute(name="dashboardFormDTO") DashboardFormDTO dashboardFormDTO,Model model, HttpSession session) {
@@ -157,29 +157,38 @@ public class ProfileController {
 
     
     
+
+	// 10-6-2023
 	@RequestMapping(value = "/editRoles")	
     public String editRoles (Model model, HttpSession session) {
 		logger.debug("In edit_roles()");
-        return "fragments/editRoles";
+        return "fragments/edit_roles";
     }
+	
 	
 	
 
 	 
-	 
+	// 10-6-23 
 	@RequestMapping(value = "/getAllActiveUsers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse getAllActiveUsers(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
 		logger.debug("In getAllActiveUsers()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "Trace", "getAllUser");
 		
-//		
+		
+		// 10-6-2023 replace with a DTO 
+		List<UserDTO> userDTOList =userLocuslinkDao.getAllDTO();
+		
+		response.setField("userList",userDTOList);
+		
+	
 //		List<UserLocuslink> userLocuslinkList =userLocuslinkService.getAllActiveUsers();
 //		List<DashboardFormDTO> dashboardFormDTOList = new ArrayList<UserFormDTO>();
 //	
 //		getUserList(userLocuslinkList,userFormDtoList);
-//		
-//		response.setField("userList",userFormDtoList);
+		
+		response.setField("userList",userDTOList);
 		
 		return response;
 	 }
