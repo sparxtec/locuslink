@@ -5,107 +5,89 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>	
  	
 
-
-
-
 </head>
  <link href="css/de-styles.css" rel="stylesheet">
 <body>
 <div th:fragment="addUser">
 
 <script>	
-		$(document).ready(function() {	
-			//To get btn id for refreshing table from edit user screen
-			var btnId;
-			var newAddUser;
+	$(document).ready(function() {	
+
+		var btnId;
+		var newAddUser;
+			
 		$('#addEditUserlink').click(function() {
-    //alert(this.id);
-    btnId=this.id;
-    
-      });
-			 $('#addUser').off('click').on('click',function(event) {	
-				 console.log("event is " +event.target.id);
-				 firstName=$('#firstName').val();
-				lastName=$('#lastName').val();
-				region=$('#region').val();
-				role=$('#role').val();
-				company=$('#company').val();
-				discipline=$('#discipline').val();
-				lanId=$('#lanId').val();
-				userId=$('#userId').val();
-				  $('#addUserMessage').text("");
-				  if($.trim($('#firstName').val())=="")
-					{
-					console.log( $('#firstName').val());
-					$('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>First Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					//$('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>First Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					}
-				else if ($.trim($('#lastName').val())=="")
-					{
-					$('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>Last Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					}
-				else if ($.trim($('#lanId').val())=="")
-					{
-					$('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>User Id required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					}
-				else
-					{
-					$('#addUserMessage').text("");
-	 			 
-	 				  $("#addUser").attr("disabled", true);
-	 				 //	showSpinner
-	 				 $('#spinnerModal').appendTo("body").modal('show');
-	 				$.ajax({
-	 			        type: "POST",
-	 			        url: "addUser",
-	 			        data:{firstName:firstName,lastName:lastName,region:region,role:role,company:company,lanId:lanId,discipline:discipline},
-	 			        success: function(response){
-	 			        	 console.log(response);
-	 	                      
-	 	                      $("#addUser").attr("disabled", false);
-	 	                    	$("#addUserModal").hide();
-	 	                    	 $("div").remove( ".modal-backdrop");
-	 	                      if(response=="Success")
-	 	                    	  {
-	 	                    	  console.log("inside success");
-	 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>User Added successfully</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
-	 	                    			$('.de-alert-success').delay( 2000 ).fadeOut( 500, function() { 
-	 	   								$(this).remove();							
-	 	   							} );
-	 	                    	 if($('#editUserDataTable').length)
-	 	                    		 {
-	 	                    		 console.log(btnId);
-	 	                    		 $('#editUserDataTable').DataTable().ajax.reload();
-	 	                    		 }
-	 	      					
-	 	                    	  }
-	 	                      else
-	 	                    	  {
-	 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-failure de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>" + response + "</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
-	 	                    	$('.de-alert-failure').delay( 2000 ).fadeOut( 500, function() { 
-									$(this).remove();							
-								} );
-	 	                    	  }
-	 	                      //hideSpinner
-	 	             		 $('#spinnerModal').appendTo("body").modal('hide');
-	 			        },
-	 					error: ajaxResponseError, 
-	 					complete: function() {   
-	 						hideSpinner();
-	 			         }
-	 				});
-	 				
-// 	 				submitFormAjaxHTML('addUser', $( "#materialMgmtFormDTO" ).serialize(), "commonResponse");
-// 		 			//$.post("addUser", $("#userFormDTO").serialize() ,function(response)
-// 							 {
-                     
-                      
-// 							 }); 
-					}
-				  
-				  
-				 
-				  });
+		    //alert(this.id);
+		    btnId=this.id;		   
+		});
+		
+		 $('#addUser').off('click').on('click',function(event) {	
+			 console.log("event is " +event.target.id);
+			 firstName=$('#firstName').val();
+			 lastName=$('#lastName').val();
+			 region=$('#region').val();
+			 role=$('#role').val();
+			 company=$('#company').val();
+			 discipline=$('#discipline').val();
+			 lanId=$('#lanId').val();
+			 userId=$('#userId').val();
+			  $('#addUserMessage').text("");
+			  
+			  if($.trim($('#firstName').val())=="")	{
+				 console.log( $('#firstName').val());
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>First Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else if ($.trim($('#lastName').val())=="") 	{
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>Last Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else if ($.trim($('#lanId').val())=="")	{
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>User Id required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else {
+				 $('#addUserMessage').text(""); 			 
+ 				 $("#addUser").attr("disabled", true);
+ 				 $('#spinnerModal').appendTo("body").modal('show');
+ 				 
+ 				 $.ajax({
+ 			        type: "POST",
+ 			        url: "addUser",
+ 			        data:{firstName:firstName,lastName:lastName,region:region,role:role,company:company,lanId:lanId,discipline:discipline},
+ 			        success: function(response){
+ 			        	 console.log(response);
+ 	                      
+ 	                      $("#addUser").attr("disabled", false);
+ 	                    	$("#addUserModal").hide();
+ 	                    	 $("div").remove( ".modal-backdrop");
+ 	                      if(response=="Success")
+ 	                    	  {
+ 	                    	  console.log("inside success");
+ 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>User Added successfully</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+ 	                    			$('.de-alert-success').delay( 2000 ).fadeOut( 500, function() { 
+ 	   								$(this).remove();							
+ 	   							} );
+ 	                    	 if($('#editUserDataTable').length)
+ 	                    		 {
+ 	                    		 console.log(btnId);
+ 	                    		 $('#editUserDataTable').DataTable().ajax.reload();
+ 	                    		 }
+ 	      					
+ 	                    	  }
+ 	                      else
+ 	                    	  {
+ 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-failure de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>" + response + "</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+ 	                    	$('.de-alert-failure').delay( 2000 ).fadeOut( 500, function() { 
+								$(this).remove();							
+							} );
+ 	                    	  }
+ 	                      //hideSpinner
+ 	             		 $('#spinnerModal').appendTo("body").modal('hide');
+ 			        },
+ 					error: ajaxResponseError, 
+ 					complete: function() {   
+ 						hideSpinner();
+ 			         }
+ 				});
+ 				
+				}
+
+			  });
 			 
 			 $('#resetAdduser').click(function()
 					 {
@@ -160,40 +142,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-row">
-								<div class="col">
-									<div class="form-group">
-										<label for="disciplineSelect">Discipline</label>
-										<select class="form-control" th:id="discipline" name="discipline">
-											<option>ALL</option>
-										</select>
-									</div>
-								</div>
-								<div class="col">
-									<div class="form-group">
-										<label for="companySelect">Company</label>
-										<input type="text"   class="form-control" th:id="company"  name="company" maxlength="60"  placeholder="Enter Company Name" required>
-									</div>
-								</div>
-							</div>
-							<div class="form-row">
-								<div class="col">
-									<div class="form-group">
-										<label for="regionSelect">Region</label>
-										<select class="form-control" th:id="region" name="region">
-											<option>ALL</option>
-										</select>
-									</div>
-								</div>
-								<div class="col">
-									<div class="form-group">
-										<label for="stateSelect">State</label>
-										<select class="form-control" th:id="state" name="state">
-											<option>ALL</option>
-										</select>
-									</div>
-								</div>
-							</div>
+
 							
 						
 						<div class="modal-footer">
