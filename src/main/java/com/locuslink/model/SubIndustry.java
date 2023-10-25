@@ -20,19 +20,19 @@ public class SubIndustry extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="sub_industry_pkid", unique=true, nullable = false)
-    private int subIndustryPkId;
+    @Column(name="sub_industry_pkid")
+    private Integer subIndustryPkId;
   
-    @Column(name = "industry_pkid", nullable = false)
-	private int industryPkId; 
+    @Column(name = "industry_pkid")
+	private Integer industryPkId; 
     
-    @Column(name="uid", nullable = false)
+    @Column(name="uid")
     private String uid;
     
-    @Column(name="sub_industry_code", nullable = false)
+    @Column(name="sub_industry_code")
     private String subIndustryCode;
 
-    @Column(name = "sub_industry_desc", nullable = false)
+    @Column(name = "sub_industry_desc")
 	private String subIndustryDesc; 
 	
 	

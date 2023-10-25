@@ -24,10 +24,10 @@ public class ProductAttribute extends Common {
 
 	@Id 
     @Column(name="product_attr_pkid", unique=true, nullable = false)
-    private int productAttrPkId;
+    private Integer productAttrPkId;
   
     @Column(name="ucat_pkid", unique=true, nullable = false)
-    private int ucatPkId;
+    private Integer ucatPkId;
 
     
     @Column(name = "attributes_json", nullable = false)

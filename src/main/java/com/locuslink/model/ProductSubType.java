@@ -20,19 +20,19 @@ public class ProductSubType extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="product_sub_type_pkId", unique=true, nullable = false)
-    private int productSubTypePkId;
+    @Column(name="product_sub_type_pkId")
+    private Integer productSubTypePkId;
   
-    @Column(name = "product_type_pkid", nullable = false)
-	private int productTypePkId; 
+    @Column(name = "product_type_pkid")
+	private Integer productTypePkId; 
     
-    @Column(name="uid", nullable = false)
+    @Column(name="uid")
     private String uid;
     
-    @Column(name="sub_type_code", nullable = false)
+    @Column(name="sub_type_code")
     private String productSubTypeCode;
 
-    @Column(name = "sub_type_desc", nullable = false)
+    @Column(name = "sub_type_desc")
 	private String productSubTypeDesc; 
 	
 	

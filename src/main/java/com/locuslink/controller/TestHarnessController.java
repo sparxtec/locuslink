@@ -26,10 +26,8 @@ import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dao.ProductSubTypeDao;
 import com.locuslink.dao.ProductTypeDao;
 import com.locuslink.dao.SubIndustryDao;
-import com.locuslink.dao.UidProductAttributeListDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
-import com.locuslink.dto.UidProductAttributeListDTO;
 import com.locuslink.dto.UidDTO;
 import com.locuslink.dto.UidGeneratorFormDTO;
 /**
@@ -69,8 +67,8 @@ public class TestHarnessController {
     @Autowired
     private ProductSubTypeDao productSubTypeDao;
     
-    @Autowired
-    private UidProductAttributeListDao uidProductAttributeListDao;   
+//    @Autowired
+//    private UidProductAttributeListDao uidProductAttributeListDao;   
     
     
     
@@ -365,18 +363,27 @@ public class TestHarnessController {
 		logger.debug(" subIndustryPkId ->: " + subIndustryPkId);
 		logger.debug(" productTypePkId ->: " + productTypePkId);
 		logger.debug(" productSubTypePkId ->: " + productSubTypePkId);
+
 		
-		// TESTING
-		List <UidProductAttributeListDTO> uidProductAttributeList_List =  uidProductAttributeListDao.getDtoByProductType(industryPkId,subIndustryPkId,productTypePkId,productSubTypePkId ) ;
-		if (uidProductAttributeList_List == null) {
-			logger.debug("  Note:  No Data Found......");
-		}
+		
+		
+		
+		// 10-19-2023 replace this TODO		
+//		// TESTING
+//		List <UidProductAttributeListDTO> uidProductAttributeList_List =  uidProductAttributeListDao.getDtoByProductType(industryPkId,subIndustryPkId,productTypePkId,productSubTypePkId ) ;
+//		if (uidProductAttributeList_List == null) {
+//			logger.debug("  Note:  No Data Found......");
+//		}
 			
+		
+		
+		
+		
         // Convert the POJO array to json, for the UI
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(uidProductAttributeList_List);			
+			// TODO fix this json = mapper.writeValueAsString(uidProductAttributeList_List);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

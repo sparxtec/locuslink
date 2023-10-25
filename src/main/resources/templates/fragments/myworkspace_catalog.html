@@ -16,7 +16,7 @@
             	retrieve: true,
      	 		searchHighlight: true,
      	 		searching:true,
-             	responsive: true,		        
+       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data        
              	"paging":   true,	
              //	scrollCollapse: true,
              //	scrollY: 'calc(100vh - 35rem)',	
@@ -37,21 +37,36 @@
      	        "dataSrc": function (json) {
      	        	universalcataloglist = json.data.universalcataloglist;	     	        	
      	        	hideSpinner();		    		
-     	      	        	
-     	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
-     	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
      	        	console.log(JSON.parse(universalcataloglist));
      	        	return JSON.parse(universalcataloglist);     	        	      	        	
      	         }					       
         		},  
      
-             columns: [	              	
+             columns: [	  
+            	 
+                 {
+                     class: 'dt-control',
+                     orderable: false,
+                     data: null,
+                     defaultContent: ''
+                 },
+                 
+                 
                  { data: "ucatPkId" },
-                 { data: "universalCatalogId" },   
-                 { data: "productTypePkId" },                   
-                 { data: "productNumber" },                 
-                 { data: "productName" },
-                 { data: "productDesc" },
+                 { data: "universalCatalogId" }, 
+                 { data: "availFlag" },    
+                 
+                 { data: "uidTemplateLen" },  
+                 
+                 { data: "cdugtPkId" },                   
+                 { data: "industryDesc" },
+                 { data: "subIndustryDesc" },
+                 { data: "productTypeDesc" },
+                 { data: "productSubTypeDesc" },
+                 
+/*                  { data: "uidAttrSeq" },
+                 { data: "uidAttrListName" },
+                 { data: "uidAttributesJson" }, */
                    
             	],
             	
@@ -74,7 +89,42 @@
    		});	
  		
  		
- 		
+   		
+   		//const detailRows = [ {  "id":"1",   "name":"yo"} ];
+   		
+   		//const data = [ {  "id":"1",   "name":"yo"} ];
+   		
+   		table.on('click', 'tbody td.dt-control', function () {
+   		    let tr = event.target.closest('tr');
+   		    let row = table.row(tr);
+   		    if (row.child.isShown()) {
+   		        row.child.hide();
+   		    }
+   		    else {   		   
+   		        row.child(format(row.data())).show();   		 
+   		    }
+   		});   		
+   		
+   		
+
+   		
+   		function format(d) {
+   			var returnString = "";
+   			for (var i = 0; i < d.attributeList.length ; i++) {
+   				//console.log ("loop ->:" + i);
+   				//console.log (d.attributeList[i]);
+   				
+   	   			returnString = returnString + 
+   	   			'seq: <strong>' + d.attributeList[i].uidAttrSeq + ' </strong>' + 
+   		        ' &nbsp selected: <strong>' + d.attributeList[i].selectedValue + ' </strong>' + 
+   		        ' &nbsp  <strong>' +  d.attributeList[i].uidAttrListName + ' </strong>: ' + d.attributeList[i].uidAttributesJson +
+   		        '<br>';   		        
+   			}     
+   		    return (	
+   		    	returnString	
+   		    );
+   		}
+   			
    	 });  
     	
     	
@@ -130,12 +180,21 @@
 	                        
 	                           <thead class="thead-light">
 	                              <tr>
-	                                 <th scope="col">Catalog Id</th>
+	                                 <th></th>
+	                                 	                             
+	                                 <th scope="col">pkId</th>
 	                                 <th scope="col">Universal Catalog ID</th>	
-	                                 <th scope="col">Type</th>
-	                                 <th scope="col">Number</th>
- 									 <th scope="col">Name</th>
- 	                                  <th scope="col">Description</th>	   
+	                                 <th scope="col">Avail</th>
+	                                 <th scope="col">Tpl Len</th>
+	                                 
+	                                 <th scope="col">cdugt</th>
+ 									 <th scope="col" style="min-width:100px">Industry</th>
+ 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
+     								 <th scope="col" style="min-width:200px">Asset</th>	 
+          							 <th scope="col" style="min-width:100px">Sub Asset</th>	  	                                  	                                 
+<!--  	                                 <th scope="col">Seq</th>	  
+    								 <th scope="col">AttrList</th>	  
+ 									 <th scope="col">Attributes</th>	 -->   
 	                              </tr>
 	                           </thead>
 	                        </table>

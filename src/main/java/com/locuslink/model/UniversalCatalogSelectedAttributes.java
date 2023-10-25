@@ -23,14 +23,19 @@ public class UniversalCatalogSelectedAttributes extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="ucat_selected_attributes__pkid", unique=true, nullable = false)
-    private int ucatSelectedAttributesPkId;
+    @Column(name="ucat_selected_attributes__pkid")
+    private Integer ucatSelectedAttributesPkId;
   
-    @Column(name = "ucat_pkid", nullable = false)
-	private int ucatPkId; 
+    @Column(name = "ucat_pkid")
+	private Integer ucatPkId; 
+
+    @Column(name="cdugt_pkid")
+    private Integer cdugtPkId;
     
-    @Column(name="uid_pal_pkId", unique=true, nullable = false)
-    private int uidPalPkId;
+    @Column(name="selected_attribute_value")
+    private String selectedAttributeValue;
+    
+    
     
 
 }

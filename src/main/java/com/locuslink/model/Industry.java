@@ -20,16 +20,16 @@ public class Industry extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="industry_pkid", unique=true, nullable = false)
-    private int industryPkId;
+    @Column(name="industry_pkid")
+    private Integer industryPkId;
   
-    @Column(name="uid", nullable = false)
+    @Column(name="uid")
     private String uid;
     
-    @Column(name="industry_code", nullable = false)
+    @Column(name="industry_code")
     private String industryCode;
 
-    @Column(name = "industry_desc", nullable = false)
+    @Column(name = "industry_desc")
 	private String industryDesc; 
 	
 	

@@ -10,6 +10,9 @@ package com.locuslink.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
@@ -22,7 +25,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.UniversalCatalogDao;
-import com.locuslink.model.Customer;
+import com.locuslink.dto.UniqueAssetDTO;
+import com.locuslink.dto.UniversalCatalogDTO;
 import com.locuslink.model.UniversalCatalog;
 
 /**
@@ -37,6 +41,11 @@ public class UniversalCatalogDaoImpl extends DaoSupport implements UniversalCata
     
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	
 	
     public UniversalCatalogDaoImpl() {
     }
@@ -55,6 +64,65 @@ public class UniversalCatalogDaoImpl extends DaoSupport implements UniversalCata
 	}
 	
 
+	
+	@Override
+	public UniversalCatalogDTO getDtoById(int pkid) {	
+			
+		// TODO
+		 return null;		
+	}
+	
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public  List<UniversalCatalogDTO>  getAllDTO() 	{	
+			
+		
+		 List <UniversalCatalogDTO> dtoList = entityManager.createQuery("""
+			select new com.locuslink.dto.UniversalCatalogDTO(
+			
+				 uc.ucatPkId, 
+		 		 uc.universalCatalogId, 
+		 		 uc.availFlag, 
+		   
+		         cdugt.cdugtPkId, 		    
+		 		 cdugt.industryPkId, 
+		 		 cdugt.subIndustryPkId, 
+           	  	 cdugt.productTypePkId, 
+           	  	 cdugt.productSubTypePkId, 
+            	 cdugt.uidTemplateLen,
+            	 cdugt.uidTemplate,
+                    
+				 i.industryDesc,
+				 si.subIndustryDesc,
+				 pt.productTypeDesc,
+				 pst.productSubTypeDesc
+
+			)
+			from UniversalCatalog uc			
+			left outer join UniversalCatalogSelectedAttributes ucsa on uc.ucatPkId = ucsa.ucatPkId			
+			left outer join CatalogDefUidGenTemplate cdugt on ucsa.cdugtPkId = cdugt.cdugtPkId										
+		    left outer join Industry i    					on	cdugt.industryPkId = i.industryPkId
+		    left outer join SubIndustry si	 				on	cdugt.subIndustryPkId = si.subIndustryPkId	        
+		    left outer join ProductType pt 				on 	cdugt.productTypePkId   = pt.productTypePkId    
+		 	left outer join ProductSubType pst 			on 	cdugt.productSubTypePkId  = pst.productSubTypePkId		 												
+			""", 
+			UniversalCatalogDTO.class).getResultList();	
+		 
+		 return dtoList;
+	}
+	
+	
+//	 cdal.cdalPkId,
+//	 cdal.uidAttrSeq,
+//	 cdal.uidAttrListName,
+//	 cdal.uidAttributesJson 
+//	left outer join CatalogDefAttributeList cdal 	on cdugt.cdugtPkId = cdal.cdugtPkId
+
+	
+
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override

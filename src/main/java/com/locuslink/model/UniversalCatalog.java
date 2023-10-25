@@ -24,11 +24,15 @@ public class UniversalCatalog extends Common {
 
 	@Id 
     @Column(name="ucat_pkId", unique=true, nullable = false)
-    private int ucatPkId;
+    private Integer ucatPkId;
   
-    @Column(name="universal_catalog_id", nullable = false)
+    @Column(name="universal_catalog_id")
     private String universalCatalogId;
 
+    @Column(name = "avail_flag")
+	private String availFlag; 
+    
+    
 //  @Column(name = "uid_pal_pkId", nullable = false)
 //	private int productTypePkId; 
     

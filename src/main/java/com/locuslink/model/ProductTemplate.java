@@ -24,10 +24,10 @@ public class ProductTemplate extends Common {
 
 	@Id 
     @Column(name="product_template_pkId", unique=true, nullable = false)
-    private int productTemplatePkId;
+    private Integer productTemplatePkId;
   
     @Column(name="ucat_pkId", unique=true, nullable = false)
-    private int ucatPkId;
+    private Integer ucatPkId;
 
     @Column(name = "product_template_desc", nullable = false)
 	private String productTemplateDesc; 

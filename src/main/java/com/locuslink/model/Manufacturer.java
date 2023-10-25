@@ -21,7 +21,7 @@ public class Manufacturer extends Common {
 
 	@Id 
     @Column(name="manufacturer_pkId", unique=true, nullable = false)
-    private int manufacturerPkId;
+    private Integer manufacturerPkId;
   
     @Column(name="name", nullable = false)
     private String name;

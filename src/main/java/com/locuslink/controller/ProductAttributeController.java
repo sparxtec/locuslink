@@ -3,7 +3,6 @@ package com.locuslink.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +19,7 @@ import com.locuslink.dao.ProductAttributeDao;
 import com.locuslink.dao.ProductSubTypeDao;
 import com.locuslink.dao.ProductTypeDao;
 import com.locuslink.dao.SubIndustryDao;
-import com.locuslink.dao.UidProductAttributeListDao;
 import com.locuslink.dto.UidGeneratorFormDTO;
-import com.locuslink.model.UidProductAttributeList;
 
 /**
  * This is a Spring MVC Controller.
@@ -61,8 +58,8 @@ public class ProductAttributeController {
     @Autowired
     private ProductSubTypeDao productSubTypeDao;
     
-    @Autowired
-    private UidProductAttributeListDao uidProductAttributeListDao;  
+//    @Autowired
+//    private UidProductAttributeListDao uidProductAttributeListDao;  
 
 
 
@@ -75,20 +72,20 @@ public class ProductAttributeController {
 	public String initProductAttributeDetail (@ModelAttribute(name = "UidGeneratorFormDTO") UidGeneratorFormDTO uidGeneratorFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initProductAttributeDetail()...");
 
+// TODO 10-19=2023 fix this		
 		
-		
-		// TESTING
-		// 3 = KVA_RATING for Testing
-		UidProductAttributeList uidProductAttributeList =  uidProductAttributeListDao.getById(3);
-		if (uidProductAttributeList == null) {
-			logger.debug("  Note:  No Data Found......");
-		}
+//		// TESTING
+//		// 3 = KVA_RATING for Testing
+//		UidProductAttributeList uidProductAttributeList =  uidProductAttributeListDao.getById(3);
+//		if (uidProductAttributeList == null) {
+//			logger.debug("  Note:  No Data Found......");
+//		}
 			
 		// testing 
 		JSONObject jsonAttributes = null;
 		try {
-		  jsonAttributes = new JSONObject(uidProductAttributeList.getUidPalAttributesJson());
-		} catch (JSONException e1) {
+		// fix this   jsonAttributes = new JSONObject(uidProductAttributeList.getUidPalAttributesJson());
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}	
 	
@@ -97,7 +94,7 @@ public class ProductAttributeController {
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(uidProductAttributeList.getUidPalAttributesJson());			
+			// fix this json = mapper.writeValueAsString(uidProductAttributeList.getUidPalAttributesJson());			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
