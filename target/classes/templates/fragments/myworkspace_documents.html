@@ -1,0 +1,149 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head> 
+    <title>My Workspace</title>
+
+    <script>
+
+		var globalTable;		
+			
+    	$(document).ready(function() {	
+     		hideSpinner();	
+     		
+     		if( $('#documentDataTable').length){
+     			
+     			var table = $('#documentDataTable').DataTable( {
+            	retrieve: true,
+     	 		searchHighlight: true,
+             	responsive: true,		        
+             	"paging":   true,	
+             	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)',	
+             	order: [0, 'asc' ],		        
+         		//colReorder: true,		        
+     
+     	    	ajax: {
+           		    url: 'getAllDocuments',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"locuslink"};
+            			var innerData = {};    
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	documentList = json.data.documentList;	     	        	
+     	        	hideSpinner();		    		
+     	      	        	
+     	        	// Data is JSON in an array, so we JSON.parse to get it out of the array
+     	        	// [{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."},{"materialId":"100","materialName":"Copper Wire","materialDesc":"2 AWG Twisted Wire."}]     	          	
+     	        	console.log(JSON.parse(documentList));
+     	        	return JSON.parse(documentList);     	        	      	        	
+     	         }					       
+        		},  
+     
+             columns: [	              	
+                 { data: "docName" },
+                 { data: "docTypeCode" },   
+                 { data: "docTypeDesc" },
+                   
+            	],
+            	
+             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+            	          		
+           });
+        }  
+        	
+ 		// SEARCH FILTER
+  		$('#documentDataTable_filter input').keyup(function(){
+ 			table.search($(this).val()).draw() ;
+ 		}); 
+ 		
+   		$('#previous').click(function() {					
+   			showSpinner();								
+   			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
+   		});	 		
+ 		
+ 		
+   	 });  // end docready
+    	
+    	
+	 function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+	 }
+					
+		
+  </script>
+	
+  </head>
+
+  <body id="Body">
+	 						  
+		<section id="document_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">My Workspace</h2>
+		        </header>
+		    </div>
+
+            <div class="form-group text-center">
+				<div class="card">
+
+  
+					<div class="card-header"><i class="fas fa-user mr-2"></i> Required Documents Data:
+			
+					</div>
+				
+
+					<div class="de-component__container">				
+	                     
+						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+						 	
+						 	<div class="datatable-toolbar-group">
+						 		<div id="addbtn">
+						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+						 		</div>
+						 	</div>
+						 
+						 	<div class="datatable-toolbar-group">
+						 		<div id="documentDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="documentDataTable"></label>
+						 		</div>
+						 	</div>
+						 </div>	                     
+	                     
+		                 <div id="xxxx">		                     
+	                        <table id="documentDataTable" class="bg-white border border-top-0">
+	                        
+	                           <thead class="thead-light">
+	                              <tr>
+	                                 <th scope="col">Document NAme</th>
+	                                 <th scope="col">Document Type</th>	                                 
+	                                 <th scope="col">Desc</th>
+	                              </tr>
+	                           </thead>
+	                        </table>
+		                 </div>		                     
+						
+					</div>
+										
+					<br><br>                               
+                    <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                         <button type="button" id="previous" class="button button--continue">Previous</button>
+                    </div>
+                                                               
+				</div>
+				
+		    </div>
+					
+
+		</section>
+	  
+  </body>
+  
+</html>

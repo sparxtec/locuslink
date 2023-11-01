@@ -27,6 +27,7 @@ import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.CatalogAttributeListDTO;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.RequiredDocumentsDTO;
 import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.dto.UniversalCatalogDTO;
 import com.locuslink.model.Customer;
@@ -72,6 +73,59 @@ public class MyWorkspaceController {
 	}
 
 
+	
+	
+	
+	//*************************************************************//
+	//********       D O C U M E N T                 **************//
+	//*************************************************************//	
+	
+	@PostMapping(value = "/initDocumentData")
+	public String initDocumentData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initDocumentData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace_documents";
+	}
+	
+	
+	@RequestMapping(value = "/getAllDocuments", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllDocuments(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllDocuments()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllDocuments");
+	  			
+//		List <RequiredDocumentsDTO> documentList =  customerDao.getAll();
+//		if (customerList == null) {
+//			logger.debug("  Note:  No Data Found......");
+//		}
+		List <RequiredDocumentsDTO> documentList = new ArrayList<RequiredDocumentsDTO> () ;
+		RequiredDocumentsDTO requiredDocumentsDTO = new RequiredDocumentsDTO();
+		requiredDocumentsDTO.setDocName("BigDocument");
+		requiredDocumentsDTO.setDocTypeCode("UberType");
+		requiredDocumentsDTO.setDocTypeDesc("This is a test required document");
+		documentList.add(requiredDocumentsDTO);
+		
+		
+        // Convert the POJO array to json, for the UI
+		ObjectMapper mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(documentList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("json ->: " + json);		
+		response.setField("documentList",  json);
+
+		return response;
+	 }
+	
+	
+	
+	
 	//*************************************************************//
 	//********         C U S T O M E R               **************//
 	//*************************************************************//
@@ -87,7 +141,7 @@ public class MyWorkspaceController {
 
 	
 	@RequestMapping(value = "/getAllCustomers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse getAllUser(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	public @ResponseBody GenericMessageResponse getAllCustomers(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
 		logger.debug("In getAllCustomers()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllCustomers");

@@ -29,11 +29,16 @@
 				submitFormAjaxHTML('initViewCustomerData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
-			$('#viewCustomerPermissionDataId').click(function() {		
+			
+			
+			// 11-1-2023
+			$('#viewDocumentDataId').click(function() {		
 				showSpinner();			
-				submitFormAjaxHTML('initViewCustomerPermissionData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initDocumentData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 		
+			
+			
 			$('#viewCatalogDataId').click(function() {		
 				showSpinner();			
 				submitFormAjaxHTML('initViewCatalogData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
@@ -126,16 +131,14 @@
 					
 					<div class="col-12 col-md-4 pb-4">
 						<div class="card mb-2">
-							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Access</span></div>
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>*New - Document Data</span></div>
 							<div class="card-body h-25">
-								<p>Adjust roles and permissions for my customers.</p>
+								<p>Manages the required documents for asset types.</p>
 
-									<button th:id="viewCustomerPermissionDataId" data-toggle="tooltip" data-placement="left" title="View my customer permissions. " 
+									<button th:id="viewDocumentDataId" data-toggle="tooltip" data-placement="left" title="View Document data. " 
 									        class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
 									</button>
-																	
-<!-- 								<a href="" id="XXXXuser_profile_edit_roles" class="text-left clearfix">Manage User Profiles</a> -->
-								
+							
 							</div>
 						</div>
 					</div>
