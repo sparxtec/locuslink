@@ -138,6 +138,14 @@ table.dataTable thead th {
 			});
 
 			
+			//  OpenAI
+			$('#buttonHeaderOpenAiId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initOpenAI', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderOpenAiId').addClass('is-current');	
+			});
+			
 			
 		    //  Testing Harness
 			$('#buttonUidGenerationId').click(function() {
