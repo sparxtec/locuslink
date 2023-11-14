@@ -6,48 +6,71 @@ import lombok.Data;
 public class UniqueAssetDTO {
 
 	public UniqueAssetDTO() {
-		
 	};
 		
-	public UniqueAssetDTO( int uniqueAssetPkId, String uniqueAssetId, 
-						   String universalCatalogId, int ucatPkId, 
-						   
-			               String manufacturerName, 
-			               String productTypeCode, 
-			               // String productName,    String productNumber, 
-			               String traceTypeCode, String traceCode,
-			               String customerName, 
-			               //String productDesc, 
-			               String productTypeDesc,
-			               String attributesJson	) {
+	public UniqueAssetDTO( 
+			int uniqueAssetPkId, 
+			String uniqueAssetId, 						  
+			String universalCatalogId, 
+			int ucatPkId, 						   
+			String manufacturerName, 
+			
+			String productTypeCode, 			              
+			String traceTypeCode, 
+			String traceCode,
+			
+		    // cat def template
+		    Integer cdugtPkId, 
+		    Integer industryPkId, 
+		    Integer subIndustryPkId, 
+		    Integer productTypePkId, 
+		    Integer productSubTypePkId, 
+          
+           // 4 keys desc
+           String industryDesc,
+           String subIndustryDesc,
+           String productTypeDesc,
+           String productSubTypeDesc,
+	           
+		   String customerName 
+
+		){
 		
+
 		this.uniqueAssetPkId = uniqueAssetPkId; 
 		this.uniqueAssetId = uniqueAssetId; 
 		this.universalCatalogId = universalCatalogId;				
-		this.ucatPkId = ucatPkId;			
+		this.ucatPkId = ucatPkId;	
+		
 		this.manufacturerName = manufacturerName;	
-		
-		// 9-27-2023
-		this.productTypeCode = productTypeCode;	
-		
-//		this.productName = productName;
-//		this.productNumber = productNumber;		
-		
+		this.productTypeCode = productTypeCode;					
 		this.traceTypeCode = traceTypeCode;		
 		this.traceCode = traceCode;		
 		
-		this.customerName = customerName;
-	//	this.productDesc = productDesc;		
-		this.productTypeDesc = productTypeDesc;		
-		this.attributesJson = attributesJson;			
+		this.cdugtPkId = cdugtPkId;	
+		this.industryPkId = industryPkId;	
+		this.subIndustryPkId = subIndustryPkId;	
+		this.productTypePkId = productTypePkId;	
+		this.productSubTypePkId = productSubTypePkId;
+				
+		
+        // 4 keys desc
+		this.industryDesc =industryDesc;
+		this.subIndustryDesc =subIndustryDesc;
+		this.productTypeDesc = productTypeDesc;
+		this.productSubTypeDesc = productSubTypeDesc;	
+        
+        
+		this.customerName = customerName;	
+				
 	}
-
 
 	// Unique Asset
 	private int uniqueAssetPkId;
 	private String uniqueAssetId;
+	private String universalCatalogId; 
 	private int ucatPkId;
-
+	
 	private int traceabilityTypePkId;
 	private int customerPkId;
 	private String traceCode;
@@ -59,22 +82,26 @@ public class UniqueAssetDTO {
 	private String traceTypeCode;
 	private String traceTypeDesc;
 	
+	// Catalog Definition Template
+    Integer cdugtPkId;
+    Integer industryPkId;
+    Integer subIndustryPkId; 
+    Integer productTypePkId; 
+    Integer productSubTypePkId; 
+    
+    // 4 keys desc
+    String industryDesc;
+    String subIndustryDesc;
+    String productTypeDesc;
+    String productSubTypeDesc;
+    
 	// Customer
 	private String customerTypeCode;
 	private String customerName;
-	
-	
-	
-	// Universal Catalog
-	private String universalCatalogId;
-//	private String productNumber;
-//	private String productName;
-//	private String productDesc;
 		
 	// Product Type	
     private String productTypeCode;
-	private String productTypeDesc; 
-	
+
 	// Product Attributes	
 	private String attributesJson; 
 

@@ -75,18 +75,23 @@
 	 	         }}, 
                    	         
 	             { data: "uniqueAssetPkId" },	               
-                 { data: "uniqueAssetId" },   
-                 { data: "universalCatalogId" },                   
+                 { data: "uniqueAssetId" },                   
                  { data: "manufacturerName" },                 
                  { data: "productTypeCode" },
-/*                  { data: "productName" },
-                 { data: "productNumber" }, */
                  { data: "traceTypeCode" },
-                 { data: "traceCode" },                 
+                 { data: "traceCode" },                    
                  { data: "customerName" },
-   /*               { data: "productDesc" }, */
+                 
+                 { data: "universalCatalogId" },   
+                 
+                 { data: "cdugtPkId" },                   
+                 { data: "industryDesc" },
+                 { data: "subIndustryDesc" },
                  { data: "productTypeDesc" },
-                 { data: "attributesJson" }
+                 { data: "productSubTypeDesc" },
+                 
+                 { data: "productTypeDesc" }
+                
             	],
             	
         		
@@ -207,17 +212,20 @@
 	     							<th scope="col"></th>   
 	                                <th scope="col">Id</th>	                                 	                          	                                 
 	                                <th scope="col">Unique Asset ID</th>
-	                                <th scope="col">Universal Catalog ID</th>	
 	                                <th scope="col">Manufacturer</th>
 	                                <th scope="col">Product Type</th>
-	<!--                                 <th scope="col">Product Name</th>
-	                                <th scope="col">Product Number</th>	 -->
 	                                <th scope="col">Trace Type</th>	
 									<th scope="col">Trace Number</th>		                                                                     	                             	                             
 	                             	<th scope="col">Customer</th>
-	         <!--                        <th scope="col">Product Desc</th> -->
+
+	                                <th scope="col">Universal Catalog ID</th>	
+	                                <th scope="col">cdugt</th>
+ 									 <th scope="col" style="min-width:100px">Industry</th>
+ 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
+     								 <th scope="col" style="min-width:200px">Asset</th>	 
+          							 <th scope="col" style="min-width:100px">Sub Asset</th>	           							           							 
 	                            	<th scope="col">PType Description]</th>
-	                                <th scope="col">Attributes</th>
+
 	                             </tr>
 	                          </thead>
 	                       </table>
