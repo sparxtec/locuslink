@@ -74,19 +74,30 @@ public class MyWorkspaceController {
 
 
 	
+	//***********************************************************************//
+	//********      A S S E T   R E Q   D O C U M E N TS       **************//
+	//***********************************************************************//	
 	
-	
-	//*************************************************************//
-	//********       D O C U M E N T                 **************//
-	//*************************************************************//	
-	
-	@PostMapping(value = "/initDocumentData")
-	public String initDocumentData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initDocumentData()...");
+	@PostMapping(value = "/initRequiredAssetDocumentData")
+	public String initRequiredAssetDocumentData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initRequiredAssetDocumentData()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/myworkspace_documents";
+		return "fragments/myworkspace_asset_req_documents";
+	}
+	
+	//***********************************************************************//
+	//********   C A T A L O G  R E Q   D O C U M E N TS       **************//
+	//***********************************************************************//	
+	
+	@PostMapping(value = "/initRequiredCatalogDocumentData")
+	public String initRequiredCatalogDocumentData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initRequiredCatalogDocumentData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/myworkspace_catalog_req_documents";
 	}
 	
 	

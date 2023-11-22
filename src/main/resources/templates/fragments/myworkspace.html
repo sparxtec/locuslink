@@ -31,12 +31,19 @@
 			
 			
 			
-			// 11-1-2023
-			$('#viewDocumentDataId').click(function() {		
+			// 11-14-2023
+			$('#viewCatalogReqDocsId').click(function() {		
 				showSpinner();			
-				submitFormAjaxHTML('initDocumentData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initRequiredCatalogDocumentData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 		
+			// 11-14-2023
+			$('#viewAssetReqDocsId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initRequiredAssetDocumentData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
 			
 			
 			$('#viewCatalogDataId').click(function() {		
@@ -112,18 +119,15 @@
 			<div  id="Manageusers" class="mt-5">
 						    
 		 		<div class="de-component__footer row">
+		 		
 					<div class="col-12 col-md-4 pb-4">
 						<div class="card mb-2">
 							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Customers</span></div>
 							<div class="card-body h-25">
-								<p>Add new customers and Manage existing customers</p>
-								
+								<p class="mb-0">Add new customers and Manage existing customers</p>								
 									<button th:id="viewCustomerDataId" data-toggle="tooltip" data-placement="left" title="View my Customer data" 
 									        class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
-									</button>
-									
-<!-- 								<a id="XXXXuser_profile_edit_users" href=""  class="text-left clearfix" oncontextmenu="return false;">Manage Customers</a>
-								<a id="XXXXaddUserlink" href="" class="text-left clearfix" data-toggle="modal" data-target="#addUserModal" >Add Customer</a> -->
+									</button>									
 							</div>
 						</div>
 					</div>
@@ -131,20 +135,31 @@
 					
 					<div class="col-12 col-md-4 pb-4">
 						<div class="card mb-2">
-							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>*New - Document Data</span></div>
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>*Catalog Required Documents</span></div>
 							<div class="card-body h-25">
-								<p>Manages the required documents for asset types.</p>
-
-									<button th:id="viewDocumentDataId" data-toggle="tooltip" data-placement="left" title="View Document data. " 
+								<p class="mb-0">Manages the required documents for the catalog.</p>
+									<button th:id="viewCatalogReqDocsId" data-toggle="tooltip" data-placement="left" title="View Document data. " 
 									        class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
-									</button>
-							
+									</button>							
 							</div>
 						</div>
 					</div>
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>*TBD</span></div>
+							<div class="card-body h-25">
+								<p class="mb-0">TBD.</p>
+									<button th:id="viewTbdId" data-toggle="tooltip" data-placement="left" title="View data. " 
+									        class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
+									</button>							
+							</div>
+						</div>
+					</div>
+										
 				</div>	
 								
-					<div XXXXth:replace="fragments/addUser :: addUser"></div>	
+			
   				
 				</div>
 		
@@ -175,9 +190,7 @@
 							<div class="card mb-2">
 								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Asset Data</span></div>
 								<div class="card-body h-25">
-									<p class="mb-0">View all my material asset data.</p>
-							<!-- 		<p>Last Update: <span id="2_LastUpdateDateId"><strong th:text="${p2qLastDataloadUpdateDate}"></strong></span></p>	 -->
-
+									<p class="mb-0">View all the Asset data.</p>					
 									<button th:id="viewAssetDataId" data-toggle="tooltip" data-placement="left" title="View Electric and Gas asset records." 
 									       class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
 									</button>
@@ -185,19 +198,19 @@
 							</div>
 						</div>
 						
-<!-- 						<div class="col-12 col-md-4 pb-4">
-							<div class="card mb-2">
-								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Published Assets</span></div>
-								<div class="card-body h-25">
-									<p class="mb-0">View and Publish assets to customers.</p>
-									<p>Last Update: <span id="3_LastUpdateDateId"><strong th:text="${p2qLastDataloadUpdateDate}"></strong></span></p>	
-
-									<button th:id="viewPublishedDataId" data-toggle="tooltip" data-placement="left" title="View asset/customer data that has already been published" 
-									     class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
-									</button>
-								</div>
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>*Asset Required Documents</span></div>
+							<div class="card-body h-25">
+								<p class="mb-0">Required documents for assets.</p>
+									<button th:id="viewAssetReqDocsId" data-toggle="tooltip" data-placement="left" title="View data. " 
+									        class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">View
+									</button>							
 							</div>
-						</div> -->
+						</div>
+					</div>
+					
+					
 						
 					</div>	
 					
