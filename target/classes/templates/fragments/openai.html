@@ -44,10 +44,45 @@
 			
 		});
 		
-
+		//ajaxCall();
 		
 	}); // end doc ready
 		
+	
+	
+	/*   function ajaxCall() {
+		
+	
+         $.ajax({
+
+            // Our sample url to make request 
+            url:
+                'http://localhost:5000/portal/initLogin',
+
+            // Type of Request
+            type: "GET",
+
+            // Function to call when to
+            // request is ok 
+            success: function (data) {
+            	//returnData= JSON.stringify(data);
+               // console.log(returnData);
+                     console.log(data);
+                
+            	$('#productAttribute_ModalBody').html( data);
+            	
+            	
+            },
+
+            // Error handling 
+            error: function (error) {
+                console.log(`Error ${error}`);
+            }
+        }); 
+    }*/
+	
+	
+	
   	function jsonResponse(returnData) {	
  		hideSpinner();			 		
 		 		 		
@@ -61,7 +96,7 @@
 	function initCommonResponse(returnData) {	
 		//	console.log("initCommonResponse()");
 			hideSpinner();
-			$('#mainBody').html( returnData); 
+			$('#mainBody').html( returnData); 	 
 	}
 		
 		
@@ -73,9 +108,7 @@
 <body id="Body" >
 	 		 	 			
 <form id="uidGeneratorFormDTO" class="bg-light" name="uidGeneratorFormDTO"  th:value="${uidGeneratorFormDTO}" method="post"> 
- 	 	    	 		
-   <!--    <input  type=hidden id="selectedProductTypePkId" name="selectedProductTypePkId"  th:value="${uidGeneratorFormDTO.selectedProductTypePkId}" readonly>
-		 -->	
+ 	
 		<div class="de-component__container">
 	    	<header class="de-component-header">
 	            <h2 class="de-component-header__title">OpenAI Test Harness</h2>
@@ -107,9 +140,16 @@
 				<div class="de-component__container">				
 	                    
 	                <button th:id="openaiButtonId" data-toggle="tooltip" data-placement="left" title="call OpenAI" 
-						  class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">OpenAI ChatGPT
+						  class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">OpenAI ChatGPT : 100 word coffee essay
 					</button>
-                                                       
+     
+                   <button th:id="openaiButtonId2" data-toggle="tooltip" data-placement="left" title="call OpenAI" 
+						  class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">OpenAI ChatGPT : Image Recognition
+					</button>
+
+		           <button th:id="openaiButtonId3" data-toggle="tooltip" data-placement="left" title="call OpenAI" 
+						  class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">OpenAI ChatGPT : Attribute OCR
+					</button>                 
 				</div> 
 									
 			<br><br>                               
@@ -121,10 +161,10 @@
 	</section>
 	
 	
-	<div id="productAttribute_ModalBody">	
+	<div id="productAttribute_ModalBody" th:text="${openAiContent}">	
 	</div>		
-	
-	
+	<br><br>
+
 </section>
 	
 </form>	

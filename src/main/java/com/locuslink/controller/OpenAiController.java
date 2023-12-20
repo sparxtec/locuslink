@@ -111,15 +111,17 @@ public class OpenAiController {
 		logger.debug(" status ->: " + chatCompletionResponse.getStatusCode());
 		//logger.debug(" response ->: " + chatCompletionResponse.getBody());
 
+		String openAiContent = "";
 		for ( ChatCompletionResponse.Choice choice : chatCompletionResponse.getBody().getChoices()) {
 			logger.debug("    Choice # ->: " + choice.getIndex());
 			logger.debug("    Role  ->: " + choice.getMessage().getRole());
 			logger.debug("    Content  ->: " + choice.getMessage().getContent());
-
+			openAiContent = openAiContent +choice.getMessage().getContent();
 		}
 		
 
-
+	   	model.addAttribute("openAiContent", openAiContent);		
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 		
 		return "fragments/openai";
 	}
