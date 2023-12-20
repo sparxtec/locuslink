@@ -1,0 +1,117 @@
+@media screen and (max-width: 1024px) {
+
+  /* body {
+    --nav-width: 80px;
+  }
+
+  body.nav-collpsed {
+    --nav-width: 280px;
+  } */
+  body.nav-collpsed {
+    --nav-width: 280px;
+  }
+
+  .nav_link span {
+    opacity: 0;
+    display: none;
+  }
+
+  .nav_link {
+    justify-content: center;
+  }
+
+  .nav-collpsed .nav_link span {
+    opacity: unset;
+    display: unset;
+  }
+
+  .nav-collpsed .nav_link {
+    justify-content: start;
+  }
+
+  .brand_logo img:nth-child(2) {
+    display: block !important;
+    transition: all 0.8s ease-in-out;
+  }
+
+  .brand_logo img:first-child {
+    display: none !important;
+    transition: all 0.8s ease-in-out;
+  }
+
+  .nav-collpsed .brand_logo img:nth-child(2) {
+    display: none !important;
+    transition: all 0.8s ease-in-out;
+  }
+
+  .nav-collpsed .brand_logo img:first-child {
+    display: block !important;
+    transition: all 0.8s ease-in-out;
+  }
+
+  .content-container {
+    width: 100%;
+  }
+
+  .nav-aside {
+    transform: translatex(-100%);
+  }
+
+  .nav-collpsed .nav-aside,
+  .nav-collpsed .backdrop {
+    transform: translatex(0);
+  }
+
+  .nav-collpsed .nav-aside {
+    z-index: 20;
+  }
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 50%);
+    z-index: 9;
+    transform: translatex(-100%);
+    transition: all 0.5s ease-in-out;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .searchbx {
+    display: none;
+  }
+
+  .main__wrap {
+    padding: 20px 10px;
+  }
+
+  .header {
+    padding: 10px;
+  }
+
+  .user-card {
+    padding: 10px 15px;
+  }
+
+  .user-card span {
+    font-size: 18px;
+  }
+
+  .dropdown-toggle>span {
+    font-size: 14px;
+  }
+
+  .view-btn a {
+    padding: 5px 11px;
+    font-size: 14px;
+  }.emptylbel label{display: none;}
+
+  .dropdown-toggle img {
+    width: 45px;
+  }
+  .dataTables_filter {margin-top: 15px;}
+  div.dataTables_wrapper div.dataTables_filter input{display: block; margin: 0;}
+  .dtatable-card {padding: 35px 10px;}
+
+  .page-hding h1, .page-hding h2{font-size: 22px;}
+}
