@@ -46,22 +46,33 @@ public class DashboardController {
     @Autowired
     private UserLocuslinkDao userLocuslinkDao;
     
+
     
+	@PostMapping(value = "/initDashboard")
+	//public String initDashboard(Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+	public String initDashboardPost(@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+	
+		logger.debug("Starting DashbaordPost()...");
 
+		// Common Routine
+		if (securityContextManager.isSecurityCredentialsGood()) {
+			return "dashboard";
+		} else {
+			return "redirect:/initLogin";
+		}
+	}
+		
 	@RequestMapping(value = "/initDashboard")
-	public String initDashboard(Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
-
+	//public String initDashboard(Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+	public String initDashboard(@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO, Model model, HttpSession session, HttpServletRequest request, @RequestHeader Map<String,String> headers) {
+		
 		logger.debug("Starting Dashbaord()...");
 
-		//model.addAttribute("appLogoutUrl",appLogoutUrl);
-
-		
 		// SQL Testing RDS
 		UserLocuslink  userLocuslink= userLocuslinkDao.getById(1);
 		if (userLocuslink == null) {
 			logger.debug("SQL Error could not find the logged in User.");
 		}
-		
 		
 		// Common Routine
 		if (securityContextManager.isSecurityCredentialsGood()) {
@@ -71,8 +82,6 @@ public class DashboardController {
 		}
 
 	}
-
-
 
 
 

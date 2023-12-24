@@ -1,7 +1,7 @@
 const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 
-new Chart("myChart", {
+/*new Chart("myChart", {
   type: "line",
 
   data: {
@@ -50,7 +50,10 @@ new Chart("myChart", {
 
     }
   }
-});
+});*/
+
+
+
 // dashboard datatable
 $('#recent-uploded-data').DataTable({
   sScrollX: "100%",

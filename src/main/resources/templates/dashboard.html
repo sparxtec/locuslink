@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html  xmlns:th="http://www.thymeleaf.org"
+ 	   xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
+    <!-- CSRF Token -->
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+		
     <title>Welcome to Locuslink</title>
+    
     <link rel="icon" type="image/x-icon" href="images/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -18,15 +25,50 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.dataTables.min.js"></script>
     <script src="js/dataTables.bootstrap5.min.js"></script>
-    <script src="js/Chart.min.js"></script>
+  <!--   <script src="js/chart.min.js"></script> -->
     <script src="js/custome.js"></script>
+    
+    <!-- Sparks Added -->
+    <script src="js/locuslink.common.js"></script>
+        
 
 	<script>
 		$(document).ready(function() {
+			
+			setupAjaxSend();
+			
+			// Retrieve token
+			var token = $("meta[name='_csrf']").attr("content");
+		    var header = $("meta[name='_csrf_header']").attr("content");
+		    console.log("Get token: ", token, header);
+		    
+			// **************************************
+			// **  Navigation Events
+			// **************************************
+		
+			$('#navLogoId').click(function() {
+				//showSpinner();
+				submitFormHTML('initDashboard', 'dashboardFormDTO');
+			});
+
+			$('#navDashboardId').click(function() {
+				//showSpinner();
+				submitFormHTML('initDashboard', 'dashboardFormDTO');
+			});
+						
+			$('#navManageUsersId').click(function() {
+				submitFormAjaxHTML('initManageUsers', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navAssetDataId').click(function() {
+				submitFormAjaxHTML('initAssetData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
 		});
 
 		function initCommonResponse(returnData) {
-			hideSpinner();
+			//hideSpinner();
 			$('#mainBody').html( returnData);
 		}
 
@@ -34,7 +76,7 @@
 	
 </head>
 
-<body>
+<body id="Body">
 
 	<!-- Import Spinner Modal -->
 	<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
@@ -47,8 +89,10 @@
     
     	<div th:replace="fragments/header :: header"></div>
     	
-        <section class="main__wrap ">
-
+        <section id="mainBody" class="main__wrap ">
+        
+        <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
+            
             <div class="page-hding">
                 <h1>Dashboard</h1>
             </div>
@@ -247,7 +291,10 @@
                                 <h4>Assets Uploaded</h4>
                             </div>
                             <div class="asset-graph">
-                                <canvas id="myChart" style="width: 100%;"></canvas>
+                             <!--    <canvas id="myChart" style="width: 100%;" ></canvas> -->
+                             
+                               <img src="./images/sampleChart.avif" class="img-fluid" alt="" title=""  style="width: 340px;height:240px" >
+                               
                             </div>
 
                         </div>
@@ -625,6 +672,7 @@
                 </table>
             </div>
 
+		</form>
         </section>
         
     </div> 

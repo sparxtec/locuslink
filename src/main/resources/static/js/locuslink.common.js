@@ -2,7 +2,7 @@
 
 function showSpinner() {
 
-	 $('.modal-backdrop').css('opacity', '0.2');
+    $('.modal-backdrop').css('opacity', '0.2');
 
 	$("#spinnerModal").modal('hide');// account for toggle, make sure it shows
 	$("#spinnerModal").modal('show');
@@ -15,6 +15,7 @@ function hideSpinner() {
 
 
 function submitFormHTML(action, formName) {
+	//alert ("action: " + action + "  formName: " + formName);
 	form = document.getElementById(formName);
 	form.action = action;
 	form.submit();
