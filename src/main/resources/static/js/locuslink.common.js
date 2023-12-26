@@ -1,18 +1,13 @@
 
 
 function showSpinner() {
-
     $('.modal-backdrop').css('opacity', '0.2');
-
-	$("#spinnerModal").modal('hide');// account for toggle, make sure it shows
-	$("#spinnerModal").modal('show');
+    document.querySelector("#spinnerModal").style.display = "none";
+    document.querySelector("#spinnerModal").style.display = "block";				
 }
-function hideSpinner() {
-	$("#spinnerModal").modal('hide');
-
+function hideSpinner() {	
+	document.querySelector("#spinnerModal").style.display = "none";	
 }
-
-
 
 function submitFormHTML(action, formName) {
 	//alert ("action: " + action + "  formName: " + formName);
@@ -27,7 +22,7 @@ function setupAjaxSend(){
 		var token = $("meta[name='_csrf']").attr("content");
 	    var header = $("meta[name='_csrf_header']").attr("content");
 		
-	    console.log("Get token from veiw sanctions 1: ", token, header);
+	    //console.log("Get token from veiw sanctions 1: ", token, header);
  	    xhr.setRequestHeader(header, token);
  	});
 }

@@ -21,9 +21,13 @@
     <link href="css/style.css" rel="stylesheet">
     <link href="css/admin-responsive.css" rel="stylesheet">
 
+    <link href="css/spinner.css" rel="stylesheet">
+    
+    
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script> 
     <script src="js/dataTables.bootstrap5.min.js"></script>
   <!--   <script src="js/chart.min.js"></script> -->
     <script src="js/custome.js"></script>
@@ -34,8 +38,6 @@
 
 	<script>
 		$(document).ready(function() {
-			
-			showSpinner();
 			
 			setupAjaxSend();
 			
@@ -49,12 +51,12 @@
 			// **************************************
 		
 			$('#navLogoId').click(function() {
-				//showSpinner();
+				showSpinner();
 				submitFormHTML('initDashboard', 'dashboardFormDTO');
 			});
 
 			$('#navDashboardId').click(function() {
-				//showSpinner();
+				showSpinner();
 				submitFormHTML('initDashboard', 'dashboardFormDTO');
 			});
 						
@@ -64,6 +66,7 @@
 			});
 			
 			$('#navAssetDataId').click(function() {
+				showSpinner();
 				submitFormAjaxHTML('initAssetData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
@@ -81,7 +84,9 @@
 
 <body id="Body">
 
-
+    <!-- Import Spinner Modal -->
+    <div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+		
     <!-- navigation-->
 	<div th:replace="fragments/left-nav :: left-nav"></div>
 	
@@ -90,10 +95,7 @@
     
     	<div th:replace="fragments/header :: header"></div>
     	
-        <section id="mainBody" class="main__wrap ">
-        
-       	<!-- Import Spinner Modal -->
-		<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+        <section id="mainBody" class="main__wrap ">        
 	
         <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
             
