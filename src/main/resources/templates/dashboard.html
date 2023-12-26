@@ -35,6 +35,8 @@
 	<script>
 		$(document).ready(function() {
 			
+			showSpinner();
+			
 			setupAjaxSend();
 			
 			// Retrieve token
@@ -57,6 +59,7 @@
 			});
 						
 			$('#navManageUsersId').click(function() {
+				showSpinner();
 				submitFormAjaxHTML('initManageUsers', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
@@ -68,7 +71,7 @@
 		});
 
 		function initCommonResponse(returnData) {
-			//hideSpinner();
+			hideSpinner();
 			$('#mainBody').html( returnData);
 		}
 
@@ -78,8 +81,6 @@
 
 <body id="Body">
 
-	<!-- Import Spinner Modal -->
-	<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
 
     <!-- navigation-->
 	<div th:replace="fragments/left-nav :: left-nav"></div>
@@ -91,6 +92,9 @@
     	
         <section id="mainBody" class="main__wrap ">
         
+       	<!-- Import Spinner Modal -->
+		<div th:replace="fragments/spinnermodal :: spinnermodal"></div>
+	
         <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
             
             <div class="page-hding">
