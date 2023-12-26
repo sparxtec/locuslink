@@ -1,3 +1,22 @@
+@media screen and (max-width: 1366px) {
+
+
+  .filter_wrap {
+    --i-item: 2;
+    gap: 15px 24px;
+  }
+
+  .acount-setingpage .colum-bx {
+    margin-bottom: 10px;
+  }
+
+  .acount-setingpage .tble-serch {
+    margin-bottom: 15px;
+  }
+
+}
+
+
 @media screen and (max-width: 1024px) {
 
   /* body {
@@ -70,10 +89,87 @@
     position: fixed;
     inset: 0;
     background: rgb(0 0 0 / 50%);
-    z-index: 9;
+    z-index: 10;
     transform: translatex(-100%);
     transition: all 0.5s ease-in-out;
   }
+
+  .backdrop::after {
+    content: 'x';
+    left: 280px;
+    position: absolute;
+    color: white;
+    background: var(--c-danger);
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 25px;
+    /* opacity: 0.7; */
+    text-align: center;
+    border-radius: 0 4px 4px 0; cursor: pointer;
+
+  }
+
+
+
+  .filter_wrap {
+    --i-item: 2;
+  }
+
+}
+
+@media screen and (max-width:992px) {
+  .main__wrap {
+    padding: 20px 10px;
+  }
+
+  .dtatable-card {
+    padding: 35px 10px;
+  }
+
+  .addaset-formbx {
+    padding: 25px 15px;
+  }
+
+  .asset-img {
+    height: inherit;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .nav-tabs .nav-link {
+    padding: 8px 15px;
+    font-size: 16px;
+  }
+
+  .custome-tabs .nav-tabs {
+    gap: 15px;
+    padding: 0 20px;
+  }
+
+  /* 
+  .assetdta-page .uplod-inputbx.uplod-inputbx {
+    margin-bottom: 15px;
+  } */
+
+  .assetdta-page .assetdetl-btn label {
+    display: none;
+  }
+
+  .adaset-hding {
+    margin-bottom: 25px;
+  }
+
+  .addasset-page .colum-bx {
+    margin-bottom: 15px;
+  }
+
+  .addasset-page .col-lg-9 {
+    margin-bottom: 25px;
+  }
+
+
+
 }
 
 @media screen and (max-width:768px) {
@@ -81,8 +177,9 @@
     display: none;
   }
 
-  .main__wrap {
-    padding: 20px 10px;
+  .custome-tabs .nav-tabs {
+    gap: 7px;
+    padding: 0 12px;
   }
 
   .header {
@@ -104,14 +201,122 @@
   .view-btn a {
     padding: 5px 11px;
     font-size: 14px;
-  }.emptylbel label{display: none;}
+  }
+
+  .emptylbel label {
+    display: none;
+  }
 
   .dropdown-toggle img {
     width: 45px;
   }
-  .dataTables_filter {margin-top: 15px;}
-  div.dataTables_wrapper div.dataTables_filter input{display: block; margin: 0;}
-  .dtatable-card {padding: 35px 10px;}
 
-  .page-hding h1, .page-hding h2{font-size: 22px;}
+  .dataTables_filter {
+    margin-top: 15px;
+  }
+
+  div.dataTables_wrapper div.dataTables_filter input {
+    display: block;
+    margin: 0;
+  }
+
+
+  .page-hding h1,
+  .page-hding h2 {
+    font-size: 22px;
+  }
+
+  .adduser-form-bx .uplod-inputbx label {
+    font-size: 14px;
+  }
+
+}
+
+@media only screen and (max-width: 576px) {
+
+  .custome-tabs .nav-tabs {
+    justify-content: center;
+  }
+
+  .assetdetl-btn .uplod-inputbx label {
+    display: none;
+  }
+
+  .custome-tabs .nav-tabs .nav-item {
+    width: 100%;
+  }
+
+  .tble-serch {
+    margin-bottom: 15px;
+  }
+
+
+  .adduser-form-bx .uplod-inputbx label {
+    font-size: 14px;
+  }
+
+  .colum-bx {
+    margin-bottom: 5px;
+  }
+
+  .bottom {
+    justify-content: center;
+  }
+
+  .usrad-btn,
+  .useradded-btns {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .useradded-btns {
+    margin-bottom: 0;
+  }
+
+
+  .usrad-btn a {
+    padding: 9px 15px;
+    font-weight: normal;
+    font-size: 14px;
+  }
+
+  .tab-subhding h3,
+  .crte-conetion-page .useradded-btns {
+    margin-bottom: 20px;
+  }
+
+  .mangeuser-page .page-hding {
+    gap: 10px;
+  }
+
+  .assetdta-page .col {
+    flex: unset;
+  }
+
+  .filter_wrap {
+    --i-item: 1;
+  }
+
+  .addasset-page .col-lg-9 {
+    margin: 0;
+  }
+
+}
+
+
+/* @media (min-width: 500px) {
+  .multisteps-form__progress-btn {
+    text-indent: 0;
+  }
+} */
+
+
+@media only screen and (max-width: 320px) {
+
+  .editasset-page .document-bx,
+  .editasset-page .documentname-hdingbx {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
 }

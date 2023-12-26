@@ -11,6 +11,7 @@
     <link href="./css/site-font.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/admin-responsive.css" rel="stylesheet">
 
 
 
@@ -106,7 +107,7 @@
                 </a>
             </li>
             <li class="nav_item">
-                <a class="nav_link" href="javascript:void(0);">
+                <a class="nav_link" href="upload-data.html">
                     <div class="icon_box">
                         <svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -117,6 +118,82 @@
                     </div>
                     <span class="text">Upload Data</span>
                 </a>
+            </li>
+            <li class="nav_item">
+                <a class="nav_link dropdown_menu" href="#sidebar_dropdown1" data-bs-toggle="collapse"
+                    aria-expanded="false" aria-controls="sidebar_dropdown1">
+                    <div class="icon_box">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8.03778 17.1869H1.70378C1.31509 17.1869 1 16.8718 1 16.4831V1.70378C1 1.31509 1.31509 1 1.70378 1H11.057C11.2451 1.00078 11.425 1.07681 11.5567 1.21113L14.1607 3.81511C14.2926 3.94707 14.3668 4.12605 14.3669 4.31268V6.63023"
+                                stroke="#2F2E7A" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M3.81494 9.73526L5.89179 7.6563C6.09684 7.45167 6.41769 7.41988 6.65891 7.58029L7.63927 8.2341C7.88652 8.39874 8.21653 8.36065 8.41976 8.14402L10.3467 6.08828"
+                                stroke="#2F2E7A" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M3.81299 4.52098V11.5588H6.6281" stroke="#2F2E7A" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12.9619 10.1512V14.3739" stroke="#2F2E7A" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M15.0733 12.2626H10.8506" stroke="#2F2E7A" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path
+                                d="M13.3384 17.1166L13.7283 16.9688C15.5793 16.265 17.1846 14.4886 17.1846 12.5082V10.1203C17.1847 9.82758 17.0111 9.56271 16.7426 9.44607C15.5279 8.99211 14.2432 8.75394 12.9464 8.74229C11.6597 8.75328 10.3851 8.99154 9.18123 9.44607C8.91276 9.56271 8.73913 9.82758 8.73926 10.1203V12.5082C8.73926 14.4886 10.3143 16.2636 12.1653 16.9688L12.5544 17.1166C12.8069 17.213 13.086 17.213 13.3384 17.1166Z"
+                                stroke="#2F2E7A" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                    </div>
+                    <span class="text">Integration</span>
+                </a>
+
+                <div class="collapse" id="sidebar_dropdown1" data-bs-parent="#accordion">
+
+                    <ul class="sub-menu-nav list-unstyled">
+                        <li class="nav_item"><a href="connection.html" class="nav_link">
+                                <div class="icon_box"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M12.5652 0.5C10.9504 0.5 9.63043 1.81998 9.63043 3.43478C9.63043 3.87935 9.73414 4.29759 9.9121 4.67164L8.38023 6.58696H6.14015C5.70254 5.52369 4.66044 4.76087 3.43478 4.76087C1.81999 4.76087 0.5 6.08085 0.5 7.69565C0.5 9.31045 1.81999 10.6304 3.43478 10.6304C4.66044 10.6304 5.70254 9.86761 6.14015 8.80435H8.38023L9.9121 10.7197C9.73414 11.0937 9.63043 11.512 9.63043 11.9565C9.63043 13.5713 10.9504 14.8913 12.5652 14.8913C14.18 14.8913 15.5 13.5713 15.5 11.9565C15.5 10.3417 14.18 9.02174 12.5652 9.02174C12.2022 9.02174 11.8607 9.09324 11.5477 9.21419L10.3332 7.69565L11.5477 6.17711C11.8607 6.29806 12.2022 6.36956 12.5652 6.36956C14.18 6.36956 15.5 5.04958 15.5 3.43478C15.5 1.81998 14.18 0.5 12.5652 0.5ZM12.5652 2.71739C12.9691 2.71739 13.2826 3.0309 13.2826 3.43478C13.2826 3.83867 12.9691 4.15217 12.5652 4.15217C12.1613 4.15217 11.8478 3.83867 11.8478 3.43478C11.8478 3.0309 12.1613 2.71739 12.5652 2.71739ZM3.43478 6.97826C3.83867 6.97826 4.15217 7.29177 4.15217 7.69565C4.15217 8.09954 3.83867 8.41304 3.43478 8.41304C3.0309 8.41304 2.71739 8.09954 2.71739 7.69565C2.71739 7.29177 3.0309 6.97826 3.43478 6.97826ZM12.5652 11.2391C12.9691 11.2391 13.2826 11.5526 13.2826 11.9565C13.2826 12.3604 12.9691 12.6739 12.5652 12.6739C12.1613 12.6739 11.8478 12.3604 11.8478 11.9565C11.8478 11.5526 12.1613 11.2391 12.5652 11.2391Z"
+                                            stroke="#25245F" />
+                                    </svg>
+                                </div>
+                                <span class="text">Connections</span>
+                            </a></li>
+                        <li class="nav_item"><a href="integration.html" class="nav_link">
+                                <div class="icon_box">
+                                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M8.14 2.22118C8.40686 2.51813 8.78731 2.68775 9.18655 2.68775C9.5858 2.68775 9.96625 2.51813 10.2331 2.22118L10.9192 1.46533C11.3226 1.02396 11.9581 0.880175 12.5123 1.10485C13.0664 1.33523 13.4156 1.88934 13.3844 2.48863V3.50029C13.3565 3.90295 13.5044 4.29795 13.7898 4.58335C14.0752 4.86875 14.4702 5.01659 14.8728 4.98872H15.8845C16.4838 4.9575 17.0379 5.30672 17.2682 5.86085C17.4929 6.41502 17.3491 7.05047 16.9078 7.45393L16.1636 8.09349C15.8666 8.36034 15.697 8.74079 15.697 9.14004C15.697 9.53928 15.8666 9.91973 16.1636 10.1866L16.9194 10.8727C17.3608 11.2761 17.5046 11.9116 17.2799 12.4657C17.0495 13.0199 16.4954 13.3691 15.8961 13.3379H14.8844C14.4818 13.31 14.0868 13.4578 13.8014 13.7432C13.516 14.0286 13.3681 14.4236 13.396 14.8263V15.838C13.4272 16.4373 13.078 16.9914 12.5239 17.2217C11.9697 17.4464 11.3343 17.3026 10.9308 16.8613L10.2331 16.117C9.96625 15.8201 9.5858 15.6505 9.18655 15.6505C8.78731 15.6505 8.40686 15.8201 8.14 16.117L7.45393 16.8729C7.05047 17.3143 6.41502 17.458 5.86085 17.2334C5.30672 17.003 4.9575 16.4489 4.98872 15.8496V14.8379C5.01659 14.4353 4.86875 14.0403 4.58335 13.7549C4.29795 13.4695 3.90295 13.3216 3.50029 13.3495H2.48863C1.88934 13.3807 1.33523 13.0315 1.10485 12.4774C0.880175 11.9232 1.02396 11.2877 1.46533 10.8843L2.22118 10.1982C2.51813 9.93136 2.68775 9.55091 2.68775 9.15167C2.68775 8.75242 2.51813 8.37197 2.22118 8.10512L1.46533 7.41904C1.02396 7.01558 0.880175 6.38013 1.10485 5.82596C1.33523 5.27184 1.88934 4.92261 2.48863 4.95383H3.50029C3.90423 4.99488 4.30602 4.85796 4.60083 4.57878C4.89564 4.2996 5.05423 3.90587 5.03523 3.50029V2.48863C5.00401 1.88934 5.35324 1.33523 5.90736 1.10485C6.46153 0.880175 7.09698 1.02396 7.50044 1.46533L8.14 2.22118Z"
+                                            stroke="#25245F" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path
+                                            d="M9.61634 12.2329C11.0613 12.2329 12.2327 11.0615 12.2327 9.61648C12.2327 8.1715 11.0613 7.0001 9.61634 7.0001C8.17136 7.0001 6.99997 8.1715 6.99997 9.61648C6.99997 11.0615 8.17136 12.2329 9.61634 12.2329Z"
+                                            stroke="#25245F" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+
+                                </div> <span class="text">Integration</span>
+                            </a></li>
+                        <li class="nav_item"><a href="dictionaries.html" class="nav_link">
+
+
+                                <div class="icon_box">
+                                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.01854 13.9406C7.06329 13.9134 7.09089 13.8651 7.09164 13.8127V13.5821V13.5766C7.08202 13.5708 7.07215 13.5657 7.06207 13.5612C6.97728 13.5231 6.87829 13.5286 6.79758 13.5776C6.79732 13.5778 6.79706 13.5779 6.7968 13.5781C6.71714 13.6269 6.66801 13.7132 6.66668 13.8067L6.9374 13.8105L6.93898 13.8105L6.93936 13.8106L6.95179 13.8107L7.09161 13.8127H6.95058H6.94068H6.94031H6.9363H6.66664V13.3626M7.01854 13.9406L7.09164 13.5766L7.07862 13.5686L7.06241 13.5605L6.66664 13.3626M7.01854 13.9406C6.97367 13.9681 6.91721 13.9681 6.87234 13.9406H7.01854ZM6.66664 13.3626L2.64333 11.351V5.12535L6.66664 7.137V13.3626ZM14.8266 3.45693L14.8266 3.45564C14.8255 3.09721 14.6389 2.7649 14.3334 2.57739C14.0282 2.39003 13.6477 2.37396 13.3278 2.53487C13.3276 2.53499 13.3273 2.53512 13.3271 2.53524L7.7008 5.34535L2.07454 2.53524C2.07429 2.53511 2.07403 2.53498 2.07378 2.53486C1.75384 2.37397 1.37342 2.39004 1.06818 2.57739C0.762695 2.7649 0.576087 3.09721 0.575002 3.45564H0.575V3.45693L0.575 11.6075L0.575 11.6078C0.575331 12.2312 0.928424 12.8008 1.48664 13.0783C1.48677 13.0784 1.48691 13.0785 1.48705 13.0785L7.23661 15.9533L7.23799 15.954C7.37946 16.0241 7.53468 16.0621 7.69254 16.0651L7.70563 16.0654L7.71872 16.0648C7.86974 16.0585 8.01799 16.0222 8.15492 15.9582L8.15498 15.9583L8.16499 15.9533L13.9146 13.0785C13.9147 13.0785 13.9149 13.0784 13.9151 13.0783C14.4732 12.8007 14.8263 12.2312 14.8266 11.6078V11.6075L14.8266 3.45693ZM12.7583 11.3449L8.73497 13.3565V7.1431L12.7583 5.13144V11.3449Z"
+                                            stroke="#25245F" stroke-width="0.85" />
+                                        <path
+                                            d="M7.69829 5.13063V5.13066L7.70338 5.13063C7.86488 5.12966 8.0239 5.09089 8.16771 5.01741C8.16806 5.01723 8.16841 5.01706 8.16876 5.01688L13.0402 2.5507L13.0541 2.54368L13.0674 2.53568C13.5315 2.2564 13.7015 1.66632 13.4571 1.18293C13.2127 0.699533 12.6367 0.486635 12.1366 0.694865L12.1223 0.700821L12.1085 0.707802L7.69783 2.9342L3.30552 0.714049C2.97595 0.523314 2.56756 0.528974 2.24303 0.729982C1.91347 0.934102 1.72575 1.30538 1.75672 1.69179C1.78722 2.07228 2.02472 2.40451 2.37365 2.55688L7.23291 5.01688C7.23327 5.01706 7.23362 5.01723 7.23397 5.01741C7.37777 5.09089 7.53679 5.12966 7.69829 5.13063Z"
+                                            stroke="#25245F" stroke-width="0.85" />
+                                    </svg>
+
+                                </div>
+                                <span class="text">Dictionaries</span>
+                            </a></li>
+
+                    </ul>
+                </div>
             </li>
             <li class="nav_item">
                 <a class="nav_link" href="javascript:void(0);">
@@ -170,6 +247,9 @@
         </ul>
 
     </section>
+    <div class="backdrop"></div>
+
+
     <!-- navigation-->
     <div class="mangeuser-page adduser-page">
         <div class="content-container">
@@ -208,8 +288,8 @@
                     <div class="adduser-form-bx">
                         <p class="warning-msg"><span>* </span> marked fields are mandatory</p>
 
-                        <div class="row mb-3">
-                            <div class="col-sm-2 colum-bx">
+                        <div class="row">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>User Name <span>*</span></label>
 
@@ -217,7 +297,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="text" placeholder="User Name" title="User Name" class="form-control">
                                     <span class="validation-msg">please Enter the valid username</span>
@@ -225,7 +305,7 @@
 
                             </div>
 
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Password <span>*</span></label>
 
@@ -233,14 +313,14 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="password" placeholder="Password" title="Password" class="form-control">
                                 </div>
 
                             </div>
 
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>First Name</label>
 
@@ -248,7 +328,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="text" placeholder="Enter First name" title="Enter First name"
                                         class="form-control">
@@ -256,7 +336,7 @@
 
                             </div>
 
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Last Name </label>
 
@@ -264,14 +344,14 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="text" placeholder="Last Name" title="Last Name" class="form-control">
                                 </div>
 
                             </div>
 
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Email ID</label>
 
@@ -279,14 +359,14 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="text" placeholder="Enter mail ID" title="Enter mail ID"
                                         class="form-control">
                                 </div>
 
                             </div>
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Phone Number</label>
 
@@ -294,7 +374,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="Number" placeholder="Enter Phone number" title="Enter Phone Number"
                                         class="form-control">
@@ -305,7 +385,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Additional info</label>
 
@@ -313,7 +393,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
                                     <input type="text" placeholder="Additional info" title="Additional info"
                                         class="form-control">
@@ -322,7 +402,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Select User Role</label>
 
@@ -330,7 +410,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-xl-10 colum-bx">
                                 <div class="tble-serch uplod-inputbx ">
                                     <select class="form-select">
                                         <option>Select Role</option>
@@ -346,7 +426,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-sm-2 colum-bx">
+                            <div class="col-sm-3 col-md-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
                                     <label>Company Name</label>
 
@@ -354,7 +434,7 @@
 
                             </div>
 
-                            <div class="col-sm-10 colum-bx">
+                            <div class="col-sm-9 col-md-9 col-xl-10 colum-bx">
                                 <div class="tble-serch uplod-inputbx">
                                     <select class="form-select">
                                         <option>Company Name</option>

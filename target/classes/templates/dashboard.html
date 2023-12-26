@@ -29,7 +29,7 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.dataTables.min.js"></script> 
     <script src="js/dataTables.bootstrap5.min.js"></script>
-  <!--   <script src="js/chart.min.js"></script> -->
+<!--  <script src="js/chart.min.js"></script> -->
     <script src="js/custome.js"></script>
     
     <!-- Sparks Added -->
@@ -69,6 +69,21 @@
 				showSpinner();
 				submitFormAjaxHTML('initAssetData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
+			
+			
+			$('#navCatalogDataId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initCatalog', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navUploadDataId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+			
+			
 			
 			
 		});

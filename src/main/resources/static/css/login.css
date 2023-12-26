@@ -11,7 +11,7 @@
     --c-dull: #7F7F7F;
     --c-gray: #DDDDDD;
     --c-gray-l: #ECECEC;
-   
+
 }
 
 * {
@@ -123,6 +123,11 @@ button:is(:hover, :focus) {
     font-size: 18px;
 }
 
+.chekbx-fogetpass .form-check-label {
+    color: #3C3C3C;
+}
+
+
 .login-form .form-control:focus,
 .form-check-input:focus {
     box-shadow: none;
@@ -138,17 +143,21 @@ button:is(:hover, :focus) {
     height: 55px;
     border-radius: 50px;
     border: 1px solid #D3D3D3;
-    padding: 10px 10px 10px 20px;
+    padding: 10px 50px 10px 20px;
 }
 
 
-.login-form .form-group img {
+.login-form .form-group img,
+.login-form .form-group i {
     display: inline-block;
-    width: 17px;
+    /* width: 17px; */
     position: absolute;
     right: 0;
-    bottom: 13px;
+    bottom: 17px;
     right: 20px;
+    font-size: 19px;
+    color: lightgray;
+    cursor: pointer;
 }
 
 .chekbx-fogetpass {
@@ -168,6 +177,10 @@ button:is(:hover, :focus) {
     font-size: 16px;
     transition: 0.5s ease-in-out;
     display: inline-block;
+}
+
+.forgot-pswd a {
+    text-decoration: underline;
 }
 
 .login-btn a {
