@@ -18,285 +18,283 @@
 </head>
 
 <body>
-    
+   
+    <div class="page-hding page-hding">
+                    <h1>Upload Data</h1>
 
-   <div class="page-hding page-hding">
-         <h1>Upload Data</h1>
+                </div>
 
-    </div>
+                <div class="dtatable-card mt-4" >
 
-    <div class="dtatable-card mt-4">
+                    <div class="multisteps-form">
 
-         <div class="multisteps-form">
+                        <div class="row justify-content-center">
+                            <div class="col-md-7">
+                                <div class="multisteps-form__progress">
+                                    <button class="multisteps-form__progress-btn js-active" type="button" title="Step 1"
+                                        data-title="Step 1">Step <span>1</span>
+                                    </button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Step 2"
+                                        data-title="Step 2">Step <span>2</span></button>
+                                    <button class="multisteps-form__progress-btn" type="button" title="Step 3"
+                                        data-title="Step 2">Step <span>3</span>
+                                    </button>
 
-             <div class="row justify-content-center">
-                 <div class="col-md-7">
-                     <div class="multisteps-form__progress">
-                         <button class="multisteps-form__progress-btn js-active" type="button" title="Step 1"
-                             data-title="Step 1">Step <span>1</span>
-                         </button>
-                         <button class="multisteps-form__progress-btn" type="button" title="Step 2"
-                             data-title="Step 2">Step <span>2</span></button>
-                         <button class="multisteps-form__progress-btn" type="button" title="Step 3"
-                             data-title="Step 2">Step <span>3</span>
-                         </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- C.Sparks FIXTHIS had to manually set height due to css and js errors  -->
+                        <!--form panels-->
+                        <div class="adduser-form-bx addaset-formbx borderbx" style="height:420px">
+                            <form class="multisteps-form__form">
+                                <!--single form panel-->
+                                <div class="multisteps-form__panel js-active" data-animation="slideHorz">
 
-                     </div>
-                 </div>
-             </div>
-             <!--form panels-->
-             <div class="adduser-form-bx addaset-formbx borderbx">
-             
-                 <form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}"  class="multisteps-form__form"  method="post">
-                 
-                     <!--single form panel-->
-                     <div class="multisteps-form__panel js-active" data-animation="slideHorz">
+                                    <div class="multisteps-form__content">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Select Industry</label>
 
-                         <div class="multisteps-form__content">
-                             <div class="row">
-                                 <div class="col-lg-3 col-xl-2 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Select Industry</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                                <div class="tble-serch uplod-inputbx ">
+                                                    <select class="form-select">
+                                                        <option>Select Industry</option>
+                                                        <option>Electric Grid</option>
+                                                        <option value="1">Oil and Gas</option>
+                                                        <option value="2">Solar</option>
 
-                                 <div class="col-lg-9 col-xl-10 colum-bx">
-                                     <div class="tble-serch uplod-inputbx ">
-                                         <select class="form-select">
-                                             <option>Select Industry</option>
-                                             <option>Electric Grid</option>
-                                             <option value="1">Oil and Gas</option>
-                                             <option value="2">Solar</option>
+                                                    </select>
 
-                                         </select>
 
 
+                                                </div>
 
-                                     </div>
+                                            </div>
+                                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label> Sub Industry </label>
 
-                                 </div>
-                                 <div class="col-lg-3 col-xl-2 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label> Sub Industry </label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                                <div class="tble-serch uplod-inputbx">
+                                                    <select class="form-select">
+                                                        <option>Select Sub Industry</option>
+                                                        <option>Distribution</option>
+                                                        <option>Substation</option>
+                                                        <option>Transmission</option>
 
-                                 <div class="col-lg-9 col-xl-10 colum-bx">
-                                     <div class="tble-serch uplod-inputbx">
-                                         <select class="form-select">
-                                             <option>Select Sub Industry</option>
-                                             <option>Distribution</option>
-                                             <option>Substation</option>
-                                             <option>Transmission</option>
+                                                    </select>
 
-                                         </select>
 
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Asset Type</label>
 
-                                 <div class="col-lg-3 col-xl-2 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Asset Type</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                                <div class="tble-serch uplod-inputbx">
+                                                    <select class="form-select">
+                                                        <option>Select Asset Type</option>
+                                                        <option>Transformer</option>
+                                                        <option>Recloser</option>
+                                                        <option>Switchgear</option>
+                                                        <option>Voltage Regulator</option>
+                                                        <option>Capacitor Bank</option>
+                                                        <option>Pole</option>
+                                                        <option>Splice</option>
 
-                                 <div class="col-lg-9 col-xl-10 colum-bx">
-                                     <div class="tble-serch uplod-inputbx">
-                                         <select class="form-select">
-                                             <option>Select Asset Type</option>
-                                             <option>Transformer</option>
-                                             <option>Recloser</option>
-                                             <option>Switchgear</option>
-                                             <option>Voltage Regulator</option>
-                                             <option>Capacitor Bank</option>
-                                             <option>Pole</option>
-                                             <option>Splice</option>
+                                                    </select>
 
-                                         </select>
 
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Sub Asset Type</label>
 
-                                 <div class="col-lg-3 col-xl-2 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Sub Asset Type</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                                <div class="tble-serch uplod-inputbx">
+                                                    <select class="form-select">
+                                                        <option>Select Sub Asset Type</option>
+                                                        <option>Sub Asset Type 1</option>
+                                                        <option>Sub Asset Type 2</option>
+                                                        <option>Sub Asset Type 3</option>
+                                                        <option>Sub Asset Type 4</option>
+                                                        <option>Sub Asset Type 5</option>
+                                                    </select>
 
-                                 <div class="col-lg-9 col-xl-10 colum-bx">
-                                     <div class="tble-serch uplod-inputbx">
-                                         <select class="form-select">
-                                             <option>Select Sub Asset Type</option>
-                                             <option>Sub Asset Type 1</option>
-                                             <option>Sub Asset Type 2</option>
-                                             <option>Sub Asset Type 3</option>
-                                             <option>Sub Asset Type 4</option>
-                                             <option>Sub Asset Type 5</option>
-                                         </select>
 
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
 
+                                            <div class="usrad-btn import-astbtn sve-btn justify-content-end">
+                                                <button type="button" class="js-btn-next">Next</button>
+                                            </div>
 
-                                 <div class="usrad-btn import-astbtn sve-btn justify-content-end">
-                                     <button type="button" class="js-btn-next">Next</button>
-                                 </div>
 
 
+                                        </div>
 
-                             </div>
 
 
 
+                                    </div>
+                                </div>
+                                <!--single form panel-->
+                                <div class="multisteps-form__panel" data-animation="slideHorz">
 
-                         </div>
-                     </div>
-                     <!--single form panel-->
-                     <div class="multisteps-form__panel" data-animation="slideHorz">
+                                    <div class="multisteps-form__content">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-xl-3 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Download Template Type</label>
 
-                         <div class="multisteps-form__content">
-                             <div class="row">
-                                 <div class="col-lg-4 col-xl-3 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Download Template Type</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
+                                            <div class="col-lg-6 col-xl-7 colum-bx">
+                                                <div class="tble-serch uplod-inputbx">
+                                                    <select class="form-select">
+                                                        <option>Select Template Type</option>
+                                                        <option>Download Template Type 1</option>
+                                                        <option>Download Template Type 2</option>
+                                                        <option>Download Template Type 3</option>
 
-                                 </div>
-                                 <div class="col-lg-6 col-xl-7 colum-bx">
-                                     <div class="tble-serch uplod-inputbx">
-                                         <select class="form-select">
-                                             <option>Select Template Type</option>
-                                             <option>Download Template Type 1</option>
-                                             <option>Download Template Type 2</option>
-                                             <option>Download Template Type 3</option>
+                                                    </select>
+                                                </div>
+                                                <span class="orword">Or</span>
+                                            </div>
+                                            <div class="col-lg-2 col-xl-2 colum-bx">
 
-                                         </select>
-                                     </div>
-                                     <span class="orword">Or</span>
-                                 </div>
-                                 <div class="col-lg-2 col-xl-2 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <a href="#" class="contine-btn">Download</a>
+                                                </div>
 
-                                     <div class="uplod-inputbx">
-                                         <a href="#" class="contine-btn">Download</a>
-                                     </div>
+                                            </div>
 
-                                 </div>
 
 
+                                            <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9 colum-bx">
 
-                                 <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9 colum-bx">
+                                                <div class="uploadfile position-relative text-center">
+                                                    <input type="file">
+                                                    <img src="./images/export.svg" class="img-fluid" alt="export"
+                                                        title="">
+                                                    <h6>Drag &amp; drop files or <span>Browse</span></h6>
+                                                </div>
 
-                                     <div class="uploadfile position-relative text-center">
-                                         <input type="file">
-                                         <img src="./images/export.svg" class="img-fluid" alt="export"
-                                             title="">
-                                         <h6>Drag &amp; drop files or <span>Browse</span></h6>
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-sm-4 col-xl-3 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Required Documents</label>
 
-                                 <div class="col-sm-4 col-xl-3 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Required Documents</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-sm-8 col-xl-9 colum-bx">
+                                                <div class="tble-serch ">
+                                                    <input type="text" placeholder="Choose file" title="Choose file "
+                                                        class="form-control">
+                                                </div>
 
-                                 <div class="col-sm-8 col-xl-9 colum-bx">
-                                     <div class="tble-serch ">
-                                         <input type="text" placeholder="Choose file" title="Choose file "
-                                             class="form-control">
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-sm-4 col-xl-3 colum-bx">
+                                                <div class="uplod-inputbx">
+                                                    <label>Upload Additional Documents</label>
 
-                                 <div class="col-sm-4 col-xl-3 colum-bx">
-                                     <div class="uplod-inputbx">
-                                         <label>Upload Additional Documents</label>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                            <div class="col-sm-8 col-xl-9 colum-bx">
+                                                <div class="tble-serch ">
+                                                    <input type="text" placeholder="Choose file" title="Choose file "
+                                                        class="form-control">
+                                                    <a href="javascript:void(0)" class="add-moreinput">+ Add documents
+                                                        fields
+                                                    </a>
+                                                    <div class="extrpinput"></div>
 
-                                 <div class="col-sm-8 col-xl-9 colum-bx">
-                                     <div class="tble-serch ">
-                                         <input type="text" placeholder="Choose file" title="Choose file "
-                                             class="form-control">
-                                         <a href="javascript:void(0)" class="add-moreinput">+ Add documents
-                                             fields
-                                         </a>
-                                         <div class="extrpinput"></div>
+                                                </div>
 
-                                     </div>
+                                            </div>
 
-                                 </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9">
+                                                <div
+                                                    class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
+                                                    <button class="js-btn-prev contine-btn" type="button"
+                                                        title="Prev">Previous</button>
+                                                    <button class="js-btn-next" type="button" title="Next">Next</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--single form panel-->
+                                <div class="multisteps-form__panel" data-animation="slideHorz">
 
-                             </div>
-                             <div class="row mt-4">
-                                 <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9">
-                                     <div
-                                         class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
-                                         <button class="js-btn-prev contine-btn" type="button"
-                                             title="Prev">Previous</button>
-                                         <button class="js-btn-next" type="button" title="Next">Next</button>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                     <!--single form panel-->
-                     <div class="multisteps-form__panel" data-animation="slideHorz">
+                                    <div class="multisteps-form__content">
+                                        <div class="row">
+                                            <div class="success-img text-center">
+                                                <img src="./images/user-added.svg" class="img-fluid" alt="user-added"
+                                                    title="User Added Successfully.">
+                                                <p>Data has been uploaded successfully.</p>
+                                                <div class="usrad-btn useradded-btns">
+                                                    <a href="upload-data.html" class="btn-bcktouser">View Data List</a>
+                                                    <a href="add-data.html" class="btn-aduser">Upload New
+                                                        Data</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4 d-none">
+                                            <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9">
+                                                <div
+                                                    class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
+                                                    <button class="js-btn-prev contine-btn" type="button"
+                                                        title="Prev">Previous</button>
+                                                    <button class="js-btn-next" type="button" title="Next">Next</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--single form panel-->
 
-                         <div class="multisteps-form__content">
-                             <div class="row">
-                                 <div class="success-img text-center">
-                                     <img src="./images/user-added.svg" class="img-fluid" alt="user-added"
-                                         title="User Added Successfully.">
-                                     <p>Data has been uploaded successfully.</p>
-                                     <div class="usrad-btn useradded-btns">
-                                         <a href="upload-data.html" class="btn-bcktouser">View Data List</a>
-                                         <a href="add-data.html" class="btn-aduser">Upload New
-                                             Data</a>
-                                     </div>
-                                 </div>
-                             </div>
-                             <div class="row mt-4 d-none">
-                                 <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9">
-                                     <div
-                                         class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
-                                         <button class="js-btn-prev contine-btn" type="button"
-                                             title="Prev">Previous</button>
-                                         <button class="js-btn-next" type="button" title="Next">Next</button>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                     <!--single form panel-->
+                            </form>
+                        </div>
+                    </div>
 
-                 </form>
-             </div>
-         </div>
 
-
-
-  </div>
+                </div>
 
 
 </body>

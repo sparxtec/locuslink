@@ -22,23 +22,32 @@
     <link href="css/admin-responsive.css" rel="stylesheet">
 
     <link href="css/spinner.css" rel="stylesheet">
-    
-    
-    
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script> 
-    <script src="js/dataTables.bootstrap5.min.js"></script>
-<!--  <script src="js/chart.min.js"></script> -->
-    <script src="js/custome.js"></script>
-    
-    <!-- Sparks Added -->
-    <script src="js/locuslink.common.js"></script>
-        
+
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script> 
+	<script src="js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/chart.min.js"></script> 
+	<script src="js/custome.js"></script>
+	
+	<!-- Sparks Added -->
+	<script src="js/locuslink.common.js"></script>
 
 	<script>
 		$(document).ready(function() {
 			
+		    // C.Sparks 12-27-2023  set the active nav button
+		    $( ".nav_link" ).bind( "click", function(event) {
+		        event.preventDefault();
+		        var clickedItem = $( this );
+		        $( ".nav_link" ).each( function() {
+		            $( this ).removeClass( "active" );
+		        });
+		        clickedItem.addClass( "active" );
+		    });
+		    
+		    
 			setupAjaxSend();
 			
 			// Retrieve token
@@ -104,7 +113,7 @@
 		
     <!-- navigation-->
 	<div th:replace="fragments/left-nav :: left-nav"></div>
-	
+		
     <!-- main body content -->
     <div class="content-container">
     
@@ -112,7 +121,7 @@
     	
         <section id="mainBody" class="main__wrap ">        
 	
-        <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
+       <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
             
             <div class="page-hding">
                 <h1>Dashboard</h1>
@@ -341,7 +350,9 @@
                     <h5>Recent Uploaded Data</h5>
                 </div>
 
-                <table id="recent-uploded-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
+               <table id="recent-uploded-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
+ 
+
                     <thead>
                         <tr>
                             <th>Universal Catalog</th>
@@ -693,11 +704,12 @@
                 </table>
             </div>
 
-		</form>
+			</form>
         </section>
         
     </div> 
-
+          
 </body>
+
 
 </html>

@@ -1,7 +1,7 @@
 const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
-/*
-new Chart("myChart", {
+
+/*new Chart("myChart", {
   type: "line",
 
   data: {
@@ -51,6 +51,7 @@ new Chart("myChart", {
     }
   }
 });*/
+
 
 // dashboard datatable
 $('#recent-uploded-data').DataTable({
@@ -169,7 +170,9 @@ $('.delete-btn').click(function () {
 const DOMstrings = {
   stepsBtnClass: 'multisteps-form__progress-btn',
   stepsBtns: document.querySelectorAll(`.multisteps-form__progress-btn`),
-  stepsBar: document.querySelector('.multisteps-form__progress'),
+  
+/*  stepsBar: document.querySelector('.multisteps-form__progress'),*/
+  
   stepsForm: document.querySelector('.multisteps-form__form'),
   stepsFormTextareas: document.querySelectorAll('.multisteps-form__textarea'),
   stepFormPanelClass: 'multisteps-form__panel',
@@ -189,7 +192,7 @@ const removeClasses = (elemSet, className) => {
   });
 
 };
-
+/*
 //return exect parent node of the element
 const findParent = (elem, parentClass) => {
 
@@ -277,11 +280,7 @@ const setFormHeight = () => {
   formHeight(activePanel);
 };
 
-
-
-/*
-
-//STEPS BAR CLICK FUNCTION
+/*STEPS BAR CLICK FUNCTION
 DOMstrings.stepsBar.addEventListener('click', e => {
 
   //check if click target is a step button
@@ -299,12 +298,10 @@ DOMstrings.stepsBar.addEventListener('click', e => {
 
   //open active panel
   setActivePanel(activeStep);
-});
+});*/
 
 
-
-
-//PREV/NEXT BTNS CLICK
+/*//PREV/NEXT BTNS CLICK
 DOMstrings.stepsForm.addEventListener('click', e => {
 
   const eventTarget = e.target;
@@ -332,32 +329,32 @@ DOMstrings.stepsForm.addEventListener('click', e => {
   setActiveStep(activePanelNum);
   setActivePanel(activePanelNum);
 
-});
+});*/
 
-//SETTING PROPER FORM HEIGHT ONLOAD
+/*//SETTING PROPER FORM HEIGHT ONLOAD
 window.addEventListener('load', setFormHeight, false);
 
 //SETTING PROPER FORM HEIGHT ONRESIZE
-window.addEventListener('resize', setFormHeight, false);
+window.addEventListener('resize', setFormHeight, false);*/
 
 //changing animation via animation select !!!YOU DON'T NEED THIS CODE (if you want to change animation type, just change form panels data-attr)
 
-const setAnimationType = newType => {
+/*const setAnimationType = newType => {
   DOMstrings.stepFormPanels.forEach(elem => {
     elem.dataset.animation = newType;
   });
-};
+};*/
 
 //selector onchange - changing animation
-const animationSelect = document.querySelector('.pick-animation__select');
+/*const animationSelect = document.querySelector('.pick-animation__select');*/
 
-animationSelect.addEventListener('change', () => {
+/*animationSelect.addEventListener('change', () => {
   const newAnimationType = animationSelect.value;
 
   setAnimationType(newAnimationType);
-});
+});*/
 
 
-*/
+
 
 
