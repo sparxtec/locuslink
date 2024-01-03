@@ -128,9 +128,9 @@ public class UploadController {
 
 	
 	
-	@PostMapping(value = "/uploadAddData")
-	public String uploadAddData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting uploadAddData()...");
+	@PostMapping(value = "/uploadStep1")
+	public String uploadStep1 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting uploadStep1()...");
 
 		
 		// TODO make a distinct list based on the product type
@@ -140,31 +140,31 @@ public class UploadController {
 	   	model.addAttribute("ucatList", ucatList);	   	
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/upload-add-data";
+		return "fragments/upload-step1";
 	}
 	
 	
 	
 	
-	@PostMapping(value = "/initUploadStep2")
-	public String initUploadStep2 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initUploadStep2()...");
+	@PostMapping(value = "/uploadStep2")
+	public String uploadStep2 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting uploadStep2()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/uploadstep2";
+		return "fragments/upload-step2";
 	}
 
 	
 	
-	@PostMapping(value = "/initUploadStep3")
-	public String initUploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	@PostMapping(value = "/uploadStep3")
+	public String uploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		
-		logger.debug("Starting initUploadStep3()...");
+		logger.debug("Starting uploadStep3()...");
 			
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/uploadstep3";
+		return "fragments/upload-step3";
 	}
 	
 
