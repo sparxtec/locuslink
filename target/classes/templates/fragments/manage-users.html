@@ -6,7 +6,11 @@
 
 	<script>	
 		$(document).ready(function() {	
-						
+				
+			$('#addUserButtonId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('addUserDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
 	 	});       
    
 	   function initCommonResponse(returnData) {	
@@ -23,7 +27,7 @@
     <div class="page-hding page-hding">
              <h1>Manage Users & Roles</h1>
              <div class="usrad-btn">
-                 <a href="adduser-details.html">Add Users</a>
+                 <a id="addUserButtonId"  href="#">Add Users</a>
              </div>
      </div>
 

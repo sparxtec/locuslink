@@ -1,22 +1,40 @@
 package com.locuslink.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.locuslink.common.GenericMessageRequest;
+import com.locuslink.common.GenericMessageResponse;
+import com.locuslink.dao.UserLocuslinkDao;
+import com.locuslink.dao.UserMembershipDao;
+import com.locuslink.dao.UserRoleTypeDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.UserDTO;
+import com.locuslink.model.UserLocuslink;
+import com.locuslink.model.UserMembership;
+
 
 
 /**
  * This is a Spring MVC Controller.
  * 
  * @author C.Sparks
- * @since 1.0.0 - December 22, 2023 - Initial version
+ * @since 1.0.0 - October 9, 2018 - Initial version
  */
 @Controller
 @Service
@@ -24,69 +42,32 @@ public class ProfileController {
  
 	private static final Logger logger = Logger.getLogger(ProfileController.class);
 	
-	
-//	@Autowired
-//	@Qualifier(UserMembershipDao.BEAN_NAME)
-//	private UserMembershipDao userMembershipDao;
-//	
-//	@Autowired
-//	@Qualifier(UserRoleTypeDao.BEAN_NAME)
-//	private UserRoleTypeDao userRoleTypeDao;
-	
-
-	@PostMapping(value = "/initManageUsers")
-	public String initManageUsers (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		
-		logger.debug("Starting initManageUsers()...");
-
-		
-//		UserTrace user=(UserTrace)session.getAttribute ("userTrace");
-//	 
-//		if (user == null) {
-//			logger.debug(" userTrace in session does not exist");
-//			return "login";
-//		} 
-//		logger.debug(user.getLoginId());
-//		
-//		UserTrace latestUserProfile=userTraceService.getUserByLanId(user.getLoginId());
-//		UserMembership userMembership= userMembershipDao.getByUser(user);
-//		
-//		List<UserRoleType> roleList=userRoleTypeDao.getAllUserRoles();
-//		System.out.println(user.getExternalContractorCompanyName());
-//		
-//		model.addAttribute("userTrace",latestUserProfile);
-//		model.addAttribute("userMembership", userMembership);
-//		model.addAttribute("roleList",roleList);
-		
-		
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-		return "fragments/manage-users";
-	}
+    @Value("${app.logout.url}")
+    private String appLogoutUrl;
     
+    @Autowired
+    private UserLocuslinkDao userLocuslinkDao;
+    
+    
+	@Autowired
+	private UserMembershipDao userMembershipDao;
+	
+	
+	@Autowired
+	private UserRoleTypeDao userRoleTypeDao;
+	
 
-		
+	
+	@PostMapping(value = "/initProfile")
+	public String initProfile (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initProfile()...");
 
-		  
+		model.addAttribute("appLogoutUrl",appLogoutUrl);
 
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		return "fragments/profile";
+	}
 
-//	 @RequestMapping(value = "/getAllActiveUsers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-//     public @ResponseBody GenericMessageResponse getAllActiveUsers(@RequestBody GenericMessageRequest request, HttpSession session)  {
-//
-//		logger.debug("In getAllActiveUsers()");
-//		GenericMessageResponse response = new GenericMessageResponse("1.0", "Trace", "getAllUser");
-//		
-//		
-//		//List<UserTrace> userTraceList =userTraceService.getAllActiveUsers();
-//		//List<UserFormDTO> userFormDtoList = new ArrayList<UserFormDTO>();
-//	
-//		getUserList(userTraceList,userFormDtoList);
-//		
-//		response.setField("userList",userFormDtoList);
-//		
-//		return response;
-//	 }
-	 
-	 
-
+    
+ 
 }
