@@ -4,213 +4,216 @@
 <head>
 	<title>Manage Users</title>
 
-	<script>	
-		$(document).ready(function() {	
-				
-			$('#addUserButtonId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('addUserDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-			});
-	 	});       
-   
-	   function initCommonResponse(returnData) {	
-		   hideSpinner();
-		   $('#mainBody').html( returnData);    	 
-	   }
-	</script>	
+	 	<script>	
+        	$(document).ready(function() {	
+         		hideSpinner();
+         		         		
+    			$('#addUserButtonId').click(function() {
+    				showSpinner();
+    				submitFormAjaxHTML('addUserDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+    			});
+    			
+    			
+    			
+         		
+         		if( $('#editUserDataTable').length){
+         			var table = $('#editUserDataTable').DataTable( {
+                	retrieve: true,
+         	 		searchHighlight: false,
+                 	responsive: true,		        
+                 	"paging":   true,	
+                 	scrollCollapse: true,
+                 	scrollY: 'calc(100vh - 35rem)',	
+                 	order: [1, 'asc' ],		        
+
+         	    	ajax: {
+               		    url: 'getAllUser',
+               		 	type: 'POST',
+                		contentType: 'application/json',
+                		data: function ( data ) {
+                			showSpinner();
+                			var myData = {version:"1.0", clientId:"gim"};
+                			var innerData = {};            
+                			myData["data"] = innerData;	        				        		
+                    		return JSON.stringify( myData );
+         	        },
+         	        "dataSrc": function (json) {
+         	        	userList = json.data.userList;	
+         	        	console.log(userList);
+         	        	hideSpinner();	// C.Sparks 1-19-19			    
+         	        	return userList;						    
+         	         }					       
+            		},  
+         
+                 columns: [	 
+                 	
+                     { data: "userLocusLinkPkId" },
+                     { data: "userTypeCode" },
+                     { data: "loginName" },
+                     { data: "firstName" },
+                     { data: "lastNameBusName" },
+              /*        { data: "activeFlag" } , */
+                      { data: "activeFlag" ,
+                     	"render": function(data, type, row, meta){	
+                     		if('Y' == row['activeFlag']){
+                     			
+                     			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeFlag+"' onclick='deactivateRow(this)' class='button button--text'>Deactivate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
+                             }
+                     		else
+                     			{
+                     			data = "<div class='d-flex'><a href='#' id='deactivateUser_"+row.lanId+"_"+row.activeFlag+"' onclick='deactivateRow(this)' class='button button--text'>Activate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_"+row.lanId+"' class='button button--text ml-3'>Delete</a></div>"
+                     			}
+                             return data;
+                       }}, 
+                          
+                          
+                	],
+                	
+                	"createdRow": function( row, data, dataIndex ) {
+                		//console.log(data.itemNumErrorFlag);
+                	
+                	    if ( data.activeFlag == "N" ) {
+                	    	 $(row).addClass('deactivated');
+                	    	 // $('tr', row).eq(9).addClass("checked"); 
+                	    }    
+                	   
+                	  },
+                	  //dom: '<"datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3" <"datatable-toolbar-group" <"#addbtn">> <"datatable-toolbar-group" f> ><t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+                	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+                	  
+            		
+             });
+         }
+            
+     		// SEARCH FILTER
+     		$('#editUserDataTable_filter input').keyup(function(){
+     			table.search($(this).val()).draw() ;
+     		});
+         			
+         	$("#addbtn").html('<button class="button button--secondary-reversed w-auto" type="button"  data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>');
+         	
+         	$(".dataTables_length select").addClass("form-control");
+         
+       		 $('#addEditUserlink').click(function() {
+       			$('#role option[value="MRC"]').prop('selected', true);
+       			$("#addUserModal").find('input[type="text"],textarea').val('');
+       			 $('#addUserMessage').text("");
+       		 });
+       		  
+       		 $(".btn-back").on('click', function(){
+					showSpinner();
+					$('#mainBody').load("initProfilePage", function () {
+					  	hideSpinner();
+					});
+			 });				
+       	 });       
+         
+         function initCommonResponse(returnData) {	
+         	hideSpinner();
+         	$('#mainBody').html( returnData); 
+         	 
+         }
+         function deactivateRow(el) {
+         	var $this = $(this);
+         	
+         	var id= $(el).attr("id");
+         	console.log(id);
+         	var tokens= id.split("_");	
+         	 var lanId = tokens[1];
+         	 if(tokens[0]==="deactivateUser") {
+
+         		 var activeFlag=tokens[2];
+         		 console.log(activeFlag);
+             		  $.post("deActivateUser", { 'lanId': (lanId), 'activeFlag': (activeFlag)},function(resp){             	
+             			  console.log("active staus after response"+resp);
+             			  var  newid="deactivateUser_"+lanId+"_"+resp;
+             			  console.log(newid);
+             			 $('#editUserDataTable').DataTable().ajax.reload();
+             				
+         	     }); 
+             	 }	         	
+         	
+         }
+         
+         function deleteRow(el,event) {
+         	 event.stopImmediatePropagation();
+         	var id= $(el).attr("id");
+         	console.log(id);
+         	var tokens= id.split("_");	
+         	 var lanId = tokens[1];
+         	 if(tokens[0]==="deleteUser") {
+         		jQuery('#deleteUserModal').modal();
+         	
+         	$('#confirmDeleteBtn').off().on('click', function(){
+         
+         		 $.post("deleteUserProfile", { 'lanId': (lanId)},function(){
+         			 if ($(el).parents("tr").hasClass("child")){
+         				 row = $(el).parents("tr.child").prevAll(".parent");
+         					$(el).parents("tr.child").prev().remove();
+         					$(el).parents("tr.child").remove();	
+         					
+         				} else {
+         					 row =$(el).parents("tr");
+         					$(el).parents("tr").remove();
+         				} 
+         			 
+         			 $('#editUserDataTable').DataTable().row( row ).remove().draw();                  
+             			
+         	     	}); 
+         		
+         		});
+         	 }
+         }	
+         
+      </script>	
+      
 </head>
 
 <body id="Body">
 
 <!-- <div class="mangeuser-page"> -->
 
-    <div class="page-hding page-hding">
-             <h1>Manage Users & Roles</h1>
-             <div class="usrad-btn">
-                 <a id="addUserButtonId"  href="#">Add Users</a>
-             </div>
+     <div class="page-hding page-hding">
+         <h1>Manage Users & Roles</h1>
      </div>
 
      <div class="dtatable-card mt-4">
      
      	<form id="dashboardFormDTO" class="bg-light" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
       
-			<div class="row mb-3">
-                <div class="col-sm-6 col-md-6 col-xl-3">
+      
+      		   <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+				 	<div class="datatable-toolbar-group">		
+		             <div class="usrad-btn">
+		                 <a id="addUserButtonId"  href="#">Add Users</a>
+		             </div>
+             				 		
+				 	</div>
+				 	<div class="datatable-toolbar-group">
+				 		<div id="editUserDataTable_filter" class="dataTables_filter">
+				 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="editUserDataTable"></label>
+				 		</div>
+				 	</div>
+				 </div>	 
+				 
+				 
+		  		<!-- 1-4-24   C.Sparks Data table replace the html -->
+                <div id="editUserListHeaderId">
+                 <!--   <table id="editUserDataTable" class="bg-white border border-top-0"> -->
+                   <table id="editUserDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;">
+                      <thead class="thead-light">
+                         <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">User Type</th>
+                            <th scope="col">Login Id</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last NAme</th>
+                            <th scope="col">Action</th>
+                         </tr>
+                      </thead>
+                   </table>
+                </div>	
 
-                    <div class="tble-serch ">
-                        <input type="text" placeholder="Search" title="Search" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-2 ">
-                    <div class="uplod-inputbx">
-                        <a href="#" class="contine-btn">Search</a>
-                    </div>
-                </div>
-            </div>
-
-
-         <table id="mangeuser-dtatable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Emp Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th> Username</th>
-                                <th>Active</th>
-                                <th>Action</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>John Doe</td>
-                                <td><a href="mailto:john@gmail.com">john@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>JohnDoe64</td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Kevin OBrien</td>
-                                <td><a href="mailto:john@gmail.com">kevin@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>KevinOBrien236</td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Guilloche</td>
-                                <td><a href="mailto:john@gmail.com">Guilloche@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>guilloche</td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>StaciePetary </td>
-                                <td><a href="mailto:kevin@gmail.com">StaciePetary@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>StaciePetary</td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Dynamograph</td>
-                                <td><a href="mailto:john@gmail.com">Dynamograph@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>Dynamograph </td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Diluvial</td>
-                                <td><a href="mailto:john@gmail.com">Diluvial@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>Diluvial </td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Hairpin</td>
-                                <td><a href="mailto:john@gmail.com">Hairpin@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>Hairpin </td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Acronical</td>
-                                <td><a href="mailto:john@gmail.com">Acronical@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>Acronical </td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Falcon9Radii</td>
-                                <td><a href="mailto:john@gmail.com">Falcon9Radii@gmail.com</a></td>
-                                <td>9876XXXXXX</td>
-                                <td>Falcon9Radii</td>
-                                <td>True</td>
-
-                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="view-btn"><i class="fa-solid fa-thumbs-up"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </tbody>
-
-                    </table>
                     
      </form>
                     
