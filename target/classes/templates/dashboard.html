@@ -87,14 +87,9 @@
 			
 			$('#navUploadDataId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('uploadStep1', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
-			
-			
-			
-			
-			
-			
+				
 		});
 
 		function initCommonResponse(returnData) {

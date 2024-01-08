@@ -16,6 +16,14 @@ function submitFormHTML(action, formName) {
 	form.submit();
 }
 
+function submitFormHTML_Get(action, formName) {
+	//alert ("action: " + action + "  formName: " + formName);
+	form = document.getElementById(formName);
+	form.action = action;
+	form.method = 'GET';
+	form.submit();
+}
+
 function setupAjaxSend(){
 	$(document).ajaxSend(function(e, xhr, options) {
  	    // Retrieve token

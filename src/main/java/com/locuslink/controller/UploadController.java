@@ -110,20 +110,20 @@ public class UploadController {
 	@Value("${file.attachment.storage.fullpath}")
 	private String attachmentStorageFullpath;
 
-	@PostMapping(value = "/initUpload")
-	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initUpload()...");
-
-		
-		// TODO make a distinct list based on the product type
-		// Build the drop down on the UI for uploading
-		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();
-		
-	   	model.addAttribute("ucatList", ucatList);	   	
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-		return "fragments/upload-data";
-	}
+//	@PostMapping(value = "/initUpload")
+//	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+//		logger.debug("Starting initUpload()...");
+//
+//		
+//		// TODO make a distinct list based on the product type
+//		// Build the drop down on the UI for uploading
+//		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();
+//		
+//	   	model.addAttribute("ucatList", ucatList);	   	
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//
+//		return "fragments/upload-data";
+//	}
 
 
 	

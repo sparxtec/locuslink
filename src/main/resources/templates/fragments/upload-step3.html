@@ -7,10 +7,16 @@
 	<script>	
 		$(document).ready(function() {	
 			
+ 			// C.Sparks 1-8-24  there is no upload list, i removed that from the flow, go to dashboardinstead
 			$('#step3ButtonViewDataListId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				//submitFormHTML('initDashboard', 'dashboardFormDTO');
+				
+				submitFormHTML_Get('initDashboard', 'dashboardFormDTO');
+				
+				
 			});
+			
 			
 			$('#step3ButtonUploadNewDataId').click(function() {
 				showSpinner();
@@ -28,7 +34,8 @@
 
 <body>
 
-  
+    <form id="dashboardFormDTO"  name="dashboardFormDTO"  class="multisteps-form__form" th:object="${dashboardFormDTO}"  method="post">  
+            
      <div class="page-hding page-hding">
          <h1>Upload Data</h1>
 
@@ -60,7 +67,7 @@
        <!--single form panel-->             
        <div class="adduser-form-bx addaset-formbx borderbx" style="height:580px">
                                                                        
-          <form id="dashboardFormDTO"  name="dashboardFormDTO"  class="multisteps-form__form" th:object="${dashboardFormDTO}"  method="post">  
+
                           
              <div class="multisteps-form__panel js-active" data-animation="slideHorz" >
 
@@ -80,12 +87,14 @@
                  </div>
              </div>
 
-          </form>
+         
        </div>
    </div>
 
 </div>
 
+ </form>
+ 
 </body>
 
 </html>
