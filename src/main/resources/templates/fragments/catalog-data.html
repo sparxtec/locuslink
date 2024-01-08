@@ -4,440 +4,212 @@
 <head>
 	<title>Upload Data</title>
 
-	<script>	
-		$(document).ready(function() {	
-				
-			$('#uploadDataButtonId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('uploadStep1', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-			});
-			
-			
-	 	});       
-   
-	   function initCommonResponse(returnData) {	
-		   hideSpinner();
-		   $('#mainBody').html( returnData);    	 
-	   }
-	</script>	
+ <style>
+	.datatable-toolbar {
+		padding: .20rem !important
+	}
+	
+	div.action-buttons {
+        white-space: nowrap;
+    }
+ 
+    div.action-buttons span {
+        display: inline-block;
+        min-width: 18px;
+        cursor: pointer;
+    }
+     td.details-control sorting_1 dtr-control {
+		display: inline-block;
+        min-width: 18px;		
+	}   
+ 	#assetDataTable td:nth-child(6) { min-width: 240px; } 
+ 	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
+    
+</style>
+ <script>
+
+    	$(document).ready(function() {	
+     		hideSpinner();	
+     		
+     		if( $('#catalogDataTable').length){
+     			
+     			var table = $('#catalogDataTable').DataTable( {
+            	retrieve: true,
+     	 		searchHighlight: true,
+     	 		searching:true,
+       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data        
+             	"paging":   true,	
+             //	scrollCollapse: true,
+             //	scrollY: 'calc(100vh - 35rem)',	
+             	order: [0, 'asc' ],		        
+         		//colReorder: true,		        
+     
+     	    	ajax: {
+           		    url: 'getAllCatalog',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"locuslink"};
+            			var innerData = {};    
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	universalcataloglist = json.data.universalcataloglist;	     	        	
+     	        	hideSpinner();		    		
+     	        	console.log(JSON.parse(universalcataloglist));
+     	        	return JSON.parse(universalcataloglist);     	        	      	        	
+     	         }					       
+        		},       
+             columns: [	              	 
+                 {
+                     class: 'dt-control',
+                     orderable: false,
+                     data: null,
+                     defaultContent: ''
+                 },
+                                  
+                 { data: "ucatPkId" },
+                 { data: "universalCatalogId" }, 
+                 { data: "availFlag" },                     
+                 { data: "uidTemplateLen" },                   
+                 { data: "cdugtPkId" },                   
+                 { data: "industryDesc" },
+                 { data: "subIndustryDesc" },
+                 { data: "productTypeDesc" },
+                 { data: "productSubTypeDesc" },
+                 
+/*                  { data: "uidAttrSeq" },
+                 { data: "uidAttrListName" },
+                 { data: "uidAttributesJson" }, */
+                   
+            	],
+            	
+             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+            	          		
+           });
+        }  // end docready
+        
+	
+ 		// SEARCH FILTER
+  		$('#catalogDataTable_filter input').keyup(function(){
+ 			table.search($(this).val()).draw() ;
+ 		}); 
+ 		
+   		$('#previous').click(function() {					
+   			showSpinner();								
+   			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
+   		});	
+ 		   	
+   		table.on('click', 'tbody td.dt-control', function () {
+   		    let tr = event.target.closest('tr');
+   		    let row = table.row(tr);
+   		    if (row.child.isShown()) {
+   		        row.child.hide();
+   		    }
+   		    else {   		   
+   		        row.child(format(row.data())).show();   		 
+   		    }
+   		});   		
+
+   		function format(d) {
+   			var returnString = "";
+   			for (var i = 0; i < d.attributeList.length ; i++) {
+   				//console.log ("loop ->:" + i);
+   				//console.log (d.attributeList[i]);
+   				
+   	   			returnString = returnString + 
+   	   			'seq: <strong>' + d.attributeList[i].uidAttrSeq + ' </strong>' + 
+   		        ' &nbsp selected: <strong>' + d.attributeList[i].selectedValue + ' </strong>' + 
+   		        ' &nbsp  <strong>' +  d.attributeList[i].uidAttrListName + ' </strong>: ' + d.attributeList[i].uidAttributesJson +
+   		        '<br>';   		        
+   			}     
+   		    return (	
+   		    	returnString	
+   		    );
+   		}
+   			
+   	 });  
+    	
+    	
+	 function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+	 }
+					
+		
+  </script>	
 </head>
 
 <body>
 
-<div class="mangeuser-page">
+<!-- <div class="mangeuser-page"> -->
 
     <div class="page-hding page-hding">
-        <h1>Upload Data</h1>
-        <div class="usrad-btn import-astbtn">
-            <a id="uploadDataButtonId" href="#">Upload Data</a>
-
-        </div>
+        <h1>Catalog Data</h1>
     </div>
 
     <div class="dtatable-card mt-4">
 
          <form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}" method="post">  
-         
-           <div class="filter_wrap mb-4">
-               <div class="item">
-                   <div class="uplod-inputbx">
-                       <label>Industry</label>
-                       <select class="form-select">
-                           <option>Select Industry</option>
-                           <option>Electric Grid</option>
-                           <option value="1">Oil and Gas</option>
-                           <option value="2">Solar</option>
-
-                       </select>
-                   </div>
-               </div>
-               <div class="item">
-                   <div class="uplod-inputbx">
-                       <label>Sub Industry</label>
-                       <select class="form-select">
-                           <option>Select Sub Industry</option>
-                           <option>Distribution</option>
-                           <option>Substation</option>
-                           <option>Transmission</option>
-
-                       </select>
-                   </div>
-               </div>
-               <div class="item">
-                   <div class="uplod-inputbx tble-serch">
-                       <label>Start Date</label>
-                       <input type="date" class="form-control" title="Select Start Date">
-                   </div>
-               </div>
-               <div class="item">
-                   <div class="uplod-inputbx tble-serch ">
-                       <label>End Date</label>
-                       <input type="date" class="form-control" title="Select End Date">
-                   </div>
-               </div>
-               <div class="item assetdetl-btn1">
-                   <div class="uplod-inputbx">
-
-                       <a href="#" class="contine-btn">Search</a>
-                   </div>
-
-               </div>
-           </div>
                   
-        </form>  
-           
-        <!--  -->
-        <table id="uploaddata-dtatable"
-            class="table table-striped recent-uplod-tble mt-4 manguser-table Assetdata-dtatabl display nowrap"
-            style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>Universal Catalog</th>
-                    <th>Unique ID</th>
-                    <th>Customer</th>
-                    <th>Published</th>
-                    <th>Action</th>
-                    <th>Reprint Barcode</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        2650012365478
-                    </td>
-                    <td>123654789</td>
-                    <td>Customer 1 </td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
 
-                </tr>
-                <tr>
-                    <td>
-                        2650125631145478
-                    </td>
-                    <td>123654789</td>
-                    <td>Customer 2</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
+          			
+	                     
+						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+						 	
+						 	<div class="datatable-toolbar-group">
+						 		<div id="addbtn">
+						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+						 		</div>
+						 	</div>
+						 
+						 	<div class="datatable-toolbar-group">
+						 		<div id="catalogDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
+						 		</div>
+						 	</div>
+						 </div>	                     
+	                     
+		   	                     
+	                        <table id="catalogDataTable" class="bg-white border border-top-0">
+	                        
+	                           <thead class="thead-light">
+	                              <tr>
+	                                 <th></th>
+	                                 	                             
+	                                 <th scope="col">pkId</th>
+	                                 <th scope="col">Universal Catalog ID</th>	
+	                                 <th scope="col">Avail</th>
+	                                 <th scope="col">Tpl Len</th>
+	                                 
+	                                 <th scope="col">cdugt</th>
+ 									 <th scope="col" style="min-width:100px">Industry</th>
+ 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
+     								 <th scope="col" style="min-width:200px">Asset</th>	 
+          							 <th scope="col" style="min-width:100px">Sub Asset</th>	  	                                  	                                 
+<!--  	                                 <th scope="col">Seq</th>	  
+    								 <th scope="col">AttrList</th>	  
+ 									 <th scope="col">Attributes</th>	 -->   
+	                              </tr>
+	                           </thead>
+	                        </table>
+		                              
+	</form>
+	
+						
+					</div>
+										
+					<br><br>                               
+                    <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                         <button type="button" id="previous" class="button button--continue">Previous</button>
+                    </div>
+                                                               
 
-                </tr>
-                <tr>
-                    <td>
-                        2650125631145478
-                    </td>
-                    <td>2589632471</td>
-                    <td>Customer 3</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
 
-                </tr>
-                <tr>
-                    <td>
-                        123650125631145478
-                    </td>
-                    <td>589746321</td>
-                    <td>Customer 12364</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
 
-                </tr>
-                <tr>
-                    <td>
-                        123650125631145478
-                    </td>
-                    <td>02365417</td>
-                    <td>Customer 23</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        589746321
-                    </td>
-                    <td> 123123650125</td>
-                    <td>Customer 29</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        12365012512365
-                    </td>
-                    <td> 1236587496547</td>
-                    <td>Customer 12</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        12365012512365
-                    </td>
-                    <td> 12569824</td>
-                    <td>Customer 6</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        12365012512365
-                    </td>
-                    <td> 12365478890</td>
-                    <td>Customer 7</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        12365012512365
-                    </td>
-                    <td> 1236547890</td>
-                    <td>Customer 18</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        123651456512365
-                    </td>
-                    <td> 1232546878890</td>
-                    <td>Customer 56</td>
-                    <td>
-                        <div class="togle-btn">
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                            <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="acton-btns">
-                            <a href="#" class="view-btn">
-                                <i class="fa-solid fa-print"></i>
-                            </a>
-                        </div>
-                    </td>
-
-                </tr>
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
 </body>
 
 </html>

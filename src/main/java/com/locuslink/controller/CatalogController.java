@@ -72,8 +72,9 @@ public class CatalogController {
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/myworkspace_catalog";
+		return "fragments/catalog-data";
 	}
+	
 	
 	@RequestMapping(value = "/getAllCatalog", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse getAllCatalog(@RequestBody GenericMessageRequest request, HttpSession session)  {
