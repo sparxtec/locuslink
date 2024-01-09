@@ -39,8 +39,8 @@
      	 		searching:true,
        //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data        
              	"paging":   true,	
-             //	scrollCollapse: true,
-             //	scrollY: 'calc(100vh - 35rem)',	
+             	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)',	
              	order: [0, 'asc' ],		        
          		//colReorder: true,		        
      
@@ -68,8 +68,7 @@
                      orderable: false,
                      data: null,
                      defaultContent: ''
-                 },
-                                  
+                 },                                  
                  { data: "ucatPkId" },
                  { data: "universalCatalogId" }, 
                  { data: "availFlag" },                     
@@ -78,16 +77,9 @@
                  { data: "industryDesc" },
                  { data: "subIndustryDesc" },
                  { data: "productTypeDesc" },
-                 { data: "productSubTypeDesc" },
-                 
-/*                  { data: "uidAttrSeq" },
-                 { data: "uidAttrListName" },
-                 { data: "uidAttributesJson" }, */
-                   
-            	],
-            	
-             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
-            	          		
+                 { data: "productSubTypeDesc" }                 
+            	],            	
+             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',            	          		
            });
         }  // end docready
         
@@ -153,62 +145,43 @@
 
     <div class="dtatable-card mt-4">
 
-         <form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}" method="post">  
+         <form id="dashboardFormDTO"  class="bg-light" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" method="post">  
                   
-
-          			
-	                     
-						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
-						 	
-						 	<div class="datatable-toolbar-group">
-						 		<div id="addbtn">
-						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
-						 		</div>
-						 	</div>
-						 
-						 	<div class="datatable-toolbar-group">
-						 		<div id="catalogDataTable_filter" class="dataTables_filter">
-						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
-						 		</div>
-						 	</div>
-						 </div>	                     
-	                     
-		   	                     
-	                        <table id="catalogDataTable" class="bg-white border border-top-0">
-	                        
-	                           <thead class="thead-light">
-	                              <tr>
-	                                 <th></th>
-	                                 	                             
-	                                 <th scope="col">pkId</th>
-	                                 <th scope="col">Universal Catalog ID</th>	
-	                                 <th scope="col">Avail</th>
-	                                 <th scope="col">Tpl Len</th>
-	                                 
-	                                 <th scope="col">cdugt</th>
- 									 <th scope="col" style="min-width:100px">Industry</th>
- 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
-     								 <th scope="col" style="min-width:200px">Asset</th>	 
-          							 <th scope="col" style="min-width:100px">Sub Asset</th>	  	                                  	                                 
-<!--  	                                 <th scope="col">Seq</th>	  
-    								 <th scope="col">AttrList</th>	  
- 									 <th scope="col">Attributes</th>	 -->   
-	                              </tr>
-	                           </thead>
-	                        </table>
+			 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+			 	
+			 	<div class="datatable-toolbar-group">
+			 	</div>
+			 
+			 	<div class="datatable-toolbar-group">
+			 		<div id="catalogDataTable_filter" class="dataTables_filter">
+			 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
+			 		</div>
+			 	</div>
+			 </div>	                     
+	                     		   	                     
+              <table id="catalogDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table">
+              
+                 <thead class="thead-light">
+                    <tr>
+                       <th></th>                       	                            
+                       <th scope="col">pkId</th>
+                       <th scope="col">Universal Catalog ID</th>	
+                       <th scope="col">Avail</th>
+                       <th scope="col">Tpl Len</th>                       
+                       <th scope="col">cdugt</th>
+					   <th scope="col" style="min-width:100px">Industry</th>
+                       <th scope="col" style="min-width:100px">Sub Industry</th>	 
+	 				   <th scope="col" style="min-width:200px">Asset</th>	 
+					   <th scope="col" style="min-width:100px">Sub Asset</th>	  	                                  	                                 
+                   </tr>
+                </thead>
+             </table>
 		                              
 	</form>
 	
 						
-					</div>
-										
-					<br><br>                               
-                    <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
-                         <button type="button" id="previous" class="button button--continue">Previous</button>
-                    </div>
-                                                               
-
-
+	</div>
+						
 
 </body>
 

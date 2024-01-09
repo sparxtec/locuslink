@@ -19,8 +19,8 @@
          		if( $('#editUserDataTable').length){
          			var table = $('#editUserDataTable').DataTable( {
                 	retrieve: true,
-         	 		searchHighlight: false,
-                 	responsive: true,		        
+         	 		searchHighlight: true,
+           	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data      	        	        
                  	"paging":   true,	
                  	scrollCollapse: true,
                  	scrollY: 'calc(100vh - 35rem)',	

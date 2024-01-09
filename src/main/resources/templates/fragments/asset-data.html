@@ -39,9 +39,12 @@
      		if( $('#assetDataTable').length){     			
      			var table = $('#assetDataTable').DataTable( {
             	retrieve: true,
-     	 		searchHighlight: false,
-             	responsive: true,		        
-             	"paging":   true,          
+     	 		searchHighlight: true,
+     	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data             	 			        
+             	"paging":   true,  
+            	scrollCollapse: true,
+             	scrollY: 'calc(100vh - 35rem)',
+             	
              	order: [2, 'asc' ],	
 
      	    	ajax: {
@@ -85,23 +88,16 @@
                  { data: "productTypeCode" },
                  { data: "traceTypeCode" },
                  { data: "traceCode" },                    
-                 { data: "customerName" },
-                 
-                 { data: "universalCatalogId" },   
-                 
+                 { data: "customerName" },                 
+                 { data: "universalCatalogId" },                    
                  { data: "cdugtPkId" },                   
                  { data: "industryDesc" },
                  { data: "subIndustryDesc" },
                  { data: "productTypeDesc" },
-                 { data: "productSubTypeDesc" },
-                 
-                 { data: "productTypeDesc" }
-                
-            	],
-            	
-        		
+                 { data: "productSubTypeDesc" },                 
+                 { data: "productTypeDesc" }                
+            	],            	        		
              	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
-
              	             	        		            	          	
            });
      	 }	 
@@ -178,24 +174,22 @@
 </head>
 
 <body>
-
-<!--             <table id="Assetdata-dtatable"  class="table table-striped recent-uplod-tble mt-4 manguser-table Assetdata-dtatabl display nowrap">
-            -->  
-                     
-<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
-
+                
      <div class="page-hding page-hding">
          <h1>Asset Data</h1>
      </div>
 
      <div class="dtatable-card mt-4">
      
-   	<form id="dashboardFormDTO" class="bg-light" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
-      
+   		<form id="dashboardFormDTO" class="bg-light" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+        	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
      
       		   <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+				 	
 				 	<div class="datatable-toolbar-group">		             				 		
 				 	</div>
+				 	
 				 	<div class="datatable-toolbar-group">
 				 		<div id="editUserDataTable_filter" class="dataTables_filter">
 				 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="editUserDataTable"></label>
@@ -204,36 +198,31 @@
 				 </div>	 
 				 
 				 
-		  		<!-- 1-4-24   C.Sparks Data table replace the html -->
+               <table id="assetDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" >
 
-                 <!--   <table id="editUserDataTable" class="bg-white border border-top-0"> -->
-                   <table id="assetDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table " style="width: 100%;">
+                        <thead class="thead-light">
+                           <tr>
+   							<th scope="col"></th>       
+   							<th scope="col"></th>   
+                              <th scope="col">Id</th>	                                 	                          	                                 
+                              <th scope="col">Unique Asset ID</th>
+                              <th scope="col">Manufacturer</th>
+                              <th scope="col">Product Type</th>
+                              <th scope="col">Trace Type</th>	
+						<th scope="col">Trace Number</th>		                                                                     	                             	                             
+                           	<th scope="col">Customer</th>
 
-	                          <thead class="thead-light">
-	                             <tr>
-	     							<th scope="col"></th>       
-	     							<th scope="col"></th>   
-	                                <th scope="col">Id</th>	                                 	                          	                                 
-	                                <th scope="col">Unique Asset ID</th>
-	                                <th scope="col">Manufacturer</th>
-	                                <th scope="col">Product Type</th>
-	                                <th scope="col">Trace Type</th>	
-									<th scope="col">Trace Number</th>		                                                                     	                             	                             
-	                             	<th scope="col">Customer</th>
-
-	                                <th scope="col">Universal Catalog ID</th>	
-	                                <th scope="col">cdugt</th>
- 									 <th scope="col" style="min-width:100px">Industry</th>
- 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
-     								 <th scope="col" style="min-width:200px">Asset</th>	 
-          							 <th scope="col" style="min-width:100px">Sub Asset</th>	           							           							 
-	                            	<th scope="col">PType Description]</th> 
-	                             </tr>
-	                          </thead>
-                   </table>
-          
-
-                    
+                              <th scope="col">Universal Catalog ID</th>	
+                              <th scope="col">cdugt</th>
+							 <th scope="col" style="min-width:100px">Industry</th>
+                                <th scope="col" style="min-width:100px">Sub Industry</th>	 
+  								 <th scope="col" style="min-width:200px">Asset</th>	 
+       							 <th scope="col" style="min-width:100px">Sub Asset</th>	           							           							 
+                          	<th scope="col">PType Description]</th> 
+                           </tr>
+                        </thead>
+                </table>
+                              
     </form> 
                     
    </div>

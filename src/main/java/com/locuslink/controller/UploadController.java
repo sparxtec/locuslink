@@ -153,6 +153,9 @@ public class UploadController {
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		return "fragments/upload-step2";
+	   	
+	  // 	return "fragments/uploadstep2";
+	   	
 	}
 
 	
@@ -168,6 +171,16 @@ public class UploadController {
 	}
 	
 
+	@PostMapping(value = "/uploadStep4")
+	public String uploadStep4 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting uploadStep3()...");
+			
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/upload-step4";
+	}
+	
 	
 	// TODO 6-15-2023   
 // FIX THIS
