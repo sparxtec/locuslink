@@ -70,6 +70,6 @@ jobs:
           #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           
-          AWS_ACCESS_KEY_ID: AKIA5MSVXCMPY7CNJTEP
-          AWS_SECRET_ACCESS_KEY: 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            
+          AWS_ACCESS_KEY_ID: AKIA5MSVXCMP6ZLVCRGZ
+          AWS_SECRET_ACCESS_KEY: 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            
           AWS_DEFAULT_REGION: us-east-1 
