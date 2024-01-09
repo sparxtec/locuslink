@@ -25,7 +25,7 @@ import com.locuslink.dao.CustomerDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.UniqueAssetDTO;
+import com.locuslink.model.Customer;
 /**
  * This is a Spring MVC Controller.
  *
@@ -34,9 +34,9 @@ import com.locuslink.dto.UniqueAssetDTO;
  */
 @Controller
 @Service
-public class AssetController {
+public class CustomerController {
 
-	private static final Logger logger = Logger.getLogger(AssetController.class);
+	private static final Logger logger = Logger.getLogger(CustomerController.class);
 
 
     @Value("${app.logout.url}")
@@ -47,65 +47,76 @@ public class AssetController {
     private SecurityContextManager securityContextManager;
 
     @Autowired
-    private UniversalCatalogDao universalCatalogDao;
-    
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
-    
-    
-    
-	
-	
-	//*************************************************************//
-	//*******            A S S E T  D A T A            ************//
-	//*************************************************************//
+    private CustomerDao customerDao;
 
-	@PostMapping(value = "/initAssetData")
-	public String initAssetData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssetData()...");
+
+    
+    
+    
+	
+	
+	//*************************************************************//
+	//********         C U S T O M E R               **************//
+	//*************************************************************//
+	
+	@PostMapping(value = "/initViewCustomerData")
+	public String initViewCustomerData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewCustomerData()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		//return "fragments/myworkspace_asset";
-	   	return "fragments/asset-data";
+		return "fragments/myworkspace_customer";
 	}
-	
-	@RequestMapping(value = "/getAllAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse getAllAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-		logger.debug("In getAllAsset()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
-	  	
-		// TESTING
-		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
-		if (uniqueAssetListDTO == null) {
+	
+	@RequestMapping(value = "/getAllCustomers", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse getAllCustomers(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In getAllCustomers()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllCustomers");
+	  			
+		List <Customer> customerList =  customerDao.getAll();
+		if (customerList == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
-			
+		
         // Convert the POJO array to json, for the UI
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(uniqueAssetListDTO);			
+			json = mapper.writeValueAsString(customerList);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		logger.debug("json ->: " + json);		
-		response.setField("uniqueassetlist",  json);
+		response.setField("customerList",  json);
 
 		return response;
 	 }
 	
 	
-	@PostMapping(value = "/initAssetDetail")
-	public String initAssetDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssetDetail()...");
+	
+	
+	
+	
+	//*************************************************************//
+	//********      A C C E S S - for customers      **************//
+	//*************************************************************//
+	
+	@PostMapping(value = "/initViewCustomerPermissionData")
+	public String initViewCustomerPermissionData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initViewCustomerPermissionData()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		//return "fragments/myworkspace_asset";
-	   	return "fragments/asset-detail";
+		return "fragments/myworkspace";
 	}
+	
+	
+
+
+	
+	
 
 }

@@ -76,9 +76,9 @@
  	               className: "controlColumns",
  	               "render": function(data, type, row, meta){	            		
                     	data ="<div class='action-buttons'>" 
-                    	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Attachment List Viewer'></i></button>&nbsp;"
+                    	+"<button id='detail_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Asset Details'></i></button>&nbsp;"
                     	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;"
-                    	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Unique Asset'></i></button></div>";	                    
+                    	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Asset'></i></button></div>";	                    
 	                return data;
 	 	         }}, 
                    	         
@@ -119,19 +119,21 @@
 	   	    e.preventDefault(); // ??	    	
 			showSpinner();
 	    		   	    	    
-			if(whatWasClicked==="docs") {
+			if(whatWasClicked==="detail") {
 
        			showSpinner();											 	
      
        			// 5-17-2023
-				submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       
-				
+				//submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       												
+	   			submitFormAjaxHTML('initAssetDetail', $("#dashboardFormDTO").serialize(), "commonResponse");														
+	 
+	   			
     		} else if(whatWasClicked==="barcode") {
 
     			// 3-21-2023
        			showSpinner();								
        			submitFormAjaxHTML('getBarcodeForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
-       			       			       			
+
     		} else if(whatWasClicked==="delete") {
     			url = "deleteAsset";	
     		}
@@ -149,17 +151,17 @@
  			table.search($(this).val()).draw() ;
  		});  
  		
-   		$('#previous').click(function() {					
+/*    		$('#previous').click(function() {					
    			showSpinner();								
    			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
-   		});	 		 		
+   		});	 */ 		 		
  		
 	
    	 });  
     	    	    
    	 function modalResponse(returnData) {	
  		hideSpinner();			 		
- 		$('#myworkspace_Asset_ModalBody').html(returnData); 	 		 		 		
+ 		$('#asset_ModalBody').html(returnData); 	 		 		 		
  	 }   	 
    	 
 	 function commonResponse(returnData) {	
@@ -227,6 +229,11 @@
                     
    </div>
    
+   		<!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+   	    <div id="asset_ModalBody">	
+	    </div>
+	    
+	    
 </body>
 
 </html>
