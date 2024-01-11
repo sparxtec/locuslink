@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
-import com.locuslink.dao.CustomerDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
@@ -99,10 +98,19 @@ public class AssetController {
 	
 	
 	@PostMapping(value = "/initAssetDetail")
-	public String initAssetDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	public String initAssetDetail (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
+		
 		logger.debug("Starting initAssetDetail()...");
 
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		
+		 uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
+		if (uniqueAssetDTO == null) {
+			logger.debug("  Note:  No Data Found......");
+		}
+		
+
+	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);	   		   	
+	  // 	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 		//return "fragments/myworkspace_asset";
 	   	return "fragments/asset-detail";
