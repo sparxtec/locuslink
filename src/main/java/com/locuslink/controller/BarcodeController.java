@@ -82,9 +82,10 @@ public class BarcodeController {
 		
 		
 		
-		// 5-9-2023
-		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(uniqueAssetDTO);		
-
+		// 1-13-2024 testing
+//		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(uniqueAssetDTO);		
+		String encodedPDFBarcdeString = "";
+		
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
 		
 	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
