@@ -5,6 +5,12 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseFactory;
+import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
+import org.apache.http.impl.DefaultHttpResponseFactory;
+import org.apache.http.message.BasicStatusLine;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -99,16 +105,9 @@ public class BartenderRestClient {
 		JSONObject jsonNamedDataSources = new JSONObject();
 
 		
-		//   6-29-2029		
+		//   1-12-2024 defaulkt them all to pipe when not really there, so the PDF viewer can show something	
 		String barcodeTemplateName = "tbd";
-		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
-			barcodeTemplateName = "pipe_prod.btw";			
-			try {
-				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}						
-		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE"))  {
+		if (uniqueAssetDTO.getProductTypeCode().equals("CABLE"))  {
 
 			barcodeTemplateName = "ucable_prod.btw";			
 			try {	
@@ -130,10 +129,7 @@ public class BartenderRestClient {
 					jsonNamedDataSources.put("reel_id", "reel_na");
 					jsonNamedDataSources.put("customer_part_number", "part_na");	
 					
-				}
-			
-				
-							
+				}			
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -156,7 +152,27 @@ public class BartenderRestClient {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-		} 
+		} else if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
+			barcodeTemplateName = "pipe_prod.btw";			
+			try {
+				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}						
+		} else {
+			// C.Sparks 1-12-2024 need a default file for the viewer as we build out more assets
+			// Should make this a generic PDF, not a cable one.
+		
+			barcodeTemplateName = "pipe_prod.btw";			
+			try {
+				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
 		
 		try {
 			jsonMainOptions.put("Document", "Librarian://main/" + barcodeTemplateName );			
@@ -185,11 +201,29 @@ public class BartenderRestClient {
 		headers.add("Accept", "*/*");
 		headers.add("Authorization",  "Bearer " + bartenderAccessToken );				
 		
-		HttpEntity<String> requestEntity = new HttpEntity<String>(jsonRequest.toString(), headers);
-		ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
-		logger.debug(" status ->: " + responseEntity.getStatusCode());
-		logger.debug(" response ->: " + responseEntity.getBody());
-				
+		
+		// 1-12-2024  When the Barcode Token expires this traps out. i want to display a sample image instead
+		HttpEntity<String> requestEntity = null;
+		ResponseEntity<String> responseEntity = null;
+		try {			
+			requestEntity = new HttpEntity<String>(jsonRequest.toString(), headers);
+			responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
+			
+			logger.debug(" status ->: " + responseEntity.getStatusCode());
+			logger.debug(" response ->: " + responseEntity.getBody());
+			
+		} catch (Exception e) {
+			logger.debug(" ERROR ->: BArcode token key may be expired, lookup faild. ->: " + e.getMessage());
+		}
+
+
+			// Early Exit
+		if (responseEntity == null) {
+			logger.debug(" Respone was bad, so manually creating a response to display a blank image.");
+
+			// response entity body is just a string
+			return "{encodedPDFBarcdeString:''}";
+		} 
 		
 		 		
 		// Step 3 = Get the ID and StatusURL Variables from the above response

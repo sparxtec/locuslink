@@ -90,7 +90,10 @@ public class BarcodeController {
 	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/modal_barcode_viewer";
+		//return "fragments/modal_barcode_viewer";
+	   	
+	   	return "fragments/asset-barcode-viewer-modal";
+	   	
 	}
 	
 
