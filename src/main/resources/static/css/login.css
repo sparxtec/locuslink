@@ -185,8 +185,8 @@ button:is(:hover, :focus) {
 
 .login-btn a {
     background: var(--c-primary);
-    color: var(--c-white);
-    font-weight: 800;
+    color: var(--c-white)!important;
+    font-weight: 600;
     font-size: 20px;
     display: flex;
     align-items: center;
@@ -195,7 +195,7 @@ button:is(:hover, :focus) {
     border-radius: 50px;
     letter-spacing: 0.85px;
     margin-top: 50px;
-    opacity: 0.9;
+    opacity: 0.8;
     transition: 0.5s ease-in-out;
 }
 

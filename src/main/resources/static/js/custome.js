@@ -1,4 +1,4 @@
-const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+// const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 
 /*new Chart("myChart", {
@@ -53,12 +53,6 @@ const xValues = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept",
 });*/
 
 
-// dashboard datatable
-$('#recent-uploded-data').DataTable({
-  sScrollX: "100%",
-
-
-});
 
 $('#aidata-imported').DataTable({
   sScrollX: "100%",
@@ -128,7 +122,7 @@ $('#conection-tble').DataTable({
 // Dictionaries page -table 
 $('#dictionari-tble').DataTable({
   responsive: true,
-  sScrollX: "100%",
+ 
   lengthMenu: [15, 25, 50, 100, 200, 500],
   "pageLength": 15
 });
@@ -136,10 +130,6 @@ $('#dictionari-tble').DataTable({
 
 
 
-// hamburger menu
-$(".hamburger,.backdrop").click(function () {
-  $("body").toggleClass("nav-collpsed");
-});
 
 
 $(".save-conetion").click(function () {
