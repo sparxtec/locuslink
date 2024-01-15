@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Manage Users</title>
+
+	<script>	
+		$(document).ready(function() {	
+			
+			$('#saveUserDataButtonId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('saveUserFinished', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+			
+	 	});       
+   
+	   function initCommonResponse(returnData) {	
+		   hideSpinner();
+		   $('#mainBody').html( returnData);    	 
+	   }
+	</script>	
+</head>
+
+<body id="Body">
+
+
+     <div class="page-hding page-hding">
+         <h1>Add User Details</h1>
+
+     </div>
+
+     <div class="dtatable-card mt-4">
+     
+      	<form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+      
+         <div class="adduser-form-bx">
+             <p class="warning-msg"><span>* </span> marked fields are mandatory</p>
+
+             <div class="row">
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>User Name <span>*</span></label>
+                     </div> 
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="text" placeholder="User Name" title="User Name" class="form-control">
+                         <span class="validation-msg">please Enter the valid username</span>
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Password <span>*</span></label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="password" placeholder="Password" title="Password" class="form-control">
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>First Name</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="text" placeholder="Enter First name" title="Enter First name"
+                             class="form-control">
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Last Name </label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="text" placeholder="Last Name" title="Last Name" class="form-control">
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Email ID</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="text" placeholder="Enter mail ID" title="Enter mail ID"
+                             class="form-control">
+                     </div>
+
+                 </div>
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Phone Number</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="Number" placeholder="Enter Phone number" title="Enter Phone Number"
+                             class="form-control">
+
+                         <a href="javascript:void(0)" class="add-moreinput">+ Add Mobile Number </a>
+                         <div class="extrpinput"></div>
+
+                     </div>
+
+                 </div>
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Additional info</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch ">
+                         <input type="text" placeholder="Additional info" title="Additional info"
+                             class="form-control">
+
+
+                     </div>
+
+                 </div>
+                 <div class="col-sm-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Select User Role</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-xl-10 colum-bx">
+                     <div class="tble-serch uplod-inputbx ">
+                         <select class="form-select">
+                             <option>Select Role</option>
+                             <option>User Role 1</option>
+                             <option>User Role 2</option>
+                             <option>User Role 3</option>
+                             <option>User Role 4</option>
+                             <option>User Role 5</option>
+                         </select>
+
+
+
+                     </div>
+
+                 </div>
+                 <div class="col-sm-3 col-md-3 col-xl-2 colum-bx">
+                     <div class="uplod-inputbx">
+                         <label>Company Name</label>
+
+                     </div>
+
+                 </div>
+
+                 <div class="col-sm-9 col-md-9 col-xl-10 colum-bx">
+                     <div class="tble-serch uplod-inputbx">
+                         <select class="form-select">
+                             <option>Company Name</option>
+                             <option>Company 1</option>
+                             <option>Company 2</option>
+                             <option>Company 3</option>
+                             <option>Company 4</option>
+                             <option>Company 5</option>
+                         </select>
+
+
+                     </div>
+
+                 </div>
+
+                 <div class="usrad-btn sve-btn text-end">
+                     <a id="saveUserDataButtonId" href="#">Save</a>
+                 </div>
+             </div>
+         </div>
+       </form>
+     </div>
+
+
+</body>
+
+</html>
