@@ -14,12 +14,13 @@
      		if( $('#materialDataTable').length){
      			
      			var table = $('#materialDataTable').DataTable( {
-            	retrieve: true,
-     	 		searchHighlight: true,
+				responsive: true,
+            	//retrieve: true,
+     	 		//searchHighlight: true,
       	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data      	        
-             	"paging":   true,	             	
-            	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)',
+             	//"paging":   true,	             	
+            	//scrollCollapse: true,
+             	//scrollY: 'calc(100vh - 35rem)',
              	
              	order: [1, 'asc' ],		        
          		//colReorder: true,		        
@@ -73,7 +74,7 @@
             	    	 // $('tr', row).eq(9).addClass("checked"); 
             	    }                	   
             	  },
-            	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',            	          		
+            	//  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',            	          		
          });
      }
         
@@ -126,7 +127,7 @@
  
 	<input type="hidden" id="jsonUploadedProductObjectList"  name="jsonUploadedProductObjectList" th:value="tbd"> 
 	
-	<div class="page-hding page-hding">
+	<div class="page-hding">
 	    <h1>Upload Data</h1>
 	</div>
 
@@ -149,9 +150,9 @@
             </div>
         </div>
      
-     	<form id="dashboardFormDTO" class="bg-light" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+     	<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
       
-	   		<div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+	   		<!--<div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
 			 	<div class="datatable-toolbar-group">			 		
 			 	</div>
 			 	
@@ -160,11 +161,11 @@
 			 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="editUserDataTable"></label>
 			 		</div>
 			 	</div>
-		    </div>	 
+		    </div>	 -->
 				 				 
 	  		<!-- 1-4-24   C.Sparks Data table replace the html -->
             <div id="editUserListHeaderId">               
-      	    	<table id="materialDataTable" class="bg-white border border-top-0">	                        
+      	    	<table id="materialDataTable" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">	                        
                   <thead class="thead-light">
                      <tr>
                         <th scope="col">Filename</th>
@@ -182,9 +183,8 @@
         </form>
                
         <div class="row mt-4">
-            <div class="offset-md-3 offset-lg-3 col-md-9 col-lg-9">
-                <div
-                    class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
+          <div class="col-lg-12">
+                <div class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
                     <button id="step3ButtonPrevId" class="js-btn-prev contine-btn" type="button" title="Prev">Previous</button>
                     <button id="step3ButtonNextId" class="js-btn-next" type="button" title="Next">Next</button>
                 </div>
