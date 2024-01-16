@@ -1,0 +1,401 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Workspace</title>
+
+ <style>
+	.datatable-toolbar {
+		padding: .20rem !important
+	}
+	
+	div.action-buttons {
+        white-space: nowrap;
+    }
+ 
+    div.action-buttons span {
+        display: inline-block;
+        min-width: 18px;
+        cursor: pointer;
+    }
+     td.details-control sorting_1 dtr-control {
+		display: inline-block;
+        min-width: 18px;		
+	}   
+ 	#attributeDataTable td:nth-child(6) { min-width: 50px; } -- sI
+ 	#attributeDataTable td:nth-child(7) { min-width: 50px; } 
+  	#attributeDataTable td:nth-child(17) { min-width: 200px; }  -- attr name
+    
+</style> 
+
+	<script>
+    	
+		$(document).ready(function() {
+	
+			hideSpinner();	
+			
+			if( $('#attributeDataTable').length){     			
+     			var attributeTable = $('#attributeDataTable').DataTable( {
+            	retrieve: true,
+     	 		//searchHighlight: true,
+             	responsive: true,		        
+             	"paging":   true,          
+             	order: [2, 'asc' ],	
+             	data: [],
+
+             columns: [	                	 
+	 			 { "className": 'details-control',
+ 	               "orderable": false,
+ 	               "data":      null,
+ 	               "defaultContent": ''
+	 	         },	 	                       	      
+	 	         { title: "Details",
+	 	           data: null,
+ 	               className: "controlColumns",
+ 	               "render": function(data, type, row, meta){	            		
+                    	data ="<div class='action-buttons'>" 
+/*                     	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Attachment List Viewer'></i></button>&nbsp;"
+                    	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;" */
+                    	+"<button id='detail_" + row.uidPalPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='Attribute Viewer'></i></button></div>";	                    
+	                return data;
+	 	         }},      
+	 	         { data: "industryPkId" },	
+	 	         { data: "industryUid" },	
+	             { data: "industryDesc" },
+	             
+	             { data: "subIndustryPkId" },  
+	             { data: "subIndustryUid" },   	             
+                 { data: "subIndustryDesc" },
+                 
+                 { data: "productTypePkId" }, 
+                 { data: "productTypeUid" },                    
+                 { data: "productTypeDesc" }, 
+                 
+                 { data: "productSubTypePkId" },      
+                 { data: "productSubTypeUid" },                     
+                 { data: "productSubTypeDesc" }, 
+                 
+                 { data: "uidPalPkId" },        
+                 { data: "uidGenSeq" },
+               //  { data: "uidSelected" },                 
+                 { data: "uidPalName" },
+                 { data: "uidPalAttributesJson" }
+            	 ],            	        		
+             	  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',             	             	        		            	          
+               });
+     	    }	
+					
+			
+			
+			$('#uidGenString').val("x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15.x16.x17.x18.x19.x20.x21.x22.x23.x24.x25");	
+			
+			$('#comboSelectedIndustry').val( $('#selectedIndustryPkId').val().trim() + '_' + $('#selectedIndustryUid').val().trim() );	
+			$('#comboSelectedSubIndustry').val( $('#selectedSubIndustryPkId').val().trim()  + '_' +$('#selectedSubIndustryUid').val().trim()   );	
+ 			$('#comboSelectedVersion').val($('#selectedVersionPkId').val().trim()  + '_' + $('#selectedVersionUid').val().trim() );
+			$('#comboSelectedProductType').val($('#selectedProductTypePkId').val().trim() + '_' +$('#selectedProductTypeUid').val().trim() );	
+			$('#comboSelectedProductSubType').val($('#selectedProductSubTypePkId').val().trim() + '_' +$('#selectedProductSubTypeUid').val().trim() );				
+			
+			// Industry
+			$('#comboSelectedIndustry').change(function () {	
+				var wrkIdArray =  $('#comboSelectedIndustry').val().trim().split("_");				
+				$('#selectedIndustryPkId').val(  wrkIdArray[0]  );
+				$('#selectedIndustryUid').val(  wrkIdArray[1]  );								
+				$('#uidGenString').val(wrkIdArray[1]);					
+				showSpinner();			
+				submitFormAjaxHTML('processIndustrySelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");								
+			});	
+			
+			
+			// Sub Industry
+			$('#comboSelectedSubIndustry').change(function () {		
+				var wrkIdArray =  $('#comboSelectedSubIndustry').val().trim().split("_");	
+				$('#selectedSubIndustryPkId').val( wrkIdArray[0] );		
+				$('#selectedSubIndustryUid').val( wrkIdArray[1] );					
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);									
+				showSpinner();			
+				submitFormAjaxHTML('processSubIndustrySelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");								
+			});	
+			
+			
+			// Version
+			$('#comboSelectedVersion').change(function () {	
+				var wrkIdArray =  $('#comboSelectedVersion').val().trim().split("_");	
+				$('#selectedVersionPkId').val( wrkIdArray[0] );		
+				$('#selectedVersionUid').val( wrkIdArray[1] );						
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);
+				
+			});	
+			
+			// Product Type
+			$('#comboSelectedProductType').change(function () {	
+				var wrkIdArray =  $('#comboSelectedProductType').val().trim().split("_");	
+				$('#selectedProductTypePkId').val( wrkIdArray[0] );			
+				$('#selectedProductTypeUid').val( wrkIdArray[1] );		
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);				
+				showSpinner();			
+				submitFormAjaxHTML('processProductTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	
+			});	
+			
+			
+			// Product Sub Type
+			$('#comboSelectedProductSubType').change(function () {	
+				var wrkIdArray =  $('#comboSelectedProductSubType').val().trim().split("_");	
+				$('#selectedProductSubTypePkId').val( wrkIdArray[0] );			
+				$('#selectedProductSubTypeUid').val( wrkIdArray[1] );		
+				$('#uidGenString').val( $('#uidGenString').val() + "." + wrkIdArray[1]);	
+				
+				// 9-15-2023  leave all the sub type in there, so we can pick thru them easily to see all the attribute lists in the data table
+	/* 			showSpinner();			
+				submitFormAjaxHTML('processProductSubTypeSelected', $( "#uidGeneratorFormDTO" ).serialize(), "initCommonResponse");	 */
+				
+				
+				
+	     		var myData = {version:"1.0", clientId:"locuslink"};
+	   			var innerData = {};      			    			
+	       		innerData["industryPkId"] = $('#selectedIndustryPkId').val();
+	            innerData["subIndustryPkId"] = $('#selectedSubIndustryPkId').val();
+	            innerData["productTypePkId"] = $('#selectedProductTypePkId').val();
+	            innerData["productSubTypePkId"] = $('#selectedProductSubTypePkId').val();
+	             	
+	   			myData["data"] = innerData;	     			
+				    $.ajax({ 			    	
+		           type: "POST",
+		           url: 'getUidProductAttributes',
+		           data: JSON.stringify(myData),
+		           contentType: 'application/json',
+		     	   dataType: "json",	     	        
+		           success: function (json) {	
+		               uidProductAttributeList_List =  JSON.parse( json.data.uidProductAttributeList_List ) ;				           
+		        	   attributeTable.clear().draw();
+		        	   attributeTable.rows.add(uidProductAttributeList_List).draw();			        
+				   },
+				   error: ajaxResponseError
+			    }); 
+				
+			});	
+			
+			
+			
+			
+	  		// SEARCH FILTER
+	  		$('#attributeDataTable_filter input').keyup(function(){
+	  			attributeTable.search($(this).val()).draw() ;
+	 		});  
+	  	
+	  		
+	  		
+	  		
+	     	 // Button Clicks on the Data table
+	  	    $('#attributeDataTable tbody').on('click', 'button', function (e) {
+		    	//console.log(this);
+		    	
+		    	var url='';
+		    	var whatWasClicked=$(this).attr("id").split("_")[0];
+		    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
+		    		 	    				
+		        // set the FORM value so the controller can get it.				
+				//$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+		        
+		        	        
+		   	    e.preventDefault(); // ??	    	
+				showSpinner();
+		    		   	    	    
+				if(whatWasClicked==="detail") {
+
+	       			showSpinner();											 	
+	     
+	       			// 5-17-2023
+					submitFormAjaxHTML('initProductAttributeDetail', $("#uidGeneratorFormDTO").serialize(), "modalResponse");	       			       	       	       	       
+					
+	    		} else if(whatWasClicked==="xxxxx") {
+
+	       			       			       			
+	    		} 
+				 			
+		    }); 
+	     	 
+	     	 
+	  		
+			
+		});
+		
+
+	   	 function modalResponse(returnData) {	
+	  		hideSpinner();			 		
+	  		$('#productAttribute_ModalBody').html(returnData); 	 		 		 		
+	  	 }  
+		
+		function initCommonResponse(returnData) {	
+			//	console.log("initCommonResponse()");
+				hideSpinner();
+				$('#mainBody').html( returnData); 
+		}
+		
+		
+	</script>
+	
+  </head>
+
+
+<body id="Body" >
+	 		 	 			
+<form id="uidGeneratorFormDTO" class="bg-light" name="uidGeneratorFormDTO"  th:value="${uidGeneratorFormDTO}" method="post"> 
+ 	 	    	 		
+      <input type=hidden id="selectedIndustryPkId" name="selectedIndustryPkId" th:value="${uidGeneratorFormDTO.selectedIndustryPkId}" readonly>    
+      <input  type=hidden id="selectedIndustryUid" name="selectedIndustryUid" th:value="${uidGeneratorFormDTO.selectedIndustryUid}" readonly>
+        
+      <input type=hidden id="selectedSubIndustryPkId" name="selectedSubIndustryPkId"  th:value="${uidGeneratorFormDTO.selectedSubIndustryPkId}" readonly>    
+      <input type=hidden id="selectedSubIndustryUid" name="selectedSubIndustryUid"  th:value="${uidGeneratorFormDTO.selectedSubIndustryUid}" readonly> 
+        
+      <input type=hidden id="selectedVersionPkId" name="selectedVersionPkId"  th:value="${uidGeneratorFormDTO.selectedVersionPkId}" readonly>  
+      <input type=hidden id="selectedVersionUid" name="selectedVersionUid"  th:value="${uidGeneratorFormDTO.selectedVersionUid}" readonly>  
+      
+      <input  type=hidden id="selectedProductTypePkId" name="selectedProductTypePkId"  th:value="${uidGeneratorFormDTO.selectedProductTypePkId}" readonly>
+      <input  type=hidden id="selectedProductTypeUid" name="selectedProductTypeUid"  th:value="${uidGeneratorFormDTO.selectedProductTypeUid}" readonly>       
+         		  
+      <input  type=hidden id="selectedProductSubTypePkId" name="selectedProductSubTypePkId"  th:value="${uidGeneratorFormDTO.selectedProductSubTypePkId}" readonly>
+      <input  type=hidden id="selectedProductSubTypeUid" name="selectedProductSubTypeUid"  th:value="${uidGeneratorFormDTO.selectedProductSubTypeUid}" readonly>              		  
+         		    		  
+	  <section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+		<div class="de-component__container">
+	    	<header class="de-component-header">
+	            <h2 class="de-component-header__title">Testing Harness</h2>
+	              <h3 class="de-component-header__title">{needs total redesign}</h3>
+	        </header>		        
+	        <header class="de-component-header">
+	            <h2 class="de-component-header__title">UID Generation - Decision Tree</h2>
+	        </header>		        
+	    </div>
+
+       <label class="d-inline-block mb-3" > Generated UID : 
+         <input  style="width:640px" id="uidGenString" name="uidGenString" th:value="${uidGeneratorFormDTO.uidGenString}" readonly> 
+       </label>
+					
+		<br>
+		<br>
+	
+ 		<div id="industryId"  class="d-flex justify-content-between"> 
+			<select class="form-control mb-3" id="comboSelectedIndustry" name="comboSelectedIndustry" th:field="*{uidDtoIndustryList}" style="width: 260px">
+	           	<option value="_"> -- Select Industry</option>            	
+	            <option th:each="entry : ${uidDtoIndustryList}"  th:value="${entry.industryPkId}+'_'+${entry.industryUid}"  th:utext="${entry.industryDesc} "/>              
+	        </select> 
+		 </div> 
+				
+ 		<div id="subIndustryId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedSubIndustry" name="comboSelectedSubIndustry" th:field="*{uidDtoSubIndustryList}" style="width: 260px">
+            	<option value="_"> -- Select Sub Industry</option>
+                <option th:each="entry : ${uidDtoSubIndustryList}"  th:value="${entry.subIndustryPkId}+'_'+${entry.subIndustryUid}"   th:utext=" ${entry.industryCode}+':'+${entry.subIndustryDesc} "/>
+            </select> 
+	 	</div>  
+		
+		<div  id="versionId"  class="d-flex justify-content-between">	
+			<select class="form-control mb-3" id="comboSelectedVersion" name="comboSelectedVersion" style="width: 260px">
+				<option value="_"> -- Select Version</option>
+				<option value="1_10" >Version 1.0</option>
+				<option value="2_11">Version 1.1</option>	
+			    <option value="3_12" >Version 1.2</option>
+				<option value="4_13">Version 1.3</option>	
+				<option value="5_20">Version 2.0</option>
+				<option value="6_21">Version 2.1</option>												      											
+			</select>	
+		</div> 
+						
+ 		<div  id="productTypeId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductType" name="comboSelectedProductType" th:field="*{uidDtoProductTypeList}" style="width: 260px">
+            	<option value="_"> -- Select Asset Type</option>
+                <option th:each="entry : ${uidDtoProductTypeList}"  th:value="${entry.productTypePkId}+'_'+${entry.productTypeUid}"   th:utext="${entry.productTypeDesc} "/>           
+            </select> 
+		</div> 
+		
+	 	<div  id="productSubTypeId"  class="d-flex justify-content-between">
+			<select class="form-control mb-3" id="comboSelectedProductSubType" name="comboSelectedProductSubType" th:field="*{uidDtoProductSubTypeList}" style="width: 260px">
+            	<option value="_"> -- Select Asset Sub Type</option>
+                <option th:each="entry : ${uidDtoProductSubTypeList}"  th:value="${entry.productSubTypePkId}+'_'+${entry.productSubTypeUid}"   th:utext="${entry.productSubTypeDesc} "/>
+            </select> 
+		</div>		
+		
+
+            
+
+ 	<section id="myworksoace_asset_section" class="de-component de-component--gray">  
+			
+        <div class="form-group text-center">
+			<div class="card">
+	
+				<div class="card-header"><i class="fas fa-user mr-2"></i> UID Catalog Data:			
+				</div>				
+	
+				<div class="de-component__container">				
+	                    
+					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
+					 	<div class="datatable-toolbar-group">
+<!-- 					 		<div id="addbtn">
+					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+					 		</div> -->
+					 	</div>
+					 
+					 	<div class="datatable-toolbar-group">
+					 		<div id="attributeDataTable_filter" class="dataTables_filter">
+					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="attributeDataTable"></label>
+					 		</div> 
+					 	</div>
+					 </div>	                     
+	                  
+	                 <div id="xxxx">		                     
+	  	 					<table id="attributeDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
+	                          <thead class="thead-light">
+	                             <tr>	                             
+	     							<th scope="col"></th>       
+	     							<th scope="col"></th>   
+	                                <th scope="col">i</th>	
+	                                <th scope="col">uid</th>	
+	                                <th scope="col">industry</th>
+	                                <th scope="col">si</th>	
+      								<th scope="col">uid</th>		                                
+	                                <th scope="col">sub Industry</th>	                                
+                                    <th scope="col">pt</th>	 
+                                    <th scope="col">uid</th>	
+	                                <th scope="col">Asset Type</th>
+	                                <th scope="col">pst</th>
+	                                <th scope="col">uid</th>	
+	                                <th scope="col">asset Sub Type</th>
+	                                <th scope="col">pal</th>	
+	                                <th scope="col">Attr Seq</th>
+	                         <!--        <th scope="col">UID Selected</th> -->
+	                                <th scope="col">Attr Name</th>
+	                                <th scope="col">Attr Values</th>	                                	                               
+	                             </tr>
+	                          </thead>
+	                       </table>
+	                 </div>		                                                       
+				</div> 
+									
+			<br><br>                               
+<!--             <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                 <button type="button" id="previous" class="button button--continue">Previous</button>
+            </div> -->
+	                                                             
+			</div>
+		
+    </div>
+								
+	</section>
+	
+	
+	<div id="productAttribute_ModalBody">	
+	</div>		
+	
+	
+</section>
+	
+</form>	
+	
+	      
+ </body>
+  
+</html>
+
+
+
+
+        	

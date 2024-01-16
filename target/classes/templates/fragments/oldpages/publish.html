@@ -1,0 +1,90 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<script>
+
+
+		$(document).ready(function() {
+			hideSpinner();
+		});
+
+		function initCommonResponse(returnData) {
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+
+	</script>
+
+  </head>
+
+<body id="Body">
+	 						  
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">Publish</h2>
+		        </header>
+		    </div>
+
+            <div class="form-group text-center">
+				<div class="card">
+
+  
+					<div class="card-header"><i class="fas fa-user mr-2"></i> Published Data:
+			
+					</div>
+				
+
+					<div class="de-component__container">				
+	                     
+						 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+						 	
+						 	<div class="datatable-toolbar-group">
+						 		<div id="addbtn">
+						 			<button class="button button--secondary-reversed w-auto" type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+						 		</div>
+						 	</div>
+						 
+						 	<div class="datatable-toolbar-group">
+						 		<div id="catalogDataTable_filter" class="dataTables_filter">
+						 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
+						 		</div>
+						 	</div>
+						 </div>	                     
+	                     
+		                 <div id="xxxx">		                     
+	                        <table id="catalogDataTable" class="bg-white border border-top-0">
+	                        
+	                           <thead class="thead-light">
+	                              <tr>
+	                                 <th scope="col">Catalog Id</th>
+	                                 <th scope="col">Universal Catalog ID</th>	
+	                                 <th scope="col">Type</th>
+	                                 <th scope="col">Number</th>
+ 									 <th scope="col">Name</th>
+ 	                                  <th scope="col">Description</th>	   
+	                              </tr>
+	                           </thead>
+	                        </table>
+		                 </div>		                     
+						
+					</div>
+										
+					<br><br>                               
+                    <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                         <button type="button" id="previous" class="button button--continue">Previous</button>
+                    </div>
+                                                               
+				</div>
+				
+		    </div>
+					
+
+		</section>
+	  
+  </body>
+
+</html>

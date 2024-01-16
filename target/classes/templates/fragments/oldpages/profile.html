@@ -1,0 +1,153 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<script>
+
+
+		$(document).ready(function() {
+
+			hideSpinner();
+
+/* 			// Only ADMIN should run Loader utilities
+			if (isUserAuthorized("SUPERADMIN")) {
+				$('#dbUtility').show();
+			} */
+
+			
+			
+			$('#manageUsersButtonId').on('click',function(e) {			
+				showSpinner();	
+				submitFormAjaxHTML('editUser', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+				 
+
+			$('#manageUserRolesButtonId').on('click',function(e) {					
+				e.preventDefault();
+				showSpinner();	
+				submitFormAjaxHTML('editRoles', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");				
+			});
+			
+			
+		});
+
+		function initCommonResponse(returnData) {
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+
+	</script>
+
+  </head>
+
+  <body id="white">
+
+	<!-- Sparks 4-7-2022 added this for the form margins -->
+	<div  style="margin:20px">
+	<div class="nav-card-body">
+	   	<h3 class="nav-card-body__title" style="text-align:center"><span>User Profile</span></h3>
+	</div>
+
+
+
+ <form id="profileId"  th:objects="${dashboardFormDTO}">
+
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+
+			<div class="de-component__footer">
+
+				<div class="card">
+<!-- 					<div class="card-header"><i class="fas fa-user mr-2"></i> User Account: <span th:text="${userTrace.getFirstName()+' '+userTrace.getLastName()}"></span></div> -->
+
+					<div class="card-header"><i class="fas fa-user mr-2"></i> User Account:
+				<!-- 	<span>Clayton Sparks</span> -->
+					</div>
+
+
+					<div class="card-body p-0">
+						<div class="de-table border-0 w-100 m-0 p-0 mw-100">
+					  		<table class="w-100">
+							    <tr>
+							    	<td class="py-3 px-4" colspan="2">
+							      		<div class="d-flex justify-content-between">
+								      		<div class="d-flex flex-column"><span>User Id:</span><span sec:authentication="principal">Principal</span></div>
+								      		<div class="d-flex flex-column"><span>Role:</span> <span sec:authentication="credentials">credentials</span></div>
+								      		<div class="d-flex flex-column"><span>Company:</span> <Strong></strong></div>
+								      	</div>
+							      	</td>
+							    </tr>
+					  		</table>
+						</div>
+					</div>
+				</div>
+
+
+
+
+			<div  id="Manageusers" class="mt-5">
+			    
+			    <div class="nav-card-body">
+	   				<h3 class="nav-card-body__title" style="text-align:center"><span>Manage Users & Access</span></h3>
+				</div>
+				<br>
+			    
+			    		
+		 		<div class="de-component__footer row">
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Users</span></div>
+							<div class="card-body h-25">
+								<p>Add new users and Manage existing users</p>
+								
+								<button th:id="manageUsersButtonId" data-toggle="tooltip" data-placement="left" title="VManage Users" 
+									   class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Manage Users
+								</button>
+																		
+						<!-- 		<a id="user_profile_edit_users" href=""  class="text-left clearfix">Manage Users</a> -->
+	<!-- 							<a href="" class="text-left clearfix" data-toggle="modal" data-target="#addUserModal" id="addUserlink">Add User</a> -->
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Access</span></div>
+							<div class="card-body h-25">
+								<p>Adjust roles and permissions for all users.</p>
+								
+								<button th:id="manageUserRolesButtonId" data-toggle="tooltip" data-placement="left" title="Manage User Roles" 
+									   class="button button--secondary float-left mb-2 mt-4 w-auto" type="button">Manage User Roles
+								</button>
+								
+<!-- 								<a href="" id="user_profile_edit_roles" class="text-left clearfix">Manage User Roles</a> -->
+							</div>
+						</div>
+					</div>
+				</div>	
+								
+<!-- 				<div th:replace="fragments/add_user :: addUser"></div>	
+					<div th:replace="fragments/editUser :: editUser"></div>
+					Error Messaging    				
+				</div>
+
+
+ -->
+
+
+
+
+
+
+
+
+			</div>
+
+		</section>
+
+
+	</form>
+</div>
+  </body>
+
+</html>

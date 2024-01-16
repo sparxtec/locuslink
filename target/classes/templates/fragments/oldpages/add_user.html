@@ -1,0 +1,164 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>	
+ 	
+
+</head>
+ <link href="css/de-styles.css" rel="stylesheet">
+<body>
+<div th:fragment="addUser">
+
+<script>	
+	$(document).ready(function() {	
+
+		var btnId;
+		var newAddUser;
+			
+		$('#addEditUserlink').click(function() {
+		    //alert(this.id);
+		    btnId=this.id;		   
+		});
+		
+		 $('#addUser').off('click').on('click',function(event) {	
+			 console.log("event is " +event.target.id);
+			 firstName=$('#firstName').val();
+			 lastName=$('#lastName').val();
+			 region=$('#region').val();
+			 role=$('#role').val();
+			 company=$('#company').val();
+			 discipline=$('#discipline').val();
+			 lanId=$('#lanId').val();
+			 userId=$('#userId').val();
+			  $('#addUserMessage').text("");
+			  
+			  if($.trim($('#firstName').val())=="")	{
+				 console.log( $('#firstName').val());
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>First Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else if ($.trim($('#lastName').val())=="") 	{
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>Last Name required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else if ($.trim($('#lanId').val())=="")	{
+				 $('#addUserMessage').html('<div class="alert de-alert-failure alert-dismissible fade show" role="alert"><strong>User Id required</strong> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			  }	else {
+				 $('#addUserMessage').text(""); 			 
+ 				 $("#addUser").attr("disabled", true);
+ 				 $('#spinnerModal').appendTo("body").modal('show');
+ 				 
+ 				 $.ajax({
+ 			        type: "POST",
+ 			        url: "addUser",
+ 			        data:{firstName:firstName,lastName:lastName,region:region,role:role,company:company,lanId:lanId,discipline:discipline},
+ 			        success: function(response){
+ 			        	 console.log(response);
+ 	                      
+ 	                      $("#addUser").attr("disabled", false);
+ 	                    	$("#addUserModal").hide();
+ 	                    	 $("div").remove( ".modal-backdrop");
+ 	                      if(response=="Success")
+ 	                    	  {
+ 	                    	  console.log("inside success");
+ 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-success de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>User Added successfully</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+ 	                    			$('.de-alert-success').delay( 2000 ).fadeOut( 500, function() { 
+ 	   								$(this).remove();							
+ 	   							} );
+ 	                    	 if($('#editUserDataTable').length)
+ 	                    		 {
+ 	                    		 console.log(btnId);
+ 	                    		 $('#editUserDataTable').DataTable().ajax.reload();
+ 	                    		 }
+ 	      					
+ 	                    	  }
+ 	                      else
+ 	                    	  {
+ 	                    	 $('body').append("<div class='alert alert-dismissible   de-alert de-alert-failure de-alert-impact fixed-top text-left align-items-center' role='alert'><strong>" + response + "</strong> <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+ 	                    	$('.de-alert-failure').delay( 2000 ).fadeOut( 500, function() { 
+								$(this).remove();							
+							} );
+ 	                    	  }
+ 	                      //hideSpinner
+ 	             		 $('#spinnerModal').appendTo("body").modal('hide');
+ 			        },
+ 					error: ajaxResponseError, 
+ 					complete: function() {   
+ 						hideSpinner();
+ 			         }
+ 				});
+ 				
+				}
+
+			  });
+			 
+			 $('#resetAdduser').click(function()
+					 {
+				 $('#role option[value="MRC"]').prop('selected', true);
+				  $("#addUserModal").find('input[type="text"],textarea').val('');
+					$('#addUserMessage').text("");
+					 });
+
+		});
+
+	</script>
+			
+		<div class="modal" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="transferLabel" aria-hidden="true">
+			
+			<div class="modal-dialog" role="document">
+				 
+				<div class="modal-content">
+					
+					<div class="modal-header border-0">
+						<h5 class="modal-title de-h5 m-0">Add User</h5>
+						<button type="button" id="" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+						<div class="modal-body">	
+							<div  th:id="addUserMessage"></div>
+						    <div class="form-row">
+								<div class="col">
+									<div class="form-group">
+										<label for="firstNameInput">First Name</label>
+										<input type="text" class="form-control"  th:id="firstName"  name="firstName" maxlength="50" placeholder="Enter First Name" required/>
+									</div>
+									<div class="form-group">
+										<label for="lastNameInput">Last Name</label>
+										<input type="text" class="form-control"  th:id="lastName"  name="lastName" maxlength="50"  placeholder="Enter Last Name" required="required"/>
+									</div>	        		
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="col">
+									<div class="form-group">
+										<label for="userIdInput">User ID</label>
+										<input type="text" class="form-control" th:id="lanId"   name="lanId" maxlength="30"  placeholder="Enter User ID" required>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group">
+										<label for="regionSelect">Role</label>
+										<select class="form-control" name="role"  th:id="role">
+											<option th:each="UserRoleType : ${roleList}" th:value="${UserRoleType.getCode()}" th:selected="${UserRoleType.getCode()==UserRoleType.Code.MRC}" th:text="${UserRoleType.getDescription()}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							
+						
+						<div class="modal-footer">
+					   	  	<div class="button-group flex-row">
+						    	<button type="button" class="button button--text w-auto" th:id="resetAdduser">Reset</button>
+						    	<input type="button" class="button button--primary" value="Save changes" th:id="addUser"></input>
+					      	</div>
+						</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		
+		
+<!-- old - delete when done with this -->			
+</div>
+	     
+	      </body>
+	      </html>

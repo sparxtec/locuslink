@@ -1,0 +1,696 @@
+<!doctype html>
+
+<html  xmlns:th="http://www.thymeleaf.org"
+ 	   xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSRF Token -->
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Welcome to Locuslink</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="css/site-font.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/admin-responsive.css" rel="stylesheet">
+
+	 <!-- JavaScript -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script src="js/custome.js"></script>
+    
+
+
+
+<!-- ORIGINAL Sparks -->
+<!-- 	<script src="js/jquery-ui-1.12.1.min.js"></script>
+	<script src="js/jquery.hideseek.min.js"></script>
+	<script src="js/dropzone.js"></script>
+	<script src="https://unpkg.com/bs-breakpoints@1.0.0/dist/bs-breakpoints.min.js"></script>
+	<script src="https://unpkg.com/bs-stepper/dist/js/bs-stepper.min.js"></script>
+	<script src="//cdn.datatables.net/plug-ins/1.13.2/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
+	<link href="//cdn.datatables.net/plug-ins/1.13.2/features/searchHighlight/dataTables.searchHighlight.css" rel="stylesheet">		
+	<script src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+	<script type="text/javascript" src="js/jquery.hideseek.min.js"></script>  	
+	<script src="js/pdfobject.js"></script> -->
+			
+<!-- <style>
+table.dataTable thead th {
+  font-size: 1.2rem;
+ }
+</style> -->
+
+	<script>
+		$(document).ready(function() {
+			
+			//setupAjaxSend();
+			
+			// Retrieve token
+			var token = $("meta[name='_csrf']").attr("content");
+		    var header = $("meta[name='_csrf_header']").attr("content");			
+		    console.log("Get token: ", token, header);
+
+
+			// **************************************
+			// **  Navigation Events
+			// **************************************
+
+
+		
+			/////////// ***********************************************************  //////////
+			/////////// **************     Profile & Account Events      *******************  //////////
+			/////////// ***********************************************************  //////////
+
+			$('#accountProfileId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initProfile', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				$('.is-current').removeClass('is-current');
+				$('#buttonHeaderAccountId').addClass('is-current');
+			});
+		
+		});
+
+		function initCommonResponse(returnData) {
+			hideSpinner();
+			$('#mainBody').html( returnData);
+		}
+
+	</script>
+
+
+  </head>
+
+
+  <body id="body"  >
+  
+	<div th:replace="fragments/header :: header"></div>
+
+<!--     <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post" class="w-100">
+
+	     <input type="hidden" th:value="${appLogoutUrl}" name="appLogoutUrl"  id="appLogoutUrl" />
+	     CSRF token
+		 <input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/> -->
+
+
+
+        <section class="main__wrap ">
+
+            <div class="page-hding">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="user-card">
+                        <div class="btn-icon">
+                            <div class="card-icon">
+                                <img src="images/total-user.svg" alt="total-user" title="Total User" class="img-fluid">
+                            </div>
+                            <div class="view-btn"><a href="#">View All</a></div>
+                        </div>
+                        <div class="card-user mt-4">
+                            <h4>Total Users</h4>
+                            <span>15823</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="user-card">
+                        <div class="btn-icon asset-card">
+                            <div class="card-icon">
+                                <img src="images/asset-card.svg" alt="total-user" title="Total User" class="img-fluid">
+                            </div>
+                            <div class="view-btn"><a href="#">View All</a></div>
+                        </div>
+                        <div class="card-user mt-4">
+                            <h4>Asset Data</h4>
+                            <span>15823</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="user-card catalog-card">
+                        <div class="btn-icon">
+                            <div class="card-icon">
+                                <img src="images/catalog-card.svg" alt="total-user" title="Total User"
+                                    class="img-fluid">
+                            </div>
+                            <div class="view-btn"><a href="#">View All</a></div>
+                        </div>
+                        <div class="card-user mt-4">
+                            <h4>Catalog Data</h4>
+                            <span>15823</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uplod-dat-sec">
+                <div class="page-hding">
+                    <h2>Upload Data</h2>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="uplod-inputbx">
+                            <label>Industry</label>
+                            <select class="form-select">
+                                <option>Select Industry</option>
+                                <option>Electric Grid</option>
+                                <option value="1">Oil and Gas</option>
+                                <option value="2">Solar</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="uplod-inputbx">
+                            <label>Sub Industry</label>
+                            <select class="form-select">
+                                <option>Select Sub Industry</option>
+                                <option>Distribution</option>
+                                <option>Substation</option>
+                                <option>Transmission</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="uplod-inputbx">
+                            <label>Asset Type</label>
+                            <select class="form-select">
+                                <option>Select Asset Type</option>
+                                <option>Transformer</option>
+                                <option>Recloser</option>
+                                <option>Switchgear</option>
+                                <option>Voltage Regulator</option>
+                                <option>Capacitor Bank</option>
+                                <option>Pole</option>
+                                <option>Splice</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="uplod-inputbx">
+                            <label>Sub Asset Type </label>
+                            <select class="form-select">
+                                <option>Select Sub Asset Type</option>
+                                <option>Electric Grid</option>
+                                <option value="1">Oil and Gas</option>
+                                <option value="2">Solar</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1 mb-4">
+                        <div class="uplod-inputbx emptylbel">
+                            <label>&nbsp;</label>
+                            <a href="#" class="contine-btn">Continue</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-xxl-5 mb-4">
+                        <div class="recent-uniq-id-bx">
+                            <div class="card-hding">
+                                <h4>Recent Unique ID's</h4>
+                            </div>
+                            <div class="unique-idbx">
+                                <table class="table m-0">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Unique ID</th>
+                                            <th>Popularity</th>
+                                            <th>Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">01</td>
+                                            <td>x18.x19.x20.x21.x.x23.x24.x25</td>
+                                            <td>
+
+                                                <div class="progress uniqid-proces">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="percent-btn"> 45</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">02</td>
+                                            <td>x18.x19.x20.x21.x.x23.x24.x25</td>
+                                            <td>
+
+                                                <div class="progress uniqid-proces gren-color">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="percent-btn gren-btn"> 45</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">03</td>
+                                            <td>x18.x19.x20.x21.x.x23.x24.x25</td>
+                                            <td>
+
+                                                <div class="progress uniqid-proces prple-color">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="percent-btn prpl-btn"> 45</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">04</td>
+                                            <td>x18.x19.x20.x21.x.x23.x24.x25</td>
+                                            <td>
+
+                                                <div class="progress uniqid-proces yelow-color">
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="25"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="percent-btn orge-btn"> 45</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-xxl-4 mb-4">
+                        <div class="recent-uniq-id-bx">
+                            <div class="card-hding">
+                                <h4>Assets Uploaded</h4>
+                            </div>
+                            <div class="asset-graph">
+                                <canvas id="myChart" style="width: 100%;"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-xxl-3 mb-4">
+                        <div class="recent-uniq-id-bx position-relative">
+                            <div class="card-hding">
+                                <h4>Barcode</h4>
+                            </div>
+                            <div class="barcode-img">
+                                <img src="./images/dashboard-barcode.jpg" class="img-fluid" alt="" title="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="dtatable-card">
+                <div class="tble-hding">
+                    <h5>Recent Uploaded Data</h5>
+                </div>
+
+                <table id="recent-uploded-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Universal Catalog</th>
+                            <th>Unique ID</th>
+                            <th>Customer</th>
+                            <th> Traceability ID</th>
+                            <th>Published</th>
+                            <th>Action</th>
+                            <th>Reprint Barcode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2650012365478</td>
+                            <td>123654789</td>
+                            <td>Customer 1 </td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2650125631145478</td>
+                            <td>123654789</td>
+                            <td>Customer 2 </td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>2650125631145478</td>
+                            <td>2589632471</td>
+                            <td>Customer 1236</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>123650125631145478</td>
+                            <td>2589632471</td>
+                            <td>Customer 12364</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>123123650125</td>
+                            <td>11555451586545</td>
+                            <td>Customer 29</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>123650125631145478</td>
+                            <td>02365417</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>12365012512365</td>
+                            <td>1236587496547</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>12365012512365</td>
+                            <td>1236587496547</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>12365012512365</td>
+                            <td>1236587496547</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>12365012512365</td>
+                            <td>1236587496547</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>12365012512365</td>
+                            <td>1236587496547</td>
+                            <td>Customer 23</td>
+                            <td>x18.x19.x20.x21.x22.x23</td>
+                            <td>
+                                <div class="togle-btn">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="#" class="view-btn"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="acton-btns">
+                                    <a href="#" class="view-btn">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </section>
+        
+        
+        
+<!--     </form> -->
+        
+
+
+
+<!-- 
+	<div th:replace="fragments/footer :: footer"></div> -->
+  </body>
+
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head> 
+    <title>My Workspace</title>
+
+
+
+    <script>
+
+	var globalTable;		
+		
+   	$(document).ready(function() {	
+    	hideSpinner();	
+     		  
+    	console.log ("before load pdf");
+        loadEmbededPDF();     		
+     		
+   		$('#buttonBackId').click(function() {					
+   			showSpinner();								
+   			submitFormAjaxHTML('initTestHarness', $("#dashboardFormDTO").serialize(), "commonResponse");														
+   		});	 	
+ 		
+   	 });  
+    	
+    	
+    	
+	function loadEmbededPDF() {
+			
+/* 	    PDFObject.embed("/barcodePDF/po" + poNumber + "/BarcodePDF/" + fileName, "#pdfContainerId_" + seq + "_" + docReqId + "_" + poNumber + "_" + isItem + "_" + isOldData);
+     */
+     	// This make the BarCode open to the size of the container, instead of a small image inside it.
+     	var options = {
+   		 pdfOpenParams: {
+   		        view: 'FitV',
+   		        pagemode: 'thumbs',
+   		        search: 'lorem ipsum'
+   		    }
+    	};      
+	    PDFObject.embed("samplefiles/locuslink_1.pdf", "#pdfContainerId_1", options );	    	
+	}    	
+    	
+    	
+    	
+    	
+	 function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+	 }
+					
+		
+  </script>
+	
+  </head>
+
+  <body id="Body">
+	 						  
+	<section>		
+		<div class="de-component__container">
+	    	<header class="de-component-header">
+	            <h2 class="de-component-header__title">Bar Code Viewer</h2>
+	        </header>
+	    </div>
+	</section>
+	
+	    		            
+    <nav class="de-header-nav--simple">
+    	<ul class="de-header-nav__group">
+			<li class="de-header-nav__item">
+		        <button type="buttonBackId" id="previousGoToUploadPage1" class="button button--continue ml-3" onclick="">Back</button>		                   
+		    </li>                   		                   
+			<li class="de-header-nav__item" >							
+				<div >
+					<span ><span class="d-inline">Heat/SN #: </span><strong><span class="d-inline" th:text="${heatNumber}">12345</span></strong></span>
+				</div>					
+				<div >
+					<span class="d-inline"> MFG:United Parts   Item#:12345    PO #: 789 </span>
+				</div>
+		     </li>                                      
+			<li class="de-header-nav__item"></li>
+        </ul>
+    </nav>     
+
+
+ 	<br>
+	<section class="de-component de-component--gray p-0 pdfobject-body">				
+	   	<div class="card-text-wrapper flexprop-none" style="height:480px">			  
+			<div style="height:480px;width:640px;margin: 0 auto" th:id="pdfContainerId_1"  th:text="locuslink_1.pdf"> </div>		
+		</div>   
+    </section>
+	            
+	            
+	            
+	            
+	            
+	            
+ 
+	            
+	            
+    <!-- 5-28-2019  display the Footer for BarCode Print, but don't display it for Material Management Viewer -->	            				
+	<section class="de-component de-component--gray pdfobject-footer" th:if="${screenId != 'manage_2'}">
+			<div class="de-component__container">
+				<header class="de-component-header mb-2">
+					<p class="de-component-header__intro">Is this document legible, accurate and complete?</p>
+				</header>
+				
+				<footer class="de-component-footer mt-2">
+					<div
+						class="de-component-footer__action btn-toggle button-group segment-control flex-row justify-content-start"
+						data-toggle="buttons">
+						<label id="confirmDocs" class="de-component-footer__button btn button">
+						       <input type="radio" autocomplete="off" value="YES">YES
+						 </label> 
+					     <label id="failDocsNoButton" class="de-component-footer__button btn button">
+							    <input type="radio" autocomplete="off" value="NO">NO
+					     </label>
+					</div>
+				</footer>
+			</div>
+        </section>
+
+
+  </body>
+  
+</html>

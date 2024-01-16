@@ -1,0 +1,340 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+   	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+   	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   	<meta name="description" content="">
+   	<meta name="author" content="">
+   	<link rel="icon" href="favicon.ico">
+   	<title>Edit User Roles</title>     	      		
+   	<link href="css/de-profile-styles.css" rel="stylesheet">
+    	
+<script>
+
+	$(document).ready(function() {	
+				
+		var table = $('#editRoles').DataTable( {
+			
+	       	retrieve: true,
+		 	searchHighlight: false,
+	        responsive: true,		        
+	        "paging":   true,	
+	        scrollCollapse: true,
+	        scrollY: 'calc(100vh - 35rem)',	        
+	        order: [1, 'desc' ],		        
+	    	//colReorder: true,		        
+	    	keys: {
+		            columns: ':not(:first-child,:last-child)',
+		          /*   keys: [ 9 ], */
+		            keys: [ 6 ],
+		            editor: editor,
+		           editOnFocus: true
+		        }, 			        
+			        select: {
+		            style:    'os',
+		            selector: 'td:first-child'
+		        },  
+		    ajax: {
+	      	    url: 'getAllActiveUsers',
+	      		type: 'POST',
+	       		contentType: 'application/json',
+	       		data: function ( data ) {
+	       			showSpinner();
+	       			var myData = {version:"1.0", clientId:"locuslink"};
+	       			var innerData = {};
+	       			myData["data"] = innerData;	        				        		
+	           		return JSON.stringify( myData );
+		        },
+		        "dataSrc": function (json) {
+		        	userList = json.data.userList;	
+		        	console.log(userList);
+		        	hideSpinner();			    
+		        	return userList;						    
+		         }					       
+	   		},  
+
+	        columns: [	 	        	
+                { data: "userLocusLinkPkId" },
+                { data: "userTypeCode" },
+                { data: "loginName" },
+                { data: "firstName" },
+                { data: "lastNameBusName" },        
+	   /*          { data: "userMembershipId"} ,  */
+	            
+	            /* { data: "usertraceId" } ,  */
+	            { 	           
+		        	data: null,
+		            className: "center",
+		            defaultContent: ' <a href="" class="editor_edit button button--text">Edit</a>  <a href="" class="editor_remove button button--text ml-3">Delete</a>',
+	            }           
+	       	],
+
+	        columnDefs: [
+/* 	           {
+	              "targets": [ 6,7,8 ],
+	              "visible": false,
+	              "searchable": false
+	            }, */
+	          	{ "className": "dt-center", "targets": [0,1,2,3,4]},   
+		        { "width":"45px", "targets": 0 },		        	
+		        { "width":"50px", "targets": 1 },
+		        { "width":"100px", "targets": 2 },
+		        { "width":"70px", "targets": 3 },
+		        { "width":"70px", "targets": 4 },
+		      		        { "width":"70px", "targets": 5 },
+		      		      /*		        { "width":"70px", "targets": 6 },
+ 		        { "width":"70px", "targets": 7 },
+		        { "width":"70px", "targets": 8 },
+		        { "width":"70px", "targets": 9 },	 */	  		     
+	       	],
+	       	
+	      	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+	   		
+	      });
+		
+		
+		
+		// 10-6-2023
+	// sparks TODO what is this doing ? why not return the in the original DTO, in 1 call	
+		
+		var editor;
+		/* 		$.post("getAllRoles",function(response) {
+			 console.log(JSON.stringify(response));					
+	         editor.field('role').update(response);
+	    });  */
+		
+/* 		$.post("getAllContractorCompanies",function(response) {
+			 console.log(JSON.stringify(response));					
+	         editor.field('contractor').update(response);
+	    }); */
+		
+		editor = new $.fn.dataTable.Editor( {					 	
+	    ajax: {
+      		url: 'updateUserProfileRow',
+      		type: 'POST',
+       		contentType: 'application/json',
+       		data: function ( data ) { 
+       			var modifier = editor.modifier();
+       			showSpinner();
+	        	console.log ("calling  rowUpdate ->: " + JSON.stringify( data)) ;			        	
+       			var myData = {version:"1.0", clientId:"gim"};
+       			var innerData = {};
+       			innerData["action"] = data.action;
+       			innerData["rowData"] = data.data; 
+       			myData["data"] = innerData;
+       			
+           		return JSON.stringify( myData );		 
+	        },
+               success: function (result) {	                	           
+                   console.warn("success callback without json result=" +  JSON.stringify(result));
+                   hideSpinner();
+                   return JSON.stringify( result );
+               },
+               error: function (xhr, error, thrown) {	      
+                   console.warn("error callback xhr=" + xhr );
+                   hideSpinner();
+                   return JSON.stringify( xhr );
+               }
+	        			       
+   		},  					
+		//idSrc:  'userMembershipId', 
+		idSrc:  'userLocusLinkPkId', 
+		
+        table: "#editRoles",
+        fields: [ 
+       	 {	   
+	            label: "lanId:",
+	            name: "lanId",
+	            type:"hidden"
+	            
+ 	     }, {	  		 	    	 
+            label: "User:",
+            name: "fullName",
+            type:"readonly"
+         }, {		        	 
+/*             label: "Discipline:",
+            name: "discipline"  , 
+            type: "select" ,
+            ipOpts: [
+              {label: "All Disciplines", value: "All Disciplines" }]
+         } ,{		        	 
+            label: "Region:",
+            name: "region"  ,
+            type: "select",
+            ipOpts: [
+              { label: "All Regions", value: "All Regions" }]
+         },{	 */	        	 
+            label: "Role:",
+            name: "role"  ,
+            type: "select"		            
+         } , {		        	 
+            label: "State:",
+            name: "state"  ,
+            type: "select",
+            ipOpts: [
+                { label: "ALL", value: "ALL" }],
+	     }, {					 
+            label: "Contracting Company Name:",
+            name: "contractor"  ,
+            type: "select",
+		 }, {				         
+            label: "userMembershipId:",
+            name: "userMembershipId"  ,
+            type: "hidden"
+         }, {		        	 
+            label: "usertraceId:",
+            name: "usertraceId"  ,
+            type: "hidden"
+			}    
+       ],		        		       		    
+        formOptions: {
+            inline: {
+              submitOnBlur: true,
+              submit: 'changed'
+            }
+        }
+  	});
+		
+		
+	editor.on( 'preSubmit', function ( e, o, action ) {
+		//console.log(e);
+		var modifier = editor.modifier();
+		//console.log(modifier);
+		columnName = table.column(modifier.column).header();
+		var ColumnName=$(columnName).html();
+		console.log(ColumnName);		        
+        if ( this.inError() ) {
+               return false;
+           }
+	});
+		 
+		 
+    
+
+	  // SEARCH FILTER
+	  $('#editUserProfileDataTable_filter input').keyup(function(){
+	  	table.search($(this).val()).draw() ;
+	  });
+        		
+ 		
+	  $(".dataTables_length select").addClass("form-control");
+	
+	  $('#editRoles').on( 'click', 'tbody td:not(:first-child,:last-child)', function (e) {		  
+	     editor.inline( this, {
+	       submit: 'changed'
+	     });		   		   
+	  });
+  
+   	  $(".btn-back").on('click', function(){
+		showSpinner();
+		$('#mainBody').load("initProfilePage", function () {
+		  	hideSpinner();
+		});
+	  });	
+   
+    	
+   	  $('#editRoles').on('click', 'a.editor_edit', function (e) {
+	    e.preventDefault();
+	    editor.edit( $(this).closest('tr'), {
+	        title: 'Edit record',
+	        buttons: [
+	            { extend: 'Cancel', text: 'Cancel', action: function () { this.close(); }, className: 'button button--text w-auto' },
+	            { extend: 'Submit', text: 'Submit', action: function () { this.submit(); }, className: 'button button--primary ml-4' }	    
+    		]   
+	    });
+	    				    
+	  });   
+
+   	  // append classes to style modal form elements and header
+      editor.on( 'open', function ( e, type ) {
+	    $(".DTE_Header_Content").addClass('de-h4');
+	    $(".DTE_Body_Content input, .DTE_Body_Content select").addClass('form-control');
+	    $(".DTE_Form_Buttons").addClass('d-flex justify-content-end mt-5');
+	  });			    
+
+	
+	  $('#editRoles').on('click', 'a.editor_remove', function (e) {
+	     e.preventDefault();
+	     console.log ($(this).data('field'));
+	     editor.remove( $(this).closest('tr'), {
+	         title: 'Delete record',
+	         message: 'This will delete the user and associated information. Do you still want to delete?',
+			 buttons: [
+	            { extend: 'cancel', text: 'Cancel', action: function () { this.close(); }, className: 'button button--text w-auto' },
+	            { extend: 'remove', text: 'Delete', action: function () { this.submit(); }, className: 'button button--primary ml-4' }
+    		 ]
+
+	      });		    
+	   });
+
+		
+	   $("#backbtn").html('<button class="btn btn-secondary" type="button"><i class="fas fa-chevron-left"></i> Back</button>');
+
+	   $("#backbtn button").click(function(){
+			showSpinner();			
+		  $('#mainBody').load("initProfilePage", function () {															
+			hideSpinner();
+		  });
+	   });
+	 
+    });  // End Doc Ready
+	
+
+	function initCommonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html( returnData); 		 
+	}
+
+	
+</script>	
+
+</head>
+
+<body>
+	<form id="dashboardFormDTO" class="bg-light" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="post"> 
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+				
+            <nav aria-label="breadcrumb">
+               <ol class="breadcrumb position-absolute">
+                  <li class="breadcrumb-item"><a href="#" class="uppercasebtn btn-back"><i class="fas fa-chevron-left"></i> Return to Dashboard</a></li>
+               </ol>
+            </nav>
+		   	<header class="de-component-header">
+		    	<h2 class="de-component-header__title">Manage User Roles</h2>
+			</header>
+
+			 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+			 	<div class="datatable-toolbar-group"></div>
+			 	<div class="datatable-toolbar-group">
+			 		<div id="editUserProfileDataTable_filter" class="dataTables_filter">
+			 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="editUserDataTable"></label>
+			 		</div>
+			 	</div>
+			 </div>	      
+					 
+
+					<table id="editRoles" class="display w-100 bg-white border border-top-0">
+						<thead class="thead-light">
+							<tr>
+                              <th scope="col">Id</th>
+                              <th scope="col">User Type</th>
+                              <th scope="col">Login Id</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last NAme</th>
+				<!-- 				<th scope="col">Contracting Company</th>  -->
+<!-- 								<th></th>
+								<th></th>
+								<th></th> -->
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+					</table>
+
+
+
+		</section>	
+	</form>	
+</body>
+  
+</html>

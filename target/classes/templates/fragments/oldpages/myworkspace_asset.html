@@ -1,0 +1,252 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head> 
+    <title>My Workspace</title>
+ <style>
+	.datatable-toolbar {
+		padding: .20rem !important
+	}
+	
+	div.action-buttons {
+        white-space: nowrap;
+    }
+ 
+    div.action-buttons span {
+        display: inline-block;
+        min-width: 18px;
+        cursor: pointer;
+    }
+     td.details-control sorting_1 dtr-control {
+		display: inline-block;
+        min-width: 18px;		
+	}   
+ 	#assetDataTable td:nth-child(6) { min-width: 240px; } 
+ 	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
+    
+</style> 
+    <script>
+
+		var globalTable;		
+			
+    	$(document).ready(function() {	
+     		hideSpinner();	
+     		
+     		if( $('#assetDataTable').length){     			
+     			var table = $('#assetDataTable').DataTable( {
+            	retrieve: true,
+     	 		searchHighlight: true,
+             	responsive: true,		        
+             	"paging":   true,          
+             	order: [2, 'asc' ],		        		             
+     	    	ajax: {
+           		    url: 'getAllAsset',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"locuslink"};
+            			var innerData = {};    
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	uniqueassetlist = json.data.uniqueassetlist;	     	        	
+     	        	hideSpinner();		    		     	      	        	
+     	        //	console.log(JSON.parse(uniqueassetlist));
+     	        	return JSON.parse(uniqueassetlist);     	        	      	        	
+     	         }					       
+        		},  
+     
+             columns: [	                	 
+	 			 { "className": 'details-control',
+ 	               "orderable": false,
+ 	               "data":      null,
+ 	               "defaultContent": ''
+	 	         },	 	                       	      
+	 	         { title: "Details",
+	 	           data: null,
+ 	               className: "controlColumns",
+ 	               "render": function(data, type, row, meta){	            		
+                    	data ="<div class='action-buttons'>" 
+                    	+"<button id='docs_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Attachment List Viewer'></i></button>&nbsp;"
+                    	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;"
+                    	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Unique Asset'></i></button></div>";	                    
+	                return data;
+	 	         }}, 
+                   	         
+	             { data: "uniqueAssetPkId" },	               
+                 { data: "uniqueAssetId" },                   
+                 { data: "manufacturerName" },                 
+                 { data: "productTypeCode" },
+                 { data: "traceTypeCode" },
+                 { data: "traceCode" },                    
+                 { data: "customerName" },
+                 
+                 { data: "universalCatalogId" },   
+                 
+                 { data: "cdugtPkId" },                   
+                 { data: "industryDesc" },
+                 { data: "subIndustryDesc" },
+                 { data: "productTypeDesc" },
+                 { data: "productSubTypeDesc" },
+                 
+                 { data: "productTypeDesc" }
+                
+            	],
+            	
+        		
+             	dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',
+
+             	             	        		            	          	
+           });
+     	 }	 
+     			
+     			
+     	 
+     	 // Button Clicks on the Data table
+  	    $('#assetDataTable tbody').on('click', 'button', function (e) {
+	    	//console.log(this);
+	    	
+	    	var url='';
+	    	var whatWasClicked=$(this).attr("id").split("_")[0];
+	    	var uniqueAssetPkId=$(this).attr("id").split("_")[1];
+	    		 	    				
+	        // set the FORM value so the controller can get it.				
+			$('#uniqueAssetPkId').val(uniqueAssetPkId).val().trim();
+	        
+	        	        
+	   	    e.preventDefault(); // ??	    	
+			showSpinner();
+	    		   	    	    
+			if(whatWasClicked==="docs") {
+
+       			showSpinner();											 	
+     
+       			// 5-17-2023
+				submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       
+				
+    		} else if(whatWasClicked==="barcode") {
+
+    			// 3-21-2023
+       			showSpinner();								
+       			submitFormAjaxHTML('getBarcodeForAsset', $("#dashboardFormDTO").serialize(), "modalResponse");	
+       			       			       			
+    		} else if(whatWasClicked==="delete") {
+    			url = "deleteAsset";	
+    		}
+			 			
+	    }); 
+	    
+	    
+     	 
+  		// SEARCH FILTER
+  		$('#assetDataTable_filter input').keyup(function(){
+ 			table.search($(this).val()).draw() ;
+ 		});  
+ 		
+   		$('#previous').click(function() {					
+   			showSpinner();								
+   			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
+   		});	 		 		
+ 		
+	
+   	 });  
+    	
+    	
+    
+   	 function modalResponse(returnData) {	
+ 		hideSpinner();			 		
+ 		$('#myworkspace_Asset_ModalBody').html(returnData); 	 		 		 		
+ 	 }   	 
+   	 
+	 function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			
+	 }
+					
+		
+  </script>
+	
+  </head>
+
+  <body>
+	 	
+	 <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
+    	    						 
+	<section id="myworksoace_asset_section" class="de-component de-component--gray"> 
+			
+		<div class="de-component__container">
+	    	<header class="de-component-header">
+	            <h2 class="de-component-header__title">My Workspace</h2>
+	        </header>
+	    </div>
+
+        <div class="form-group text-center">
+			<div class="card">
+	
+				<div class="card-header"><i class="fas fa-user mr-2"></i> Asset Data:			
+				</div>				
+	
+				<div class="de-component__container">				
+	                    
+					 <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">						 	
+					 	<div class="datatable-toolbar-group">
+<!-- 					 		<div id="addbtn">
+					 			<button class="button button--secondary-reversed w-auto"   type="button" data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add </button>
+					 		</div> -->
+					 	</div>
+					 
+					 	<div class="datatable-toolbar-group">
+					 		<div id="assetDataTable_filter" class="dataTables_filter">
+					 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="assetDataTable"></label>
+					 		</div> 
+					 	</div>
+					 </div>	                     
+	                  
+	                 <div id="xxxx">		                     
+	  	 					<table id="assetDataTable" class="bg-white border border-top-0" style="width:100%"> 	            	              		 	              		 
+	                          <thead class="thead-light">
+	                             <tr>
+	     							<th scope="col"></th>       
+	     							<th scope="col"></th>   
+	                                <th scope="col">Id</th>	                                 	                          	                                 
+	                                <th scope="col">Unique Asset ID</th>
+	                                <th scope="col">Manufacturer</th>
+	                                <th scope="col">Product Type</th>
+	                                <th scope="col">Trace Type</th>	
+									<th scope="col">Trace Number</th>		                                                                     	                             	                             
+	                             	<th scope="col">Customer</th>
+
+	                                <th scope="col">Universal Catalog ID</th>	
+	                                <th scope="col">cdugt</th>
+ 									 <th scope="col" style="min-width:100px">Industry</th>
+ 	                                 <th scope="col" style="min-width:100px">Sub Industry</th>	 
+     								 <th scope="col" style="min-width:200px">Asset</th>	 
+          							 <th scope="col" style="min-width:100px">Sub Asset</th>	           							           							 
+	                            	<th scope="col">PType Description]</th>
+
+	                             </tr>
+	                          </thead>
+	                       </table>
+	                 </div>		                                                       
+				</div> 
+									
+			<br><br>                               
+            <div class="py-4 text-center px-0 d-flex justify-content-between d-sm-block">
+                 <button type="button" id="previous" class="button button--continue">Previous</button>
+            </div>
+	                                                             
+			</div>
+		
+    </div>
+				
+				
+	    <div id="myworkspace_Asset_ModalBody">	
+	    </div>			
+					
+	</section>
+	  
+  </body>
+  
+</html>

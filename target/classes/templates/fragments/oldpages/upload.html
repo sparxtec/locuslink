@@ -1,0 +1,175 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>UI - Upload Data - Page1</title>
+
+    <!-- StyleSheets - ORDER IS IMPORTANT -->
+    <link href="css/de-upload-styles.css" rel="stylesheet">
+    
+  
+    
+    <script>
+
+		var stepper1 = null;
+		   	
+		$(document).ready(function() {
+			
+			$('#continueGoToPage2').click(function() {	
+				
+				// set the FORM value from the document combo box dropdown				
+				$('#selectedDocType').val($('#comboSelectedDocType').val().trim()); 		;
+				
+				showSpinner();								
+				submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
+			});	
+			
+			
+			
+			$('#downloadTemplateId').click(function() {	
+				
+				// set the FORM value from the document combo box dropdown				
+				$('#selectedTemplate').val($('#comboTemplatesId').val().trim()); 		;
+				
+				alert ("selected template ->: " + $("#selectedTemplate").val() );
+				//showSpinner();								
+				//submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
+			});	
+			
+			
+			
+		});
+	
+		function commonResponse(returnData) {	
+			hideSpinner();
+			$('#mainBody').html(returnData); 
+			$("#purchaseOrderNumber").val("");
+			$('#showOnlyWhenDBErrors').show();
+			$('#showOnlyWhenNoErrors').hide();
+		}
+		
+		function commonResponsePrev(returnData) {	
+			hideSpinner();
+			$('#mainBody').html(returnData); 
+		}
+
+	</script>
+
+  </head>
+  
+  
+  <body>
+  
+    <input type="hidden" id="selectedDocType" name="selectedDocType"  th:value="${comboSelectedDocType}">
+    <input type="hidden" id="selectedTemplate" name="selectedTemplate"  th:value="${comboTemplatesId}">
+    	 
+ 			<main>
+	            <section class="de-component h-100">
+	                <div class="de-component__container">
+	                    <header class="de-component-header mb-0">
+	                        <h2 class="de-component-header__title">Upload Data</h2>
+	                    </header>
+	
+	                    <div id="stepper1" class="bs-stepper">
+	                    
+	                        <div class="bs-stepper-header m-auto bs-stepper-custom-width" role="tablist">
+	                            <div class="step active" data-target="#step1">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1" aria-selected="true">
+	                                    <span class="bs-stepper-circle">1</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+	                            <div class="line"></div>
+	                            <div class="step" data-target="#step2">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2" aria-selected="false">
+	                                    <span class="bs-stepper-circle">2</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+	                            <div class="line"></div>
+	                            <div class="step" data-target="#step3">
+	                                <button type="button" class="btn btn-link step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3" aria-selected="false">
+	                                    <span class="bs-stepper-circle">3</span>
+	                                    <span class="bs-stepper-label"></span>
+	                                </button>
+	                            </div>
+
+	                        </div>  
+	                        
+	                        
+	                        
+	                                      
+	                        <div class="bs-stepper-content">
+	                            <div id="step1" role="tabpanel" class="content active" aria-labelledby="stepper1trigger1">
+	                                <div class="form-group d-flex flex-column justify-content-center align-items-center bs-stepper-custom-width m-auto text-center">
+	                                    
+	                                    <div id="showOnlyWhenNoErrors">
+	                                    	<label  class="d-inline-block mb-3" for="purchaseOrderNumber">Please choose what type of asset record you will be uploading.</label>
+	                                     </div>
+	                                     
+										<div class="de-component-footer__action">
+											<div class="d-flex justify-content-between">
+		
+										<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" style="width: 260px">
+													<option value="STEEP_PIPE" selected >Steel Pipe :0123001D015</option>
+												    <option value="CABLE">Cable :0123001C007</option>																						      											
+												</select>	 
+												
+					<!-- 						<select class="form-control mb-3" id="comboSelectedDocType" name="comboSelectedDocType" th:field="*{ucatList}" style="width: 260px">
+							                         <option value=""> -- Select a Type of Asset</option>
+							                         <option th:each="ucat : ${ucatList}"  th:value="${ucat.productName}"  th:utext="${ucat.productName} + ' : ' + ${ucat.productNumber}"/>
+							                    </select> -->
+                  
+                  
+
+
+                  
+                  											
+											</div>
+										</div>
+	                                </div>
+	                                <div class="text-center px-0">
+	                                    <button type="button" id="continueGoToPage2" class="button button--continue"  >Continue</button>
+	                                </div>
+	                            </div>
+	                            
+	                            
+	                            
+	                           
+   						 <br><br>
+	                      <div class="form-group d-flex flex-column justify-content-center align-items-center text-center">	                                         	                                  
+
+							<div class="card mb-2" style = "text-align:center">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Do you need a template to download ?</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">Select a template for download.</p>													
+								    <button th:id="downloadTemplateId" data-toggle="tooltip" data-placement="left" title="Download a material catalog template" 
+									        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Download
+								   </button>								   
+									<select id="comboTemplatesId" name="comboTemplatesId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+										<option value="none" >-- Select a Template ---</option>
+										<option value="CABLE_UNDERGROUND">Under Ground Cable :111B21G1Q11443411233312X</option>	
+														<option value="CABLE_UNDERGROUND">Splice :33107131162411144444</option>	
+										<option value="STEEL_PIPE_12Inch">Steel Pipe 12 :0123001D015</option>														
+									</select>
+								</div>											
+	                      </div> 
+	                    
+	 
+
+	                                  
+	                        </div>
+	                        
+	                        
+	                        
+	                        
+	                        
+	                    </div>
+	
+	                </div>
+	            </section>
+	        </main>	       
+
+        </div>
+
+  </body>
+  
+</html>

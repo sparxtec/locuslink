@@ -1,0 +1,332 @@
+<!doctype html>
+<html  xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Workspace</title>
+
+	<script>
+    	
+		$(document).ready(function() {
+			
+
+		   accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InpZYUVKd1R6RlYwa28ydTFCMjdoYSJ9.eyJodHRwczovL0JhclRlbmRlckNsb3VkLmNvbS9UZW5hbnRJRCI6ImI4NjVlMmZjLWYxYTUtNDY1Mi1hMjMyLTI1MDEwMDY2YzIxZSIsImh0dHBzOi8vQmFyVGVuZGVyQ2xvdWQuY29tL1VzZXJJRCI6IjExNTBhMWM5LWYxYmMtNDhkNC04MjQwLTE0NWZlOWM5MmVhNiIsImlzcyI6Imh0dHBzOi8vYmFydGVuZGVyY2xvdWQtcHJvZHVjdGlvbi51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjNmMDBhYjljYjIwOTFhMmFlNmE2MmRlIiwiYXVkIjpbImh0dHBzOi8vQmFyVGVuZGVyQ2xvdWRTZXJ2aWNlQXBpIiwiaHR0cHM6Ly9iYXJ0ZW5kZXJjbG91ZC1wcm9kdWN0aW9uLnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2NzcwNzkyMzIsImV4cCI6MTY3OTY3MTIzMiwiYXpwIjoiU2JYTEE3MUFCcExseDFEU3IwY0JKSDdwb1VrbGFQVTciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG9mZmxpbmVfYWNjZXNzIiwicGVybWlzc2lvbnMiOltdfQ.Oa5xXdoGqs6BaOo1TkbVNjBlb6JgrR0cNv12hMuafMwIR3EcEkdYbeEdVfdTxCpKYjEx8I42X7q6R_sH_nsSzfx-Ny7fjoZF5gcBTwIF3dXcr07n9HQsmXkwZka5_mQJdXeOxr4i9kbt_5Zg1vUUVfS4uFWtRAaUUeMHLztGrxg9Cyhe8jVKDRp_8AxkX_nbhtWm3EKKs6IXMZHN6_ytQByr022aGsRhzE7rKP4yf8wWCapYxiQhbugp8t7bDmntOTpnd619zSc4MTLf3_JNDKuHjDoLrTXHPcxKtc7CSr6eUgdEbPbJGH20M8c58lo8PZ8f6IXIANeqs3IO3NwQGw";	
+		   btcServerLocation = "https://bartendercloud.com";	
+		   headers = { "Authorization" : "Bearer " + accessToken }
+
+
+			
+			hideSpinner();	
+			
+			$('#viewBarcodeId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initBarcodeView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+						
+			$('#viewPdfId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initPdfView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#viewExcelId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initExcelView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#viewTemplateId').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('initTemplateView', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+			$('#btc_1').click(function() {		
+				showSpinner();	
+				url_getPrintersApi = btcServerLocation + "/api/printers"		
+				callBartender_GET( url_getPrintersApi );
+			});
+			
+			$('#btc_2').click(function() {		
+				showSpinner();	
+				
+				var myJsonRequest_1 = '{ "PrintBTWAction": {' +
+				' "Document": "Librarian://main/locuslink_1.btw", ' +
+				' "Printer": "printer:Sparxtec_1/ZDesigner_ZD420-300dpi_ZPL", ' +
+			    // ' "Printer": "printer:01MSWANSON22/ZDesigner_ZD420-300dpi_ZPL", ' +		
+			    // this is how to pass data to the template on the fly
+				' "NamedDataSources": {"Ship_To_Name":"bubba"}, ' +								
+				' "SaveAfterPrint": false ' +
+				'}}';
+				
+				callBartender_POST( myJsonRequest_1);				
+			});
+						
+			
+			$('#btc_3').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('printBartenderCloud', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#btc_4').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('writeBartenderCloudToPDF', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+			$('#btc_5').click(function() {		
+				showSpinner();			
+				submitFormAjaxHTML('viewBartenderCloud', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
+		});
+		
+		function initCommonResponse(returnData) {	
+			//console.log("initCommonResponse()");
+			hideSpinner();
+			$('#mainBody').html( returnData); 						
+	      	document.getElementById("responseBartender").innerHTML += ("<p>" +  "Succesful." + "</p>")
+		}
+		
+		function callBartender_GET (url) {
+			
+			document.getElementById("responseBartender").innerHTML = ("<p></p>");
+			
+		   fetch(url, {
+		      method: "GET",
+		      credentials: 'include',
+		      headers: headers
+		   })
+		   .then(function(response)  {
+			  hideSpinner();
+		      var contentType = response.headers.get("content-type");
+		      if(contentType && contentType.includes("application/json")) {
+		         return response.json();
+		      }
+		      throw new TypeError("Oops, we haven't got JSON!");
+		   })
+		   	.then(function(json)  {
+		   				   
+		   		// display all the printers knownby Bartender, my 3 and Matt  has 1
+		   		json.forEach(function(obj) {
+		   			console.log(obj.PrinterId); 
+		   		   	document.getElementById("responseBartender").innerHTML += ("<p> printerId ->:" + obj.PrinterId + "</p>")		   		 
+		   		});
+		   				   	
+		   		// debug show all data
+		      	//document.getElementById("responseBartender").innerHTML += ("<p>" + JSON.stringify(json) + "</p>")
+		   })
+		   .catch(function(error) {
+		      console.log(error);
+		      document.getElementById("responseBartender").innerHTML += ("<p>" + error + "</p>")
+		   });
+	    }
+		
+		
+		
+		function callBartender_POST (jsonRequest) {
+			   
+			document.getElementById("responseBartender").innerHTML = ("<p></p>");
+			
+			   url = btcServerLocation + "/api/actions?Wait=30s&MessageCount=200&MessageSeverity=Info"		
+			   headers = { "Authorization" : "Bearer " + accessToken }
+
+			   fetch(url, {
+			      method: "POST",
+			      body: jsonRequest,
+			      credentials: 'include',
+			      headers: headers
+			   })
+			   .then(function(response)  {
+				
+				  hideSpinner();
+					
+			      var contentType = response.headers.get("content-type");
+			      if(contentType && contentType.includes("application/json")) {
+			         return response.json();
+			      }
+			      throw new TypeError("Oops, we haven't got JSON!");
+			   })
+			   	.then(function(json)  {
+			      document.getElementById("responseBartender").innerHTML += ("<p>" + JSON.stringify(json) + "</p>")
+			   })
+			   .catch(function(error) {
+			      console.log(error);
+			      document.getElementById("responseBartender").innerHTML += ("<p>" + error + "</p>")
+			   });
+			}
+
+	</script>
+	
+  </head>
+
+  <body id="Body" >
+	 			
+	 	
+	<form id="docUploadFormDTO" class="bg-light" name="docUploadFormDTO"   method="post"> 
+     				  
+		<section id="manage_1_mainBody" class="de-component de-component--gray">
+			
+			<div class="de-component__container">
+		    	<header class="de-component-header">
+		            <h2 class="de-component-header__title">Testing Harness</h2>
+		        </header>
+		    </div>
+
+
+
+
+			<div  id="Barcodes" class="mt-5">
+						    
+		 		<div class="de-component__footer row">
+					<div class="col-12 col-md-4 pb-4">
+										
+						<div class="card mb-2" style = "text-align:center">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Barcode Testing</span></div>
+							<div class="card-body h-25">
+								<p class="mb-0">Select a barcode for viewing.</p>													
+							    <button th:id="viewBarcodeId" data-toggle="tooltip" data-placement="left" title="View the Barcode data." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboBarcodeId" name="comboBarcodeId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select a Barcode ---</option>
+									<option value="BARCODE_1">Barcode 1</option>	
+								    <option value="BARCODE_2">Barcode 2</option>
+								    <option value="BARCODE_3">Barcode 3</option>
+									<option value="BARCODE_4">Barcode 4</option>	
+								    <option value="BARCODE_5">Barcode 5</option>													
+								</select>
+							</div>											
+                      </div> 
+                      
+					</div>
+					
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>PDF Functionality</span></div>
+							
+							<div class="card-body h-25">
+								<p class="mb-0">Select a PDF for viewing.</p>													
+							    <button th:id="viewPdfId" data-toggle="tooltip" data-placement="left" title="View the PDF file." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboPdfId" name="comboPdfId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select a PDF ---</option>
+									<option value="PDF_1">PDF 1</option>	
+								    <option value="PDF_2">PDF 2</option>
+								    <option value="PDF_3">PDF 3</option>
+									<option value="PDF_4">PDF 4</option>	
+								    <option value="PDF_5">PDF 5</option>													
+								</select>
+							</div>	
+
+						</div>
+					</div>
+					
+					<div class="col-12 col-md-4 pb-4">
+						<div class="card mb-2">
+							<div class="card-header"><i class="fas fa-lock mr-2"></i> <span>Excel Functionality</span></div>
+							
+							<div class="card-body h-25">
+								<p class="mb-0">Select an Excel file for viewing.</p>													
+							    <button th:id="viewExcelId" data-toggle="tooltip" data-placement="left" title="View the Excel file." 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+							   </button>								   
+								<select id="comboExcelId" name="comboExcelId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+									<option value="none" >-- Select an Excel ---</option>
+									<option value="EXCEL_1">Excel 1</option>	
+								    <option value="EXCEL_2">Excel 2</option>
+								    <option value="EXCEL_3">Excel 3</option>														
+								</select>
+							</div>	
+
+						</div>
+					</div>
+						
+		</div>	
+						
+			</div>			
+						
+	
+	
+	
+	
+	
+	
+	
+	
+	
+				<div  id="rowTwoId" class="mt-5">
+						    
+		 		   <div class="de-component__footer row">
+		 		
+						<div class="col-12 col-md-4 pb-4">
+											
+							<div class="card mb-2" style = "text-align:center">
+								<div class="card-header"><i class="fas fa-users mr-2"></i> <span>Template View</span></div>
+								<div class="card-body h-25">
+									<p class="mb-0">Select a template for viewing.</p>													
+								    <button th:id="viewTemplateId" data-toggle="tooltip" data-placement="left" title="View the Template data" 
+									        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View
+								   </button>								   
+									<select id="comboTemplatesId" name="comboTemplatesId"  class="form-control mb-3 mt-4"  style="width: 240px; margin-left:20; ">
+										<option value="none" >-- Select a Template ---</option>
+									    <option value="TPL_1">Wire template 1</option>
+									    <option value="TPL_2">Pipe Template 2</option>
+										<option value="TPL_3">Transformer Template 3</option>																
+									</select>
+								</div>											
+		                     </div> 
+	                      
+						</div>
+					
+					
+					<div class="col-12 col-md-4 pb-4">					  
+	      				<div class="card mb-2" style = "text-align:center">
+							<div class="card-header"><i class="fas fa-users mr-2"></i> <span>BarTender Cloud Testing</span></div>
+							<div class="card-body h-25">
+																				
+							    <button th:id="btc_1" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Printer List JS
+							   </button>								   
+
+							    <button th:id="btc_2" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Print Cloud JS
+							   </button>
+							   
+							    <button th:id="btc_3" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Print Barcode
+							   </button>
+							   
+							   
+							   <button th:id="btc_4" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">Barcode to PDF
+							   </button>
+							   
+							   
+							   <button th:id="btc_5" data-toggle="tooltip" data-placement="left" title="Bartender Cloud Testing" 
+								        class="button button--secondary float-left mr-3 mb-1 mt-4 w-auto" type="button">View Barcode
+							   </button>
+							   
+							   
+							</div>											
+                       </div> 						
+					</div>
+					
+						
+		</div>	
+						
+		</div>	
+	
+	
+	
+<p id="responseBartender"></p>	
+	
+
+
+		</section>
+	
+	</form>	
+
+	      
+  </body>
+  
+</html>
