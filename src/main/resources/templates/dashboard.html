@@ -13,30 +13,35 @@
 		
     <title>Welcome to Locuslink</title>
     
-    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+  <link rel="icon" type="image/x-icon" href="images/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/dataTables.bootstrap5.min.css" rel="stylesheet">
+   <link href="css/responsive.dataTables.min.css" rel="stylesheet">
     <link href="css/site-font.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/admin-responsive.css" rel="stylesheet">
+ 
 
-	<!-- Sparks Added -->
+    <!-- Sparks Added -->
     <link href="css/spinner.css" rel="stylesheet">
     <link href="css/de-upload-styles.css" rel="stylesheet">
-    <link href="css/dropzone.css" rel="stylesheet">
+  <link href="css/dropzone.css" rel="stylesheet"> 
+      <!-- harish update the sequence  -->
+   <link href="css/style.css" rel="stylesheet">
+    <link href="css/admin-responsive.css" rel="stylesheet">
 
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap5.min.js"></script>
+     <script src="js/dataTables.responsive.min.js"></script>
+    
+        
+    <!-- <script src="js/chart.min.js"></script>  -->
+    <script src="js/custome.js"></script>
 
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.bundle.min.js"></script>
-	<script src="js/jquery.dataTables.min.js"></script> 
-	<script src="js/dataTables.bootstrap5.min.js"></script>
-    <script src="js/chart.min.js"></script> 
-	<script src="js/custome.js"></script>
-	
-	<!-- Sparks Added -->
-	<script src="js/locuslink.common.js"></script>
-	<script src="js/dropzone.js"></script>
+    <!-- Sparks Added -->
+    <script src="js/locuslink.common.js"></script>
+   <script src="js/dropzone.js"></script>
 
 	<script>
 		$(document).ready(function() {
@@ -93,6 +98,15 @@
 				showSpinner();
 				submitFormAjaxHTML('uploadStep1', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
+			
+			   // dashboard datatable
+            $('#recent-uploded-data').DataTable({
+             responsive: true
+            });
+// hamburger menu
+$(".hamburger,.backdrop").click(function () {
+  $("body").toggleClass("nav-collpsed");
+});
 				
 		});
 
