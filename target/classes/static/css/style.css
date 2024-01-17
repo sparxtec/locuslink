@@ -418,7 +418,7 @@ button:is(:hover, :focus) {
 }
 
 .contine-btn {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--c-primary);
     border: 1px solid var(--c-primary);
@@ -1761,7 +1761,7 @@ table.dataTable>tbody>tr.child ul.dtr-details {display: block;}
    /*   .dropzone .dz-preview .dz-details .dz-filename span, .dropzone .dz-preview .dz-details .dz-size span, .dropzone .dz-preview .dz-details .dz-filename:hover {position: initial; } */
     
     
-    
+    .action-buttons {display:inline-block;}
     
     
     /*Extra css for updating the dropzone class section end*/

@@ -4,7 +4,7 @@
 <head>
 
     <title>Asset Data</title>
-
+<!--
  <style>
 	.datatable-toolbar {
 		padding: .20rem !important
@@ -27,7 +27,7 @@
  	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
     
 </style>
-
+-->
 
  <script>
 
@@ -43,8 +43,8 @@
      	 	//	searchHighlight: true,
      	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data             	 			        
              	//"paging":   true,  
-            	scrollCollapse: true,
-             	scrollY: 'calc(100vh - 35rem)',
+            //	scrollCollapse: true,
+            // 	scrollY: 'calc(100vh - 35rem)',
              	
              	order: [2, 'asc' ],	
 
@@ -67,11 +67,11 @@
         		},  
      
              columns: [	                	 
-	 			 { "className": 'details-control',
- 	               "orderable": false,
- 	               "data":      null,
- 	               "defaultContent": ''
-	 	         },	 	                       	      
+	 			// { "className": 'details-control',
+ 	            //   "orderable": false,
+ 	              // "data":      null,
+ 	               //"defaultContent": ''
+	 	        // },	 	                       	      
 	 	         { title: "Details",
 	 	           data: null,
  	               className: "controlColumns",
@@ -178,7 +178,7 @@
 
 <body>
                 
-     <div class="page-hding page-hding">
+     <div class="page-hding">
          <h1>Asset Data</h1>
      </div>
 
@@ -201,11 +201,11 @@
 				 </div>	 -->
 				 
 				 
-               <table id="assetDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" >
+               <table id="assetDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;" >
 
                         <thead class="thead-light">
                            <tr>
-   							<th scope="col"></th>       
+   						<!--	<th scope="col"></th>   -->    
    							<th scope="col"></th>   
                               <th scope="col">Id</th>	                                 	                          	                                 
                               <th scope="col">Unique Asset ID</th>
@@ -215,12 +215,12 @@
 						<th scope="col">Trace Number</th>		                                                                     	                             	                             
                            	<th scope="col">Customer</th>
 
-                              <th scope="col">Universal Catalog ID</th>	
+                              <th scope="col" >Universal Catalog ID</th>	
                               <th scope="col">cdugt</th>
-							 <th scope="col" style="min-width:100px">Industry</th>
-                                <th scope="col" style="min-width:100px">Sub Industry</th>	 
-  								 <th scope="col" style="min-width:200px">Asset</th>	 
-       							 <th scope="col" style="min-width:100px">Sub Asset</th>	           							           							 
+							 <th scope="col" >Industry</th>
+                                <th scope="col" >Sub Industry</th>	 
+  								 <th scope="col" >Asset</th>	 
+       							 <th scope="col">Sub Asset</th>	           							           							 
                           	<th scope="col">PType Description]</th> 
                            </tr>
                         </thead>

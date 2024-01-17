@@ -229,7 +229,11 @@
   .adduser-form-bx .uplod-inputbx label {
     font-size: 14px;
   }
-
+  
+	.recent-uplod-tble.dataTable td {
+	    word-break: break-all;
+	    text-wrap: wrap;
+	}
 }
 
 @media only screen and (max-width: 576px) {
@@ -301,6 +305,7 @@
     margin: 0;
   }
   .importasset-page .uploadfile {margin: 20px 0;}
+  
 
 }
 
@@ -320,4 +325,5 @@
     justify-content: center;
     gap: 20px;
   }
+ 
 }
