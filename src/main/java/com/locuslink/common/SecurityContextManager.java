@@ -79,7 +79,7 @@ public class SecurityContextManager {
 	 */
 	public boolean processSecurityContext(HttpSession session, String jwtUid, String jwtCmsRoles, String appLogoutUrl ) {
 
-		logger.debug("  processSpringSecurityContext  ->: " );
+		logger.debug(" in processSpringSecurityContext () " );
 
 		// 7-11-2022
 		//  The user can have multiple roles, from other systems, as well as multiple roles from within the application.

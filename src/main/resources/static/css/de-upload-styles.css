@@ -12,8 +12,8 @@
 .dropzone.dz-drag-hover {
     box-shadow: #cecece 1px 1px 1px;
 }
-table.dataTable thead tr th:last-of-type,
-table.dataTable tbody tr td:last-of-type {text-align: right;}
+/*table.dataTable thead tr th:last-of-type,
+table.dataTable tbody tr td:last-of-type {text-align: right;}*/
 table.dataTable tr td:first-child {width:15rem;}
 .datatable-toolbar ~ div:not(.datatable-pagination) {/*height: calc(100vh - 432px);*/overflow: auto;display: inline-block;width: 100%;}
 table.dataTable tbody tr td .error {border-color: #860e04;border: 0;color: #fff;background-color: rgba(139, 14, 4, 0.5);}

@@ -110,9 +110,27 @@ public class UploadController {
 	@Value("${file.attachment.storage.fullpath}")
 	private String attachmentStorageFullpath;
 
-	@PostMapping(value = "/initUpload")
-	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initUpload()...");
+//	@PostMapping(value = "/initUpload")
+//	public String initUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+//		logger.debug("Starting initUpload()...");
+//
+//		
+//		// TODO make a distinct list based on the product type
+//		// Build the drop down on the UI for uploading
+//		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();
+//		
+//	   	model.addAttribute("ucatList", ucatList);	   	
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//
+//		return "fragments/upload-data";
+//	}
+
+
+	
+	
+	@PostMapping(value = "/uploadStep1")
+	public String uploadStep1 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting uploadStep1()...");
 
 		
 		// TODO make a distinct list based on the product type
@@ -122,33 +140,47 @@ public class UploadController {
 	   	model.addAttribute("ucatList", ucatList);	   	
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/upload";
+		return "fragments/upload-step1";
 	}
-
-
 	
-	@PostMapping(value = "/initUploadStep2")
-	public String initUploadStep2 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initUploadStep2()...");
+	
+	
+	
+	@PostMapping(value = "/uploadStep2")
+	public String uploadStep2 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting uploadStep2()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/uploadstep2";
+		return "fragments/upload-step2";
+	   	
+	  // 	return "fragments/uploadstep2";
+	   	
 	}
 
 	
 	
-	@PostMapping(value = "/initUploadStep3")
-	public String initUploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	@PostMapping(value = "/uploadStep3")
+	public String uploadStep3 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		
-		logger.debug("Starting initUploadStep3()...");
+		logger.debug("Starting uploadStep3()...");
 			
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/uploadstep3";
+		return "fragments/upload-step3";
 	}
 	
 
+	@PostMapping(value = "/uploadStep4")
+	public String uploadStep4 (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting uploadStep3()...");
+			
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+		return "fragments/upload-step4";
+	}
+	
 	
 	// TODO 6-15-2023   
 // FIX THIS
