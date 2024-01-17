@@ -4,7 +4,7 @@
 <head>
 	<title>Upload Data</title>
 
- <style>
+<!-- <style>
 	.datatable-toolbar {
 		padding: .20rem !important
 	}
@@ -25,7 +25,7 @@
  	#assetDataTable td:nth-child(6) { min-width: 240px; } 
  	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
     
-</style>
+</style>-->
  <script>
 
     	$(document).ready(function() {	
@@ -64,12 +64,12 @@
      	         }					       
         		},       
              columns: [	              	 
-                 {
-                     class: 'dt-control',
-                     orderable: false,
-                     data: null,
-                     defaultContent: ''
-                 },                                  
+                  //{
+                    //   class: 'dt-control',
+                  //     orderable: false,
+                 //    data: null,
+                   //    defaultContent: ''
+                  // },                                  
                  { data: "ucatPkId" },
                  { data: "universalCatalogId" }, 
                  { data: "availFlag" },                     
@@ -86,42 +86,42 @@
         
 	
  		// SEARCH FILTER
-  		$('#catalogDataTable_filter input').keyup(function(){
- 			table.search($(this).val()).draw() ;
- 		}); 
+  		// $('#catalogDataTable_filter input').keyup(function(){
+ 	// 		table.search($(this).val()).draw() ;
+ 	// 	}); 
  		
    		$('#previous').click(function() {					
    			showSpinner();								
    			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
    		});	
  		   	
-   		table.on('click', 'tbody td.dt-control', function () {
-   		    let tr = event.target.closest('tr');
+   		 table.on('click', 'tbody td.dt-control', function () {
+   		     let tr = event.target.closest('tr');
    		    let row = table.row(tr);
    		    if (row.child.isShown()) {
-   		        row.child.hide();
-   		    }
-   		    else {   		   
-   		        row.child(format(row.data())).show();   		 
-   		    }
-   		});   		
+   		       row.child.hide();
+   		  }
+   		  else {   		   
+   		     row.child(format(row.data())).show();   		 
+   	   }
+   	 	});   		
 
-   		function format(d) {
-   			var returnString = "";
+  	function format(d) {
+   		var returnString = "";
    			for (var i = 0; i < d.attributeList.length ; i++) {
    				//console.log ("loop ->:" + i);
    				//console.log (d.attributeList[i]);
    				
-   	   			returnString = returnString + 
+   	   		returnString = returnString + 
    	   			'seq: <strong>' + d.attributeList[i].uidAttrSeq + ' </strong>' + 
-   		        ' &nbsp selected: <strong>' + d.attributeList[i].selectedValue + ' </strong>' + 
+   		       ' &nbsp selected: <strong>' + d.attributeList[i].selectedValue + ' </strong>' + 
    		        ' &nbsp  <strong>' +  d.attributeList[i].uidAttrListName + ' </strong>: ' + d.attributeList[i].uidAttributesJson +
    		        '<br>';   		        
    			}     
-   		    return (	
+   		   return (	
    		    	returnString	
-   		    );
-   		}
+   		);
+   	}
    			
    	 });  
     	
@@ -138,7 +138,7 @@
 
 <body>
 
-<!-- <div class="mangeuser-page"> -->
+<div class="mangeuser-page"> 
 
     <div class="page-hding">
         <h1>Catalog Data</h1>
@@ -160,20 +160,20 @@
 			 	</div>
 			 </div>	  -->             
 	                     		   	                     
-              <table id="catalogDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table">
+              <table id="catalogDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;">
               
                  <thead class="thead-light">
                     <tr>
-                       <th></th>                       	                            
+                      <!-- <th></th>       -->                	                            
                        <th scope="col">pkId</th>
                        <th scope="col">Universal Catalog ID</th>	
                        <th scope="col">Avail</th>
                        <th scope="col">Tpl Len</th>                       
                        <th scope="col">cdugt</th>
-					   <th scope="col" style="min-width:100px">Industry</th>
-                       <th scope="col" style="min-width:100px">Sub Industry</th>	 
-	 				   <th scope="col" style="min-width:200px">Asset</th>	 
-					   <th scope="col" style="min-width:100px">Sub Asset</th>	  	                                  	                                 
+					   <th scope="col">Industry</th>
+                       <th scope="col">Sub Industry</th>	 
+	 				   <th scope="col">Asset</th>	 
+					   <th scope="col" >Sub Asset</th>	  	                                  	                                 
                    </tr>
                 </thead>
              </table>
@@ -182,7 +182,7 @@
 	
 						
 	</div>
-						
+	</div>				
 
 </body>
 
