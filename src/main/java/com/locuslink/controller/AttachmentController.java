@@ -112,8 +112,8 @@ public class AttachmentController {
 
     
 	@PostMapping(value = "/initAssetAttachments")
-	public String getAllAssetAttachments (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting getAllAssetAttachments()...");
+	public String initAssetAttachments (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAssetAttachments()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
@@ -169,7 +169,7 @@ public class AttachmentController {
 		
 		// TESTING
 		List <ProductAttachmentDTO> productAttachmentListDTO =  productAttachmentDao.getDtoByUniqueAssetId(Integer.valueOf(uniqueAssetPkId));
-		if (productAttachmentListDTO == null) {
+		if (productAttachmentListDTO == null || productAttachmentListDTO.size() == 0) {
 			logger.debug("  Note:  No Data Found......");
 		}
 			
@@ -301,7 +301,8 @@ public class AttachmentController {
 
 				 
 			 
-	        logger.debug("    ->: " + fullpathFileName_keyName);
+	        logger.debug("           Name ->: " + fullpathFileName_keyName);
+	        logger.debug("    Content Type ->: " + inputfile.getContentType());
         	        
             final ObjectMetadata metaData = new ObjectMetadata();
             metaData.setContentType(inputfile.getContentType());
@@ -377,10 +378,10 @@ public class AttachmentController {
 	
 	
 	/**
-	 *   04-26-2023 C.Sparks
-	 *   Attachment List has an ADD function, after Dropzone already called, and it loaded Staging,
-	 *    it calls this to move the staging files to the  the AWS S3 Storage bucket, 
-	 *    and insert into the database an attachment record with the filename and path.
+	 * 1-17-2024  Attachment ADD via Dropzone.
+	 *       Once an attachment is droped in dropzone buffer, it was added to AWS staging.
+	 *       This is used to remove from staging if they click delete on the drop zone buffer arera.
+	 * 
 	 */
 	@RequestMapping(value = "/deleteFileUpload", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse deleteFileUpload(@RequestBody GenericMessageRequest request, HttpSession session)  {
@@ -432,9 +433,15 @@ public class AttachmentController {
 	 *    it calls this to move the staging files to the  the AWS S3 Storage bucket, 
 	 *    and insert into the database an attachment record with the filename and path.
 	 */
-	@RequestMapping(value = "/saveAttachmentsFromStagingToStorage", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	//public @ResponseBody GenericMessageResponse saveAttachmentsFromStagingToStorage(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	
+	// 1-17-2024
+	@PostMapping(value = "/saveAttachmentsFromStagingToStorage")
 	public String saveAttachmentsFromStagingToStorage (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	
+	
+	// 1-17-2024 @RequestMapping(value = "/saveAttachmentsFromStagingToStorage", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	//public @ResponseBody GenericMessageResponse saveAttachmentsFromStagingToStorage(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	//public String saveAttachmentsFromStagingToStorage (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		
 		logger.debug("In saveAttachmentsFromStagingToStorage()");
 		//GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "saveAttachmentsFromStagingToStorage");
@@ -475,10 +482,11 @@ public class AttachmentController {
             // remove it from the staging folder
             awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, sourceKey));
             logger.debug("     remove the staging file successfully.");	
+
             
             // TODO Insert to DB for a successful copy
      
-         	
+            logger.debug("    Insert to DB pkID ->: " + uniqueAssetPkId );	
          	ProductAttachment productAttachment = new ProductAttachment();
           	productAttachment.setUniqueAssetPkId(Integer.valueOf(uniqueAssetPkId));
          	productAttachment.setAddBy("attachmentUpload");      

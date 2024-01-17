@@ -16,7 +16,7 @@
 			$('#continueGoToPage2').click(function() {	
 				
 				// set the FORM value from the document combo box dropdown				
-				$('#selectedDocType').val($('#comboSelectedDocType').val().trim()); 		;
+				$('#selectedDocType').val($('#comboSelectedDocType').val().trim()); 
 				
 				showSpinner();								
 				submitFormAjaxHTML('initUploadStep2', $("#dashboardFormDTO").serialize(), "commonResponse");														
@@ -27,7 +27,7 @@
 			$('#downloadTemplateId').click(function() {	
 				
 				// set the FORM value from the document combo box dropdown				
-				$('#selectedTemplate').val($('#comboTemplatesId').val().trim()); 		;
+				$('#selectedTemplate').val($('#comboTemplatesId').val().trim()); 
 				
 				alert ("selected template ->: " + $("#selectedTemplate").val() );
 				//showSpinner();								

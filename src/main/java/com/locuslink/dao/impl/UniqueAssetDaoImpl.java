@@ -64,35 +64,53 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	@Override
 	public UniqueAssetDTO getDtoById(int pkid) {	
 
-		//join ProductType pt on pt.productTypePkId = uc.productTypePkId	
-
-		//pt.productTypeDesc,
-		
+		 //  1-11-2024
 		 UniqueAssetDTO dto = entityManager.createQuery("""
 			select new com.locuslink.dto.UniqueAssetDTO(
+				
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,	
-		 		uc.ucatPkId,				 			 			 	
-		 		mfg.name,		 							 										
-				pt.productTypeCode,				
-				tt.traceTypeCode,
-				ua.traceCode,						
-				cus.customerName,				
-				pt.productTypeDesc,				
-				pa.attributesJson					
+		 		ua.traceCode,
+		 				
+				tt.traceTypeCode,							 			 			 	
+		 		mfg.name,
+		 		cus.customerName,
+		 				 							 											 							 										
+				uc.ucatPkId, 
+		 		uc.universalCatalogId, 
+		 		uc.availFlag,
+		 		
+		 		pa.attributesJson,	 
+		   
+		        cdugt.cdugtPkId, 		    
+		 		cdugt.industryPkId, 
+		 		cdugt.subIndustryPkId, 
+           	  	cdugt.productTypePkId, 
+           	  	cdugt.productSubTypePkId, 
+            	cdugt.uidTemplateLen,
+            	cdugt.uidTemplate,
+                    
+				i.industryDesc,
+				si.subIndustryDesc,
+				pt.productTypeDesc,
+				pst.productSubTypeDesc,
+				pt.productTypeCode
+									
 			)
 			from UniqueAsset ua	
-				join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
-		        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
-		        join Customer cus on cus.customerPkId = ua.customerPkId		        
-				join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId
-				
-				join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId				
-			    join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId				
-			    join ProductType pt on pt.productTypePkId = upal.productTypePkId	
-														
+				left outer join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
+		        left outer join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
+		        left outer join Customer cus on cus.customerPkId = ua.customerPkId		        
+				left outer join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
 				left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
+				left outer join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId		
+				
+		 		left outer join CatalogDefUidGenTemplate cdugt on ucsa.cdugtPkId = cdugt.cdugtPkId										
+		 		left outer join Industry i    			on	cdugt.industryPkId = i.industryPkId
+		 		left outer join SubIndustry si	 		on	cdugt.subIndustryPkId = si.subIndustryPkId	        
+		 		left outer join ProductType pt 			on 	cdugt.productTypePkId   = pt.productTypePkId    
+		 	    left outer join ProductSubType pst 		on 	cdugt.productSubTypePkId  = pst.productSubTypePkId		 												
+							
 			where ua.uniqueAssetPkId = :pkid
 									
 			""", UniqueAssetDTO.class)
@@ -106,70 +124,58 @@ public class UniqueAssetDaoImpl extends DaoSupport implements UniqueAssetDao, Ap
 	@SuppressWarnings("unchecked")
 	@Override
 	public  List<UniqueAssetDTO>  getAllDTO() 	{	
-		
-//		uc.productName,					
-//		uc.productNumber,
-		//uc.productDesc,
-		
-		//pt.productTypeCode,	
-		//pt.productTypeDesc,
-		//uc.ucatPkId,	
-		
-		//join ProductType pt on pt.productTypePkId = uc.productTypePkId		
-		
-		//pt.productTypeCode,	
-		//pa.attributesJson
-		
+
+		// 1-11-2024
 		 List <UniqueAssetDTO> dtoList = entityManager.createQuery("""
 			select new com.locuslink.dto.UniqueAssetDTO(
 				ua.uniqueAssetPkId,
 				ua.uniqueAssetId,
-		 		uc.universalCatalogId,	
-		 		uc.ucatPkId,
-		 				 						 			 			 		
-		 		mfg.name,		 				
-                pt.productTypeCode,		 				 							 												 							 												
-				tt.traceTypeCode,
-				ua.traceCode,	
-				
-				cdugt.cdugtPkId, 		    
+		 		ua.traceCode,
+		 				
+				tt.traceTypeCode,							 			 			 	
+		 		mfg.name,
+		 		cus.customerName,
+		 				 							 											 							 										
+				uc.ucatPkId, 
+		 		uc.universalCatalogId, 
+		 		uc.availFlag,
+		 		
+		 		pa.attributesJson,	 
+		   
+		        cdugt.cdugtPkId, 		    
 		 		cdugt.industryPkId, 
 		 		cdugt.subIndustryPkId, 
            	  	cdugt.productTypePkId, 
            	  	cdugt.productSubTypePkId, 
-           	  	                   	  	           
-           	  	i.industryDesc,
+            	cdugt.uidTemplateLen,
+            	cdugt.uidTemplate,
+                    
+				i.industryDesc,
 				si.subIndustryDesc,
 				pt.productTypeDesc,
-				pst.productSubTypeDesc,          
-           	  	            	  	 										    	
-				cus.customerName														
+				pst.productSubTypeDesc,
+				pt.productTypeCode														
 			)
 			from UniqueAsset ua
-			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
-	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
-	        join Customer cus on cus.customerPkId = ua.customerPkId		        
-			join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
-										
-			left outer join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId	
-			
-			left outer join CatalogDefUidGenTemplate cdugt on ucsa.cdugtPkId = cdugt.cdugtPkId	
+				left outer join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
+		        left outer join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
+		        left outer join Customer cus on cus.customerPkId = ua.customerPkId		        
+				left outer join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
+				left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
+				left outer join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId		
 				
-			left outer join Industry i    					on	cdugt.industryPkId = i.industryPkId
-		    left outer join SubIndustry si	 				on	cdugt.subIndustryPkId = si.subIndustryPkId	        
-		    left outer join ProductType pt 				on 	cdugt.productTypePkId   = pt.productTypePkId    
-		 	left outer join ProductSubType pst 			on 	cdugt.productSubTypePkId  = pst.productSubTypePkId	
-		 																					
+		 		left outer join CatalogDefUidGenTemplate cdugt on ucsa.cdugtPkId = cdugt.cdugtPkId										
+		 		left outer join Industry i    			on	cdugt.industryPkId = i.industryPkId
+		 		left outer join SubIndustry si	 		on	cdugt.subIndustryPkId = si.subIndustryPkId	        
+		 		left outer join ProductType pt 			on 	cdugt.productTypePkId   = pt.productTypePkId    
+		 	    left outer join ProductSubType pst 		on 	cdugt.productSubTypePkId  = pst.productSubTypePkId		 												
+																									
 			""", UniqueAssetDTO.class)
 		.getResultList();	
 		 
 		 return dtoList;
 	}
-	//join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId							
-	//join ProductType pt on pt.productTypePkId = upal.productTypePkId																																		
-	//left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId	
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public  List<UniqueAsset>  getAll() {					

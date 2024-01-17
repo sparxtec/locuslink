@@ -94,11 +94,16 @@ public class ProductAttachmentDaoImpl extends DaoSupport implements ProductAttac
 			join Manufacturer mfg on mfg.manufacturerPkId = ua.manufacturerPkId		
 	        join TraceType tt on tt.traceTypePkId = ua.traceTypePkId	
 	        
-	        join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
-	        
-			join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId				
-			join UidProductAttributeList upal on upal.uidPalPkId = ucsa.uidPalPkId				
-			join ProductType pt on pt.productTypePkId = upal.productTypePkId	
+			left outer join UniversalCatalog uc on uc.ucatPkId = ua.ucatPkId	
+			left outer join ProductAttribute pa on pa.ucatPkId = uc.ucatPkId			
+			left outer join UniversalCatalogSelectedAttributes ucsa on ucsa.ucatPkId = ua.ucatPkId		
+				
+		 	left outer join CatalogDefUidGenTemplate cdugt on ucsa.cdugtPkId = cdugt.cdugtPkId										
+		 	left outer join Industry i    			on	cdugt.industryPkId = i.industryPkId
+		 	left outer join SubIndustry si	 		on	cdugt.subIndustryPkId = si.subIndustryPkId	        
+		 	left outer join ProductType pt 			on 	cdugt.productTypePkId   = pt.productTypePkId    
+		 	left outer join ProductSubType pst 		on 	cdugt.productSubTypePkId  = pst.productSubTypePkId		 												
+					
 				
 			
 			where attach.uniqueAssetPkId = :uniqueAssetPkId																
