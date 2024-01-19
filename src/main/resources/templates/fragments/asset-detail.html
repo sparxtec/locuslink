@@ -7,35 +7,43 @@
 	<script>	
 		$(document).ready(function() {	
 			
-			$('#saveUserDataButtonId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('saveUserFinished', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			$('#addDocumentsId').click(function() {
+/* 				showSpinner();
+				submitFormAjaxHTML('saveUserFinished', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse"); */
+				
+
+       			showSpinner();											 	
+				submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       				
+
 			});
-			
-			
-			
+
 	 	});       
    
 	   function initCommonResponse(returnData) {	
 		   hideSpinner();
 		   $('#mainBody').html( returnData);    	 
 	   }
+	   
+	   function modalResponse(returnData) {	
+	  		hideSpinner();			 		
+	  		$('#asset_ModalBody').html(returnData); 	 		 		 		
+	  }   
+	   	 
 	</script>	
 </head>
 
 <body id="Body">
 
-<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+	<div class="mangeuser-page assetdtaIL-page">
+	
+<!-- <form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
      
-<div class="mangeuser-page assetdtaIL-page">
-  <div class=" page-hding page-hding">
-      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
-      
-      <div class="usrad-btn import-astbtn">
-          <a href="#">Edit Assets</a>
-      </div>
-  </div>
-</div>   
+ -->
+	
+	  <div class="page-hding">
+	      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
+	  </div>
+
                 
   <!-- Nav tabs -->
   <div class="custome-tabs">
@@ -70,15 +78,15 @@
                           <div class="aset-sidebar-bx">
                               <ul class="list-unstyled asset-side-nav">
                                   <li><a href="#" class="active">General</a></li>
-                                  <li><a href="#">Documents</a></li>
+                          <!--         <li><a href="#">Documents</a></li> -->
                                   <li><a href="#">Test certification</a></li>
                                   <li><a href="#">Images</a></li>
-                                  <li><a href="#">Asset Details 1</a></li>
+<!--                                   <li><a href="#">Asset Details 1</a></li>
                                   <li><a href="#">Asset Details 2</a></li>
                                   <li><a href="#">Asset Details 3</a></li>
                                   <li><a href="#">Asset Details 4</a></li>
                                   <li><a href="#">Asset Details 5</a></li>
-                                  <li><a href="#">Asset Details 6</a></li>
+                                  <li><a href="#">Asset Details 6</a></li> -->
                               </ul>
                           </div>
                       </div>
@@ -295,6 +303,14 @@
                   </div>
 
               </div>
+              
+              
+              
+              
+              
+              
+              
+              
               <div id="history" class="tab-pane fade">
 
                   <div class="row mb-4">
@@ -635,6 +651,10 @@
                   </table>
               </div>
 
+
+
+
+
               <div id="smarttag" class="tab-pane fade">
                   <div class="tab-subhding">
                       <h3>Product QR Code</h3>
@@ -648,14 +668,32 @@
                       </div>
                   </div>
               </div>
+              
+              
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+              
               <div id="documents" class="tab-pane fade">
                   <div class="tab-subhding procut-tab">
-                      <h3>Uploaded Product Documents
-                          <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
-                                  class="img-fluid" alt="Download" title="Download All"> Download all
-                              Documents</a>
-                      </h3>
+                      <h3>Uploaded Product Documents    
+						  <!-- C.Sparks This needs to be a button styled  -->                                                                             
+                          <a id="addDocumentsId" href="#">Add</a>			       		
+                          <a href="#" download> 
+                             <img src="./images/downlaod-icon-primary.svg" class="img-fluid" alt="Download" title="Download All">Download all Documents
+                          </a>  
+                      </h3>                          
                   </div>
+                  
                   <div class="row">
                       <div class="col-md-6">
                           <div class="barcdetab document-bx">
@@ -1006,7 +1044,14 @@
 
   </div>
   
-</form>
+<!-- </form> -->
+
+   		<!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+   	    <div id="asset_ModalBody">	
+	    </div>
+	    
+	    
+</div>
 </body>
 
 </html>

@@ -54,8 +54,8 @@
  	               className: "controlColumns",
  	               "render": function(data, type, row, meta){	            		
                     	data ="<div class='action-buttons'>" 
-                    	+"<button id='detail_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Asset Details'></i></button>&nbsp;"
-                    	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;"
+                    	+"&nbsp;&nbsp;<button id='detail_" + row.uniqueAssetPkId+ "' class='button button--text'  type='button'> <i class='fas fa-chart-bar fa-lg' title='Asset Details'></i></button>&nbsp;&nbsp;&nbsp;"
+                    	+"<button id='barcode_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='fas fa-file-invoice fa-lg' title='BarCode Viewer'></i></button>&nbsp;&nbsp;&nbsp;"
                     	+"<button id='delete_" + row.uniqueAssetPkId+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Asset'></i></button></div>";	                    
 	                return data;
 	 	         }}, 
