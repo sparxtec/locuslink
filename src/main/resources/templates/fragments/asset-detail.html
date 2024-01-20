@@ -2,21 +2,157 @@
 <html  xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Manage Users</title>
+	<title>Asset Detail</title>
 
 	<script>	
-		$(document).ready(function() {	
+	
+	    var isDuplicateFileupload = false;
+		//var stepper1 = null;		
+		Dropzone.autoDiscover = false;		
+		var traceDropzoneId = $('#tracedropzone').dropzone({
 			
-			$('#addDocumentsId').click(function() {
-/* 				showSpinner();
-				submitFormAjaxHTML('saveUserFinished', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse"); */
+		   headers:{   'X-CSRFToken' : '{{ csrf_token }}' },				
+		   acceptedFiles: '.pdf, application/pdf',			 			 		
+		   maxThumbnailFilesize: '20',
+		   dictInvalidFileType: "Incorrect File type, please upload only .PDF files",			   
+	    
+		   init: function() {
+		     this.on("addedfile", 
+		    	function(file) {	    	
+		      });
+		     
+		     this.on("success", 
+		    	function(file,response) {
+		    	  $(".dz-success-mark svg").css("background", "green");
+		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
+		    	  document.getElementById("continueUpload").disabled = false;	
+		    	  
+		    	  // Error Check - Duplicate Filename
+		    	  if (response.error != "0" ) {		    		  
+		    		 isDuplicateFileupload = true;		    		  
+		    	     $('#errorMessageId').show();	
+		    	     $('#errorMessageId').text(response.errorMessage);				    	      
+		    	  	 document.getElementById("continueUpload").disabled = true;
+		    	     this.removeFile(file);
+		    	     // display red error for 5 seconds, then remove the error message
+		    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
+		    	  }
+		    	  
+		      }); 		     		  
+		
+	     	this.on("error", 
+		    	function(file) {
+	     		  $(".dz-error-mark svg").css("background", "red");
+	     		  $(".dz-success-mark").css("display", "none");	 	     		  	 	     		 
+		      }); 		
+	     	
+	     	this.on("removedfile", 
+	     		function(file) {
+	     		
+				if (isDuplicateFileupload === true) {
+				    isDuplicateFileupload = false;
+				} else {
+	         		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+	               	var innerData = {};
+	        		innerData["removeFileName"] = file.name;
+            		innerData["deleteAllFilesWithPk"] =	"NO";
+                  	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
+	        		myData["data"] = innerData;
+	        		
+	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+	        		if (this.files[0] == null) {
+	 		   			document.getElementById("continueUpload").disabled = true;
+	 		   		}
+				}
 				
+	     	});		   
+		  }
+			
+		}); 
+		
+		
+		$(document).ready(function() {	
 
-       			showSpinner();											 	
-				submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       				
+			// Added for Dropzone
+			window.addEventListener("dragover",function(e){
+				  e = e || event;
+				  e.preventDefault();
+				},false);
+			window.addEventListener("drop",function(e){
+			  e = e || event;
+			  e.preventDefault();
+			},false);
+			document.getElementById("continueUpload").disabled = true;	
+			
+			$('#errorMessageId').hide();
+		   	$("#attachmentUploadId").hide();	
+			
+			
+			
+			
+			// Add Attachments - Drop Zone Stuff
+	    	$('#addAttachmentId').click(function() {	
+	    		
+	    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+	    	//	pkId = $('input#uniqueAssetPkId').val();
+	    	//	$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+			   	$("#attachmentUploadId").show();	
+	    	});   
+			
+			
+	    	$('#cancelUpload').click(function() {	
+	    		
+	    		// clear files from the UI
+	    		traceDropzoneId[0].dropzone.removeAllFiles();
+	    		    		
+	    		$("#attachmentUploadId").hide();
+	    		
+	     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+	           	var innerData = {};
+	    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+	    		innerData["deleteAllFilesWithPk"] =	"YES";
+	    		myData["data"] = innerData;
+	    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
 
-			});
+	    	});   
+	    	
+	    	
+	    	$('#continueUpload').click(function() {	
+	    		
+	    		showSpinner();	
+	    		
+	   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");	
+				
+				hideSpinner();
+				$("#attachmentUploadId").hide();
+	    	}); 
+	    	
 
+	        // BACK
+	    	$('#backButtonId').click(function() {	
+	    		
+	    		// clear files from the UI
+	    		traceDropzoneId[0].dropzone.removeAllFiles();    		    		
+	    		
+	     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+	           	var innerData = {};
+	    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+	    		innerData["deleteAllFilesWithPk"] =	"YES";
+	    		myData["data"] = innerData;
+	    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+	    		
+	    		
+	    		$('.modal-backdrop').remove();    		
+	    		var node = document.getElementById("myworkspace_Asset_ModalBody");
+	    		node.parentNode.replaceChild(node.cloneNode(false), node);    		    		    		    		
+	    	});  
+			
+
+	 		// Browse Files BUTTON on the Dropzone Box
+		    $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
+		
+	 		
+	 		
 	 	});       
    
 	   function initCommonResponse(returnData) {	
@@ -687,12 +823,85 @@
                   <div class="tab-subhding procut-tab">
                       <h3>Uploaded Product Documents    
 						  <!-- C.Sparks This needs to be a button styled  -->                                                                             
-                          <a id="addDocumentsId" href="#">Add</a>			       		
+                          <a id="addAttachmentId" href="#">Add</a>			       		
                           <a href="#" download> 
                              <img src="./images/downlaod-icon-primary.svg" class="img-fluid" alt="Download" title="Download All">Download all Documents
                           </a>  
                       </h3>                          
                   </div>
+                  
+                  
+                  <!-- =============================================================================   -->
+                  <!-- =============================================================================   -->
+                  <!-- =============================================================================   -->
+                                                      
+                  <!-- 1-18-2024  C.Sparks added show hide code when the add document is clicked  -->
+			      <div id="attachmentUploadId" class="adduser-form-bx addaset-formbx borderbx">
+	                                                            
+					<!-- C.Sparks  this container has some needed css for positioning -->
+					<div class="multisteps-form__form">
+	
+	             		 <div class="multisteps-form__panel js-active" data-animation="slideHorz">
+	
+		                     <div class="multisteps-form__content">
+		                         <div class="row">
+		                             
+		                             <div class="col-lg-12 col-xl-7 colum-bx">
+		                                 <div class="tble-serch uplod-inputbx">
+		                                     <select class="form-select">
+		                                         <option>Select Attachment Doc Type</option>
+		                                         <option>Document Type 1</option>
+		                                         <option>Document Type 2</option>
+		                                         <option>Document Type 3</option>	
+		                                     </select>
+		                                 </div>
+		                             </div>
+		                             
+									 <div class="offset-xl-3 col-lg-12 col-xl-9 colum-bx">
+		                            	   
+		                                 <div class="uploadfile position-relative text-center" style="border:2px">
+		                                 
+							  				<form id="tracedropzone" name="tracedropzone"	th:object="${dashboardFormDTO}" 						
+												action="/portal/processAttachmentUpload" class="dropzone dz-clickable" enctype="multipart/form-data" method="POST">								
+												
+												<!-- CSRF token -->
+												<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>									
+												<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId"  />
+																	
+												<div class="dz-default dz-message">
+													<span>Files must be less than 20MB and a '.Pdf' file</span>
+												</div>
+												
+											    <div id="errorMessageId"  style="display:none;color:red">
+				       								<span>Error Msg</span>
+				       							</div>
+				       						       			
+											</form>
+		
+		                             	  </div>	
+		                              </div>
+			
+		                         </div>
+		                         
+		                     <div class="row mt-4">
+		                           <div class="offset-xl-3 col-lg-12 col-xl-9">
+		                             <div
+		                                 class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
+		                                 <button id="cancelUpload" class="js-btn-prev contine-btn" type="button" title="Prev">Cancel</button>
+		                                 <button id="continueUpload" class="js-btn-next" type="button" title="Next">Continue</button>
+		                             </div>
+		                         </div>
+		                     </div>
+		                	 </div>
+	                     </div>
+					</div>                                
+	
+	              </div>                  
+                     
+                 <!-- =============================================================================   -->
+                 <!-- =============================================================================   -->
+                 <!-- =============================================================================   -->    
+                  
                   
                   <div class="row">
                       <div class="col-md-6">

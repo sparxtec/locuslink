@@ -1692,17 +1692,50 @@ table.dataTable>tbody>tr.child ul.dtr-details {display: block;}
  
  
  
- /*Extra css for updating the dropzone class*/
+/*   C.SParks We need more styleing on the drop zone, refer to PROD
+  the button needs to be better, center aligh, etc.
+     */
+     
+/* C.sparks poor attempt on button, replace, fix. thx*/
+  .button--secondary {
+    background-color: transparent !important ;
+    border-color: #994d00;
+    color: #994d00 !important;
+    
+    border-radius: 2px;
+    font-size: 1.2rem !important;
+    line-height: 1.6;
+    letter-spacing: 0.16px;
+    transition: font 0.15s ease-in-out !important;
+    padding: 11px;
+    background: #994d00;
+    border: 1px solid #994d00;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    height: 44px;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 180px;
+    transition: all .1s ease-in-out !important;   
+   box-sizing: border-box !important;           
+}
+     
  .dropzone {
      box-shadow: none;
     background: none;
     position: inherit;
     max-height: inherit;
-    border: none;
+    border: 1px solid #994d00;
     padding: inherit;
     min-height: inherit;
     width: 100%;
-    margin: 0;
+    margin: 2rem 0;
     height: 100%;
     display: flex;
     align-items: center;
@@ -1716,7 +1749,9 @@ table.dataTable>tbody>tr.child ul.dtr-details {display: block;}
 }
 .dropzone .dz-preview .dz-progress {
     display: none;
-}
+} 
+
+
 
 .uploadfile span {
     display: inline;

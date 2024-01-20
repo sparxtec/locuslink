@@ -166,25 +166,15 @@
     		innerData["deleteAllFilesWithPk"] =	"YES";
     		myData["data"] = innerData;
     		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
-    		
-    		
-    		
-    	});     	    	
+
+    	});   
+    	
+    	
     	$('#continueUpload').click(function() {	
     		
     		showSpinner();	
     		
-/*         	var myData = {version:"1.0", clientId:"trace"};
-        	var innerData = {};   	        		    	        	        	
-          	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
-     		myData["data"] = innerData;	      		  
-			submitFormAjaxJSON('saveAttachmentsFromStagingToStorage', myData, "generalResponse");  */  
-    		
    			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");	
-			
-	
-			
-			
 			
 			hideSpinner();
 			$("#attachmentUploadId").hide();

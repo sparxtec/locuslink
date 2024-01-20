@@ -117,7 +117,8 @@ public class AttachmentController {
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/modal_attachment_list";
+		//return "fragments/modal_attachment_list";
+	   	return "fragments/asset-attachment-viewer-modal";
 	}
 	
 	
@@ -144,7 +145,9 @@ public class AttachmentController {
         
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/modal_attachment_list";
+		//return "fragments/modal_attachment_list";
+	   	return "fragments/asset-attachment-viewer-modal";
+	   	
 	}
 	
 	
@@ -501,8 +504,10 @@ public class AttachmentController {
         }
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-		return "fragments/modal_attachment_list";
+		//return "fragments/modal_attachment_list";
         
+	   	return "fragments/asset-attachment-viewer-modal";
+	   	
 		//return response;
 	 }
 		 
