@@ -821,13 +821,15 @@
               
               <div id="documents" class="tab-pane fade">
                   <div class="tab-subhding procut-tab">
-                      <h3>Uploaded Product Documents    
-						  <!-- C.Sparks This needs to be a button styled  -->                                                                             
-                          <a id="addAttachmentId" href="#">Add</a>			       		
-                          <a href="#" download> 
-                             <img src="./images/downlaod-icon-primary.svg" class="img-fluid" alt="Download" title="Download All">Download all Documents
-                          </a>  
-                      </h3>                          
+                  	<div class="documn-title">
+                  		<h3>Uploaded Product Documents</h3>
+                  		<a id="addAttachmentId" href="#">Add</a>	
+                  	</div>
+                    <div class="download-link">
+                       <a href="#" download> 
+                          <img src="./images/downlaod-icon-primary.svg" class="img-fluid" alt="Download" title="Download All">Download all Documents
+                       </a>  
+                    </div>                     
                   </div>
                   
                   
@@ -836,7 +838,7 @@
                   <!-- =============================================================================   -->
                                                       
                   <!-- 1-18-2024  C.Sparks added show hide code when the add document is clicked  -->
-			      <div id="attachmentUploadId" class="adduser-form-bx addaset-formbx borderbx">
+			      <div id="attachmentUploadId" class="adduser-form-bx addaset-formbx borderbx add-document">
 	                                                            
 					<!-- C.Sparks  this container has some needed css for positioning -->
 					<div class="multisteps-form__form">
@@ -846,7 +848,7 @@
 		                     <div class="multisteps-form__content">
 		                         <div class="row">
 		                             
-		                             <div class="col-lg-12 col-xl-7 colum-bx">
+		                             <div class="col-lg-12 col-xl-12 colum-bx">
 		                                 <div class="tble-serch uplod-inputbx">
 		                                     <select class="form-select">
 		                                         <option>Select Attachment Doc Type</option>
@@ -857,9 +859,9 @@
 		                                 </div>
 		                             </div>
 		                             
-									 <div class="offset-xl-3 col-lg-12 col-xl-9 colum-bx">
+									 <div class="col-lg-12 col-xl-12 colum-bx">
 		                            	   
-		                                 <div class="uploadfile position-relative text-center" style="border:2px">
+		                                 <div class="uploadfile position-relative text-center uploadbrowserfile">
 		                                 
 							  				<form id="tracedropzone" name="tracedropzone"	th:object="${dashboardFormDTO}" 						
 												action="/portal/processAttachmentUpload" class="dropzone dz-clickable" enctype="multipart/form-data" method="POST">								
@@ -884,9 +886,9 @@
 		                         </div>
 		                         
 		                     <div class="row mt-4">
-		                           <div class="offset-xl-3 col-lg-12 col-xl-9">
+		                           <div class="col-lg-12 col-xl-12">
 		                             <div
-		                                 class="usrad-btn import-astbtn sve-btn d-flex justify-content-between">
+		                                 class="usrad-btn import-astbtn sve-btn d-flex justify-content-end">
 		                                 <button id="cancelUpload" class="js-btn-prev contine-btn" type="button" title="Prev">Cancel</button>
 		                                 <button id="continueUpload" class="js-btn-next" type="button" title="Next">Continue</button>
 		                             </div>
@@ -1180,12 +1182,15 @@
                   </div>
               </div>
               <div id="images" class="tab-pane fade">
-                  <div class="tab-subhding procut-tab">
-                      <h3>Uploaded Product Image
-                          <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
+              	<div class="tab-subhding procut-tab">
+                  	<div class="documn-title">
+                  		<h3>Uploaded Product Image</h3>	
+                  	</div>
+                    <div class="download-link">
+                       <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
                                   class="img-fluid" alt="Download" title="Download All"> Download all
                               images</a>
-                      </h3>
+                    </div>                     
                   </div>
                   <div class="row">
                       <div class="col-md-3">

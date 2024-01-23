@@ -1050,21 +1050,26 @@ input:checked+.slider:before {
 
 /* document tab section */
 
-.procut-tab h3,
-.procut-tab h3 a {
+
+.procut-tab{
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
-
-}
-
-.procut-tab h3 {
     justify-content: space-between;
-    gap: 25px;
 }
-
-.procut-tab h3 a {
+.documn-title{
+	display: flex;
+	align-items: baseline;
+	gap: 15px;
+}
+.documn-title a{
+	background: var(--c-primary);
+    color: var(--c-white);
+    padding: 4px 15px;
+    border-radius: 5px;
+}
+.procut-tab .download-link a {
     opacity: 0.8;
+    display: flex;
     gap: 10px;
     text-transform: capitalize;
     font-weight: 500;
@@ -1073,6 +1078,24 @@ input:checked+.slider:before {
 
 .procut-tab h3 a:hover {
     opacity: 1;
+}
+
+/* Add Document CSS */
+.add-document{
+	margin-bottom: 20px;
+}
+.uploadbrowserfile{
+	height: 205px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #F3F4FA;
+    align-content: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 2px dashed var(--c-secondary);
+    align-items: center;
+    cursor: pointer;
 }
 
 .image-tab-img {
@@ -1217,6 +1240,23 @@ table.dataTable tbody td {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* DropZone Upload File */
+.uploadfile .dropzone{
+	border: 0px;
+	box-shadow: unset;
+	padding: unset;
+	margin: unset;
+	background: transparent;
+	transition: unset;
+}
+.uploadfile .dropzone .dz-message{
+	margin: unset;
+}
+.uploadfile .dropzone .dz-message button{
+	border: 0px;
+	font-weight: 500;
 }
 
 /* flter */

@@ -234,6 +234,9 @@
 	    word-break: break-all;
 	    text-wrap: wrap;
 	}
+	#editUserDataTable.recent-uplod-tble.dataTable td {
+		word-break: unset;
+	}
 }
 
 @media only screen and (max-width: 576px) {
