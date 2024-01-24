@@ -25,14 +25,14 @@
 		    	function(file,response) {
 		    	  $(".dz-success-mark svg").css("background", "green");
 		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
-		    	  document.getElementById("continueUpload").disabled = false;	
+		    	  //document.getElementById("continueUpload").disabled = false;	
 		    	  
 		    	  // Error Check - Duplicate Filename
 		    	  if (response.error != "0" ) {		    		  
 		    		 isDuplicateFileupload = true;		    		  
 		    	     $('#errorMessageId').show();	
 		    	     $('#errorMessageId').text(response.errorMessage);				    	      
-		    	  	 document.getElementById("continueUpload").disabled = true;
+		    	  	 //document.getElementById("continueUpload").disabled = true;
 		    	     this.removeFile(file);
 		    	     // display red error for 5 seconds, then remove the error message
 		    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
@@ -60,9 +60,9 @@
 	        		myData["data"] = innerData;
 	        		
 	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
-	        		if (this.files[0] == null) {
-	 		   			document.getElementById("continueUpload").disabled = true;
-	 		   		}
+	        		//if (this.files[0] == null) {
+	 		   		//	document.getElementById("continueUpload").disabled = true;
+	 		   		//}
 				}
 				
 	     	});		   
@@ -82,25 +82,30 @@
 			  e = e || event;
 			  e.preventDefault();
 			},false);
-			document.getElementById("continueUpload").disabled = true;	
+			//document.getElementById("continueUpload").disabled = true;	
 			
 			$('#errorMessageId').hide();
 		   	$("#attachmentUploadId").hide();	
 			
-			
-			
+		   	
+		   	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
+		   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
+		    if (gotoDocumentsTab === 'yes') {
+		    	  document.getElementById("documentsTabId").click();
+		    }
+		   	
+		   	$('#gotoDocumentsTab').val();
 			
 			// Add Attachments - Drop Zone Stuff
-	    	$('#addAttachmentId').click(function() {	
-	    		
+	    	$('#addAttachmentId').click(function() {		    		
 	    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
-	    	//	pkId = $('input#uniqueAssetPkId').val();
-	    	//	$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+	    		pkId = $('input#uniqueAssetPkId').val();
+	    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
 			   	$("#attachmentUploadId").show();	
 	    	});   
 			
 			
-	    	$('#cancelUpload').click(function() {	
+	    	$('#addCancelUpload').click(function() {	
 	    		
 	    		// clear files from the UI
 	    		traceDropzoneId[0].dropzone.removeAllFiles();
@@ -117,18 +122,19 @@
 	    	});   
 	    	
 	    	
-	    	$('#continueUpload').click(function() {	
-	    		
+	    	$('#addContinueUpload').click(function() {		    		
 	    		showSpinner();	
 	    		
-	   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "modalResponse_attachmentList");	
-				
+	    		uniqueAssetPkId = $('#uniqueAssetPkId').val();
+	    		console.log ("uniqueAssetPkId ->: " + uniqueAssetPkId);
+	    		
+	   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#uniqueAssetDTO").serialize(), "initCommonResponse");					
 				hideSpinner();
 				$("#attachmentUploadId").hide();
 	    	}); 
 	    	
-
-	        // BACK
+// c.sparks 1-24-2024   dont see this on the ui at all, remove it for now
+/* 	        // BACK
 	    	$('#backButtonId').click(function() {	
 	    		
 	    		// clear files from the UI
@@ -145,7 +151,7 @@
 	    		$('.modal-backdrop').remove();    		
 	    		var node = document.getElementById("myworkspace_Asset_ModalBody");
 	    		node.parentNode.replaceChild(node.cloneNode(false), node);    		    		    		    		
-	    	});  
+	    	});   */
 			
 
 	 		// Browse Files BUTTON on the Dropzone Box
@@ -170,16 +176,21 @@
 
 <body id="Body">
 
+  
+
+	      
 	<div class="mangeuser-page assetdtaIL-page">
 	
-<!-- <form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
-     
- -->
-	
-	  <div class="page-hding">
-	      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
-	  </div>
-
+	<!-- C.Sparks need to pass this in the form object to the controller -->
+ 	 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+ 
+ 	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
+ 	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
+ 	      
+		  <div class="page-hding">
+		      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
+		  </div>
+ 	   </form>
                 
   <!-- Nav tabs -->
   <div class="custome-tabs">
@@ -194,7 +205,7 @@
               <a class="nav-link" data-bs-toggle="tab" href="#smarttag">Smart Tag</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#documents">Documents</a>
+              <a id="documentsTabId" class="nav-link" data-bs-toggle="tab" href="#documents">Documents</a>
           </li>
           <li class="nav-item">
               <a class="nav-link " data-bs-toggle="tab" href="#images">images</a>
@@ -887,10 +898,9 @@
 		                         
 		                     <div class="row mt-4">
 		                           <div class="col-lg-12 col-xl-12">
-		                             <div
-		                                 class="usrad-btn import-astbtn sve-btn d-flex justify-content-end">
-		                                 <button id="cancelUpload" class="js-btn-prev contine-btn" type="button" title="Prev">Cancel</button>
-		                                 <button id="continueUpload" class="js-btn-next" type="button" title="Next">Continue</button>
+		                             <div class="usrad-btn import-astbtn sve-btn d-flex justify-content-end">
+		                                 <button id="addCancelUpload" class="js-btn-prev contine-btn" type="button" title="Prev">Cancel</button>
+		                                 <button id="addContinueUpload" class="js-btn-next contine-btn" type="button" title="Next">Continue</button>
 		                             </div>
 		                         </div>
 		                     </div>
