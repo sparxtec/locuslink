@@ -899,7 +899,7 @@ input:checked+.slider:before {
 }
 
 .Assetdata-dtatabl .sorting {
-    min-width: 150px;
+    /* min-width: 150px; */
     padding-right: 30px;
 }
 
@@ -1487,12 +1487,12 @@ table.dataTable tbody td {
     opacity: 0;
     visibility: hidden;
 }
-
+ */
 .multisteps-form__panel.js-active {
     height: auto;
     opacity: 1;
     visibility: visible;
-} */
+}
 
 .multisteps-form__panel[data-animation="scaleOut"] {
     -webkit-transform: scale(1.1);
@@ -1841,5 +1841,7 @@ table.dataTable>tbody>tr.child ul.dtr-details {display: block;}
     
     /*Extra css for updating the dropzone class section end*/
  
- 
+ table#history-table tr td {
+    text-wrap: wrap;
+}
  

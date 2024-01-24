@@ -16,6 +16,11 @@
 
 }
 
+@media screen and (max-width: 1200px) {
+	.custome-tabs .nav-tabs {gap:15px;}
+	.nav-tabs .nav-link {font-size: 17px; padding: 10px 17px;}
+
+}
 
 @media screen and (max-width: 1024px) {
 
@@ -109,8 +114,6 @@
     border-radius: 0 4px 4px 0; cursor: pointer;
 
   }
-
-
 
   .filter_wrap {
     --i-item: 2;
