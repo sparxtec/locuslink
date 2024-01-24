@@ -98,10 +98,8 @@ public class ManageUserController {
 	
 	// 1-4-24
 	@PostMapping(value = "/addUserDetail")
-	public String addUserDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		
-//	@RequestMapping(value = "/editUser")	
-   // public String editUser (Model model, HttpSession session) {
+	public String addUserDetail (@ModelAttribute(name = "userDTO") UserDTO userDTO,	Model model, HttpSession session) {
+
 		logger.debug("In addUserDetail()");
 		
 //		UserLocuslink user=(UserLocuslink)session.getAttribute ("userLocuslink");
@@ -116,7 +114,7 @@ public class ManageUserController {
 //		List<UserRoleType> roleList=userRoleTypeDao.getAllUserRoles();
 //		model.addAttribute("roleList",roleList);
 		  
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	model.addAttribute("userDTO", userDTO);
 	   	
 		return "fragments/adduser-details";
       

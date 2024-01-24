@@ -10,10 +10,8 @@
 
 			$('#addUserButtonId').click(function () {
 				showSpinner();
-				submitFormAjaxHTML('addUserDetail', $("#dashboardFormDTO").serialize(), "initCommonResponse");
+				submitFormAjaxHTML('addUserDetail', $("#userDTO").serialize(), "initCommonResponse");
 			});
-
-
 
 
 			if ($('#editUserDataTable').length) {
@@ -58,7 +56,6 @@
 							data: "activeFlag",
 							"render": function (data, type, row, meta) {
 								if ('Y' == row['activeFlag']) {
-
 									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Deactivate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>Delete</a></div>"
 								}
 								else {
@@ -67,7 +64,6 @@
 								return data;
 							}
 						},
-
 
 					],
 
@@ -110,11 +106,7 @@
 			});
 		});
 
-		function initCommonResponse(returnData) {
-			hideSpinner();
-			$('#mainBody').html(returnData);
 
-		}
 		function deactivateRow(el) {
 			var $this = $(this);
 
@@ -167,6 +159,12 @@
 			}
 		}
 
+		
+	 function commonResponse(returnData) {	
+			hideSpinner();
+			$('#mainBody').html(returnData); 
+			hideSpinner();			 
+	 }
 	</script>
 
 </head>
@@ -177,27 +175,26 @@
 
 		<div class="page-hding">
 			<h1>Manage Users & Roles</h1>
-
+			<div id="addUserButtonId" class="usrad-btn">
+                  <a href="adduser-details.html">Add Users</a>
+            </div>
 		</div>
-
+        
+                    
 		<div class="dtatable-card mt-4">
 
-			<form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}">
-
-
-				<!-- <div class="datatable-toolbar  border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3"> -->
-
+<!-- C.Sparks 1-24-2024   add this duplicate definition for dashboard, since the default is GET, we want a POST -->
+<form id="userDTO"  name="userDTO"  th:object="${userDTO}"  method="post">  
+                            
 				<div class="datatable-toolbar-group d-none">
 					<div id="editUserDataTable_filter" class="dataTables_filter">
 						<label class="d-flex align-items-center justify-content-end">Search: <input type="search" class="form-control w-auto ms-2" placeholder="" aria-controls="editUserDataTable"></label>
 					</div>
 				</div>
-				<!-- </div> -->
 
 
 				<!-- 1-4-24   C.Sparks Data table replace the html -->
 				<div id="editUserListHeaderId">
-					<!--   <table id="editUserDataTable" class="bg-white border border-top-0"> -->
 					<table id="editUserDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table"
 						style="width: 100%;">
 						<thead class="thead-light">
@@ -214,7 +211,7 @@
 				</div>
 
 
-			</form>
+	</form>
 
 		</div>
 
