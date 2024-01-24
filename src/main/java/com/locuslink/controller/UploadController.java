@@ -264,6 +264,12 @@ public class UploadController {
             }else if (fullpathFileName_keyName.toUpperCase().contains("SPLICE")) {
                 tags.add(new Tag("product_type", "SPLICE"));
             }
+            else {
+            	
+            	// need to know the file type or we cant write it to AWS, it will get stuck there.
+            	logger.debug("  ERROR csvFileUpload failed unknow file type NEED CODE. ->: " );
+            	return response;
+            }
             
             
             putObjectRequest.setTagging(new ObjectTagging(tags));
@@ -579,7 +585,7 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 	
 	
 	/**
-	 *  04-25-2023 - C.Sparks
+	 *  01-23-2024 - C.Sparks
 	 *  
 	 *  Called from Upload Page 3, Submit button.
 	 *  This method will write all uploaded files on upload page 3, to the database.
@@ -672,14 +678,17 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 		
 		
 
+// 1-23-2024 return to page 4, says success, then to catalog list		
+//		// 6-14-2023
+//		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();		
+//	   	model.addAttribute("ucatList", ucatList);	
+//	   	
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//
+//		return "fragments/upload";
 		
-		// 6-14-2023
-		List <UniversalCatalog> ucatList = universalCatalogDao.getAll();		
-	   	model.addAttribute("ucatList", ucatList);	
-	   	
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-		return "fragments/upload";
+		return "fragments/upload-step4";
+		
 	}
 
 	

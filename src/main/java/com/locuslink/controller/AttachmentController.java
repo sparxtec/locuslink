@@ -1,9 +1,7 @@
 package com.locuslink.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
@@ -54,6 +52,7 @@ import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.ProductAttachmentDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.ProductAttachmentDTO;
+import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.ProductAttachment;
 //import com.lowagie.text.Cell;
 import com.lowagie.text.Document;
@@ -439,7 +438,7 @@ public class AttachmentController {
 	
 	// 1-17-2024
 	@PostMapping(value = "/saveAttachmentsFromStagingToStorage")
-	public String saveAttachmentsFromStagingToStorage (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	public String saveAttachmentsFromStagingToStorage (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
 	
 	
 	// 1-17-2024 @RequestMapping(value = "/saveAttachmentsFromStagingToStorage", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
@@ -450,9 +449,9 @@ public class AttachmentController {
 		//GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "saveAttachmentsFromStagingToStorage");
 	  		
 		//String uniqueAssetPkId = request.getFieldAsString("uniqueAssetPkId");
-		String uniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId();
+		 int uniqueAssetPkId = uniqueAssetDTO.getUniqueAssetPkId();
 		
-		if (uniqueAssetPkId == null || uniqueAssetPkId.length() < 1) {
+		if (uniqueAssetPkId < 1) {
 			logger.debug("Error ->: missing uniqueAssetPkId. ");
 		}
 		
@@ -503,12 +502,14 @@ public class AttachmentController {
             logger.debug("     Inrested to the database successfully.");	
         }
 
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-		//return "fragments/modal_attachment_list";
+	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);
         
-	   	return "fragments/asset-attachment-viewer-modal";
+
+	   	// C.Sparks 1-24-2024 Need this so the UI can navigate back to the TAB we want in focus
+	   	model.addAttribute("gotoDocumentsTab", "yes");
 	   	
-		//return response;
+	   	return "fragments/asset-detail";
+
 	 }
 		 
 	
@@ -620,14 +621,7 @@ public class AttachmentController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 //	@PostMapping(value = "/deleteAssetAttachment")
 //	public String deleteAssetAttachment (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
