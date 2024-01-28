@@ -90,7 +90,8 @@ public class ManageUserController {
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "Trace", "getAllUser");
 
 		List<UserDTO> userDTOList =userLocuslinkDao.getAllDTO();
-			
+		logger.debug(" userDTOList ->: " + userDTOList);
+		
 		response.setField("userList",userDTOList);
 		return response;
 	}
@@ -208,14 +209,8 @@ public class ManageUserController {
 		List<UserDTO> userDTOList =userLocuslinkDao.getAllDTO();
 		
 		response.setField("userList",userDTOList);
-		
-	
-//		List<UserLocuslink> userLocuslinkList =userLocuslinkService.getAllActiveUsers();
-//		List<DashboardFormDTO> dashboardFormDTOList = new ArrayList<UserFormDTO>();
-//	
-//		getUserList(userLocuslinkList,userFormDtoList);
-		
-		response.setField("userList",userDTOList);
+		logger.debug(" userDTOList - >: " + userDTOList);
+
 		
 		return response;
 	 }

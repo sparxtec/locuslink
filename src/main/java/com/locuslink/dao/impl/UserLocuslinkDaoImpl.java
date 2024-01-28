@@ -82,16 +82,19 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	public  List<UserDTO>  getAllDTO() 	{	
 
 		 List <UserDTO> dtoList = entityManager.createQuery("""
-			select new com.locuslink.dto.UserDTO(			
+			select new com.locuslink.dto.UserDTO(	
+					
 				ul.userLocusLinkPkId,
 				ul.userTypeCode,
 		 		ul.loginName,	
 		 		ul.firstName,				 			 			 		
 		 		ul.lastNameBusName,		 							 										
-				ul.activeFlag						
+				ul.activeFlag
+				
+														
 			)
 			from UserLocuslink ul
-															
+																																																				
 			""", UserDTO.class)
 		.getResultList();	
 		 

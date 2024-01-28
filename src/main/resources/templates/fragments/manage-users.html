@@ -16,10 +16,12 @@
 
 			if ($('#editUserDataTable').length) {
 				var table = $('#editUserDataTable').DataTable({
+					
 					responsive: true, //10-01-2024 we only need to use this to see the details
+					
 					//retrieve: true,
 					//searchHighlight: true,
-					//	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data      	        	        
+						responsive: true,	   	        	        
 					"paging": true,
 					//scrollCollapse: true,
 					//scrollY: 'calc(100vh - 35rem)',
@@ -47,6 +49,7 @@
 					columns: [
 
 						{ data: "userLocusLinkPkId" },
+						{ data: "activeFlag" },
 						{ data: "userTypeCode" },
 						{ data: "loginName" },
 						{ data: "firstName" },
@@ -56,10 +59,10 @@
 							data: "activeFlag",
 							"render": function (data, type, row, meta) {
 								if ('Y' == row['activeFlag']) {
-									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Deactivate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>Delete</a></div>"
+									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Deactivate&nbsp </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>&nbsp&nbspDelete</a></div>"
 								}
 								else {
-									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Activate </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>Delete</a></div>"
+									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Activate&nbsp </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>&nbsp&nbspDelete</a></div>"
 								}
 								return data;
 							}
@@ -67,6 +70,13 @@
 
 					],
 
+/* 	            	fixedColumns: true,
+	                columnDefs: [
+	            	 { "width": "20px","targets": 1}
+	            	
+	                ], */ 
+	                
+	                
 					"createdRow": function (row, data, dataIndex) {
 						//console.log(data.itemNumErrorFlag);
 
@@ -88,22 +98,22 @@
 				table.search($(this).val()).draw();
 			});
 
-			$("#addbtn").html('<button class="button button--secondary-reversed w-auto" type="button"  data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>');
+		//	$("#addbtn").html('<button class="button button--secondary-reversed w-auto" type="button"  data-toggle="modal" data-target="#addUserModal" id="addEditUserlink"> Add User</button>');
 
 			$(".dataTables_length select").addClass("form-control");
 
-			$('#addEditUserlink').click(function () {
+/* 			$('#addEditUserlink').click(function () {
 				$('#role option[value="MRC"]').prop('selected', true);
 				$("#addUserModal").find('input[type="text"],textarea').val('');
 				$('#addUserMessage').text("");
-			});
+			}); */
 
-			$(".btn-back").on('click', function () {
+/* 			$(".btn-back").on('click', function () {
 				showSpinner();
 				$('#mainBody').load("initProfilePage", function () {
 					hideSpinner();
 				});
-			});
+			}); */
 		});
 
 
@@ -176,7 +186,7 @@
 		<div class="page-hding">
 			<h1>Manage Users & Roles</h1>
 			<div id="addUserButtonId" class="usrad-btn">
-                  <a href="adduser-details.html">Add Users</a>
+                  <a href="#">Add Users</a>
             </div>
 		</div>
         
@@ -195,15 +205,15 @@
 
 				<!-- 1-4-24   C.Sparks Data table replace the html -->
 				<div id="editUserListHeaderId">
-					<table id="editUserDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table"
-						style="width: 100%;">
+					<table id="editUserDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;">						
 						<thead class="thead-light">
 							<tr>
 								<th scope="col">Id</th>
+								<th scope="col">Active</th>
 								<th scope="col">User Type</th>
 								<th scope="col">Login Id</th>
 								<th scope="col">First Name</th>
-								<th scope="col">Last NAme</th>
+								<th scope="col">Last Name</th>
 								<th scope="col">Action</th>
 							</tr>
 						</thead>

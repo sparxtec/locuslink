@@ -4,28 +4,6 @@
 <head>
 	<title>Upload Data</title>
 
-<!-- <style>
-	.datatable-toolbar {
-		padding: .20rem !important
-	}
-	
-	div.action-buttons {
-        white-space: nowrap;
-    }
- 
-    div.action-buttons span {
-        display: inline-block;
-        min-width: 18px;
-        cursor: pointer;
-    }
-     td.details-control sorting_1 dtr-control {
-		display: inline-block;
-        min-width: 18px;		
-	}   
- 	#assetDataTable td:nth-child(6) { min-width: 240px; } 
- 	#assetDataTable td:nth-child(12) { min-width: 200px; }  	
-    
-</style>-->
  <script>
 
     	$(document).ready(function() {	
@@ -59,7 +37,7 @@
      	        "dataSrc": function (json) {
      	        	universalcataloglist = json.data.universalcataloglist;	     	        	
      	        	hideSpinner();		    		
-     	        	console.log(JSON.parse(universalcataloglist));
+     	        	//console.log(JSON.parse(universalcataloglist));
      	        	return JSON.parse(universalcataloglist);     	        	      	        	
      	         }					       
         		},       

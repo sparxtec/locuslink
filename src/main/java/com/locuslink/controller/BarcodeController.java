@@ -70,21 +70,10 @@ public class BarcodeController {
 			logger.debug("  Note:  No Data Found......");
 		}
 		
-//   6-29-2029 moved lower		
-//		// 5-17-2023
-//		String barcodeTemplateName = "tbd";
-//		if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
-//			barcodeTemplateName = "pipe_poc2.btw";
-//		} else if (uniqueAssetDTO.getProductTypeCode().equals("CABLE")) {
-//			barcodeTemplateName = "SCATE4.btw";
-//		} 
-		
-		
-		
-		
+	
 		// 1-13-2024 testing
-//		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(uniqueAssetDTO);		
-		String encodedPDFBarcdeString = "";
+		String encodedPDFBarcdeString = bartenderRestClient.getBarcode_PDFEncodedStream(uniqueAssetDTO);		
+//		String encodedPDFBarcdeString = "";
 		
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);	
 		

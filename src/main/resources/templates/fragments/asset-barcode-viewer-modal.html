@@ -10,16 +10,23 @@
 
 	$(document).ready(function() {	
 		
-        var b64 = $('input#b64Id').val();
+       // var b64 = $('input#b64Id').val();
         
 		hideSpinner();	
 	   	$("#modal_barcode_viewer").modal('show');	
 	   	
-	 	loadEmbededPDF(b64);    
+	 	loadEmbededPDF( $('input#b64Id').val() );    
         
     	$('#backButtonId').click(function() {													
     		showSpinner();			
-    		submitFormAjaxHTML('initViewAssetData', $( "#dashboardFormDTO" ).serialize(), "commonResponse"); 
+
+    		// 1-26-2024 Close Modal
+    		$('.modal-backdrop').remove();    		
+    		var node = document.getElementById("asset_ModalBody");
+    		node.parentNode.replaceChild(node.cloneNode(false), node);  
+    		
+    		hideSpinner();	
+    		
     	});
     	    	
 	});
@@ -29,15 +36,16 @@
      	// This make the BarCode open to the size of the container, instead of a small image inside it.
      	var options = {
    		 pdfOpenParams: {
-   		        view: 'FitV',
+   		        //view: 'FitV',
    		        pagemode: 'thumbs',
+   		        zoom: '125',
    		        search: 'lorem ipsum'
    		    }
     	};      
-       // PDFObject.embed("samplefiles/barcode_image.pdf", "#pdfContainerId_1", options );	
-        
-   	     PDFObject.embed("samplefiles/locuslink_1.pdf", "#pdfContainerId_1", options );	
-	  //  PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
+
+   	   //  PDFObject.embed("samplefiles/locuslink_1.pdf", "#pdfContainerId_1", options );	
+	    PDFObject.embed('data:application/pdf;base64,' + b64, "#pdfContainerId_1", options );
+	      	   
 	}   
 	
 	
@@ -51,8 +59,8 @@
 	
 <body>
 
-<form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}"  method="post" class="w-100">
-
+<!-- <form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}"  method="post" class="w-100">
+ -->
  <input type="hidden" id="b64Id"  name="b64Id" th:value="${encodedPDFBarcdeString}"> 
 
 
@@ -79,7 +87,7 @@
 							<div><span class="d-inline" th:text= "'Unique Asset Id: ' +  ${uniqueAssetDTO.getUniqueAssetId()}"></span></div>		
 							<div><span class="d-inline" th:text= "'Universal Catalog Id: ' +  ${uniqueAssetDTO.getUniversalCatalogId()}"></span></div> 					    
 					     </li>                                      
-						<li class="de-header-nav__item"></li>
+						<!-- <li class="de-header-nav__item"></li> -->
 			        </ul>
 			      </nav>  
 		          
@@ -87,7 +95,7 @@
 		          <br>
 				 <section class="de-component de-component--gray p-0 pdfobject-body">				
 				   	<div class="card-text-wrapper flexprop-none" style="height:480px">			  
-						<div style="height:480px;width:640px;margin: 0 auto" th:id="pdfContainerId_1"  th:text="locuslink_1.pdf"> </div>		
+						<div id="pdfContainerId_1" style="height:480px;width:640px;margin: 0 auto"  > </div>		
 					</div>   
 			      </section>
 		        

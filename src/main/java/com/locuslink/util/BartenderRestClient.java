@@ -46,6 +46,15 @@ public class BartenderRestClient {
 	@Value("${bartender.access.token}")
 	private String bartenderAccessToken;
 	
+    @Value("${barcode.template.pipe}")
+    private String barcodeTemplatePipe;
+	
+    @Value("${barcode.template.splice}")
+    private String barcodeTemplateSplice;
+    
+    @Value("${barcode.template.cable}")
+    private String barcodeTemplateCable;
+	
     @Autowired
     private ProductAttributeDao productAttributeDao;
 	  
@@ -108,8 +117,10 @@ public class BartenderRestClient {
 		//   1-12-2024 defaulkt them all to pipe when not really there, so the PDF viewer can show something	
 		String barcodeTemplateName = "tbd";
 		if (uniqueAssetDTO.getProductTypeCode().equals("CABLE"))  {
-
-			barcodeTemplateName = "ucable_prod.btw";			
+			
+			// 1-26-2024
+			//barcodeTemplateName = "ucable_prod.btw";					
+			barcodeTemplateName = barcodeTemplateCable;
 			try {	
 				
 				//jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());	
@@ -137,7 +148,10 @@ public class BartenderRestClient {
 	
 		} else if (uniqueAssetDTO.getProductTypeCode().contains("SPLICE"))  {
 	
-			barcodeTemplateName = "ucable_prod.btw";			
+			// 1-26-2024
+			//barcodeTemplateName = "ucable_prod.btw";	
+			barcodeTemplateName = barcodeTemplateCable;
+		
 			try {				
 				//jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniqueAssetId().trim());	
 				jsonNamedDataSources.put("catalog_id",    uniqueAssetDTO.getUniversalCatalogId().trim());	
@@ -153,17 +167,45 @@ public class BartenderRestClient {
 				e.printStackTrace();
 			}
 		} else if (uniqueAssetDTO.getProductTypeCode().equals("STEEL_PIPE")) {
-			barcodeTemplateName = "pipe_prod.btw";			
+			
+			// 1-26-2024
+			//barcodeTemplateName = "pipe_prod.btw";
+			barcodeTemplateName = barcodeTemplatePipe;
+			
 			try {
-				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
+				//jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
+				
+				// 1-28-2023  works
+				//jsonNamedDataSources.put("univ_id",    "x1.x2.x3");					
+				//jsonNamedDataSources.put("serial_number",  "S78787878");	
+				//jsonNamedDataSources.put("heat_number",  "B56565656");		
+				//jsonNamedDataSources.put("manufacturer",  "Steel Co");	
+				//jsonNamedDataSources.put("purchase_order",  "12121212");	
+				
+				jsonNamedDataSources.put("univ_id",    uniqueAssetDTO.getUniqueAssetId());					
+				jsonNamedDataSources.put("serial_number",  "S03146257");	// Not in the DB, WE have Heat or Serial not both. This is really part number ?
+				jsonNamedDataSources.put("heat_number",  uniqueAssetDTO.getTraceCode().trim());		
+				jsonNamedDataSources.put("manufacturer",  uniqueAssetDTO.getManufacturerName().trim());	
+				jsonNamedDataSources.put("purchase_order",  "801375");	// asset doesn't have to have a po, not sure why matt has this in here.
+				
+				
+				//ProductAttribute productAttribute = productAttributeDao.getByUniversalCatalogId(uniqueAssetDTO.getUcatPkId());				
+				//jsonAttributes = new JSONObject(productAttribute.getAttributesJson());				
+				//jsonNamedDataSources.put("lot_code", jsonAttributes.get("serial_number"));
+				//jsonNamedDataSources.put("reel_id", "");
+				//jsonNamedDataSources.put("customer_part_number", jsonAttributes.get("customer_part_number"));	
+				
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}						
 		} else {
 			// C.Sparks 1-12-2024 need a default file for the viewer as we build out more assets
-			// Should make this a generic PDF, not a cable one.
-		
-			barcodeTemplateName = "pipe_prod.btw";			
+			// Should make this a generic PDF, not a cable one.		
+			
+			// 1-26-2024
+			barcodeTemplateName = barcodeTemplatePipe;
+			//barcodeTemplateName = "pipe_prod.btw";			
 			try {
 				jsonNamedDataSources.put("xxxxxx",  uniqueAssetDTO.getUniqueAssetId());
 			} catch (JSONException e) {
