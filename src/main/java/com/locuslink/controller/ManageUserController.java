@@ -78,7 +78,7 @@ public class ManageUserController {
 		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-		return "fragments/manage-users";
+		return "fragments/user-data";
 	}
     
 
@@ -117,7 +117,7 @@ public class ManageUserController {
 		  
 	   	model.addAttribute("userDTO", userDTO);
 	   	
-		return "fragments/adduser-details";
+		return "fragments/user-add";
       
     }	
 
