@@ -59,10 +59,12 @@
 							data: "activeFlag",
 							"render": function (data, type, row, meta) {
 								if ('Y' == row['activeFlag']) {
-									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Deactivate&nbsp </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>&nbsp&nbspDelete</a></div>"
+									data = "<div class='acton-btns'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='view-btn' title='Deactivate'><i class='fa-solid fa-thumbs-down' ></i> </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3 delete-btn' title='Delete'><i class='fa-solid fa-trash' ></i></a></div>"
 								}
 								else {
-									data = "<div class='d-flex'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'>Activate&nbsp </a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3'>&nbsp&nbspDelete</a></div>"
+									data = "<div class='acton-btns'><a href='#' id='deactivateUser_" + row.lanId + "_" + row.activeFlag + "' onclick='deactivateRow(this)' class='button button--text'  title='Activate'> <i class='fa-solid fa-thumbs-up' ></i></a> <a href='#'  onclick='deleteRow(this,event)' id='deleteUser_" + row.lanId + "' class='button button--text ml-3' title='Delete'><i class='fa-solid fa-trash' ></i></a></div>"
+								
+									
 								}
 								return data;
 							}

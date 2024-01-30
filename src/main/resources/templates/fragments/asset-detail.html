@@ -201,7 +201,8 @@
 	<div class="mangeuser-page assetdtaIL-page">
 	
 	<!-- C.Sparks need to pass this in the form object to the controller -->
- 	 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+ 	 <!-- 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >   -->
+ 	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
  
  	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
  	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
@@ -537,8 +538,8 @@
 
                               <td>
                                   <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                      <a href="#" class="edit-btn" title="Edit"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn" title="Delete">><i class="fa-solid fa-trash"></i></a>
                                   </div>
                               </td>
 

@@ -105,10 +105,41 @@
             $('#recent-uploded-data').DataTable({
              responsive: true
             });
-// hamburger menu
-$(".hamburger,.backdrop").click(function () {
-  $("body").toggleClass("nav-collpsed");
-});
+			   
+			   
+			   
+			// **************************************
+			// **  Profile Events
+			// **************************************  
+			   
+			$('#navProfileAccountId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initMyAccount', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navProfileSettingsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initMySettings', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navProfileSupportId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initSupport', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navProfileLogoutId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initLogout', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			// **************************************
+			// **  Other  Events
+			// ************************************** 
+			
+			// hamburger menu
+			$(".hamburger,.backdrop").click(function () {
+			  $("body").toggleClass("nav-collpsed");
+			});
 				
 		});
 

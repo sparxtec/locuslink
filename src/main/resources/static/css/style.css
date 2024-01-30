@@ -1254,7 +1254,7 @@ table.dataTable tbody td {
 .uploadfile .dropzone .dz-message{
 	margin: unset;
 }
-.uploadfile .dropzone .dz-message button{
+.uploadfile .dropzone .dz-message button,.uploadfile .dz-message button{
 	border: 0px;
 	font-weight: 500;
 }
@@ -1844,4 +1844,6 @@ table.dataTable>tbody>tr.child ul.dtr-details {display: block;}
  table#history-table tr td {
     text-wrap: wrap;
 }
+
+/*  testing*/
  

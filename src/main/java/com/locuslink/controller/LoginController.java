@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.UserLocuslinkDao;
+import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.LoginFormDTO;
+import com.locuslink.model.UserLocuslink;
 
 @Controller
 @Service
@@ -33,6 +36,8 @@ public class LoginController {
     @Value("${app.logout.url}")
     private String appLogoutUrl;
     
+    @Autowired
+    private UserLocuslinkDao userLocuslinkDao;
     
     
 	@RequestMapping(value = "/initLogin")
@@ -58,6 +63,14 @@ public class LoginController {
 			return "login";
 		}
 		
+		
+		// 1-30-2024 TODO Really need to replae the above with the userId entered.
+		//    then look up the role
+		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
+		defineUserInfo(dashboardFormDTO);		
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+ 
+	   	
 		return "dashboard";
 	}
 	
@@ -77,7 +90,28 @@ public class LoginController {
 			return "login";
 		}
 		
+		// 1-30-2024 
+		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
+		defineUserInfo(dashboardFormDTO);		
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		
 		return "dashboard";
+	}
+	
+	
+	
+	private void defineUserInfo(DashboardFormDTO dashboardFormDTO) {
+		
+		UserLocuslink  userLocuslink= userLocuslinkDao.getById(1);
+		if (userLocuslink == null) {
+			logger.debug("SQL Error could not find the logged in User.");			
+			dashboardFormDTO.setFirstName("unknown user");
+			dashboardFormDTO.setLastNameBusName("");	
+		} else {		
+			dashboardFormDTO.setFirstName(userLocuslink.getFirstName());
+			dashboardFormDTO.setLastNameBusName(userLocuslink.getLastNameBusName());
+		}
+		
 	}
 	
 }

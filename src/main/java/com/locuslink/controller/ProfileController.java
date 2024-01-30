@@ -62,12 +62,49 @@ public class ProfileController {
 	public String initProfile (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initProfile()...");
 
-		model.addAttribute("appLogoutUrl",appLogoutUrl);
+//		UserTrace user=(UserTrace)session.getAttribute ("userTrace");
+		
+		
+		
+		//model.addAttribute("appLogoutUrl",appLogoutUrl);
+		
+		
+	   	model.addAttribute("userDTO", new UserDTO());
+	   	
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 		return "fragments/profile";
 	}
 
     
+	@PostMapping(value = "/initProfileAccount")
+	public String initProfileAccount (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initProfileAccount()...");
+
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		return "fragments/profile-account";
+	}
+	
+	
+	@PostMapping(value = "/initProfileSettings")
+	public String initProfileSettings (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initProfileSettings()...");
+
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		return "fragments/profile-setting";
+	}
  
+	
+	@PostMapping(value = "/initProfileSupport")
+	public String initProfileSupport (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initProfileSupport()...");
+
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		return "fragments/profile-support";
+	}
+	
+	
 }

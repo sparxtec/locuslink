@@ -51,4 +51,9 @@ public class DashboardFormDTO {
 	private String jsonUploadedProductObjectList;
 	
 	
+	// Login, then needed on the header for the PRofile name displayed
+	private String firstName;
+	private String lastNameBusName;
+	
+	
 }

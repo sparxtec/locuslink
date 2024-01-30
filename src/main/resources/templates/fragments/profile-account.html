@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Account Setting</title>
+
+	
+</head>
+
+<body id="Body">
+
+<div class="mangeuser-page assetdtaIL-page acount-setingpage">
+     <div class="page-hding">
+                    <h1>My Account</h1>
+
+                </div>
+                <div class="dtatable-card mt-4">
+                 <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
+                    <div class="row">
+                        <div class="col-md-4 col-xl-2">
+                            <div class="row">
+
+                                <div class="col-sm-6 col-md-12">
+                                    <div class="update-pic position-relative ">
+                                        <img src="./images/update-profile.jpg" class="img-fluid" alt="" title="">
+
+                                        <div class="updateiimg-icon position-relative">
+                                            <i class="fa fa-pencil"></i>
+                                            <input type="file" class="opacity-0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-12">
+                                    <div class="aset-sidebar-bx mb-4">
+                                        <ul class="list-unstyled asset-side-nav">
+                                            <li><a href="account-setting.html" class="active">Account Details</a></li>
+                                            <li><a href="change-password.html">Password Change</a></li>
+                                            <li><a href="#">Support</a></li>
+                                            <li><a href="login.html">Logout</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-8 col-xl-10">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="aset-detal-bx">
+                                        <div class="borderbx adduser-form-bx">
+                                            <div class="bx-hding">
+                                                <h4>Account Details</h4>
+                                            </div>
+
+
+                                            <div class="row mt-4 pd-bx">
+                                                <div class="col-md-12">
+                                                    <div class="asset-details">
+                                                        <div class="row mb-3">
+
+                                                            <div class="col-sm-12 col-xl-2 colum-bx">
+                                                                <div class="uplod-inputbx">
+                                                                    <label>First Name</label>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-10 colum-bx">
+                                                                <div class="tble-serch ">
+                                                                    <input type="text" placeholder="Enter First name" title="Enter First name" class="form-control">
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-2 colum-bx">
+                                                                <div class="uplod-inputbx">
+                                                                    <label>Last Name </label>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-10 colum-bx">
+                                                                <div class="tble-serch ">
+                                                                    <input type="text" placeholder="Last Name" title="Last Name" class="form-control">
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-2 colum-bx">
+                                                                <div class="uplod-inputbx">
+                                                                    <label>Email ID</label>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-10 colum-bx">
+                                                                <div class="tble-serch ">
+                                                                    <input type="text" placeholder="Enter mail ID" title="Enter mail ID" class="form-control">
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-sm-12 col-xl-2 colum-bx">
+                                                                <div class="uplod-inputbx">
+                                                                    <label>Phone Number</label>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-sm-12 col-xl-10 colum-bx">
+                                                                <div class="tble-serch ">
+                                                                    <input type="Number" placeholder="Enter Phone number" title="Enter Phone Number" class="form-control">
+
+                                                                    <!-- <a href="javascript:void(0)" class="add-moreinput">+ Add Mobile Number </a> -->
+                                                                    <div class="extrpinput"></div>
+
+                                                                </div>
+
+                                                            </div>
+
+
+                                                            <div class="usrad-btn sve-btn text-end">
+                                                                <a href="#">Save</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+					</form>
+                </div>
+                
+                
+                
+     </div>
+
+</body>
+
+</html>

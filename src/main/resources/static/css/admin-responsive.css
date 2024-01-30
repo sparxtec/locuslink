@@ -122,6 +122,15 @@
 }
 
 @media screen and (max-width:992px) {
+.assetdta-page.importasset-page	.uplod-inputbx{margin: 10px 0 25px;}
+	  .tble-serch {
+    margin-bottom: 15px;
+  }
+	
+	  .colum-bx {
+    margin-bottom: 5px;
+  }
+	
   .main__wrap {
     padding: 20px 10px;
   }
@@ -256,18 +265,13 @@
     width: 100%;
   }
 
-  .tble-serch {
-    margin-bottom: 15px;
-  }
 
 
   .adduser-form-bx .uplod-inputbx label {
     font-size: 14px;
   }
 
-  .colum-bx {
-    margin-bottom: 5px;
-  }
+
 
   .bottom {
     justify-content: center;

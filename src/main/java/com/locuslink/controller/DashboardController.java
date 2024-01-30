@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.UserLocuslinkDao;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.UserDTO;
 import com.locuslink.model.UserLocuslink;
 
 /**
@@ -56,6 +57,7 @@ public class DashboardController {
 
 		// Common Routine
 		if (securityContextManager.isSecurityCredentialsGood()) {
+		   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 			return "dashboard";
 		} else {
 			return "redirect:/initLogin";
@@ -75,7 +77,8 @@ public class DashboardController {
 		}
 		
 		// Common Routine
-		if (securityContextManager.isSecurityCredentialsGood()) {
+		if (securityContextManager.isSecurityCredentialsGood()) {			
+		   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);			
 			return "dashboard";
 		} else {
 			return "redirect:/initLogin";
