@@ -703,6 +703,8 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 	 */
 	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is, UniqueAsset uniqueAsset ) {
 		
+		JSONObject jsonObject = new JSONObject();
+		
         // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
         try {
 			XSSFWorkbook workbook = new XSSFWorkbook(s3is);					
@@ -729,29 +731,44 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 							// do nothing
 						} else {
 							System.out.print(",");	
-							
-							// TODO Find CELLS we care about
-							
+														
+							// 2-1-2024  								
+							jsonObject.put(rowCellValue, row.getCell(i+1).toString());
+														
 							if (rowCellValue.equalsIgnoreCase("catalog_id")) {
 								
 								// TODO add DB lookup to use text to get pkId
 								uniqueAsset.setUcatPkId(804); // Steel
 								
-								uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());
+								// 2-1-2024 TODO this needs to come FROM the DB, previously built when the catalog was constructed
+								//uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
+								uniqueAsset.setUniqueAssetId("x1....x25");
+								
+								
+								// 2-1-2024   default value db lookup is below
 								uniqueAsset.setManufacturerPkId(55); // real value in the table
+								
+								// 2-1-2024 TODO
+								//  Not sure if customer is required here during the Asset Creation process.
+								//  by definition, i think the MTR is for a customer ??
 								uniqueAsset.setCustomerPkId(2);  // ACME Utilities
+								
+								// 2-1-2024 Pipe uses HEAT by definition
 								uniqueAsset.setTraceTypePkId(40); // heat	
 								
+								// 2-1-2024 The heat number default
 								uniqueAsset.setTraceCode("535521");
+								
 								uniqueAsset.setAddBy("digitalMtr");
 								
 							} else if (rowCellValue.equalsIgnoreCase("Facility_Name_for_Pipe_Manufacturer")) {
 								
-								// TODO add DB lookup to use "EVRAZ NA Camrose name" to get the pkId
+								// 2-1-2024 TODO add DB lookup to use text to get the pkId
 								uniqueAsset.setManufacturerPkId(55);
 													
 							} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
 								
+								// 2-1-2024 Override the default with the real value in the excel files
 								uniqueAsset.setTraceCode(row.getCell(i+1).toString());
 								
 							} else if (rowCellValue.equalsIgnoreCase("xxxxxx")) {
@@ -766,9 +783,27 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 		
         	// Validate the required fields
         	if (uniqueAsset.getUcatPkId() > 0) {
-        		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
+        		logger.debug(" Found a new Unique Asset / Catalogue Product, to insert to the Unique Asset Table.");		        				        	
         		uniqueAssetDao.save(uniqueAsset);
         		logger.debug(" Unique Asset Table ->: saved.");	
+        		
+        		
+        		
+        		// 2-1-2024
+        		// Save all the stripped off attributes to the attributes table as json string.
+                // Convert the POJO array to json, for the UI
+
+        		
+        		ProductAttribute productAttribute = new ProductAttribute();
+        		productAttribute.setUcatPkId(804); // Steel Pipe
+        		productAttribute.setAddBy("digitalAssetCable");        		
+        		productAttribute.setAttributesJson(jsonObject.toString());
+        	
+        		productAttributeDao.delete(productAttribute);        		
+        		productAttributeDao.save(productAttribute);
+        		
+        		
+        		
         	}
         			        	
         } catch (Exception e1) {

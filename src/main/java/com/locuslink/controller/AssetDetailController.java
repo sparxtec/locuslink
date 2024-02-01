@@ -29,13 +29,13 @@ import com.locuslink.dto.UniqueAssetDTO;
  * This is a Spring MVC Controller.
  *
  * @author C.Sparks
- * @since 1.0.0 - January 05, 2023 - Initial version
+ * @since 1.0.0 - February 01, 2024 - Initial version
  */
 @Controller
 @Service
-public class AssetController {
+public class AssetDetailController {
 
-	private static final Logger logger = Logger.getLogger(AssetController.class);
+	private static final Logger logger = Logger.getLogger(AssetDetailController.class);
 
 
     @Value("${app.logout.url}")
@@ -51,44 +51,20 @@ public class AssetController {
     @Autowired
     private UniqueAssetDao uniqueAssetDao;
     
-    
-
-	@PostMapping(value = "/initAssetData")
-	public String initAssetData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssetData()...");
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-	   	return "fragments/asset-data";
-	}
-	
-	
-	@RequestMapping(value = "/getAllAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse getAllAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
-
-		logger.debug("In getAllAsset()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
-	  	
-		// TESTING
-		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
-		if (uniqueAssetListDTO == null) {
+     
+	@PostMapping(value = "/initAssetDetail")
+	public String initAssetDetail (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
+		
+		logger.debug("Starting initAssetDetail()...");
+		
+		uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
+		if (uniqueAssetDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
-			
-        // Convert the POJO array to json, for the UI
-		ObjectMapper mapper = new ObjectMapper();		
-		String json = "";			
-		try {
-			json = mapper.writeValueAsString(uniqueAssetListDTO);			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
-		logger.debug("json ->: " + json);		
-		response.setField("uniqueassetlist",  json);
+	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);	   		   	
 
-		return response;
-	 }
-	
+	   	return "fragments/asset-detail";
+	}
 
 }

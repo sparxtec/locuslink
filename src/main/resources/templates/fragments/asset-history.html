@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Asset Detail</title>
+
+	<script>	
+		
+		$(document).ready(function() {	
+
+			$('#tabDetailsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabHistoryId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetHistory', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+	 		
+	 	});       
+   
+		
+	   function initCommonResponse(returnData) {	
+		   hideSpinner();
+		   $('#mainBody').html( returnData);    	 
+	   }
+	   
+	
+   
+	</script>	
+</head>
+
+<body id="Body">
+
+  
+
+	      
+	<div class="mangeuser-page assetdtaIL-page">
+	
+	<!-- C.Sparks need to pass this in the form object to the controller -->
+ 	 <!-- 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >   -->
+ 	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+ 
+ 	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
+ 	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
+ 	      
+		  <div class="page-hding">
+		      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
+		  </div>
+ 	   </form>
+                
+  	   <!-- Nav tabs -->
+	  <div class="custome-tabs">
+	      <ul class="nav nav-tabs  mt-4" role="tablist">
+	          <li class="nav-item">
+	              <a id="tabDetailsId" class="nav-link " data-bs-toggle="tab" href="#">Details</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabHistoryId" class="nav-link active" data-bs-toggle="tab" href="#">History</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabSmartTagId" class="nav-link" data-bs-toggle="tab" href="#">Smart Tag</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabDocumentsId" class="nav-link" data-bs-toggle="tab" href="#">Documents</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabImagesId" class="nav-link " data-bs-toggle="tab" href="#">images</a>
+	          </li>	
+	      </ul>
+
+
+
+      <div class="dtatable-card ">
+
+          <div class="tab-content">
+
+              <div id="history" class="tab-pane active">
+
+                  <div class="row mb-4">
+
+                      <div class="col-sm-5 col-sm-5 col-xl-3">
+                          <div class="uplod-inputbx tble-serch">
+                              <label>Start Date</label>
+                              <input type="date" class="form-control" title="Select Start Date">
+                          </div>
+                      </div>
+                      <div class="col-xs-12 col-sm-5 col-xl-3">
+                          <div class="uplod-inputbx tble-serch ">
+                              <label>End Date</label>
+                              <input type="date" class="form-control" title="Select End Date">
+                          </div>
+                      </div>
+                      <div class="col-xs-3 col assetdetl-btn">
+                          <div class="uplod-inputbx">
+                              <label>&nbsp;</label>
+                              <a href="#" class="contine-btn">Search</a>
+                          </div>
+
+                      </div>
+                  </div>
+                
+
+                  <table id="history-table"  class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width:100%">
+                      <thead>
+                          <tr>
+                              <th>Modify Date</th>
+                              <th>Id</th>
+                              <th>Unique Asset ID</th>
+                              <th> Universal Catalog ID</th>
+                              <th>Manufacturer</th>
+                              <th>Product Type</th>
+                              <th>Trace Number</th>
+                              <th>Customers</th>
+                              <th>P Type Description</th>
+                              <th>Attributes</th>
+                              <th>Action</th>
+
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">10 Oct 2023</span>
+                              </td>
+                              <td>1</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn" title="Edit"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn" title="Delete">><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">9 Oct 2023</span>
+                              </td>
+                              <td>02</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">8 Oct 2023</span>
+                              </td>
+                              <td>03</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">07 Oct 2023</span>
+                              </td>
+                              <td>04</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">6 Oct 2023</span>
+                              </td>
+                              <td>05</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date"> 28 Sep 2023</span>
+                              </td>
+
+                              <td>06</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">25 Sep 2023</span>
+                              </td>
+                              <td>07</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">17 Sep 2023</span>
+                              </td>
+                              <td>08</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">20 Sep 2023</span>
+                              </td>
+                              <td>09</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">15 Sep 2023</span>
+                              </td>
+                              <td>10</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date">10 Sep 2023</span>
+                              </td>
+
+                              <td>11</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date"> 18 Sep 2023</span>
+                              </td>
+
+                              <td>12</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+                          <tr>
+                              <td>
+                                  <span class="modify-date"> 14 Sep 2023</span>
+                              </td>
+
+                              <td>13</td>
+                              <td>x1.x2</td>
+                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                              <td>South Wire</td>
+                              <td>Cable</td>
+                              <td>Serial</td>
+                              <td>Black Hills Energy</td>
+                              <td>lorem ipsum dolor sit amet</td>
+                              <td>South Wire</td>
+
+                              <td>
+                                  <div class="acton-btns">
+                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                  </div>
+                              </td>
+
+                          </tr>
+
+                      </tbody>
+
+                  </table>
+              </div>
+
+
+
+          </div>
+      </div>
+
+  </div>
+  
+
+  	<!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+  	    <div id="asset_ModalBody">	
+    </div>
+	    
+	    
+</div>
+
+</body>
+
+</html>
