@@ -9,10 +9,10 @@ function hideSpinner() {
 	document.querySelector("#spinnerModal").style.display = "none";	
 }
 
-function submitFormHTML(action, formName) {
-	//alert ("action: " + action + "  formName: " + formName);
+function submitFormHTML(action, formName) {		
+	//alert ("action: 1 " + action + "  formName: " + formName);	
 	form = document.getElementById(formName);
-	form.action = action;
+	form.action = action;	
 	form.submit();
 }
 

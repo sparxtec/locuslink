@@ -64,11 +64,11 @@ public class LoginController {
 		}
 		
 		
-		// 1-30-2024 TODO Really need to replae the above with the userId entered.
-		//    then look up the role
-		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
-		defineUserInfo(dashboardFormDTO);		
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//		// 1-30-2024 TODO Really need to replae the above with the userId entered.
+//		//    then look up the role
+//		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
+//		defineUserInfo(dashboardFormDTO, session);		
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
  
 	   	
 		return "dashboard";
@@ -90,26 +90,30 @@ public class LoginController {
 			return "login";
 		}
 		
-		// 1-30-2024 
-		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
-		defineUserInfo(dashboardFormDTO);		
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+//		// 1-30-2024 
+//		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
+//		defineUserInfo(dashboardFormDTO, session);		
+//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 		
 		return "dashboard";
 	}
 	
 	
 	
-	private void defineUserInfo(DashboardFormDTO dashboardFormDTO) {
+	private void defineUserInfo(DashboardFormDTO dashboardFormDTO, HttpSession session) {
 		
 		UserLocuslink  userLocuslink= userLocuslinkDao.getById(1);
 		if (userLocuslink == null) {
 			logger.debug("SQL Error could not find the logged in User.");			
 			dashboardFormDTO.setFirstName("unknown user");
 			dashboardFormDTO.setLastNameBusName("");	
+			
+			session.setAttribute("sessionUserFullname", "unknown user");
 		} else {		
 			dashboardFormDTO.setFirstName(userLocuslink.getFirstName());
 			dashboardFormDTO.setLastNameBusName(userLocuslink.getLastNameBusName());
+			
+			session.setAttribute("sessionUserFullname", userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
 		}
 		
 	}

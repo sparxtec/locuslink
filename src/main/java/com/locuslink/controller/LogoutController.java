@@ -62,7 +62,7 @@ public class LogoutController {
 		session.invalidate();
 		SecurityContextHolder.clearContext();
 
-	    return "logout";
+		return "redirect:/initLogin";
 
     }
 }

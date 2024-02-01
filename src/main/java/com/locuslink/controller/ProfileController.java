@@ -93,7 +93,7 @@ public class ProfileController {
 
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-		return "fragments/profile-setting";
+		return "fragments/profile-settings";
 	}
  
 	

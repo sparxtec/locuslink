@@ -72,12 +72,18 @@
 		
 			$('#navLogoId').click(function() {
 				showSpinner();
+				form = document.createElement("FORM");
+				form.setAttribute("id","dashboardFormDTO");
+				document.body.appendChild(form);	
 				submitFormHTML('initDashboard', 'dashboardFormDTO');
 			});
 
 			$('#navDashboardId').click(function() {
-				showSpinner();
-				submitFormHTML('initDashboard', 'dashboardFormDTO');
+				showSpinner();					
+				form = document.createElement("FORM");
+				form.setAttribute("id","dashboardFormDTO");
+				document.body.appendChild(form);				
+				submitFormHTML('initDashboard', 'dashboardFormDTO');				
 			});
 						
 			$('#navManageUsersId').click(function() {
@@ -114,22 +120,29 @@
 			   
 			$('#navProfileAccountId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initMyAccount', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initProfileAccount', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
 			$('#navProfileSettingsId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initMySettings', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initProfileSettings', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
 			$('#navProfileSupportId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initSupport', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				submitFormAjaxHTML('initProfileSupport', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
 			$('#navProfileLogoutId').click(function() {
 				showSpinner();
-				submitFormAjaxHTML('initLogout', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				//submitFormAjaxHTML('initLogout', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+				
+				form = document.createElement("FORM");
+				form.setAttribute("id","dashboardFormDTO");
+				document.body.appendChild(form);				
+				submitFormHTML('initLogout', 'dashboardFormDTO');	
+				
+				
 			});
 			
 			// **************************************
