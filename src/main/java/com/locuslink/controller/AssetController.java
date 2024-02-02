@@ -84,7 +84,7 @@ public class AssetController {
 			e.printStackTrace();
 		}
 		
-		logger.debug("json ->: " + json);		
+		//logger.debug("json ->: " + json);		
 		response.setField("uniqueassetlist",  json);
 
 		return response;

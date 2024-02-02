@@ -52,10 +52,10 @@ public class AssetDocumentController {
     private UniqueAssetDao uniqueAssetDao;
     
      
-	@PostMapping(value = "/initAssetDocument")
-	public String initAssetDocument (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
+	@PostMapping(value = "/initAssetDocuments")
+	public String initAssetDocuments (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
 		
-		logger.debug("Starting initAssetDocument()...");
+		logger.debug("Starting initAssetDocuments()...");
 		
 		uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
 		if (uniqueAssetDTO == null) {

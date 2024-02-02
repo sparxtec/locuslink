@@ -73,7 +73,30 @@
 		
 		$(document).ready(function() {	
 
-		
+			$('#tabDetailsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabHistoryId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetHistory', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabSmartTagId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetSmartTag', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabDocumentsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetDocuments', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabImagesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetImages', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
 			
 			
 			// Added for Dropzone
@@ -136,32 +159,9 @@
 				$("#attachmentUploadId").hide();
 	    	}); 
 	    	
-// c.sparks 1-24-2024   dont see this on the ui at all, remove it for now
-/* 	        // BACK
-	    	$('#backButtonId').click(function() {	
-	    		
-	    		// clear files from the UI
-	    		traceDropzoneId[0].dropzone.removeAllFiles();    		    		
-	    		
-	     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
-	           	var innerData = {};
-	    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
-	    		innerData["deleteAllFilesWithPk"] =	"YES";
-	    		myData["data"] = innerData;
-	    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
-	    		
-	    		
-	    		$('.modal-backdrop').remove();    		
-	    		var node = document.getElementById("myworkspace_Asset_ModalBody");
-	    		node.parentNode.replaceChild(node.cloneNode(false), node);    		    		    		    		
-	    	});   */
-			
-
 	 		// Browse Files BUTTON on the Dropzone Box
 		    $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
-		
-	 		
-	 		
+			 			 	
 	 	});       
    
 		
@@ -176,17 +176,17 @@
 	  }   
 	  
 	
-			$('#history-table').DataTable({
-		      responsive: true,
-		      searching: false,
-		      bLengthChange : false
-		   });
-		   
-			$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
-			   $($.fn.dataTable.tables(true)).DataTable()
-			      .columns.adjust()
-			      .responsive.recalc();
-			});
+/* 		$('#history-table').DataTable({
+	      responsive: true,
+	      searching: false,
+	      bLengthChange : false
+	   }); */
+	   
+		$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
+		   $($.fn.dataTable.tables(true)).DataTable()
+		      .columns.adjust()
+		      .responsive.recalc();
+		});
 		
 
    
@@ -195,14 +195,9 @@
 
 <body id="Body">
 
-  
-
-	      
 	<div class="mangeuser-page assetdtaIL-page">
 	
-	<!-- C.Sparks need to pass this in the form object to the controller -->
- 	 <!-- 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >   -->
- 	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
  
  	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
  	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
@@ -212,645 +207,34 @@
 		  </div>
  	   </form>
                 
-  <!-- Nav tabs -->
-  <div class="custome-tabs">
-      <ul class="nav nav-tabs  mt-4" role="tablist">
-          <li class="nav-item">
-              <a class="nav-link active" data-bs-toggle="tab" href="#details">Details</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#history">History</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#smarttag">Smart Tag</a>
-          </li>
-          <li class="nav-item">
-              <a id="documentsTabId" class="nav-link" data-bs-toggle="tab" href="#documents">Documents</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link " data-bs-toggle="tab" href="#images">images</a>
-          </li>
-
-      </ul>
+  	   <!-- Nav tabs -->
+	  <div class="custome-tabs">
+	      <ul class="nav nav-tabs  mt-4" role="tablist">
+	          <li class="nav-item">
+	              <a id="tabDetailsId" class="nav-link " data-bs-toggle="tab" href="#">Details</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabHistoryId" class="nav-link" data-bs-toggle="tab" href="#">History</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabSmartTagId" class="nav-link " data-bs-toggle="tab" href="#">Smart Tag</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabDocumentsId" class="nav-link active" data-bs-toggle="tab" href="#">Documents</a>
+	          </li>
+	          <li class="nav-item">
+	              <a id="tabImagesId" class="nav-link " data-bs-toggle="tab" href="#">images</a>
+	          </li>	
+	      </ul>
 
 
       <div class="dtatable-card ">
-          <!-- Tab panes -->
-
 
           <div class="tab-content">
-              <div id="details" class="tab-pane active">
-                  <div class="row">
-                      <div class="col-md-3 mb-4">
-                          <div class="aset-sidebar-bx">
-                              <ul class="list-unstyled asset-side-nav">
-                                  <li><a href="#" class="active">General</a></li>
-                          <!--         <li><a href="#">Documents</a></li> -->
-                                  <li><a href="#">Test certification</a></li>
-                                  <li><a href="#">Images</a></li>
-<!--                                   <li><a href="#">Asset Details 1</a></li>
-                                  <li><a href="#">Asset Details 2</a></li>
-                                  <li><a href="#">Asset Details 3</a></li>
-                                  <li><a href="#">Asset Details 4</a></li>
-                                  <li><a href="#">Asset Details 5</a></li>
-                                  <li><a href="#">Asset Details 6</a></li> -->
-                              </ul>
-                          </div>
-                      </div>
-
-                      <div class="col-md-9">
-                          <div class="row">
-                              <div class="col-md-12">
-                                  <div class="aset-detal-bx">
-                                      <div class="borderbx">
-                                          <div class="bx-hding">
-                                              <h4>General</h4>
-                                          </div>
-
-
-                                          <div class="row mt-4 pd-bx">
-                                              <div class="col-md-12 col-lg-8 mb-3">
-                                                  <div class="asset-details">
-                                                      <table class="table table-striped">
-
-                                                          <tbody>
-                                                              <tr>
-                                                                  <th class="t-hding">Id</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Unique Asset ID</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Manufacturer </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Product Type </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Trace Number </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Customers </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> P Type Description
-                                                                  </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-12 col-lg-4 mb-3">
-                                                  <div class="asset-img borderbx">
-                                                      <img src="./images/product-img.jpg"
-                                                          alt="product-img" class="img-fluid"
-                                                          title="3Phase Distribution Transformer">
-                                                  </div>
-                                              </div>
-
-                                          </div>
-
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="col-md-12 mt-4">
-                                  <div class="aset-detal-bx">
-                                      <div class="borderbx">
-                                          <div class="bx-hding">
-                                              <h4>Unique ID</h4>
-                                          </div>
-
-
-                                          <div class="row mt-4 pd-bx">
-                                              <div class="col-md-12">
-                                                  <div class="asset-details">
-                                                      <table class="table table-striped">
-
-                                                          <tbody>
-                                                              <tr>
-                                                                  <th class="t-hding">Id</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Unique Asset ID</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Manufacturer </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Product Type </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Trace Number </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Customers </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> P Type Description
-                                                                  </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="col-md-12 mt-4">
-                                  <div class="aset-detal-bx">
-                                      <div class="borderbx">
-                                          <div class="bx-hding">
-                                              <h4>Traceability Data</h4>
-                                          </div>
-
-
-                                          <div class="row mt-4 pd-bx">
-                                              <div class="col-md-12">
-                                                  <div class="asset-details">
-                                                      <table class="table table-striped">
-
-                                                          <tbody>
-                                                              <tr>
-                                                                  <th class="t-hding">Id</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Unique Asset ID</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Manufacturer </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Product Type </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Trace Number </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Customers </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> P Type Description
-                                                                  </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
-                                                              </tr>
-
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
-
-                                          </div>
-
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-
-
-                  </div>
-
-              </div>
+          
+ 
+              <div id="documents" class="tab-pane active">
               
-              
-              
-              
-              
-              
-              
-              
-              <div id="history" class="tab-pane fade">
-
-                  <div class="row mb-4">
-
-                      <div class="col-sm-5 col-sm-5 col-xl-3">
-                          <div class="uplod-inputbx tble-serch">
-                              <label>Start Date</label>
-                              <input type="date" class="form-control" title="Select Start Date">
-                          </div>
-                      </div>
-                      <div class="col-xs-12 col-sm-5 col-xl-3">
-                          <div class="uplod-inputbx tble-serch ">
-                              <label>End Date</label>
-                              <input type="date" class="form-control" title="Select End Date">
-                          </div>
-                      </div>
-                      <div class="col-xs-3 col assetdetl-btn">
-                          <div class="uplod-inputbx">
-                              <label>&nbsp;</label>
-                              <a href="#" class="contine-btn">Search</a>
-                          </div>
-
-                      </div>
-                  </div>
-                
-
-                  <table id="history-table"  class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width:100%">
-                      <thead>
-                          <tr>
-                              <th>Modify Date</th>
-                              <th>Id</th>
-                              <th>Unique Asset ID</th>
-                              <th> Universal Catalog ID</th>
-                              <th>Manufacturer</th>
-                              <th>Product Type</th>
-                              <th>Trace Number</th>
-                              <th>Customers</th>
-                              <th>P Type Description</th>
-                              <th>Attributes</th>
-                              <th>Action</th>
-
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">10 Oct 2023</span>
-                              </td>
-                              <td>1</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn" title="Edit"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn" title="Delete">><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">9 Oct 2023</span>
-                              </td>
-                              <td>02</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">8 Oct 2023</span>
-                              </td>
-                              <td>03</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">07 Oct 2023</span>
-                              </td>
-                              <td>04</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">6 Oct 2023</span>
-                              </td>
-                              <td>05</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date"> 28 Sep 2023</span>
-                              </td>
-
-                              <td>06</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">25 Sep 2023</span>
-                              </td>
-                              <td>07</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">17 Sep 2023</span>
-                              </td>
-                              <td>08</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">20 Sep 2023</span>
-                              </td>
-                              <td>09</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">15 Sep 2023</span>
-                              </td>
-                              <td>10</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date">10 Sep 2023</span>
-                              </td>
-
-                              <td>11</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date"> 18 Sep 2023</span>
-                              </td>
-
-                              <td>12</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-                          <tr>
-                              <td>
-                                  <span class="modify-date"> 14 Sep 2023</span>
-                              </td>
-
-                              <td>13</td>
-                              <td>x1.x2</td>
-                              <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
-                              <td>South Wire</td>
-                              <td>Cable</td>
-                              <td>Serial</td>
-                              <td>Black Hills Energy</td>
-                              <td>lorem ipsum dolor sit amet</td>
-                              <td>South Wire</td>
-
-                              <td>
-                                  <div class="acton-btns">
-                                      <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                      <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                  </div>
-                              </td>
-
-                          </tr>
-
-                      </tbody>
-
-                  </table>
-              </div>
-
-
-
-
-
-              <div id="smarttag" class="tab-pane fade">
-                  <div class="tab-subhding">
-                      <h3>Product QR Code</h3>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-3">
-                          <div class="barcdetab">
-                              <img src="./images/barcode-tab.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              
-              
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-              
-              <div id="documents" class="tab-pane fade">
                   <div class="tab-subhding procut-tab">
                   	<div class="documn-title">
                   		<h3>Uploaded Product Documents</h3>
@@ -863,11 +247,7 @@
                     </div>                     
                   </div>
                   
-                  
-                  <!-- =============================================================================   -->
-                  <!-- =============================================================================   -->
-                  <!-- =============================================================================   -->
-                                                      
+                                                
                   <!-- 1-18-2024  C.Sparks added show hide code when the add document is clicked  -->
 			      <div id="attachmentUploadId" class="adduser-form-bx addaset-formbx borderbx add-document">
 	                                                            
@@ -930,11 +310,10 @@
 	
 	              </div>                  
                      
-                 <!-- =============================================================================   -->
-                 <!-- =============================================================================   -->
-                 <!-- =============================================================================   -->    
-                  
-                  
+
+
+
+                  <!-- Loop and get all the document -->
                   <div class="row">
                       <div class="col-md-6">
                           <div class="barcdetab document-bx">
@@ -987,6 +366,7 @@
 
                           </div>
                       </div>
+                      
                       <div class="col-md-6">
                           <div class="barcdetab document-bx">
                               <div class="documentname-hdingbx">
@@ -1004,14 +384,15 @@
 
                           </div>
                       </div>
+                      
                       <div class="col-md-6">
                           <div class="barcdetab document-bx">
                               <div class="documentname-hdingbx">
                                   <div class="document-name-bx">
-                                      <span>PDF</span>
+                                      <span>Word</span>
                                   </div>
                                   <div class="document-hding">
-                                      <h6>Document 5.pdf<span>254 kB</span></h6>
+                                      <h6>Document 5.doc<span>714 kB</span></h6>
                                   </div>
                               </div>
                               <div class="download-icon">
@@ -1021,278 +402,21 @@
 
                           </div>
                       </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>XLS</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 6.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>DOCX</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 7.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 8.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 9.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>XLS</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 10.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>DOCX</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 11.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 12.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 13.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>XLS</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 14.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>DOCX</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 15.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 16.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div id="images" class="tab-pane fade">
-              	<div class="tab-subhding procut-tab">
-                  	<div class="documn-title">
-                  		<h3>Uploaded Product Image</h3>	
-                  	</div>
-                    <div class="download-link">
-                       <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
-                                  class="img-fluid" alt="Download" title="Download All"> Download all
-                              images</a>
-                    </div>                     
-                  </div>
-                  <div class="row">
-                      <div class="col-md-3">
-                          <div class="barcdetab image-tab-img position-relative">
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-                              <img src="./images/product-img.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                              <h5>Product Image -1</h5>
-                          </div>
-                      </div>
-
-                      <div class="col-md-3">
-                          <div class="barcdetab image-tab-img position-relative">
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-                              <img src="./images/product-img.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                              <h5>Product Image -2</h5>
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <div class="barcdetab image-tab-img position-relative">
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-                              <img src="./images/product-img.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                              <h5>Product Image -3</h5>
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <div class="barcdetab image-tab-img position-relative">
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-                              <img src="./images/product-img.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                              <h5>Product Image -4</h5>
-                          </div>
-                      </div>
-                      <div class="col-md-3 ">
-                          <div class="barcdetab image-tab-img position-relative mb-0">
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
-                              <img src="./images/product-img.jpg" class="img-fluid" alt="barcode-tab"
-                                  title="">
-                              <h5>Product Image -5</h5>
-                          </div>
-                      </div>
-
+                      
+                      
 
                   </div>
               </div>
+                                         
           </div>
+          
       </div>
 
   </div>
-  
-<!-- </form> -->
 
-   		<!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
-   	    <div id="asset_ModalBody">	
-	    </div>
+  	<!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+    <div id="asset_ModalBody">	
+    </div>
 	    
 	    
 </div>

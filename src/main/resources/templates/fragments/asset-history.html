@@ -18,6 +18,21 @@
 				submitFormAjaxHTML('initAssetHistory', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
+			$('#tabSmartTagId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetSmartTag', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabDocumentsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetDocuments', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabImagesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetImages', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
 	 		
 	 	});       
    
@@ -33,15 +48,10 @@
 </head>
 
 <body id="Body">
-
-  
-
-	      
+   
 	<div class="mangeuser-page assetdtaIL-page">
 	
-	<!-- C.Sparks need to pass this in the form object to the controller -->
- 	 <!-- 	<form id="uniqueAssetDTO" class="bg-light" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >   -->
- 	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
+	 	<form id="uniqueAssetDTO" name="uniqueAssetDTO"  th:object="${uniqueAssetDTO}" >  
  
  	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
  	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 

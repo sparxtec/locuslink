@@ -18,6 +18,22 @@
 				submitFormAjaxHTML('initAssetHistory', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
+			$('#tabSmartTagId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetSmartTag', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabDocumentsId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetDocuments', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#tabImagesId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initAssetImages', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			
 	 	});       
    	
 	   function initCommonResponse(returnData) {	

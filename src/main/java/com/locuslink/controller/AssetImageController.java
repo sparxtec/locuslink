@@ -52,10 +52,10 @@ public class AssetImageController {
     private UniqueAssetDao uniqueAssetDao;
     
      
-	@PostMapping(value = "/initAssetImage")
-	public String initAssetImage (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
+	@PostMapping(value = "/initAssetImages")
+	public String initAssetImages (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
 		
-		logger.debug("Starting initAssetImage()...");
+		logger.debug("Starting initAssetImages()...");
 		
 		uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
 		if (uniqueAssetDTO == null) {
