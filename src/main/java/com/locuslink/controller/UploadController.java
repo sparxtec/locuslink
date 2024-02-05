@@ -417,8 +417,14 @@ public class UploadController {
 								//productDTO.setProductName("Steel Pipe");		
 								productDTO.setProductDesc("FBE Steel Pipe 12-Inch API 5L PSL2 ");	
 								
-								productObjectList.add(productDTO);										
-							}								
+								productObjectList.add(productDTO);
+								
+							} else if (rowCellValue.equalsIgnoreCase("heat_number")) {
+							
+								// 2-1-2024 Override the default with the real value in the excel files
+								//uniqueAsset.setTraceCode(row.getCell(i+1).toString());
+								productDTO.setHeatNumber(row.getCell(i+1).toString());
+							}
 						}							
 					}	
 					System.out.println();						
