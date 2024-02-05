@@ -742,7 +742,7 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 								
 								// 2-1-2024 TODO this needs to come FROM the DB, previously built when the catalog was constructed
 								//uniqueAsset.setUniqueAssetId(row.getCell(i+1).toString());								
-								uniqueAsset.setUniqueAssetId("x1....x25");
+								uniqueAsset.setUniqueAssetId("131011215G9");
 								
 								
 								// 2-1-2024   default value db lookup is below
