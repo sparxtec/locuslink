@@ -76,6 +76,7 @@ public class ProductAttachmentDaoImpl extends DaoSupport implements ProductAttac
 		 List <ProductAttachmentDTO> dtoList = entityManager.createQuery("""
 			select new com.locuslink.dto.ProductAttachmentDTO(			
 			    attach.productAttachPkId,
+			    attach.filename,
 				attach.filenameFullpath,
 				doc.docTypeCode,
 				doc.docTypeDesc,								

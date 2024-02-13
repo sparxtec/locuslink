@@ -9,11 +9,12 @@ public class ProductAttachmentDTO {
 		
 	};
 		
-	public ProductAttachmentDTO( int productAttachPkId, String filenameFullpath, String docTypeCode, String docTypeDesc,			
+	public ProductAttachmentDTO( int productAttachPkId, String filename, String filenameFullpath, String docTypeCode, String docTypeDesc,			
 			                     int uniqueAssetPkId, String uniqueAssetId,	 String traceCode,	String manufacturerName,
 			                     String productTypeCode, String traceTypeCode,  String productTypeDesc ) {
 				
 		this.productAttachPkId = productAttachPkId;	
+		this.filename = filename;	
 		this.filenameFullpath = filenameFullpath;	
 		this.docTypeCode = docTypeCode;	
 		this.docTypeDesc = docTypeDesc;	
@@ -55,6 +56,7 @@ public class ProductAttachmentDTO {
 	
 	// Product Attachments
 	private int productAttachPkId;
+	private String filename;
 	private String filenameFullpath;
 	private String docTypeCode;
 	private String docTypeDesc;

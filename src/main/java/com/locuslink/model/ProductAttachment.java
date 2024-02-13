@@ -33,6 +33,9 @@ public class ProductAttachment extends Common {
     @Column(name = "doc_type_pkId", nullable = false)
 	private int docTypePkId; 
 	 
+    @Column(name = "filename", nullable = false)
+	private String filename; 
+    
     @Column(name = "filename_fullpath", nullable = false)
 	private String filenameFullpath; 
 

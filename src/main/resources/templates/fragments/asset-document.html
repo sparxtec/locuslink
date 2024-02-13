@@ -314,101 +314,48 @@
 
 
                   <!-- Loop and get all the document -->
-                  <div class="row">
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 1.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
+                                                                                        
+                  <th:block th:each="i, iStat  : ${productAttachmentDTO_List} ">
+                  
+	                  <th:block th:if="${iStat.odd}"> 
+	                   	 <div class="row">  
+	                  </th:block>  
 
-                          </div>
+                      <div class="col-md-6">                
+                        <div class="barcdetab document-bx">
+                            <div class="documentname-hdingbx">
+                                <div class="document-name-bx">
+                                    <span>PDF</span>
+                                </div>
+                                <div class="document-hding">
+                                    <h6 th:text="${i.getFilename()}"><span>254 kB</span></h6>
+                                </div>
+                            </div>                                           
+              			    <div class="d-md-inline-flex" style="gap:10px">                              
+                               <div  style="width:32px;height:32px">
+                             	  <a href="#">
+                                    <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
+                                 </a>                                                                      
+                               </div>                               
+                               <div class="download-icon" >
+                                 <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"  alt="Download" title="Download Document">                                                                          
+                               </div>  
+					        </div>                       
+                        </div>
                       </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>XLS</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 2.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
+	                      
+                      <th:block th:if="${iStat.odd}"> 
+                         </div>  
+                      </th:block>  
+						
+			      </th:block>
 
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>DOCX</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 3.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
 
-                          </div>
-                      </div>
-                      
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>PDF</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 4.pdf<span>254 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
 
-                          </div>
-                      </div>
-                      
-                      <div class="col-md-6">
-                          <div class="barcdetab document-bx">
-                              <div class="documentname-hdingbx">
-                                  <div class="document-name-bx">
-                                      <span>Word</span>
-                                  </div>
-                                  <div class="document-hding">
-                                      <h6>Document 5.doc<span>714 kB</span></h6>
-                                  </div>
-                              </div>
-                              <div class="download-icon">
-                                  <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                      alt="Download" title="Download All">
-                              </div>
 
-                          </div>
-                      </div>
-                      
-                      
-
-                  </div>
-              </div>
+              </div> <!-- End of the Page Content -->
                                          
-          </div>
+
           
       </div>
 
