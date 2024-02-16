@@ -23,6 +23,7 @@ public class ProductAttribute extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="product_attr_pkid", unique=true, nullable = false)
     private Integer productAttrPkId;
   

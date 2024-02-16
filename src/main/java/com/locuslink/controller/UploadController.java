@@ -178,6 +178,9 @@ public class UploadController {
 			
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
+	   	// 2-13-2024
+	   	processXlsFileSave(dashboardFormDTO, model, session);
+	   	
 		return "fragments/upload-step4";
 	}
 	
@@ -628,9 +631,16 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 	            S3ObjectInputStream s3is = s3Object.getObjectContent();     
 	            UniqueAsset uniqueAsset = new UniqueAsset();
 	            
+	            // 2-16-2024 need this at a higher level so it can be shared
+	        	JSONObject jsonObject = new JSONObject();
+	            
 	            // TODO 6-12-2023
 	            if (productDTO.getProductTypeCode().toUpperCase().contains("STEEL")) {
-	            	if (processSaveToDB_Steel( s3is, uniqueAsset )) {
+	            	
+	            	// 2-16-2024  flow change, the json attributes for the uploaded MTR, need to go on the product_attachment json
+	            	//  {it was going to product_attribute. TBD in the future when we build the cat item from an uplaod that will go there}
+	            	
+	            	if (processSaveToDB_Steel( s3is, uniqueAsset, jsonObject )) {
 	            		logger.debug("Successfull Save to DB, Unique Asset Created");
 	            	} else {
 	            		// ERROR
@@ -674,7 +684,8 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 	            // 2.) All Done Clean Up AWS - Move from Staging to Storage
 	           // saveUploadStorageToAttachment(productDTO, s3is, destinationKey, uniqueAsset);
 	            
-	            saveCopyUploadStorageToAttachment(s3Object, uniqueAsset);
+	            // 2-16-2024
+	            saveCopyUploadStorageToAttachment(s3Object, uniqueAsset, productDTO, jsonObject);
 	                 	            
 		
 			} catch (Exception e) {
@@ -707,9 +718,9 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 	 *   The Uploaded File was Under Ground Cable, this is the routine to parse thru that file and create the database entries from that.
 	 *   The step after this would be to save the uploaded file to the attachments table.
 	 */
-	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is, UniqueAsset uniqueAsset ) {
+	private boolean processSaveToDB_Steel( S3ObjectInputStream s3is, UniqueAsset uniqueAsset, JSONObject jsonObject  ) {
 		
-		JSONObject jsonObject = new JSONObject();
+		//JSONObject jsonObject = new JSONObject();
 		
         // Create Workbook for this file in AWS S3, passed from upload page 3 SUBMIT
         try {
@@ -794,19 +805,23 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
         		logger.debug(" Unique Asset Table ->: saved.");	
         		
         		
+        		//   2-16-2024  This doesnt go here.
+        		// Creating the PRODUCT attribute Json is a function of building the catalog, not
+        		//  building an asset attached to that product.
+        		//  when we cretae a build catalog process, then this will be used there.
         		
-        		// 2-1-2024
-        		// Save all the stripped off attributes to the attributes table as json string.
-                // Convert the POJO array to json, for the UI
-
-        		
-        		ProductAttribute productAttribute = new ProductAttribute();
-        		productAttribute.setUcatPkId(804); // Steel Pipe
-        		productAttribute.setAddBy("digitalAssetCable");        		
-        		productAttribute.setAttributesJson(jsonObject.toString());
-        	
-        		productAttributeDao.delete(productAttribute);        		
-        		productAttributeDao.save(productAttribute);
+//        		// 2-1-2024
+//        		// Save all the stripped off attributes to the attributes table as json string.
+//                // Convert the POJO array to json, for the UI
+//
+//        		
+//        		ProductAttribute productAttribute = new ProductAttribute();
+//        		productAttribute.setUcatPkId(804); // Steel Pipe
+//        		productAttribute.setAddBy("digitalAssetCable");        		
+//        		productAttribute.setAttributesJson(jsonObject.toString());
+//        	
+//        		productAttributeDao.delete(productAttribute);        		
+//        		productAttributeDao.save(productAttribute);
         		
         		
         		
@@ -909,19 +924,25 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
         		uniqueAssetDao.save(uniqueAsset);
         		logger.debug(" Unique Asset Table ->: saved.");	
         		
-        		
-        		// TODO 8-24-2023
-        		// Save all the stripped off attributes to the attributes table as json string.
-                // Convert the POJO array to json, for the UI
 
+        		//   2-16-2024  This doesnt go here.
+        		// Creating the PRODUCT attribute Json is a function of building the catalog, not
+        		//  building an asset attached to that product.
+        		//  when we cretae a build catalog process, then this will be used there.
         		
-        		ProductAttribute productAttribute = new ProductAttribute();
-        		productAttribute.setUcatPkId(800); // Under ground Cable        		
-        		productAttribute.setAddBy("digitalAssetCable");        		
-        		productAttribute.setAttributesJson(jsonObject.toString());
-        	
-        		productAttributeDao.delete(productAttribute);        		
-        		productAttributeDao.save(productAttribute);
+        		
+//        		// TODO 8-24-2023
+//        		// Save all the stripped off attributes to the attributes table as json string.
+//                // Convert the POJO array to json, for the UI
+//
+//        		
+//        		ProductAttribute productAttribute = new ProductAttribute();
+//        		productAttribute.setUcatPkId(800); // Under ground Cable        		
+//        		productAttribute.setAddBy("digitalAssetCable");        		
+//        		productAttribute.setAttributesJson(jsonObject.toString());
+//        	
+//        		productAttributeDao.delete(productAttribute);        		
+//        		productAttributeDao.save(productAttribute);
         		
         	}
         			        	
@@ -1031,20 +1052,26 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
         		logger.debug(" Found a new Catalogue PRoduct, to insert to the Unique Asset Table.");		        				        	
         		uniqueAssetDao.save(uniqueAsset);
         		logger.debug(" Unique Asset Table ->: saved.");	
-        		
-        		
-        		// TODO 8-24-2023
-        		// Save all the stripped off attributes to the attributes table as json string.
-                // Convert the POJO array to json, for the UI
 
         		
-        		ProductAttribute productAttribute = new ProductAttribute();
-        		productAttribute.setUcatPkId(805); // Under ground Cable        		
-        		productAttribute.setAddBy("digitalAssetSplice");        		
-        		productAttribute.setAttributesJson(jsonObject.toString());
-        	
-        		productAttributeDao.delete(productAttribute);        		
-        		productAttributeDao.save(productAttribute);
+        		//   2-16-2024  This doesnt go here.
+        		// Creating the PRODUCT attribute Json is a function of building the catalog, not
+        		//  building an asset attached to that product.
+        		//  when we cretae a build catalog process, then this will be used there.
+        		
+        		
+//        		// TODO 8-24-2023
+//        		// Save all the stripped off attributes to the attributes table as json string.
+//                // Convert the POJO array to json, for the UI
+//
+//        		
+//        		ProductAttribute productAttribute = new ProductAttribute();
+//        		productAttribute.setUcatPkId(805); // Under ground Cable        		
+//        		productAttribute.setAddBy("digitalAssetSplice");        		
+//        		productAttribute.setAttributesJson(jsonObject.toString());
+//        	
+//        		productAttributeDao.delete(productAttribute);        		
+//        		productAttributeDao.save(productAttribute);
         		
         	}
         			        	
@@ -1070,7 +1097,7 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
 
     // The Upload saved to the database correctly, so now Clean up AWS
 	//  move the staged file to storage.
-	private boolean processCopyStageToStorage( S3Object s3Object ) {
+	private boolean processCopyStageToStorage( S3Object s3Object) {
 	
         CopyObjectRequest copyObjRequest;
         
@@ -1095,7 +1122,7 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
     // The Upload File saved successfully to create an Asset in the DB
     //     - Save Storage File to the Asset Attachments Table in the DB
 	
-	private boolean saveCopyUploadStorageToAttachment(S3Object s3Object, UniqueAsset uniqueAsset ) {
+	private boolean saveCopyUploadStorageToAttachment(S3Object s3Object, UniqueAsset uniqueAsset,  ProductDTO productDTO,  JSONObject jsonObject ) {
 		
 	   	logger.debug("   saveCopyUploadStorageToAttachment" );	
 	   	
@@ -1123,6 +1150,12 @@ private  boolean processgetStagedSplice( List <ProductDTO> productObjectList, St
      	
      	// TODO maybe ADD just the filename, instead of the whole path for the UI
      	productAttachment.setFilenameFullpath(destinationKey);   
+     	
+     	// 2-16-2024
+     	productAttachment.setAttributesJson(jsonObject.toString());
+     	
+     	// 2-13-2024
+     	productAttachment.setFilename(productDTO.getUploadedFilename());
      	
      	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
      	productAttachment.setDocTypePkId(1);   

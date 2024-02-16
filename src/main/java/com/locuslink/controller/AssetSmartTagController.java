@@ -57,7 +57,9 @@ public class AssetSmartTagController {
 		
 		logger.debug("Starting initAssetSmartTag()...");
 		
-		uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
+		// 2-16-2024
+		// Need to re-hydrate the DTO, the pkId is the only thing coming in to this routine
+		uniqueAssetDTO =  uniqueAssetDao.getDtoById(uniqueAssetDTO.getUniqueAssetPkId());
 		if (uniqueAssetDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}

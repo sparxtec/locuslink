@@ -54,14 +54,15 @@ public class AssetDocumentController {
 		
 		logger.debug("Starting initAssetDocuments()...");
 		
-		// TODO
-		uniqueAssetDTO =  uniqueAssetDao.getDtoById(1);
+		// 2-16-2024
+		// Need to re-hydrate the DTO, the pkId is the only thing coming in to this routine
+		uniqueAssetDTO =  uniqueAssetDao.getDtoById(uniqueAssetDTO.getUniqueAssetPkId());
 		if (uniqueAssetDTO == null) {
 			logger.debug("  ERROR:  DTO not found.");
 		} 
 		
 		// TODO
-		List <ProductAttachmentDTO> productAttachmentDTO_List = productAttachmentDao.getDtoByUniqueAssetId(62);
+		List <ProductAttachmentDTO> productAttachmentDTO_List = productAttachmentDao.getDtoByUniqueAssetId(uniqueAssetDTO.getUniqueAssetPkId());
 		if (productAttachmentDTO_List.size() > 0) {
 			logger.debug("  Number attachments ->: " + productAttachmentDTO_List.size());
 		} else {
