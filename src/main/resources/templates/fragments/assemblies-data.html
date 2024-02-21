@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Assemblies Data</title>
+
+	  <script>
+
+        $('#assemble-data').DataTable({
+            responsive: true,
+
+        });
+    </script>
+</head>
+
+<body>
+              
+              <div class="mangeuser-page assetdta-page asemble-data-page"> 
+   					 <div class="page-hding">
+                    <h1>Assemblies Data</h1>
+                    <div class="usrad-btn import-astbtn">
+                        <a href="add-Assemblies.html">Add Assemblies</a>
+                        
+                    </div>
+                </div>
+
+     <div class="dtatable-card mt-4">
+     
+   		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+        	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
+      <table id="assemble-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>Details</th>
+                                <th>Id</th>
+                                <th>Unique Asset ID</th>
+                                <th> Universal Catalog ID</th>
+                                <th>Manufacturer</th>
+                                <th>Product Type</th>
+                                <th>Trace Number</th>
+                                <th>Customers</th>
+                                <th>P Type Description</th>
+                                <th>Attributes</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>1</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>02</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>03</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>04</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>05</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>06</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>07</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>08</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>09</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>10</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>11</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>12</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="details-btn">
+                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
+                                        <a href="Assemblies-details.html" class="eye-btn"><i
+                                                class="fa-solid fa-eye"></i></a>
+                                    </div>
+                                </td>
+                                <td>13</td>
+                                <td>x1.x2</td>
+                                <td>x1.x2.x3.x4.x5.x6.x7.x8.x9.x10.x11.x12.x13.x14.x15</td>
+                                <td>South Wire</td>
+                                <td>Cable</td>
+                                <td>Serial</td>
+                                <td>Black Hills Energy</td>
+                                <td>lorem ipsum dolor sit amet</td>
+                                <td>South Wire</td>
+
+                                <td>
+                                    <div class="acton-btns">
+                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
+                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+      	
+				 
+             
+                              
+    </form> 
+                    
+   </div>
+   </div> 
+   	
+	    
+	    
+</body>
+
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Add Assemblies</title>
+
+	 
+</head>
+
+<body>
+              
+              <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
+   					 <div class="page-hding">
+                   <h1>Add Assemblies</h1>
+                    
+                </div>
+
+     <div class="dtatable-card mt-4">
+     
+   		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+        	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
+       <div class="adduser-form-bx addaset-formbx borderbx">
+                        <h5 class="adaset-hding">Add Assemblies Details</h5>
+
+
+                        <div class="row">
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Select Assemblies Type</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch uplod-inputbx ">
+                                    <select class="form-select">
+                                        <option>Select Asset</option>
+                                        <option>Transformer</option>
+                                        <option>Recloser</option>
+                                        <option>Switchgear</option>
+                                        <option>Voltage Regulator</option>
+                                        <option>Capacitor Bank</option>
+                                        <option>Pole</option>
+                                        <option>Splice</option>
+
+                                    </select>
+
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label> Assemblies Category</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch uplod-inputbx">
+                                    <select class="form-select">
+                                        <option> Assemblies Type</option>
+                                        <option>Category 1</option>
+                                        <option>Category 2</option>
+                                        <option>Category 3</option>
+                                        <option>Category 4</option>
+                                        <option>Category 5</option>
+                                    </select>
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Unique Asset ID</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="password" placeholder="Enter Unique Asset ID"
+                                        title="nter Unique Asset ID" class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Manufacturer</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Manufacturer" title="Manufacturer"
+                                        class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Product type </label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Enter Product type" title="Product type"
+                                        class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Trace Number</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Enter Trace Number" title="Trace Number"
+                                        class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Customers</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Customers" title="Customers" class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Attributes</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Attributes" title="Attributes" class="form-control">
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Upload Documents </label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" class="form-control">
+
+                                    <a href="javascript:void(0)" class="add-moreinput">+ Add More Documents </a>
+                                    <div class="extrpinput"></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Upload image </label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" class="form-control"> <a href="javascript:void(0)"
+                                        class="add-moreinput">+ Add More Images </a>
+                                    <div class="extrpinput"></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="usrad-btn import-astbtn sve-btn justify-content-end">
+                                <a href="Assemblies-data.html">Save As Draft</a>
+                                <a href="Assemblies-data.html" class="imprort-btn">Publish </a>
+                            </div>
+
+
+                        </div>
+                    </div>
+      	
+				 
+             
+                              
+    </form> 
+                    
+   </div>
+   </div> 
+   	
+	    
+	    
+</body>
+
+</html>
