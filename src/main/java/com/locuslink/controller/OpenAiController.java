@@ -48,6 +48,20 @@ public class OpenAiController {
 //    private UserLocuslinkDao userLocuslinkDao;
     
 
+	
+	
+
+	@PostMapping(value = "initAIUpload")
+	public String initAIUpload (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAIUpload()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/ai-upload";
+	}
+	
+	
+	
 	//@Autowired
 	//RestTemplate restTemplate;
 	

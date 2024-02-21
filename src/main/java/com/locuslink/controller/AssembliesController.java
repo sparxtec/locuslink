@@ -63,6 +63,16 @@ public class AssembliesController {
 	}
 	
 	
+	@PostMapping(value = "addAssembliesData")
+	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting addAssembliesData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/assemblies-add";
+	}
+	
+	
 //	@RequestMapping(value = "/getAllAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 //	public @ResponseBody GenericMessageResponse getAllAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
 //

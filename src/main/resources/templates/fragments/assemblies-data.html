@@ -2,35 +2,46 @@
 <html  xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<title>Upload Add Data</title>
 
-    <title>Assemblies Data</title>
-
-	  <script>
-
-        $('#assemble-data').DataTable({
-            responsive: true,
-
-        });
-    </script>
+	<script>	
+		$(document).ready(function() {	
+			
+	        $('#assemble-data').DataTable({
+	            responsive: true,
+	        });
+	        
+			$('#addAssembliesDataId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('addAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+		
+	 	});       
+   
+	   function initCommonResponse(returnData) {	
+		   hideSpinner();
+		   $('#mainBody').html( returnData);    	 
+	   }
+	</script>	
 </head>
 
 <body>
               
-              <div class="mangeuser-page assetdta-page asemble-data-page"> 
-   					 <div class="page-hding">
-                    <h1>Assemblies Data</h1>
-                    <div class="usrad-btn import-astbtn">
-                        <a href="add-Assemblies.html">Add Assemblies</a>
-                        
-                    </div>
-                </div>
+    <div class="mangeuser-page assetdta-page asemble-data-page"> 
+ 		<div class="page-hding">
+            <h1>Assemblies Data</h1>
+            <div class="usrad-btn import-astbtn">
+                <a id="addAssembliesDataId"  href="#">Add Assemblies</a>                
+            </div>
+        </div>
 
      <div class="dtatable-card mt-4">
      
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
         	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
-      <table id="assemble-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
+        	
+      		<table id="assemble-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Details</th>

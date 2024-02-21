@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 
-<head>
-	<title> Ai Upload </title>
 
+<head>
+	<title>AI Upload</title>
+
+	<script>	
+		$(document).ready(function() {	
+			
+
+	        
+			$('#xxxx').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('xxxx', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+		
+	 	});       
+   
+	   function initCommonResponse(returnData) {	
+		   hideSpinner();
+		   $('#mainBody').html( returnData);    	 
+	   }
+	</script>	
 </head>
 
 <body>
@@ -17,8 +35,7 @@
     <div class="dtatable-card mt-4">
 
          <form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}" method="post">  
-                   
-	               
+                   	               
                 <div class="dtatable-card mt-4">
                     <div class="ai-bg">
                         <div class="ai-hding text-center">
