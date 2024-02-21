@@ -193,13 +193,20 @@ public class AttachmentController {
 	
 	
 	
-	
+	/**
+	 * 2-21-2024  This is called from the asset detail tab, when a document was clicked on for viewing.
+	 * 
+	 * @param uniqueAssetDTO
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@PostMapping(value = "/getAttachmentForAsset")
-	public String getAttachmentForAsset (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	public String getAttachmentForAsset (@ModelAttribute(name = "uniqueAssetDTO") UniqueAssetDTO uniqueAssetDTO,	Model model, HttpSession session) {
 	
 		logger.debug("Starting getAttachmentForAsset()...");
 
-		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(dashboardFormDTO.getProductAttachPkId()));
+		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(uniqueAssetDTO.getProductAttachPkId()));
 		if (productAttachment == null) {
 			logger.debug("  Error:  Product Attachment Lookup failed...");
 		}
@@ -219,7 +226,7 @@ public class AttachmentController {
 		String encodedPDFBarcdeString = "";
 		JSONObject xlsJson = null;
 		if (s3Object.getKey().contains("xls")) {
-			dashboardFormDTO.setPdf(false);		
+			uniqueAssetDTO.setPdf(false);		
 			
 			//boolean result = convertExcelToPDF( s3is );			
 			//InputStream in = new ByteArrayInputStream(convertExcelToPDF( s3is ).toByteArray());
@@ -228,7 +235,7 @@ public class AttachmentController {
 			
 			
 		} else if (s3Object.getKey().contains("pdf"))  {
-			dashboardFormDTO.setPdf(true);
+			uniqueAssetDTO.setPdf(true);
 			
 			try {
 				byteArrayResource = new ByteArrayResource( s3is.readAllBytes());
@@ -244,9 +251,12 @@ public class AttachmentController {
 				
 	   	model.addAttribute("encodedPDFBarcdeString", encodedPDFBarcdeString);		   	
 	   	model.addAttribute("productAttachPkId", productAttachment.getProductAttachPkId());		
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	model.addAttribute("uniqueAssetDTO", uniqueAssetDTO);
 
-		return "fragments/modal_attachment_viewer";
+		//return "fragments/modal_attachment_viewer";
+	   	
+	   	return "fragments/asset-attachment-viewer-modal";
+	   	
 	}
 
 	
@@ -473,6 +483,23 @@ public class AttachmentController {
             GetObjectTaggingRequest getTaggingRequest = new GetObjectTaggingRequest(awsS3BucketName, s3ObjectSummary.getKey());
             GetObjectTaggingResult getTagsResult = awsS3Client.getObjectTagging(getTaggingRequest);
                         
+            
+            // 2-21-2024 get the filename from a tag when uploaded
+            String tagFileName = "unknown";
+            String tagProductType = "unknown";
+            List <Tag> tagList = getTagsResult.getTagSet();
+            for (Tag tag :tagList ) {
+            	logger.debug("    s3 tags found ->: " + tag.getKey() + " : " + tag.getValue());	 
+            	if (tag.getKey().equals("filename")) {
+            		tagFileName = tag.getValue();
+            	}
+            	if (tag.getKey().equals("product_type")) {
+            		tagProductType = tag.getValue();
+            	}
+            }
+            
+            
+            
             String sourceKey = s3ObjectSummary.getKey();                       
             String destinationKey = sourceKey.replace("staging", "storage");            
          	logger.debug("    moving  ->: " + sourceKey);	 
@@ -498,6 +525,12 @@ public class AttachmentController {
          	
          	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
          	productAttachment.setDocTypePkId(1);   
+         	
+         	// 2-21-2024
+         	productAttachment.setFilename(tagFileName);
+         	
+         	
+         	
          	productAttachmentDao.save(productAttachment);
             logger.debug("     Inrested to the database successfully.");	
         }

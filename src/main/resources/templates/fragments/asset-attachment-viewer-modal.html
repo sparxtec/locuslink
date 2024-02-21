@@ -9,18 +9,24 @@
 <script>	
 
 	$(document).ready(function() {	
-		
-        var b64 = $('input#b64Id').val();
-        
-        var xlsJson = $('input#xlsJsonId').val();
-        
+		  
 		hideSpinner();	
 	   	$("#attachment_viewer").modal('show');	
 	   	
-	 	loadEmbededPDF(b64);    
+	 	loadEmbededPDF( $('input#b64Id').val() );     
 	 	
     	$('#attachmentViewerBackButtonId').click(function() {	    		
-			// not sure why nothing is needed here to remove the modal, the modal dismiss maybe ?
+    		showSpinner();			
+
+    		// 1-26-2024 Close Modal
+    		$('.modal-backdrop').remove();    		
+    		var node = document.getElementById("asset_ModalBody");
+    		
+    		console.log("1");
+    		console.log(node);
+    		node.parentNode.replaceChild(node.cloneNode(false), node);  
+    		
+    		hideSpinner();	
     	});
     	    	
 	});
@@ -30,15 +36,22 @@
      	// This make the BarCode open to the size of the container, instead of a small image inside it.
      	var options = {
    		 pdfOpenParams: {
-   		        view: 'FitV',
+   		      //  view: 'FitV',
    		        pagemode: 'thumbs',
+   		        zoom: '90',
    		        search: 'lorem ipsum'
    		    }
     	};      
    	  //   PDFObject.embed("samplefiles/mtr.pdf", "#pdfContainerId_1", options );	
 	    PDFObject.embed('data:application/pdf;base64,' + b64 , "#pdfContainerId_1", options );		    
 	}   
-	  
+	
+	
+ 	function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+    }	  
 	 
 </script>
 	
@@ -48,7 +61,11 @@
    
 	<div th:fragment="messageLogModal">
 		
-		<div th:id="attachment_viewer" class="modal " tabindex="1000" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
+<!-- 		<div th:id="attachment_viewer" class="modal " tabindex="1000" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
+		   -->
+		   
+		 <div th:id="attachment_viewer" class="modal " tabindex="-1" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">
+		  
 		  
 		  <div class="modal-dialog modal-lg" >
 		    
@@ -65,9 +82,11 @@
 		          <nav class="de-header-nav--simple">
 			    	<ul class="de-header-nav__group">                		                   
 						<li>
-		    
+							<div><strong><span class="d-inline" th:text= "${uniqueAssetDTO.getManufacturerName()}"></span></strong></div>							
+							<div><span class="d-inline" th:text= "'Unique Asset Id: ' +  ${uniqueAssetDTO.getUniqueAssetId()}"></span></div>		
+							<div><span class="d-inline" th:text= "'Universal Catalog Id: ' +  ${uniqueAssetDTO.getUniversalCatalogId()}"></span></div> 					    
 					     </li>                                      
-						<li class="de-header-nav__item"></li>
+						<!-- <li class="de-header-nav__item"></li> -->
 			        </ul>
 			      </nav>  
 		          
@@ -75,7 +94,7 @@
 		          <br>
 				 <section class="de-component de-component--gray p-0 pdfobject-body">				
 				   	<div class="card-text-wrapper flexprop-none" style="height:480px">			  
-						<div style="height:480px;width:640px;margin: 0 auto" th:id="pdfContainerId_1"  th:text="locuslink_1.pdf"> </div>		
+						<div id="pdfContainerId_1" style="height:480px;width:640px;margin: 0 auto"  > </div>		
 					</div>   
 			      </section>
 		        

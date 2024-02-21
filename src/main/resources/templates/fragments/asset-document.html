@@ -161,7 +161,28 @@
 	    	
 	 		// Browse Files BUTTON on the Dropzone Box
 		    $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
-			 			 	
+			 		
+	 		
+	 		
+		    // CS 2-21-2024  Determine which Image clicked o it can be in the viewer.
+			$("[id^='papkid_']").click(function() {
+				
+				showSpinner();	
+				
+				var tokens = ($(this).attr("id")).split("_");
+				productAttachPkId = tokens[1];	
+				
+		        // set the FORM value so the controller can get it.				
+				$('#productAttachPkId').val(productAttachPkId).val().trim();
+				 
+
+	   			submitFormAjaxHTML('getAttachmentForAsset', $("#uniqueAssetDTO").serialize(), "modalResponse");					
+				hideSpinner();
+				
+				
+			});	
+	 		
+	 		
 	 	});       
    
 		
@@ -201,6 +222,8 @@
  
  	      <input type="hidden" id="uniqueAssetPkId"  name="uniqueAssetPkId" th:value="${uniqueAssetDTO.getUniqueAssetPkId}"> 
  	      <input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
+ 	      <input type="hidden" id="productAttachPkId"  name="productAttachPkId" th:value="${uniqueAssetDTO.getProductAttachPkId}"> 
+ 	      
  	      
 		  <div class="page-hding">
 		      <h1><span class="d-inline" th:text= "${uniqueAssetDTO.getProductTypeDesc()}"></span></h1>
@@ -315,7 +338,7 @@
 
                   <!-- Loop and get all the document -->
                                                                                         
-                  <th:block th:each="i, iStat  : ${productAttachmentDTO_List} ">
+                  <th:block th:each="productAttachmentDTO, iStat  : ${productAttachmentDTO_List} ">
                   
 	                  <th:block th:if="${iStat.odd}"> 
 	                   	 <div class="row">  
@@ -324,16 +347,16 @@
                       <div class="col-md-6">                
                         <div class="barcdetab document-bx">
                             <div class="documentname-hdingbx">
-                                <div class="document-name-bx">
-                                    <span>PDF</span>
+                                <div class="document-name-bx" th:with="docfilename=${productAttachmentDTO.getFilename()}"  >
+                                    <span th:text="${#strings.substringAfter( docfilename ,'.')}"></span>
                                 </div>
                                 <div class="document-hding">
-                                    <h6 th:text="${i.getFilename()}"><span>254 kB</span></h6>
+                                    <h6 th:text="${productAttachmentDTO.getFilename()}"><span>254 kB</span></h6>
                                 </div>
                             </div>                                           
               			    <div class="d-md-inline-flex" style="gap:10px">                              
                                <div  style="width:32px;height:32px">
-                             	  <a href="#">
+                             	  <a th:id="papkid_ + ${productAttachmentDTO.getProductAttachPkId()}" href="#">
                                     <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
                                  </a>                                                                      
                                </div>                               

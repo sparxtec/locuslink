@@ -78,6 +78,13 @@ public class UniqueAssetDTO {
 		this.productTypeCode = productTypeCode;	
         		
 	}
+	
+	
+	// Attachment Processing
+	private String productAttachPkId;
+	private boolean isPdf;
+	
+	
 
 	// Unique Asset
 	private int uniqueAssetPkId;
