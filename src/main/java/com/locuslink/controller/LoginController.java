@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.UserLocuslinkDao;
-import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.LoginFormDTO;
 import com.locuslink.model.UserLocuslink;
 
@@ -55,20 +54,20 @@ public class LoginController {
 		logger.debug("Starting loginPost()...");
 	  
 		// Common Routine
-		if (loginFormDTO.getUsername().equals("admin")) {
+		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
 			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
-		} else if (loginFormDTO.getUsername().equals("user")) {
-			securityContextManager.processSecurityContext( session , "User", "locuslink-user", appLogoutUrl);	
+		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
+			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
 		} else {
 			return "login";
 		}
 		
 		
-//		// 1-30-2024 TODO Really need to replae the above with the userId entered.
-//		//    then look up the role
-//		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
-//		defineUserInfo(dashboardFormDTO, session);		
-//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		// 2-23-2024		
+		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());
+		//String displayName	= 	userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName();
+		session.setAttribute("userLocuslink",userLocuslink ); 
+		logger.debug(" Setting User for the Session ->: " + userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
  
 	   	
 		return "dashboard";
@@ -82,40 +81,25 @@ public class LoginController {
 		logger.debug("Starting loginGet()...");
 	  
 		// Common Routine
-		if (loginFormDTO.getUsername().equals("admin")) {
+		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
 			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
-		} else if (loginFormDTO.getUsername().equals("user")) {
-			securityContextManager.processSecurityContext( session , "User", "locuslink-user", appLogoutUrl);	
+		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
+			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
 		} else {
 			return "login";
 		}
 		
-//		// 1-30-2024 
-//		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
-//		defineUserInfo(dashboardFormDTO, session);		
-//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		// 2-23-2024		
+		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());
+		//String displayName	= 	userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName();
+		session.setAttribute("userLocuslink",userLocuslink ); 
+		logger.debug(" Setting User for the Session ->: " + userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
+		
 		
 		return "dashboard";
 	}
 	
 	
-	
-	private void defineUserInfo(DashboardFormDTO dashboardFormDTO, HttpSession session) {
-		
-		UserLocuslink  userLocuslink= userLocuslinkDao.getById(1);
-		if (userLocuslink == null) {
-			logger.debug("SQL Error could not find the logged in User.");			
-			dashboardFormDTO.setFirstName("unknown user");
-			dashboardFormDTO.setLastNameBusName("");	
-			
-			session.setAttribute("sessionUserFullname", "unknown user");
-		} else {		
-			dashboardFormDTO.setFirstName(userLocuslink.getFirstName());
-			dashboardFormDTO.setLastNameBusName(userLocuslink.getLastNameBusName());
-			
-			session.setAttribute("sessionUserFullname", userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
-		}
-		
-	}
+
 	
 }

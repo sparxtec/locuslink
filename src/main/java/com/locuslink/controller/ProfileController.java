@@ -1,8 +1,5 @@
 package com.locuslink.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -13,20 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.locuslink.common.GenericMessageRequest;
-import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.dao.UserLocuslinkDao;
 import com.locuslink.dao.UserMembershipDao;
 import com.locuslink.dao.UserRoleTypeDao;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.dto.UserDTO;
 import com.locuslink.model.UserLocuslink;
-import com.locuslink.model.UserMembership;
 
 
 
@@ -57,6 +47,8 @@ public class ProfileController {
 	private UserRoleTypeDao userRoleTypeDao;
 	
 
+
+	
 	
 	@PostMapping(value = "/initProfile")
 	public String initProfile (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
@@ -88,11 +80,26 @@ public class ProfileController {
 	
 	
 	@PostMapping(value = "/initProfileSettings")
-	public String initProfileSettings (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	public String initProfileSettings (@ModelAttribute(name = "userDTO") UserDTO userDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initProfileSettings()...");
+		
+		UserLocuslink userLocuslink=(UserLocuslink)session.getAttribute ("userLocuslink");		 
+		if (userLocuslink == null) {
+			logger.debug(" userLocuslink in session does not exist");
+			return "login";
+		} 		
+		logger.debug(userLocuslink.getLoginName());
 
 
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		
+//		List<UserRoleType> roleList=userRoleTypeDao.getAllUserRoles();
+//		model.addAttribute("roleList",roleList);
+		  
+	   	model.addAttribute("userLocuslink", userLocuslink);
+	   	
+	   	
+	   //	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	
 		return "fragments/profile-settings";
 	}
  

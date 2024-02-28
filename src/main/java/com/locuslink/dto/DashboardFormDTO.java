@@ -52,8 +52,8 @@ public class DashboardFormDTO {
 	
 	
 	// Login, then needed on the header for the PRofile name displayed
-	private String firstName;
-	private String lastNameBusName;
+	//private String firstName;
+	//private String lastNameBusName;
 	
 	
 }

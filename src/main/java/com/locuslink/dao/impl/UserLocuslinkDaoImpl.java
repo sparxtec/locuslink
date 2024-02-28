@@ -63,10 +63,10 @@ public class UserLocuslinkDaoImpl extends DaoSupport implements UserLocuslinkDao
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public UserLocuslink getUserByLanId(String lanId) {
+	public UserLocuslink getUserByLanId(String loginName) {
 		UserLocuslink usrData = null;
 		DetachedCriteria criteria= DetachedCriteria.forClass(UserLocuslink.class, "userLocuslink");
-		criteria.add(Restrictions.eq("userLocuslink.loginId",lanId));
+		criteria.add(Restrictions.eq("userLocuslink.loginName",loginName));
 		List<UserLocuslink> usrs = (List<UserLocuslink>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();
 		if (!CollectionUtils.isEmpty(usrs)) {
 			usrData = usrs.get(0);
