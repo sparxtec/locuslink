@@ -73,8 +73,18 @@ public class ProfileController {
 	public String initProfileAccount (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting initProfileAccount()...");
 
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+		UserLocuslink userLocuslink=(UserLocuslink)session.getAttribute ("userLocuslink");		 
+		if (userLocuslink == null) {
+			logger.debug(" userLocuslink in session does not exist");
+			return "login";
+		} 		
+		logger.debug(userLocuslink.getLoginName());
+		
+		
+	   	//model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	
+	   	model.addAttribute("userLocuslink", userLocuslink);
+	   	
 		return "fragments/profile-account";
 	}
 	

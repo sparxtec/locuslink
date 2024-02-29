@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+  </head>
+
+<body>
+
+<!-- Header -->
+<div th:fragment="profile-account-left-nav" th:remove="tag">
+                              
+   <div class="col-md-4 col-xl-2">
+       <div class="row">
+
+           <div class="col-sm-6 col-md-12">
+               <div class="update-pic position-relative ">
+                   <img src="./images/update-profile.jpg" class="img-fluid" alt="" title="">
+
+                   <div class="updateiimg-icon position-relative">
+                       <i class="fa fa-pencil"></i>
+                       <input type="file" class="opacity-0">
+                   </div>
+               </div>
+           </div>
+           
+           <div class="col-sm-6 col-md-12">
+               <div class="aset-sidebar-bx mb-4">
+                   <ul class="list-unstyled asset-side-nav">
+                       <li><a id="navProfileSubMenuAccountId"  class="" href="#"  >Account Details</a></li>
+                       <li><a id="navProfileSubMenuSettingsId" class="nav_link" href="#"  >Password Change</a></li>
+                       <li><a id="navProfileSubMenuSupportId"  class="nav_link active" href="#"  >Support</a></li>
+                   </ul>
+               </div>
+           </div>
+       </div>
+
+   </div>
+
+</div>    
+</body>
+
+</html>
