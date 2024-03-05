@@ -27,7 +27,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.UserRoleTypeDao;
-import com.locuslink.model.ProductType;
 import com.locuslink.model.UserRoleType;
 
 
@@ -58,13 +57,20 @@ public class UserRoleTypeDaoImpl extends DaoSupport implements UserRoleTypeDao, 
 		return this.sessionFactory.getCurrentSession().get(UserRoleType.class, pkid);				
 	}
 	
+
+	public  UserRoleType  getByCode (String userRoleCode)	{	
+		DetachedCriteria criteria= DetachedCriteria.forClass(UserRoleType.class, "userRoleType");  		
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+		criteria.add(Restrictions.eq("userRoleCode", userRoleCode).ignoreCase());
+		return ( UserRoleType) ( criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).uniqueResult());		
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public  List<UserRoleType>  getAll () 	{	
-		DetachedCriteria criteria= DetachedCriteria.forClass(ProductType.class, "userRoleType");  		
+		DetachedCriteria criteria= DetachedCriteria.forClass(UserRoleType.class, "userRoleType");  		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
-		criteria.addOrder(Order.asc ("userRoleTypeCode"));
+		criteria.addOrder(Order.asc ("userRoleCode"));
 		return (List<UserRoleType>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();		
 	}
 	

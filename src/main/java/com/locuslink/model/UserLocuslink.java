@@ -45,4 +45,11 @@ public class UserLocuslink extends Common {
 	@Column(name = "Active_Flag", nullable = false)
 	private String activeFlag;
 	
+	
+	@Column(name = "email_address")
+	private String emailAddress;
+	
+	@Column(name = "phone_number")
+	private String phoneNumber;
+	
 }

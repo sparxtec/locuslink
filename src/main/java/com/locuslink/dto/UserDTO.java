@@ -1,5 +1,7 @@
 package com.locuslink.dto;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,8 +38,6 @@ public class UserDTO {
 	String lastNameBusName;	
 	String activeFlag;
 	
-	// Role Table
-	
-	// Membership
+
     
 }

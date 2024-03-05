@@ -13,6 +13,8 @@ public interface UserRoleTypeDao  {
     
 	
 	public UserRoleType getById (int id);
+	
+	public UserRoleType getByCode (String userRoleCode);	
 		
 	public List<UserRoleType>  getAll();
 	

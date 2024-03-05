@@ -56,4 +56,11 @@ public class DashboardFormDTO {
 	//private String lastNameBusName;
 	
 	
+	// Profile - UI Selection Role Table	
+    String selectedUserRoleCode;
+	String selectedFirstName;	
+	String selectedLastNameBusName;	
+	String selectedEmailId;	
+	String selectedPhoneNumber;	
+	
 }

@@ -1,3 +1,9 @@
+alter table user_locuslink  ADD COLUMN email_address varchar;
+
+alter table user_locuslink  ADD COLUMN phone_number varchar;
+
+
+
 ##### code bug but still, i dont want dups in the product attribute, it causes SQL to return dups in the UI
 alter table Product_Attribute
 add constraint UK_pa unique (ucat_pkid);
@@ -48,7 +54,7 @@ ALTER TABLE "catalog_attachment" ADD CONSTRAINT "fk_ca_doctype" FOREIGN KEY ("do
 
 
 CREATE TABLE "user_role_type" (
-  "user_role_type_pkId" INT PRIMARY KEY,  
+  "user_role_type_pkid" INT PRIMARY KEY,  
   "userRoleCode" varchar not null,
   "userRoleDesc" varchar not null,
    
@@ -69,7 +75,7 @@ CREATE TABLE "user_membership" (
   "update_ts" timestamp
 );
 ALTER TABLE "user_membership" ADD CONSTRAINT "fk_um_user" FOREIGN KEY ("user_locuslink_pkid") REFERENCES "user_locuslink" ("user_locuslink_pkid");
-ALTER TABLE "user_membership" ADD CONSTRAINT "fk_um_userroletype" FOREIGN KEY ("user_role_type_pkId") REFERENCES "user_role_type" ("user_role_type_pkId");
+ALTER TABLE "user_membership" ADD CONSTRAINT "fk_um_userroletype" FOREIGN KEY ("user_role_type_pkid") REFERENCES "user_role_type" ("user_role_type_pkid");
 
 
 

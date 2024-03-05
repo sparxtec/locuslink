@@ -65,7 +65,7 @@ public class LoginController {
 		
 		// 2-23-2024		
 		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());
-		//String displayName	= 	userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName();
+		
 		session.setAttribute("userLocuslink",userLocuslink ); 
 		logger.debug(" Setting User for the Session ->: " + userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
  

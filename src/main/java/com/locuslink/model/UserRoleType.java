@@ -20,7 +20,7 @@ public class UserRoleType extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @Column(name="user_role_type_pkId", unique=true, nullable = false)
+    @Column(name="user_role_type_pkid", unique=true, nullable = false)
     private int userRoleTypePkId;
       
     @Column(name="user_role_code", nullable = false)

@@ -5,7 +5,25 @@
 <title>Account Setting</title>
 
 <script>
-	$(document).ready(function() {			
+	$(document).ready(function() {	
+						
+		$('#saveButtonId').click(function() {
+
+			var selectedRole = $( "select#roleSelectId option:checked" ).val();
+			console.log("selectedRole:" + selectedRole);
+		    $("#selectedUserRoleCode").val(selectedRole);
+									
+			console.log("firstName:" +  $("#selectedFirstName").val() );
+			console.log("lastName:" +  $("#selectedLastNameBusName").val() );			
+			console.log("emailId:" +  $("#selectedEmailId").val() );
+			console.log("phoneNumber:" +  $("#selectedPhoneNumber").val() );
+														   
+			showSpinner();
+			submitFormAjaxHTML('saveProfileAccount', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+						
+		});	
+		
+		
 		$('#navProfileSubMenuSettingsId').click(function() {
 			showSpinner();
 			submitFormAjaxHTML('initProfileSettings', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
@@ -32,7 +50,11 @@
  </div>
                 
  <div class="dtatable-card mt-4">
-   <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
+ 
+    <form id="dashboardFormDTO" name="dashboardFormDTO" th:object="${dashboardFormDTO}"  method="get" class="w-100">
+               	
+     <input type="hidden" id="selectedUserRoleCode" name="selectedUserRoleCode" >
+      	     
      <div class="row">
                                                        
 		   <div class="col-md-4 col-xl-2">
@@ -81,13 +103,32 @@
 
                             <div class="col-sm-12 col-xl-2 colum-bx">
                               <div class="uplod-inputbx">
+                                <label>Role</label>
+                              </div>
+                            </div>
+
+                                            
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                              <div class="tble-serch uplod-inputbx ">
+						         <select id="roleSelectId" name="roleSelectId" class="form-select">
+								    <option value="0">Select Role</option>
+								    <option th:selected= "${ userLocuslink.userTypeCode == userroletype.userRoleCode }"  th:each="userroletype : ${roleList}" th:value="${userroletype.userRoleCode}" th:text="${userroletype.userRoleDesc}"></option>
+								  </select>
+                              </div>
+                            </div>           
+                                 
+
+                              
+                            
+                            <div class="col-sm-12 col-xl-2 colum-bx">
+                              <div class="uplod-inputbx">
                                 <label>Login Id</label>
                               </div>
                             </div>
 
                             <div class="col-sm-12 col-xl-10 colum-bx">
                                 <div class="tble-serch ">                                            
-                                    <input th:value="${userLocuslink.loginName}" type="text" placeholder="Enter Login Id" title="Enter Login Id" class="form-control">                                    
+                                    <input th:value="${userLocuslink.loginName}" type="text" placeholder="Enter Login Id" title="Enter Login Id" class="form-control" disabled>                                    
                                 </div>
                             </div>
                                     
@@ -99,7 +140,7 @@
 
                             <div class="col-sm-12 col-xl-10 colum-bx">
                                 <div class="tble-serch ">                                            
-                                    <input th:value="${userLocuslink.firstName}" type="text" placeholder="Enter First name" title="Enter First name" class="form-control">
+                                    <input id="selectedFirstName"  name="selectedFirstName"   th:value="${userLocuslink.firstName}" type="text" placeholder="Enter First name" title="Enter First name" class="form-control">
                                 </div>
                             </div>
 
@@ -111,7 +152,7 @@
 
                             <div class="col-sm-12 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input th:value="${userLocuslink.lastNameBusName}" type="text" placeholder="Last Name" title="Last Name" class="form-control">
+                                    <input id="selectedLastNameBusName" name="selectedLastNameBusName"  th:value="${userLocuslink.lastNameBusName}" type="text" placeholder="Last Name" title="Last Name" class="form-control">
                                 </div>
                             </div>
 
@@ -123,7 +164,7 @@
 
                             <div class="col-sm-12 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter mail ID" title="Enter mail ID" class="form-control">
+                                    <input id="selectedEmailId" name="selectedEmailId" th:value="${userLocuslink.emailAddress}"  type="text" placeholder="Enter mail ID" title="Enter mail ID" class="form-control">
                                 </div>
                             </div>
                                     
@@ -135,14 +176,14 @@
 
                             <div class="col-sm-12 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="Number" placeholder="Enter Phone number" title="Enter Phone Number" class="form-control">
-                                    <div class="extrpinput"></div>
+                                    <input id="selectedPhoneNumber" name="selectedPhoneNumber" th:value="${userLocuslink.phoneNumber}"  type="text" placeholder="Enter Phone number" title="Enter Phone Number" class="form-control">
+                                    <!-- <div class="extrpinput"></div> -->
                                 </div>
                             </div>
 
 
                             <div class="usrad-btn sve-btn text-end">
-                                <a href="#">Save</a>
+                                <a id="saveButtonId" href="#">Save</a>
                             </div>
                         </div>
                       </div>
