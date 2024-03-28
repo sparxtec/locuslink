@@ -173,6 +173,41 @@
 			$('#mainBody').html( returnData);
 		}
 
+
+//	jquery for dictionary and integraion screens 
+		
+		$(".save-conetion").click(function () {
+  $(this).parents(".crete-conetion-bx").hide("");
+  $(this).parents(".borderbx").find('.editconetion, .detailsbx').show();
+  $(this).parents(".borderbx").next('.borderbx').find('.btn_authOuter').removeAttr('disabled');
+});
+
+$(".editconetion").click(function () {
+  $(this).parents(".borderbx").find('.crete-conetion-bx').show();
+  $(this).parents(".borderbx").find(".detailsbx,.editconetion").hide("");
+});
+
+$('.btn_authOuter').click(function () {
+  $(this).parent().hide();
+  $(this).parents('.auth_container').find('.from_wrap').show();
+})
+
+$('.delete-btn').click(function () {
+  $(this).parents('tr').hide();
+});
+
+
+$("#aifile-details").DataTable({
+    responsive: true,
+});
+
+$("#edit-details").DataTable({
+    responsive: true,
+    searching: false,
+    info: false,
+    paging: false
+});
+
 	</script>
 	
 </head>

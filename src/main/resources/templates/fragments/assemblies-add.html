@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Add Assemblies</title>
+    <title>Add Assembly </title>
 
 	 
 </head>
@@ -12,7 +12,7 @@
               
               <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
    					 <div class="page-hding">
-                   <h1>Add Assemblies</h1>
+                   <h1>Add Assembly </h1>
                     
                 </div>
 
@@ -21,65 +21,14 @@
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
         	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
-       <div class="adduser-form-bx addaset-formbx borderbx">
-                        <h5 class="adaset-hding">Add Assemblies Details</h5>
+      <div class="adduser-form-bx addaset-formbx borderbx">
+                        <!-- <h5 class="adaset-hding">Create Assembly  Details</h5> -->
 
 
                         <div class="row">
                             <div class="col-lg-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
-                                    <label>Select Assemblies Type</label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch uplod-inputbx ">
-                                    <select class="form-select">
-                                        <option>Select Asset</option>
-                                        <option>Transformer</option>
-                                        <option>Recloser</option>
-                                        <option>Switchgear</option>
-                                        <option>Voltage Regulator</option>
-                                        <option>Capacitor Bank</option>
-                                        <option>Pole</option>
-                                        <option>Splice</option>
-
-                                    </select>
-
-
-
-                                </div>
-
-                            </div>
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label> Assemblies Category</label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch uplod-inputbx">
-                                    <select class="form-select">
-                                        <option> Assemblies Type</option>
-                                        <option>Category 1</option>
-                                        <option>Category 2</option>
-                                        <option>Category 3</option>
-                                        <option>Category 4</option>
-                                        <option>Category 5</option>
-                                    </select>
-
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label>Unique Asset ID</label>
+                                    <label>Job Number</label>
 
                                 </div>
 
@@ -87,15 +36,15 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="password" placeholder="Enter Unique Asset ID"
-                                        title="nter Unique Asset ID" class="form-control">
+                                    <input type="password" placeholder="Enter Job Number"
+                                        title="Enter Job Number" class="form-control">
                                 </div>
 
-                            </div>
 
+                            </div>
                             <div class="col-lg-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
-                                    <label>Manufacturer</label>
+                                    <label> Description </label>
 
                                 </div>
 
@@ -103,7 +52,38 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Manufacturer" title="Manufacturer"
+                                    <input type="password" placeholder="Enter Description"
+                                        title=" Enter Description" class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Customer Job Number</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Customer Job Number"
+                                        title="Customer Job Number" class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">
+                                    <label>Station Number</label>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-9 col-xl-10 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Station Number" title="Station Number"
                                         class="form-control">
                                 </div>
 
@@ -111,7 +91,7 @@
 
                             <div class="col-lg-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
-                                    <label>Product type </label>
+                                    <label>Customer </label>
 
                                 </div>
 
@@ -119,7 +99,7 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter Product type" title="Product type"
+                                    <input type="text" placeholder="Enter Customer" title=" Customer"
                                         class="form-control">
                                 </div>
 
@@ -127,7 +107,7 @@
 
                             <div class="col-lg-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx">
-                                    <label>Trace Number</label>
+                                    <label>Location </label>
 
                                 </div>
 
@@ -135,101 +115,27 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter Trace Number" title="Trace Number"
+                                    <input type="text" placeholder="Trace Location" title="Trace Location"
                                         class="form-control">
                                 </div>
 
                             </div>
 
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label>Customers</label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" placeholder="Customers" title="Customers" class="form-control">
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label>Attributes</label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" placeholder="Attributes" title="Attributes" class="form-control">
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label>Upload Documents </label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" class="form-control">
-
-                                    <a href="#" class="add-moreinput">+ Add More Documents </a>
-                                    <div class="extrpinput"></div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">
-                                    <label>Upload image </label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-lg-9 col-xl-10 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" class="form-control"> <a href="#"
-                                        class="add-moreinput">+ Add More Images </a>
-                                    <div class="extrpinput"></div>
-
-                                </div>
-
-                            </div>
 
                             <div class="usrad-btn import-astbtn sve-btn justify-content-end">
-                                <a href="#">Save As Draft</a>
-                                <a href="#" class="imprort-btn">Publish </a>
+                                <a href="Assemblies-data.html">Save </a>
+                                <!-- <a href="Assemblies-data.html" class="imprort-btn">Publish </a> -->
                             </div>
 
 
                         </div>
                     </div>
-      	
-				 
-             
-                              
+				      
     </form> 
                     
    </div>
    </div> 
-   	
-	    
-	    
+   	  
 </body>
 
 </html>

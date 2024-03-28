@@ -1,3 +1,26 @@
+@media screen and (max-width: 1600px) {
+
+  
+  .importaset-ai .dtatable-card {
+      padding-right:30px;
+  }
+
+  .importaset-ai .dtatable-card:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(0deg 0% 0% / 50%);
+  }
+
+  .ai-bg {
+    z-index: 1;
+    width: 95%;
+  }
+
+
+}
+
+
 @media screen and (max-width: 1366px) {
 
 
@@ -19,6 +42,11 @@
 @media screen and (max-width: 1200px) {
 	.custome-tabs .nav-tabs {gap:15px;}
 	.nav-tabs .nav-link {font-size: 17px; padding: 10px 17px;}
+
+ .asemblies-details .document-bx {flex-wrap: wrap; gap: 10px;}
+  .asemblies-details .documentname-hdingbx,.asemblies-details .download-delte {flex-wrap: wrap; width: 100%;}
+  .asemblies-details .document-name-bx{width: 100%;}
+
 
 }
 
@@ -122,6 +150,10 @@
 }
 
 @media screen and (max-width:992px) {
+	 .editaifile-modal form .inputbx {
+    width: 100%;
+}
+	
 .assetdta-page.importasset-page	.uplod-inputbx{margin: 10px 0 25px;}
 	  .tble-serch {
     margin-bottom: 15px;
@@ -159,10 +191,6 @@
     padding: 0 20px;
   }
 
-  /* 
-  .assetdta-page .uplod-inputbx.uplod-inputbx {
-    margin-bottom: 15px;
-  } */
 
   .assetdta-page .assetdetl-btn label {
     display: none;
@@ -180,11 +208,17 @@
     margin-bottom: 25px;
   }
 
-
-
 }
 
 @media screen and (max-width:768px) {
+	div.dataTables_wrapper div.dataTables_filter label{display: block;}
+	.dataTables_wrapper .row:nth-child(3)>* {max-width: 50%;}
+div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate {text-align: left;} 
+
+div.dataTables_wrapper div.dataTables_filter input{height: 40px; width:100%;}
+	
+	
+	
   .searchbx {
     display: none;
   }
@@ -252,6 +286,12 @@
 }
 
 @media only screen and (max-width: 576px) {
+.dataTables_wrapper .row:nth-child(3)>* {max-width: 100%;}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    justify-content: start!important;
+    margin-top: 10px;
+}
 
   .custome-tabs .nav-tabs {
     justify-content: center;
@@ -318,13 +358,6 @@
   
 
 }
-
-
-/* @media (min-width: 500px) {
-  .multisteps-form__progress-btn {
-    text-indent: 0;
-  }
-} */
 
 
 @media only screen and (max-width: 320px) {
