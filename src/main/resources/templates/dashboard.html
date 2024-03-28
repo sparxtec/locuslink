@@ -111,10 +111,22 @@
 				submitFormAjaxHTML('uploadStep1', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 			
-			$('#navIntegrationId').click(function() {
+			
+			$('#navConnectionId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initConnection', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
+			$('#navAIIntegrationId').click(function() {
 				showSpinner();
 				submitFormAjaxHTML('initAIUpload', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
+			
+			$('#navDictionaryId').click(function() {
+				showSpinner();
+				submitFormAjaxHTML('initDictionary', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			});
+			
 			
 			
 			

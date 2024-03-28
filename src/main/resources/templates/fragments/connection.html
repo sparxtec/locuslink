@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Connection</title>
+<script>
+	
+	$(document).ready(function() {	
+			    
+		$('#addConnectionButtonId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('addConnection', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		});		
+		
+		
+		$('#conection-tble').DataTable({
+		    responsive: true,
+		   
+		 });
+		
+	});       
+	
+	function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+	}
+</script>	
+
+
+
+
+
+	
+</head>
+
+<body id="Body">
+
+	<div class="mangeuser-page assetdta-page uploaddata-page conection-pge">
+
+		<div class="page-hding">
+                    <h1>Connection</h1>
+                    <div class="usrad-btn import-astbtn">
+                        <a id="addConnectionButtonId" href="#">Add New</a>
+
+                    </div>
+                </div>
+        
+                    
+		<div class="dtatable-card mt-4">
+
+   		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+
+				<div id="editUserListHeaderId">
+					    <table id="conection-tble"
+                        class="table table-striped recent-uplod-tble mt-4 manguser-table Assetdata-dtatabl display nowrap"
+                        style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Name </th>
+                                <th>Description </th>
+                                <th>Connection</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>Locusview LV Connect Staging Feature Service</td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Locusview LV Connect Staging Feature Service
+                                </td>
+                                <td>Gas Asset Synchronization Locusview-> ArcGIS</td>
+                                <td>Esri Feature Service </td>
+                            </tr>
+
+
+
+                        </tbody>
+
+                    </table>
+				</div>
+
+
+	</form>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Upload Data</title>
+
+ <script>
+
+    	$(document).ready(function() {	
+     		hideSpinner();	
+     		
+     		if( $('#catalogDataTable').length){
+     			
+     			var table = $('#catalogDataTable').DataTable( {
+					 	responsive: true,
+            	//   retrieve: true,
+     	 		//   searchHighlight: true,
+     	 		//   searching:true,
+       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data        
+             	//   "paging":   true,	
+             //   	scrollCollapse: true,
+             //   	scrollY: 'calc(100vh - 35rem)',	
+             //   	order: [0, 'asc' ],		        
+         		//colReorder: true,		        
+     
+     	    	ajax: {
+           		    url: 'getAllCatalog',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"locuslink"};
+            			var innerData = {};    
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	universalcataloglist = json.data.universalcataloglist;	     	        	
+     	        	hideSpinner();		    		
+     	        	//console.log(JSON.parse(universalcataloglist));
+     	        	return JSON.parse(universalcataloglist);     	        	      	        	
+     	         }					       
+        		},       
+             columns: [	              	 
+                  //{
+                    //   class: 'dt-control',
+                  //     orderable: false,
+                 //    data: null,
+                   //    defaultContent: ''
+                  // },                                  
+                 { data: "ucatPkId" },
+                 { data: "universalCatalogId" }, 
+                 { data: "availFlag" },                     
+                 { data: "uidTemplateLen" },                   
+                 { data: "cdugtPkId" },                   
+                 { data: "industryDesc" },
+                 { data: "subIndustryDesc" },
+                 { data: "productTypeDesc" },
+                 { data: "productSubTypeDesc" }                 
+            	],            	
+             	//  dom: '<t><"datatable-pagination d-flex flex-row justify-content-center justify-content-md-between align-items-center mt-2" <"datatable-pagination-group d-none d-md-block" l><"datatable-pagination-group" p><"datatable-pagination-group d-none d-md-block" i>>',            	          		
+           });
+        }  // end docready
+        
+	
+ 		// SEARCH FILTER
+  		// $('#catalogDataTable_filter input').keyup(function(){
+ 	// 		table.search($(this).val()).draw() ;
+ 	// 	}); 
+ 		
+   		$('#previous').click(function() {					
+   			showSpinner();								
+   			submitFormAjaxHTML('initMyWorkspace', $("#dashboardFormDTO").serialize(), "commonResponse");														
+   		});	
+ 		   	
+   		 table.on('click', 'tbody td.dt-control', function () {
+   		     let tr = event.target.closest('tr');
+   		    let row = table.row(tr);
+   		    if (row.child.isShown()) {
+   		       row.child.hide();
+   		  }
+   		  else {   		   
+   		     row.child(format(row.data())).show();   		 
+   	   }
+   	 	});   		
+
+  	function format(d) {
+   		var returnString = "";
+   			for (var i = 0; i < d.attributeList.length ; i++) {
+   				//console.log ("loop ->:" + i);
+   				//console.log (d.attributeList[i]);
+   				
+   	   		returnString = returnString + 
+   	   			'seq: <strong>' + d.attributeList[i].uidAttrSeq + ' </strong>' + 
+   		       ' &nbsp selected: <strong>' + d.attributeList[i].selectedValue + ' </strong>' + 
+   		        ' &nbsp  <strong>' +  d.attributeList[i].uidAttrListName + ' </strong>: ' + d.attributeList[i].uidAttributesJson +
+   		        '<br>';   		        
+   			}     
+   		   return (	
+   		    	returnString	
+   		);
+   	}
+   			
+   	 });  
+    	
+    	
+	 function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+	 }
+					
+		
+  </script>	
+</head>
+
+<body>
+
+<div class="mangeuser-page"> 
+
+    <div class="page-hding">
+        <h1>Catalog Data</h1>
+    </div>
+
+    <div class="dtatable-card mt-4">
+
+         <form id="dashboardFormDTO"  name="dashboardFormDTO"  th:object="${dashboardFormDTO}" method="post">  
+                  
+			<!-- <div class="datatable-toolbar border border-bottom-0 text-secondary d-flex justify-content-between align-items-center py-2 px-3">
+			 	
+			 	<div class="datatable-toolbar-group">
+			 	</div>
+			 
+			 	<div class="datatable-toolbar-group">
+			 		<div id="catalogDataTable_filter" class="dataTables_filter">
+			 			<label class="d-flex align-items-center">Search: <input type="search" class="form-control w-auto" placeholder="" aria-controls="catalogDataTable"></label>
+			 		</div>
+			 	</div>
+			 </div>	  -->             
+	                     		   	                     
+              <table id="catalogDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;">
+              
+                 <thead class="thead-light">
+                    <tr>
+                      <!-- <th></th>       -->                	                            
+                       <th scope="col">pkId</th>
+                       <th scope="col">Universal Catalog ID</th>	
+                       <th scope="col">Avail</th>
+                       <th scope="col">Tpl Len</th>                       
+                       <th scope="col">cdugt</th>
+					   <th scope="col">Industry</th>
+                       <th scope="col">Sub Industry</th>	 
+	 				   <th scope="col">Asset</th>	 
+					   <th scope="col" >Sub Asset</th>	  	                                  	                                 
+                   </tr>
+                </thead>
+             </table>
+		                              
+	</form>
+	
+						
+	</div>
+	</div>				
+
+</body>
+
+</html>

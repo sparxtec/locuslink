@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Dictionaries editor</title>
+<script>
+
+
+ 
+
+</script>
+	
+</head>
+
+<body id="Body">
+
+	<div class="mangeuser-page addasset-page crte-conetion-page dictinry-edit-pge">
+
+		<div class="page-hding">
+                    <h1>Dictionaries</h1>
+                  
+                </div>
+        
+                    
+		<div class="dtatable-card mt-4 ">
+
+
+<form id="userDTO"  name="userDTO"  th:object="${userDTO}"  method="post">  
+                            
+				
+
+
+				
+				<div id="editUserListHeaderId">
+					  <p class="warning-msg mb-0"><span>*</span> marked fields are mandatory</p>
+					  
+					  <div class="borderbx">
+                        <div class="bx-hding editconetion-hding">
+                            <h4>Properties</h4>
+                            <div class="editconetion"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.3576 0C11.169 0 10.9803 0.071819 10.8366 0.215872L9.5788 1.47368L12.5261 4.42105L13.7839 3.16324C14.072 2.87513 14.072 2.40867 13.7839 2.1213L11.8785 0.215872C11.7345 0.071819 11.5461 0 11.3576 0ZM8.47356 2.57895L1.47366 9.57895C1.47366 9.57895 2.21418 9.58263 2.57891 9.94737C2.94364 10.3121 2.93581 11.0411 2.93581 11.0411C2.93581 11.0411 3.6871 11.0556 4.05257 11.4211C4.41804 11.7865 4.42099 12.5263 4.42099 12.5263L11.4209 5.52632L8.47356 2.57895ZM0.493619 11.0526L0 14L2.94732 13.5064L0.493619 11.0526Z" fill="#32B373"></path>
+                                </svg><span class="ms-2">Edit</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pd-bx">
+                            <div class="crete-conetion-bx">
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-3 col-xl-2 colum-bx">
+                                        <div class="uplod-inputbx">
+                                            <label> Dictionary Name <span>*</span></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-9 col-xl-10 colum-bx">
+                                        <div class="tble-serch ">
+                                            <input type="text" placeholder="Enter Dictionary Name" title="Enter Dictionary  Name" class="form-control">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-3 col-xl-2 colum-bx">
+                                        <div class="uplod-inputbx">
+                                            <label>If Value Does Not Exist <span>*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-9 col-xl-10 colum-bx">
+                                        <div class="tble-serch uplod-inputbx">
+                                            <select class="form-select">
+                                                <option>Select value</option>
+                                                <option>Use source value</option>
+                                                <option>Do Nothing</option>
+                                                <option>Use source value</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-12 col-lg-3 col-xl-2 colum-bx">
+                                        <div class="uplod-inputbx">
+                                            <label>Description</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-9 col-xl-10 colum-bx">
+                                        <div class="tble-serch uplod-inputbx">
+                                            <textarea placeholder="Enter Description" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="usrad-btn useradded-btns justify-content-end mt-0">
+                                    <a href="#" class="btn-bcktouser cancel-btn">Cancel</a>
+                                    <a href="#" class="btn-aduser save-conetion">Save</a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mb-3 detailsbx">
+                                <table class="table table-striped">
+
+                                    <tbody>
+                                        <tr>
+                                            <th class="t-hding">
+                                                Dictionary Name
+                                            </th>
+                                            <td><span class="t-dot">:</span></td>
+                                            <td> <span class="t-discription">Dictionary name will be
+                                                    here</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="t-hding">If Value Does Not Exist</th>
+                                            <td class="t-dot">:</td>
+                                            <td class="t-discription">Value will be here
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="t-hding">Description</th>
+                                            <td class="t-dot">:</td>
+                                            <td class="t-discription">Lorem Ipsum is simply dummy
+                                                text
+                                                of the printing and typesetting industry.</td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="borderbx">
+                        <div class="bx-hding editconetion-hding">
+                            <h4> Conversion Setup </h4>
+                            <div class="editconetion"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11.3576 0C11.169 0 10.9803 0.071819 10.8366 0.215872L9.5788 1.47368L12.5261 4.42105L13.7839 3.16324C14.072 2.87513 14.072 2.40867 13.7839 2.1213L11.8785 0.215872C11.7345 0.071819 11.5461 0 11.3576 0ZM8.47356 2.57895L1.47366 9.57895C1.47366 9.57895 2.21418 9.58263 2.57891 9.94737C2.94364 10.3121 2.93581 11.0411 2.93581 11.0411C2.93581 11.0411 3.6871 11.0556 4.05257 11.4211C4.41804 11.7865 4.42099 12.5263 4.42099 12.5263L11.4209 5.52632L8.47356 2.57895ZM0.493619 11.0526L0 14L2.94732 13.5064L0.493619 11.0526Z" fill="#32B373"></path>
+                                </svg><span class="ms-2">Edit</span>
+                            </div>
+                        </div>
+                        <div class="auth_container mt-4 pd-bx">
+                            <div class="inner_wrap">
+                                <p class="note_text"> Create Conversions,<span>
+                                        <input type="file"> or upload file</span></p>
+                                <button class="btn_authOuter" disabled="">+</button>
+                            </div>
+                            <!-- <div class="mt-4 pd-bx"> -->
+                            <div class="from_wrap">
+                                <div class="crete-conetion-bx">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-lg-3 col-xl-2 colum-bx">
+                                            <div class="uplod-inputbx">
+                                                <label>From Value <span>*</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-12 col-lg-9 col-xl-10 colum-bx">
+                                            <div class="tble-serch">
+                                                <input type="text" placeholder="Enter Value" title="Enter Value" class="form-control">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-12 col-lg-3 col-xl-2 colum-bx">
+                                            <div class="uplod-inputbx">
+                                                <label>To Value <span>*</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-lg-9 col-xl-10 colum-bx">
+                                            <div class="tble-serch">
+                                                <input type="text" placeholder="Enter Value " title="Enter Value" class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="usrad-btn useradded-btns justify-content-end mt-0">
+                                        <a href="#" class="btn-bcktouser cancel-btn">Cancel</a>
+                                        <a href="#" class="btn-aduser save-conetion">Save</a>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                            <div class="col-md-12 mb-3 detailsbx">
+                                <table class="table table-striped">
+
+                                    <tbody>
+                                        <tr>
+                                            <th class="t-hding">
+                                                <b>From Value</b>
+                                            </th>
+                                            <th class="t-hding">
+                                                <b> To Value</b>
+                                            </th>
+                                            <th class="t-hding"><b>Action</b>
+                                            </th>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td class="t-hding"> 100</td>
+                                            <td class="t-hding">100 </td>
+                                            <td class="t-hding">
+                                                <div class="acton-btns">
+                                                    <a href="#" class="edit-btn editconetion"><i class="fa-solid fa-pencil"></i></a>
+                                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="t-hding"> 100</td>
+                                            <td class="t-hding">100 </td>
+                                            <td class="t-hding">
+                                                <div class="acton-btns">
+                                                    <a href="#" class="edit-btn editconetion"><i class="fa-solid fa-pencil"></i></a>
+                                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="t-hding"> 100</td>
+                                            <td class="t-hding">100 </td>
+                                            <td class="t-hding">
+                                                <div class="acton-btns">
+                                                    <a href="#" class="edit-btn editconetion"><i class="fa-solid fa-pencil"></i></a>
+                                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="t-hding"> 100</td>
+                                            <td class="t-hding">100 </td>
+                                            <td class="t-hding">
+                                                <div class="acton-btns">
+                                                    <a href="#" class="edit-btn editconetion"><i class="fa-solid fa-pencil"></i></a>
+                                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td class="t-hding"> 100</td>
+                                            <td class="t-hding">100 </td>
+                                            <td class="t-hding">
+                                                <div class="acton-btns">
+                                                    <a href="#" class="edit-btn editconetion"><i class="fa-solid fa-pencil"></i></a>
+                                                    <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="usrad-btn import-astbtn justify-content-end">
+                                    <a href="#" class="edit-btn editconetion">+ Add Conversion</a>
+                                    <span class="imprort-btn importvlue-btn">
+                                        <input type="file" title="Import Values"> Import Values 
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+				</div>
+
+
+	</form>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>
