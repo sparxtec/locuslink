@@ -73,32 +73,24 @@ public class AssembliesController {
 	}
 	
 	
-//	@RequestMapping(value = "/getAllAsset", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-//	public @ResponseBody GenericMessageResponse getAllAsset(@RequestBody GenericMessageRequest request, HttpSession session)  {
-//
-//		logger.debug("In getAllAsset()");
-//		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getAllAsset");
-//	  	
-//		// TESTING
-//		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
-//		if (uniqueAssetListDTO == null) {
-//			logger.debug("  Note:  No Data Found......");
-//		}
-//			
-//        // Convert the POJO array to json, for the UI
-//		ObjectMapper mapper = new ObjectMapper();		
-//		String json = "";			
-//		try {
-//			json = mapper.writeValueAsString(uniqueAssetListDTO);			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		//logger.debug("json ->: " + json);		
-//		response.setField("uniqueassetlist",  json);
-//
-//		return response;
-//	 }
-//	
+	
+	@PostMapping(value = "initAssembliesDetail")
+	public String initAssembliesDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAssembliesDetail()...");
 
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/assemblies-details";
+	}
+
+	@PostMapping(value = "editAssembliesData")
+	public String editAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting editAssembliesData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/assemblies-edit";
+	}
+	
+	
 }

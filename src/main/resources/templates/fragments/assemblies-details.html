@@ -3,26 +3,48 @@
 
 <head>
     <title>Assemblies Details</title>
+    
     <script>
-    $('#assemblehistory-table').DataTable({
-    	  responsive: true,
-    	  searching: false,
-    	  bLengthChange: false
-    	});
+    $(document).ready(function() {	
+		
+    $('#editAssembliesDataId').click(function() {
+		showSpinner();
+		submitFormAjaxHTML('editAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+	}); 
+	
+	
+/* 		$('#addAssembliesDataId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('addAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		}); */
+		
+		
+/*         $('#assemblehistory-table').DataTable({
+      	  responsive: true,
+      	  searching: false,
+      	  bLengthChange: false
+      	});
 
-    	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function (e) {
-    	  $($.fn.dataTable.tables(true)).DataTable()
-    	    .columns.adjust()
-    	    .responsive.recalc();
-    	});
+      	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function (e) {
+      	  $($.fn.dataTable.tables(true)).DataTable()
+      	    .columns.adjust()
+      	    .responsive.recalc();
+      	});
 
-                $(".documn-title a").click(function () {
-                    $("#Traceabilitydocument .uploadzone").slideToggle();
-                });
+                  $(".documn-title a").click(function () {
+                      $("#Traceabilitydocument .uploadzone").slideToggle();
+                  });
 
-                $(".bx-hding h4 span").click(function () {
-                    $(".uploadzone").slideToggle();
-                });
+                  $(".bx-hding h4 span").click(function () {
+                      $(".uploadzone").slideToggle();
+                  }); */
+		
+ 	});       
+
+   function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+   }
         
     </script>
 </head>
@@ -30,15 +52,18 @@
 <body id="Body">
 
     <div class="mangeuser-page assetdtaIL-page asmble-detaile-pge asemblies-details">
+    
         <form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}">
-            <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId"
+        
+<!--             <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId"
                 th:value="${uniqueAssetDTO.getUniqueAssetPkId}">
+                
             <input type="hidden" id="gotoDocumentsTab" name="gotoDocumentsTab" th:value="${gotoDocumentsTab}">
-
+ -->
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">
-                    <a href="edit-assemblies.html">Edit Assembly </a>
+                    <a id="editAssembliesDataId" href="#">Edit Assembly </a>
                     <a href="#" class="imprort-btn">Export Assembly </a>
 
                 </div>
