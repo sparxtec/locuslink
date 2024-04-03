@@ -4,6 +4,23 @@
 <head>
     <title>Create Assembly</title>
 	 
+ <script>
+    $(document).ready(function() {	
+		
+	    $('#saveAssembliesDetailId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('initAssembliesDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		}); 
+			
+ 	});       
+
+   function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+   }
+        
+    </script>	 
+	 
 </head>
 
 <body>
@@ -336,7 +353,7 @@
                                    
                                    
 
-                                    <a href="Assemblies-details.html">Save</a>
+                                    <a id="saveAssembliesDetailId"  href="#">Save</a>
                                    <!--  <a href="Assemblies-details.html" class="imprort-btn">Publish</a> -->
                                 </div>
 
