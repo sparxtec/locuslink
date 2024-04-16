@@ -23,8 +23,12 @@
 	 		     this.on("success", 
 	 		    	function(file) {
 	 		    	  $(".dz-success-mark svg").css("background", "green");
-	 		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
-	 		    	  document.getElementById("continueUploadPage3").disabled = false;	 		    		    
+	 		    	  $(".dz-error-mark").css("display", "none");	
+	 		    	  
+	 		    	  if (document.getElementById("continueUploadPage3") != null) {
+		 		    	  document.getElementById("continueUploadPage3").disabled = false;	 
+	 		    	  }
+		    		    
 	 		      }); 		     		  
 	 		
 	 	     	this.on("error", 

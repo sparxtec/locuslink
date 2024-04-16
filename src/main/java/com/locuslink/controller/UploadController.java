@@ -260,7 +260,7 @@ public class UploadController {
             tags.add(new Tag("filename", inputfile.getOriginalFilename()));
             
             
-            if (fullpathFileName_keyName.toUpperCase().contains("MTR")) {
+            if (fullpathFileName_keyName.toUpperCase().contains("MTR") || fullpathFileName_keyName.toUpperCase().contains("STEEL")) {
                 tags.add(new Tag("product_type", "STEEL"));
             } else if (fullpathFileName_keyName.toUpperCase().contains("CABLE")) {
                 tags.add(new Tag("product_type", "CABLE"));
