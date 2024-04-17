@@ -112,41 +112,37 @@
                                                               <tr>
                                                                   <th class="t-hding">Id</th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
+                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getUniversalCatalogId()}"></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Unique Asset ID</th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getUniqueAssetId()}"></td>                                                                                                                                    
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Manufacturer </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getManufacturerName()}" > </td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Product Type </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
+                                                                  <td class="t-discription"   th:text="${uniqueAssetDTO.getProductTypeCode()}" ></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding"> Trace Number </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getTraceTypeCode()}" ></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding"> Customers </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
+                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getCustomerName()}" > </td>
                                                               </tr>
                                                               <tr>
-                                                                  <th class="t-hding"> P Type Description
-                                                                  </th>
+                                                                  <th class="t-hding"> P Type Description</th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
+                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getProductTypeDesc()}" >
                                                                   </td>
                                                               </tr>
 
@@ -184,42 +180,39 @@
                                                               <tr>
                                                                   <th class="t-hding">Id</th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getUniversalCatalogId()}"></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Unique Asset ID</th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getUniversalCatalogId()}"></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Manufacturer </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getManufacturerName()}" > </td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding">Product Type </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getProductTypeCode()}" ></td>
                                                               </tr>
                                                               <tr>
-                                                                  <th class="t-hding"> Trace Number </th>
+                                                                  <th class="t-hding"> Trace Type </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getTraceTypeCode()}"  ></td>
                                                               </tr>
+                                                            
                                                               <tr>
                                                                   <th class="t-hding"> Customers </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getCustomerName()}"></td>
                                                               </tr>
                                                               <tr>
                                                                   <th class="t-hding"> P Type Description
                                                                   </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
+                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getProductTypeDesc()}"> </td>
                                                               </tr>
 
                                                           </tbody>
@@ -247,44 +240,27 @@
 
                                                           <tbody>
                                                               <tr>
-                                                                  <th class="t-hding">Id</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">1</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Unique Asset ID</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">x1.x2</td>
-                                                              </tr>
-                                                              <tr>
                                                                   <th class="t-hding">Manufacturer </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getManufacturerName()}"> </td>
                                                               </tr>
+
                                                               <tr>
-                                                                  <th class="t-hding">Product Type </th>
+                                                                  <th class="t-hding"> Trace Type </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Cable</td>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getTraceTypeCode()}"></td>
                                                               </tr>
-                                                              <tr>
+                                                       		<tr>
                                                                   <th class="t-hding"> Trace Number </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Serial</td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding"> Customers </th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription">Black Hills
-                                                                      Energy
-                                                                  </td>
-                                                              </tr>
+                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getTraceCode()}"  ></td>
+                                                              </tr>                                                                
+      
                                                               <tr>
                                                                   <th class="t-hding"> P Type Description
                                                                   </th>
                                                                   <td class="t-dot">:</td>
-                                                                  <td class="t-discription">South Wire
-                                                                  </td>
+                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getProductTypeDesc()}"> </td>
                                                               </tr>
 
                                                           </tbody>
