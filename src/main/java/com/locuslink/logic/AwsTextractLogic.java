@@ -1,0 +1,27 @@
+package com.locuslink.logic;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class AwsTextractLogic {
+		
+	private static final Logger logger = Logger.getLogger(AwsTextractLogic.class);
+	
+	
+	/**
+	 *   C.Sparks 4-19-2024
+	 *   	We will define the logic methods needed
+	 */
+	public boolean process_1(  ) {
+		
+		logger.debug("Starting process_1() " );
+
+
+		return true;
+	}
+
+	
+	
+}
