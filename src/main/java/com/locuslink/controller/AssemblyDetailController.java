@@ -43,9 +43,9 @@ public class AssemblyDetailController {
     
     
 
-	@PostMapping(value = "initAssembliesDetail")
+	@PostMapping(value = "initAssemblyDetail")
 	public String initAssemblyDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssembliesDetail()...");
+		logger.debug("Starting initAssemblyDetail()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 

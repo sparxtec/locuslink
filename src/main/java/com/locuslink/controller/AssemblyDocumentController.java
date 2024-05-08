@@ -53,9 +53,9 @@ public class AssemblyDocumentController {
     
     
 
-	@PostMapping(value = "initAssembliesDocument")
-	public String initAssembliesDocument (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssembliesDocument()...");
+	@PostMapping(value = "initAssemblyDocument")
+	public String initAssemblyDocument (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAssemblyDocument()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 

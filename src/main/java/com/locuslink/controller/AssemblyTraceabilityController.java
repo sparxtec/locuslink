@@ -53,9 +53,9 @@ public class AssemblyTraceabilityController {
     
     
 
-	@PostMapping(value = "initAssemblyTraceability")
-	public String initAssemblyTraceability (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssemblyTraceability()...");
+	@PostMapping(value = "initAssemblyTraceDocument")
+	public String initAssemblyTraceDocument (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAssemblyTraceDocument()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
