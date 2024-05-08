@@ -64,7 +64,7 @@ public class AssemblyDetailController {
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-	   	return "fragments/assemblies-edit";
+	   	return "fragments/assembly-edit";
 	}
 	
 
