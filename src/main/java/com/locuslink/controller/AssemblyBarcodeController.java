@@ -33,9 +33,9 @@ import com.locuslink.dto.UniqueAssetDTO;
  */
 @Controller
 @Service
-public class AssembliesController {
+public class AssemblyBarcodeController {
 
-	private static final Logger logger = Logger.getLogger(AssembliesController.class);
+	private static final Logger logger = Logger.getLogger(AssemblyBarcodeController.class);
 
 
     @Value("${app.logout.url}")
@@ -53,44 +53,20 @@ public class AssembliesController {
     
     
 
-	@PostMapping(value = "initAssembliesData")
-	public String initAssetData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssembliesData()...");
+	@PostMapping(value = "initAssemblyBarcode")
+	public String initAssemblyDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAssemblyBarcode()...");
 
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-	   	return "fragments/assemblies-data";
-	}
-	
-	
-	@PostMapping(value = "addAssembliesData")
-	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting addAssembliesData()...");
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-	   	return "fragments/assemblies-add";
+	   	return "fragments/assembly-barcode";
 	}
 	
 	
 	
-	@PostMapping(value = "initAssembliesDetail")
-	public String initAssembliesDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting initAssembliesDetail()...");
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-	   	return "fragments/assemblies-details";
-	}
-
-	@PostMapping(value = "editAssembliesData")
-	public String editAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting editAssembliesData()...");
-
-	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-
-	   	return "fragments/assemblies-edit";
-	}
+	
+	
+	
 	
 	
 }

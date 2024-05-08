@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Assemblies Details</title>
+    
+    <script>
+    $(document).ready(function() {	
+		
+    $('#editAssembliesDataId').click(function() {
+		showSpinner();
+		submitFormAjaxHTML('editAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+	}); 
+	
+	
+/* 		$('#addAssembliesDataId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('addAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		}); */
+		
+		
+/*         $('#assemblehistory-table').DataTable({
+      	  responsive: true,
+      	  searching: false,
+      	  bLengthChange: false
+      	});
+
+      	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function (e) {
+      	  $($.fn.dataTable.tables(true)).DataTable()
+      	    .columns.adjust()
+      	    .responsive.recalc();
+      	});
+
+                  $(".documn-title a").click(function () {
+                      $("#Traceabilitydocument .uploadzone").slideToggle();
+                  });
+
+                  $(".bx-hding h4 span").click(function () {
+                      $(".uploadzone").slideToggle();
+                  }); */
+		
+ 	});       
+
+   function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+   }
+        
+    </script>
+</head>
+
+<body id="Body">
+
+    <div class="mangeuser-page assetdtaIL-page asmble-detaile-pge asemblies-details">
+    
+        <form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}">
+        
+<!--             <input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId"
+                th:value="${uniqueAssetDTO.getUniqueAssetPkId}">
+                
+            <input type="hidden" id="gotoDocumentsTab" name="gotoDocumentsTab" th:value="${gotoDocumentsTab}">
+ -->
+            <div class="page-hding">
+                <h1>Assembly Details</h1>
+                <div class="usrad-btn import-astbtn">
+                    <a id="editAssembliesDataId" href="#">Edit Assembly </a>
+                    <a href="#" class="imprort-btn">Export Assembly </a>
+
+                </div>
+            </div>
+        </form>
+
+        <!-- Nav tabs -->
+        <div class="custome-tabs">
+            <ul class="nav nav-tabs  mt-4" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#details">Details </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#Assembliesdocuments">Assembly Document</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#smarttag">Barcode</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#Traceabilitydocument"> Traceability
+                                Document</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#history">
+                                History</a>
+                        </li>
+
+                    </ul>
+
+</div>
+
+            <div class="dtatable-card">
+
+                <div class="tab-content">
+                    
+ 				<div id="details" class="tab-pane active">
+                                <div class="row">
+                                    <div class="col-md-3 mb-4">
+                                        <div class="aset-sidebar-bx">
+                                            <ul class="list-unstyled asset-side-nav">
+                                                <li><a href="#" class="active">General</a></li>
+                                                <li><a href="#">Documents</a></li>
+                                                <li><a href="#">Test certification</a></li>
+                                                <li><a href="#">Images</a></li>
+                                                <li><a href="#">Asset Details 1</a></li>
+                                                <li><a href="#">Asset Details 2</a></li>
+                                                <li><a href="#">Asset Details 3</a></li>
+                                                <li><a href="#">Asset Details 4</a></li>
+                                                <li><a href="#">Asset Details 5</a></li>
+                                                <li><a href="#">Asset Details 6</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="aset-detal-bx">
+                                                     <div class="aset-detal-bx">
+                                                    <div class="borderbx">
+                                                        <div class="bx-hding">
+                                                            <h4>General</h4>
+                                                        </div>
+
+
+                                                        <div class="row mt-4 pd-bx">
+                                                            <div class="col-md-12 col-lg-8 mb-3">
+                                                                <div class="asset-details">
+                                                                    <table class="table table-striped">
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th class="t-hding">Id</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">1</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Job Number</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">0123654</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Description </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription"> Lorem ipsum
+                                                                                    dolor sit amet, consectetur
+                                                                                    adipiscing elit.
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Customer Job Number
+                                                                                </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">78965412</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Station Number</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">102540</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Trace Number </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">205460
+                                                                                    Energy
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Customer
+                                                                                </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Lorem Ipsum
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Location
+                                                                                </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription"> Akshya Nagar
+                                                                                    1st Block 1st Cross, Rammurthy
+                                                                                    nagar,
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 col-lg-4 mb-3">
+                                                                <div class="asset-img borderbx">
+                                                                    <img src="./images/product-img.jpg"
+                                                                        alt="product-img" class="img-fluid"
+                                                                        title="3Phase Distribution Transformer">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mt-4">
+                                                <div class="aset-detal-bx">
+                                                    <div class="borderbx">
+                                                        <div class="bx-hding">
+                                                            <h4>Unique ID</h4>
+                                                        </div>
+
+
+                                                        <div class="row mt-4 pd-bx">
+                                                            <div class="col-md-12">
+                                                                <div class="asset-details">
+                                                                    <table class="table table-striped">
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th class="t-hding">Id</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">1</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Unique Asset ID</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">x1.x2</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Manufacturer </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">South Wire
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Product Type </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Cable</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Trace Number </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Serial</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Customers </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Black Hills
+                                                                                    Energy
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> P Type Description
+                                                                                </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">South Wire
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mt-4">
+                                                <div class="aset-detal-bx">
+                                                    <div class="borderbx">
+                                                        <div class="bx-hding">
+                                                            <h4>Traceability Data</h4>
+                                                        </div>
+
+
+                                                        <div class="row mt-4 pd-bx">
+                                                            <div class="col-md-12">
+                                                                <div class="asset-details">
+                                                                    <table class="table table-striped">
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th class="t-hding">Id</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">1</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Unique Asset ID</th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">x1.x2</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Manufacturer </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">South Wire
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding">Product Type </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Cable</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Trace Number </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Serial</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> Customers </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">Black Hills
+                                                                                    Energy
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="t-hding"> P Type Description
+                                                                                </th>
+                                                                                <td class="t-dot">:</td>
+                                                                                <td class="t-discription">South Wire
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="Assembliesdocuments" class="tab-pane fade">
+                                <div class="tab-subhding procut-tab">
+                                    <h3>Upload Assemblies Documents
+                                        <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
+                                                class="img-fluid" alt="Download" title="Download All"> Download all
+                                            Documents</a>
+                                    </h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="aset-sidebar-bx">
+                                            <ul class="list-unstyled asset-side-nav">
+                                                <li><a href="#" class="active doc-sucess">Purchase Orders <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Fabrication Project Number and Project Details <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Welding Procedures and Stamp <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Welder Certs (OQ) <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Weld Map <i class="fa-regular fa-circle-check"></i> </a>
+                                                </li>
+                                                <li><a href="#">Stamped Asbuilt Drawings with Bill of Materials
+                                                        included <i class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Weld inspection <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Hydrostatic Report <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Hydrostatic Chart <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Calibration Certificate/Data Sheet <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Coating Report/Stamp <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Equipment <i class="fa-regular fa-circle-check"></i>
+                                                    </a></li>
+                                                <li><a href="#">Non-destructive testing <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="aset-detal-bx">
+
+                                                    <div class="borderbx ">
+                                                        <div class="bx-hding">
+                                                            <h4>Upload Purchase Orders Document
+                                                                <span>Add</span>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="col-lg-12 col-xl-12 p-3 mt-3 uploadzone">
+                                                            <div class="importasset-page">
+                                                                <div class="uploadfile position-relative text-center">
+                                                                    <input type="file">
+                                                                    <img src="./images/export.svg" class="img-fluid"
+                                                                        alt="export" title="">
+                                                                    <h6>Drag &amp; drop files or <span>Browse</span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
+                                                                <button id="addCancelUpload"
+                                                                    class="js-btn-prev contine-btn" type="button"
+                                                                    title="Prev">Cancel</button>
+                                                                <button id="addContinueUpload"
+                                                                    class="js-btn-next contine-btn" type="button"
+                                                                    title="Next">Continue</button>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row mt-4">
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>PDF</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 1.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>XLS</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 2.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>PDF</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 3.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>XLS</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 4.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                            <div id="smarttag" class="tab-pane fade">
+                                <div class="tab-subhding procut-tab">
+                                    <h3>Product QR Code
+
+                                        <a href="#" download=""> <i class="fa-solid fa-print" title="Print Barcode"></i>
+                                            Print QR Barcode
+                                        </a>
+
+                                    </h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="barcdetab">
+                                            <img src="./images/barcode-tab.jpg" class="img-fluid" alt="barcode-tab"
+                                                title="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="Traceabilitydocument" class="tab-pane fade">
+                                <div class="tab-subhding procut-tab">
+                                    <h3>Upload Traceability Documents
+                                        <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
+                                                class="img-fluid" alt="Download" title="Download All"> Download all
+                                            Documents</a>
+                                    </h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="aset-sidebar-bx">
+                                            <ul class="list-unstyled asset-side-nav">
+                                                <li><a href="#" class="active doc-sucess">Purchase Orders <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Fabrication Project Number and Project Details <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Welding Procedures and Stamp <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Welder Certs (OQ) <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Weld Map <i class="fa-regular fa-circle-check"></i> </a>
+                                                </li>
+                                                <li><a href="#">Stamped Asbuilt Drawings with Bill of Materials
+                                                        included <i class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Weld inspection <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Hydrostatic Report <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Hydrostatic Chart <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Calibration Certificate/Data Sheet <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Coating Report/Stamp <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                                <li><a href="#">Equipment <i class="fa-regular fa-circle-check"></i>
+                                                    </a></li>
+                                                <li><a href="#">Non-destructive testing <i
+                                                            class="fa-regular fa-circle-check"></i> </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="aset-detal-bx">
+
+                                                    <div class="borderbx ">
+                                                        <div class="bx-hding">
+                                                            <h4>Upload Purchase Orders Document
+                                                                <span>Add</span>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="col-lg-12 col-xl-12 p-3 mt-3 uploadzone">
+                                                            <div class="importasset-page">
+                                                                <div class="uploadfile position-relative text-center">
+                                                                    <input type="file">
+                                                                    <img src="./images/export.svg" class="img-fluid"
+                                                                        alt="export" title="">
+                                                                    <h6>Drag &amp; drop files or <span>Browse</span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
+                                                                <button id="addCancelUpload"
+                                                                    class="js-btn-prev contine-btn" type="button"
+                                                                    title="Prev">Cancel</button>
+                                                                <button id="addContinueUpload"
+                                                                    class="js-btn-next contine-btn" type="button"
+                                                                    title="Next">Continue</button>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row mt-4">
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>PDF</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 1.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>XLS</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 2.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>PDF</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 3.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="barcdetab document-bx">
+                                                    <div class="documentname-hdingbx">
+                                                        <div class="document-name-bx">
+                                                            <span>XLS</span>
+                                                        </div>
+                                                        <div class="document-hding">
+                                                            <h6>Document 4.pdf<span>254 kB</span></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="download-icon">
+                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
+                                                            alt="Download" title="Download All">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                    
+                     </div>
+                </div>
+
+
+                <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+                <div id="asset_ModalBody">
+                </div>
+            </div>
+            
+            <!-- Button trigger modal -->
+
+    <div class="add-detailsmodal">
+        <!-- Modal -->
+        <div class="modal fade" id="add-details" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 inputbx">
+                              <label class="form-label">Traceability Document Details</label>
+                            <textarea class="form-control" placeholder="Enter Details"></textarea>
+
+                        </div>
+                        <div class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
+                            <!-- <button id="addCancelUpload" class="js-btn-prev contine-btn" type="button" title="Prev">Cancel</button> -->
+                            <button id="addContinueUpload" class="js-btn-next contine-btn"  data-bs-dismiss="modal" aria-label="Close">Save</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+            
+            
+            
+</body>
+
+</html>
