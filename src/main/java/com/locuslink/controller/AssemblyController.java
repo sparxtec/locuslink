@@ -98,4 +98,25 @@ public class AssemblyController {
 	
 	
 	
+	
+	
+	
+	/**
+	 *   The Create Assembly Button on the Assemblies Main page UI
+	 * 
+	 */
+	@PostMapping(value = "addAssembliesData")
+	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting addAssembliesData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/assembly-add";
+	}
+	
+	
+	
+
+	
+	
 }

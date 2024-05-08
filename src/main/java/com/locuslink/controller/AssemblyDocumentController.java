@@ -64,30 +64,5 @@ public class AssemblyDocumentController {
 	
 	
 	
-	
-	
-	
-	
-//	@PostMapping(value = "addAssembliesData")
-//	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-//		logger.debug("Starting addAssembliesData()...");
-//
-//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-//
-//	   	return "fragments/assemblies-add";
-//	}
-//	
-//	
-//	
-//	
-//	@PostMapping(value = "editAssembliesData")
-//	public String editAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-//		logger.debug("Starting editAssembliesData()...");
-//
-//	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
-//
-//	   	return "fragments/assemblies-edit";
-//	}
-	
-	
+
 }

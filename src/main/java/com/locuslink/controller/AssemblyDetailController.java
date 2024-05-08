@@ -52,5 +52,20 @@ public class AssemblyDetailController {
 	   	return "fragments/assembly-detail";
 	}
 	
+	
+	
+	/**
+	 *   The Edit Assembly Button on the Assemblies Detail UI
+	 * 
+	 */
+	@PostMapping(value = "editAssembliesData")
+	public String editAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting editAssembliesData()...");
+
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	   	return "fragments/assemblies-edit";
+	}
+	
 
 }
