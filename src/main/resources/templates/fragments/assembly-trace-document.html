@@ -37,12 +37,36 @@
 			submitFormAjaxHTML('editAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	    
+	    
+	    // TODO Sparks 5-9-2024 Navigation from the Document Cards - AI processing
+	    //   This is temporary for now so we can code the AI calls, it will be automatic later, thats why that code is in a "Logic" module
+	    //   so it can be shared later.
+	    
+    	$('#buttonAwsId').click(function() {	
+    		    		
+    		showSpinner();	
+    		
+     		var myData = {version:"1.0", protocol:"json", clientId:"locuslink"};
+           	var innerData = {};
+    		innerData["assemblyPkId"] =	pkId = $('input#assemblyPkId').val();
+    		//innerData["deleteAllFilesWithPk"] =	"YES";
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");
+    	});   
+	    
+    
  	});       
 
-   function initCommonResponse(returnData) {	
+   function initCommonResponse(returnData) {
 	   hideSpinner();
 	   $('#mainBody').html( returnData);    	 
    }
+   
+   function asyncResponseCommonResponse(returnData) {	
+	   hideSpinner(); 
+	   alert ('AWS Manual Testing finished.');
+   }
+   
         
 </script>
 </head>
@@ -53,6 +77,9 @@
     
         <form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}">
         
+        	<!-- C.Sparks TEMP for testing -->
+         	<input type="hidden" id="assemblyPkId"  name="assemblyPkId" th:value="123"> 
+         	      
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">
@@ -134,6 +161,10 @@
 
                     </div>
 
+
+
+<!-- C.Sparks Testing, manual Button for calling AI code  -->
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="barcdetab document-bx">
@@ -142,8 +173,7 @@
                                         <span>PDF</span>
                                     </div>
                                     <div class="document-hding">
-                                        <h6>Document 1.pdf<span class="doc-descrip">lla ut lorem rutrum
-                                                feugiat. Etiam sit amet metus ligula.</span></h6>
+                                        <h6>MTR_sample_1.pdf<span class="doc-descrip">Sample 1 Test case for MTR processing using AWS Textract.</span></h6>
                                         <span>254 kB</span>
                                     </div>
                                 </div>
@@ -152,15 +182,26 @@
                                         <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
                                             alt="Download" title="Download All">
                                     </div>
-                                    <div class="add-details">
-
-                                        <span data-bs-toggle="modal" data-bs-target="#add-details">Edit
-                                            Details</span>
+                                    <div id="buttonEditMtrId" class="add-details">                                        
+                                        <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
+                                            <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
+                                        </a>                                                          
                                     </div>
+                                    
+                                    <div id="buttonAwsId" class="add-details">                                                                               
+                                          <a href="#" data-toggle="tooltip" data-placement="top" title="Click to test the AWS OCR processing." > 
+                                              <span data-bs-toggle="modal" data-bs-target="#add-details">Aws</span>
+                                          </a>    
+                                    </div>
+                                    
                                 </div>
 
                             </div>
                         </div>
+                        
+                        
+                        
+                        
                         <div class="col-md-6">
                             <div class="barcdetab document-bx">
                                 <div class="documentname-hdingbx">

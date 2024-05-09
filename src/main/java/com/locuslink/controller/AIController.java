@@ -45,11 +45,11 @@ public class AIController {
 	 *  This type of method is a JSON method, where the UI navigation is not changing. 
 	 *  The UI needs data or a response, so its called with this method signature.
 	 */		
-	@RequestMapping(value = "/getSomeData", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	@RequestMapping(value = "/processAWSTextract", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public @ResponseBody GenericMessageResponse getSomeData(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
-		logger.debug("In getSomeData()");
-		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "getSomeData");
+		logger.debug("In processAWSTextract()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "processAWSTextract");
 
 		try {
 			// C.Sparks  04-19-2024
