@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.logic.AwsTextractLogic;
+import com.locuslink.model.ProductAttachment;
 
 
 
@@ -51,14 +52,33 @@ public class AIController {
 		logger.debug("In processAWSTextract()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "processAWSTextract");
 
+		// TODO This is hard coded as 123 for now, but oncei get the database model created an loaded, we will write SQL here to pull
+		// the assembly object
+		String assemblyPkId = request.getFieldAsString("assemblyPkId");
+		if (assemblyPkId == null || assemblyPkId.length() < 1) {
+			logger.debug("Error - assemblyPkId is missing");
+		} else {
+			logger.debug("  assemblyPkId ->: " + assemblyPkId);
+		}
+		
+		
 		try {
 			// C.Sparks  04-19-2024
 			//    This is where the work will go. Below is a sample on calling the "logic" module.
 			//    small coding can go in here, but larger chunks need to be separated out into logic modules/functions so they can be shared.
 			
 			
-			boolean result = awsTextractLogic.process_1();
+			boolean result = awsTextractLogic.process_1(assemblyPkId);
 			logger.debug("Result from AWSTextract processing ->: " + result);
+			
+//			boolean result = awsTextractLogic.process_2();
+//			logger.debug("Result from AWSTextract processing ->: " + result);
+//			
+//			boolean result = awsTextractLogic.process_3();
+//			logger.debug("Result from AWSTextract processing ->: " + result);
+			
+
+			
 			
 		} catch (Exception e) {
 			logger.debug("  ERROR something failed ->: " + e.getMessage());
