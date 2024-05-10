@@ -1,7 +1,9 @@
 package com.locuslink.logic;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,14 @@ import software.amazon.awssdk.services.textract.model.Block;
 import software.amazon.awssdk.services.textract.model.DetectDocumentTextRequest;
 import software.amazon.awssdk.services.textract.model.DetectDocumentTextResponse;
 import software.amazon.awssdk.services.textract.model.Document;
+import software.amazon.awssdk.services.textract.model.DocumentLocation;
 import software.amazon.awssdk.services.textract.model.DocumentMetadata;
+import software.amazon.awssdk.services.textract.model.FeatureType;
+import software.amazon.awssdk.services.textract.model.GetDocumentAnalysisRequest;
+import software.amazon.awssdk.services.textract.model.GetDocumentAnalysisResponse;
 import software.amazon.awssdk.services.textract.model.S3Object;
+import software.amazon.awssdk.services.textract.model.StartDocumentAnalysisRequest;
+import software.amazon.awssdk.services.textract.model.StartDocumentAnalysisResponse;
 import software.amazon.awssdk.services.textract.model.TextractException;
 
 
@@ -96,49 +104,131 @@ public class AwsTextractLogic {
 				.region(Region.US_EAST_1)
 				.build();
 				
-	     detectDocTextS3(textractClient, awsS3BucketName, "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf");
-	     textractClient.close();
-	     
+	   //  detectDocTextS3(textractClient, awsS3BucketName, "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf");
+	   //  textractClient.close();
+		
+		String docName = "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf";
+		
+	    String jobId = startDocAnalysisS3(textractClient, awsS3BucketName, docName);
+	    System.out.println("Getting results for job " + jobId);
+	    String status = getJobResults(textractClient, jobId);
+	    System.out.println("The job status is " + status);
+	    textractClient.close();
+        		
+        		
 	     return "";	     
 	}
 	
 	
 	
-	 public static void detectDocTextS3(TextractClient textractClient, String bucketName, String docName) {
-		 
-	        try {
-	        	
-	        	S3Object s3Object = S3Object.builder()
-	                    .bucket(bucketName)
-	                    .name(docName)
-	                    .build();
+	public static String startDocAnalysisS3(TextractClient textractClient, String bucketName, String docName) {
+		
+        try {
+            List<FeatureType> myList = new ArrayList<>();
+            myList.add(FeatureType.TABLES);
+            myList.add(FeatureType.FORMS);
 
-	            // Create a Document object and reference the s3Object instance.
-	            Document myDoc = Document.builder()
-	                    .s3Object(s3Object)
-	                    .build();
+            S3Object s3Object = S3Object.builder()
+                    .bucket(bucketName)
+                    .name(docName)
+                    .build();
 
-	            DetectDocumentTextRequest detectDocumentTextRequest = DetectDocumentTextRequest.builder()
-	                    .document(myDoc)
-	                    .build();
+            DocumentLocation location = DocumentLocation.builder()
+                    .s3Object(s3Object)
+                    .build();
 
-	            // TODO 5-10-2024
-	            // Says it can take a PDF, but throws an error
-	            DetectDocumentTextResponse textResponse = textractClient.detectDocumentText(detectDocumentTextRequest);
+            StartDocumentAnalysisRequest documentAnalysisRequest = StartDocumentAnalysisRequest.builder()
+                    .documentLocation(location)
+                    .featureTypes(myList)
+                    .build();
 
-	            for (Block block : textResponse.blocks()) {
-	                System.out.println("The block type is " + block.blockType().toString());
-	            }
+            StartDocumentAnalysisResponse response = textractClient.startDocumentAnalysis(documentAnalysisRequest);
 
-	            DocumentMetadata documentMetadata = textResponse.documentMetadata();
-	            System.out.println("The number of pages in the document is " + documentMetadata.pages());
+            // Get the job ID
+            String jobId = response.jobId();
+            return jobId;
 
-	        } catch (TextractException e) {
+        } catch (TextractException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        return "";
+	}
 
-	            System.err.println(e.getMessage());
-	            System.exit(1);
-	        }
-	    }
+    private static String getJobResults(TextractClient textractClient, String jobId) {
+    	
+        boolean finished = false;
+        int index = 0;
+        String status = "";
+
+        try {
+            while (!finished) {
+                GetDocumentAnalysisRequest analysisRequest = GetDocumentAnalysisRequest.builder()
+                        .jobId(jobId)
+                        .maxResults(1000)
+                        .build();
+
+                GetDocumentAnalysisResponse response = textractClient.getDocumentAnalysis(analysisRequest);
+                status = response.jobStatus().toString();
+
+                if (status.compareTo("SUCCEEDED") == 0)
+                    finished = true;
+                else {
+                    System.out.println(index + " status is: " + status);
+                    Thread.sleep(1000);
+                }
+                index++;
+            }
+
+            return status;
+
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+        return "";
+    }	
+	
+	
+	
+	
+	
+	
+//	 public static void detectDocTextS3(TextractClient textractClient, String bucketName, String docName) {
+//		 
+//	        try {
+//	        	
+//	        	S3Object s3Object = S3Object.builder()
+//	                    .bucket(bucketName)
+//	                    .name(docName)
+//	                    .build();
+//
+//	            // Create a Document object and reference the s3Object instance.
+//	            Document myDoc = Document.builder()
+//	                    .s3Object(s3Object)
+//	                    .build();
+//
+//	            DetectDocumentTextRequest detectDocumentTextRequest = DetectDocumentTextRequest.builder()
+//	                    .document(myDoc)
+//	                    .build();
+//
+//	            // TODO 5-10-2024
+//	            // Says it can take a PDF, but throws an error
+//	            DetectDocumentTextResponse textResponse = textractClient.detectDocumentText(detectDocumentTextRequest);
+//
+//	            for (Block block : textResponse.blocks()) {
+//	                System.out.println("The block type is " + block.blockType().toString());
+//	            }
+//
+//	            DocumentMetadata documentMetadata = textResponse.documentMetadata();
+//	            System.out.println("The number of pages in the document is " + documentMetadata.pages());
+//
+//	        } catch (TextractException e) {
+//
+//	            System.err.println(e.getMessage());
+//	            System.exit(1);
+//	        }
+//	    }
 	 
 	
 	
