@@ -158,6 +158,7 @@ public class AwsTextractLogic {
     private static String getJobResults(TextractClient textractClient, String jobId) {
     	
         boolean finished = false;
+        boolean moreBlocks = false;
         int index = 0;
         String status = "";
 
@@ -171,9 +172,37 @@ public class AwsTextractLogic {
                 GetDocumentAnalysisResponse response = textractClient.getDocumentAnalysis(analysisRequest);
                 status = response.jobStatus().toString();
 
-                if (status.compareTo("SUCCEEDED") == 0)
+                if (status.compareTo("SUCCEEDED") == 0) {
+                	// Create document metadata and blocks variables
+                    DocumentMetadata responseMetadata = response.documentMetadata();
+                    List<Block> blocks = response.blocks();
+                    String nextToken = response.nextToken();
+            		
+            		// Fetch document metadata
+                    System.out.println("Document has the following metadata: " + responseMetadata.toString());
+                    // Returns List<Block> for all TEXT, TABLES, etc. found in each page of the document
+                	System.out.println("Found the following Blocks: " + blocks.toString());
+                	
+                	/*
+                	 * I.Summers 5-13-2024
+                	 * 		The max # blocks returned is 1000, even if maxResults() isn't specified. 
+                	 * 		If >1000 results, the response is paginated using tokens (i.e. returns NextToken string).
+                	 * 		Implemented the nextToken method to access full Textract results.
+                	 */
+            		do {
+            			if (nextToken != null && nextToken != "") {
+            				nextToken = getJobResults(textractClient, jobId, nextToken);
+            				moreBlocks = true;
+            			} else {
+            				System.out.println("All done! No more tokens.");
+            				moreBlocks = false;
+            			}
+            		} while (moreBlocks);
+                	
+                	
                     finished = true;
-                else {
+                    
+                } else {
                     System.out.println(index + " status is: " + status);
                     Thread.sleep(1000);
                 }
@@ -187,7 +216,58 @@ public class AwsTextractLogic {
             System.exit(1);
         }
         return "";
-    }	
+    }
+    
+    /*
+     * I. Summers 5-13-24
+     * 		Created new overloaded method for getJobResults, to be used for paginated response results.
+     * 		Accepts token String parameter and returns nextToken string (if applicable)  
+     */
+	private static String getJobResults(TextractClient textractClient, String jobId, String token) {
+	    	
+	        boolean finished = false;
+	        int index = 0;
+	        String status;
+	        String nextToken = null;
+	
+	        try {
+	            while (!finished) {
+	                GetDocumentAnalysisRequest analysisRequest = GetDocumentAnalysisRequest.builder()
+	                        .jobId(jobId)
+	                        .nextToken(token)
+	                        .maxResults(1000)
+	                        .build();
+	
+	                GetDocumentAnalysisResponse response = textractClient.getDocumentAnalysis(analysisRequest);
+	                status = response.jobStatus().toString();
+	
+	                if (status.compareTo("SUCCEEDED") == 0) {
+	                	
+            			// Create blocks list variable
+                        List<Block> blocks = response.blocks();
+	                    
+                        // Returns List<Block> for all TEXT, TABLES, etc. found in each page of the document
+                    	System.out.println("Found the following Blocks: " + blocks.toString());
+                    	
+                    	// Set nextToken
+                    	nextToken = response.nextToken();
+                    	finished = true;
+	                    
+	                } else {
+	                    System.out.println(index + " status is: " + status);
+	                    Thread.sleep(1000);
+	                }
+	                index++;
+	            }
+	
+	            return nextToken;
+	
+	        } catch (InterruptedException e) {
+	            System.out.println(e.getMessage());
+	            System.exit(1);
+	        }
+	        return "";
+	}
 	
 	
 	
