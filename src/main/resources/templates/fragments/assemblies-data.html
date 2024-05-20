@@ -5,6 +5,9 @@
 	<title>Upload Add Data</title>
 
 	<script>	
+	
+		var globalTable;	
+	
 		$(document).ready(function() {	
 			
 	        $('#assemble-data').DataTable({
@@ -20,6 +23,119 @@
 				showSpinner();
 				submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
+			
+			
+			
+			if( $('#assemblyDataTable').length){     			
+     			var table = $('#assemblyDataTable').DataTable( {
+					 	responsive: true,
+            	//retrieve: true,
+     	 	//	searchHighlight: true,
+     	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data             	 			        
+             	//"paging":   true,  
+            //	scrollCollapse: true,
+            // 	scrollY: 'calc(100vh - 35rem)',
+             	
+             	order: [1, 'asc' ],	
+
+     	    	ajax: {
+           		    url: 'getAllAssemblies',
+           		 	type: 'POST',
+            		contentType: 'application/json',
+            		data: function ( data ) {
+            			showSpinner();            	
+            			var myData = {version:"1.0", clientId:"locuslink"};
+            			var innerData = {};    
+            			myData["data"] = innerData;	                  			
+                		return JSON.stringify( myData );
+     	        }, 
+     	        "dataSrc": function (json) {
+     	        	assemblylist = json.data.assemblylist;	     	        	
+     	        	hideSpinner();		    		     	      	        	
+     	        	return JSON.parse(assemblylist);     	        	      	        	
+     	         }					       
+        		},  
+     
+             columns: [	                	 
+	 			// { "className": 'details-control',
+ 	            //   "orderable": false,
+ 	              // "data":      null,
+ 	               //"defaultContent": ''
+	 	        // },	 	                       	      
+	 	         { title: "Details",
+	 	           data: null,
+ 	               className: "controlColumns",
+ 	               "render": function(data, type, row, meta){	            		
+                    	data ="<div class='action-buttons'>" 
+                    	+"&nbsp;&nbsp;<button id='detail_" + row.assemblyPkid+ "' class='barcode-btn'  type='button'> <i class='fa-solid fa-barcode' title='Assembly Details'></i></button>&nbsp;&nbsp;&nbsp;"
+                    	+"<button id='barcode_" + row.assemblyPkid+ "' class='eye-btn' type='button'> <i class='fa-solid fa-eye' title='BarCode Viewer'></i></button>&nbsp;&nbsp;&nbsp;"
+                    	//+"<button id='delete_" + row.assemblyPkid+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Assembly'></i></button></div>";	   
+                    	+ "</div>"
+	                return data;
+	 	         }}, 
+                   	         
+	             { data: "assemblyPkid" },	               
+                 { data: "jobNumber" },                   
+                 { data: "jobDescription" },                 
+                 { data: "location" },
+                 { data: "stationNumber" },
+                 { data: "traceNumber" } 
+                        
+            	],   
+             	        		            	          	
+           });
+     	 }			
+			
+			
+			 // Button Clicks on the Data table
+	  	    $('#assemblyDataTable tbody').on('click', 'button', function (e) {
+		    	
+	  	    	console.log(this);
+		    	
+		    	var url='';
+		    	var whatWasClicked=$(this).attr("id").split("_")[0];
+		    	var assemblyPkid=$(this).attr("id").split("_")[1];
+		    		 	    				
+		        // set the FORM value so the controller can get it.				
+				$('#assemblyPkid').val(assemblyPkid).val().trim();
+		        
+		        	        
+		   	    e.preventDefault(); // ??	    	
+				showSpinner();
+		    		   	    	    
+				if(whatWasClicked==="detail") {
+
+	       			showSpinner();											 	
+	     
+	       			// 5-17-2023
+					//submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       												
+		   			submitFormAjaxHTML('initAssemblyDetail', $("#dashboardFormDTO").serialize(), "commonResponse");														
+		 
+		   			
+	    		} else if(whatWasClicked==="barcode") {
+
+	    			// 3-21-2023
+	       			showSpinner();								
+	       			//submitFormAjaxHTML('initAssemblyBarcode', $("#dashboardFormDTO").serialize(), "modalResponse");	
+	       			submitFormAjaxHTML('initAssemblyBarcode', $("#dashboardFormDTO").serialize(), "commonResponse");	
+
+	    		} else if(whatWasClicked==="delete") {
+	    			url = "deleteAsset";	
+	    		}
+				 			
+		    }); 
+			 
+			 
+	  		// SEARCH FILTER	  		
+	    		$('#assemblyDataTable_filter input').keyup(function(){
+	   			table.search($(this).val()).draw() ;
+	   		}); 	
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -53,324 +169,22 @@
      
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
-        	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
-        	
-      		<table id="assemble-data" class="table table-striped recent-uplod-tble mt-4" style="width: 100%">
-                         <thead>
-                            <tr>
-                                <th>Details</th>
-                                <th>Id</th>
-                                <th>Job Number</th>
-                                <th> Description</th>
-                                <th>Customer Job Number</th>
-                                <th>Station Number</th>
-                                <th>Trace Number</th>
-                                <th>Customer</th>
-                                <th>Location</th>
-                                <th>Action</th>
-                               
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="details-btn">
-                                        <a href="#" class="barcode-btn"><i class="fa-solid fa-barcode"></i></a>
-                                        <a href="Assemblies-details.html" class="eye-btn"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                    </div>
-                                </td>
-                                <td>1</td>
-                                <td>0123654</td>
-                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                                <td>78965412</td>
-                                <td>102540</td>
-                                <td>205460</td>
-                                <td>Lorem Ipsum</td>
-                                <td>Akshya Nagar 1st Block 1st Cross, Rammurthy nagar,</td>
-                                                                <td>
-                                    <div class="acton-btns">
-                                        <a href="#" class="edit-btn"><i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="delete-btn"><i class="fa-solid fa-trash"></i></a>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        
-                            
-
-                        </tbody>
-
-                    </table>
-      	
-				 
-             
-                              
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid" >
+        	      		
+       		 <table id="assemblyDataTable" class="table table-striped recent-uplod-tble mt-4 manguser-table" style="width: 100%;" >
+                <thead class="thead-light">
+                   <tr>
+					  <th scope="col"></th>   
+                      <th scope="col">Id</th>	                                 	                          	                                 
+                      <th scope="col">Job Number</th>
+                      <th scope="col">Description</th>
+                      <th scope="col" >Location</th>	
+                      <th scope="col">Station Number</th>	
+    				  <th scope="col">Trace Number</th>		                                                                     	                             	                             
+                   </tr>
+                </thead>
+       		 </table>  	
+				                                           
     </form> 
                     
    </div>

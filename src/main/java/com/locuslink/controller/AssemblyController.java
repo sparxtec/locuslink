@@ -21,10 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
-import com.locuslink.dao.UniqueAssetDao;
+import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dao.UniversalCatalogDao;
+import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.UniqueAssetDTO;
 /**
  * This is a Spring MVC Controller.
  *
@@ -49,7 +49,7 @@ public class AssemblyController {
     private UniversalCatalogDao universalCatalogDao;
     
     @Autowired
-    private UniqueAssetDao uniqueAssetDao;
+    private AssemblyDao assemblyDao;
     
     
 
@@ -73,8 +73,8 @@ public class AssemblyController {
 		
 		
 		// TODO REPLACE THIS 
-		List <UniqueAssetDTO> uniqueAssetListDTO =  uniqueAssetDao.getAllDTO();
-		if (uniqueAssetListDTO == null) {
+		List <AssemblyDTO> assemblyListDTO =  assemblyDao.getAllDTO();
+		if (assemblyListDTO == null) {
 			logger.debug("  Note:  No Data Found......");
 		}
 			
@@ -85,7 +85,7 @@ public class AssemblyController {
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(uniqueAssetListDTO);			
+			json = mapper.writeValueAsString(assemblyListDTO);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

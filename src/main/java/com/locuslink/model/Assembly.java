@@ -26,7 +26,7 @@ public class Assembly extends Common {
     @Column(name = "job_number")
 	private String jobNumber; 
     
-    @Column(name = "jobDescription")
+    @Column(name = "job_description")
 	private String jobDescription; 
     
     @Column(name = "location")
