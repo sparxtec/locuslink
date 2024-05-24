@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
@@ -36,10 +37,7 @@ public class AssemblyHistoryController {
     private SecurityContextManager securityContextManager;
 
     @Autowired
-    private UniversalCatalogDao universalCatalogDao;
-    
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
+    private AssemblyDao assemblyDao;
     
     
 

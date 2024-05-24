@@ -45,8 +45,6 @@ public class AssemblyController {
     @Autowired
     private SecurityContextManager securityContextManager;
 
-    @Autowired
-    private UniversalCatalogDao universalCatalogDao;
     
     @Autowired
     private AssemblyDao assemblyDao;

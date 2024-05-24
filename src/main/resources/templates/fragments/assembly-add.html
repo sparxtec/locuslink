@@ -20,8 +20,9 @@
      
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
-        	<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId" >
-      <div class="adduser-form-bx addaset-formbx borderbx">
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
+        	
+        	      <div class="adduser-form-bx addaset-formbx borderbx">
                         <!-- <h5 class="adaset-hding">Create Assembly  Details</h5> -->
 
 

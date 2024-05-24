@@ -1,15 +1,16 @@
 package com.locuslink.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.locuslink.dto.uploadedFileObjects.WireAttributesDTO;
-
 import lombok.Data;
 
 @Data
 public class DashboardFormDTO {
 
+	
+	// Assembly Data
+	private String assemblyPkid;
+	
+	
+	
 	// Attachment Processing
 	private String productAttachPkId;
 	private boolean isPdf;

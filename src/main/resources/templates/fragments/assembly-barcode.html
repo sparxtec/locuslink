@@ -9,27 +9,27 @@
 		
 		$('#tabAssemblyDetailsId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyDetail', $( "#uniqueAssetDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		});
     	
 		$('#tabAssemblyDocumentId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyDocument', $( "#uniqueAssetDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initAssemblyDocument', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		});
 		
 		$('#tabAssemblyBarcodeId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyBarcode', $( "#uniqueAssetDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initAssemblyBarcode', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		});
 		
 		$('#tabAssemblyTraceDocumentId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyTraceDocument', $( "#uniqueAssetDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initAssemblyTraceDocument', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		});
 		
 		$('#tabAssemblyHistoryId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyHistory', $( "#uniqueAssetDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initAssemblyHistory', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		});
 		
 	    $('#editAssembliesDataId').click(function() {
@@ -51,8 +51,10 @@
 
     <div class="mangeuser-page assetdtaIL-page asmble-detaile-pge asemblies-details">
     
-        <form id="uniqueAssetDTO" name="uniqueAssetDTO" th:object="${uniqueAssetDTO}">
-        
+   		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
+        	 
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">

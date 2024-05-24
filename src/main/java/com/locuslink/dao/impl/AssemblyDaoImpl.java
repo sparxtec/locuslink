@@ -78,7 +78,7 @@ public class AssemblyDaoImpl extends DaoSupport implements AssemblyDao, Applicat
 		 				
 			)
 			from Assembly a
-				left outer join AssemblyReqDoc ard on a.assemblyPkid = ard.assemblyPkid									
+							
  																		
 			where a.assemblyPkid = :pkid
 									
@@ -94,6 +94,8 @@ public class AssemblyDaoImpl extends DaoSupport implements AssemblyDao, Applicat
 	@Override
 	public  List<AssemblyDTO>  getAllDTO() 	{	
 
+		//	left outer join AssemblyReqDoc ard on a.assemblyPkid = ard.assemblyPkid		
+				
 		// 1-11-2024
 		 List <AssemblyDTO> dtoList = entityManager.createQuery("""
 			select new com.locuslink.dto.AssemblyDTO(
@@ -107,7 +109,7 @@ public class AssemblyDaoImpl extends DaoSupport implements AssemblyDao, Applicat
 		 													
 			)
 			from Assembly a
-				left outer join AssemblyReqDoc ard on a.assemblyPkid = ard.assemblyPkid		        
+        
 	 																																				
 			""", AssemblyDTO.class)
 		.getResultList();	

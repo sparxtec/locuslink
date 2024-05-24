@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
+import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dao.UniqueAssetDao;
 import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.DashboardFormDTO;
@@ -46,10 +47,7 @@ public class AssemblyDocumentController {
     private SecurityContextManager securityContextManager;
 
     @Autowired
-    private UniversalCatalogDao universalCatalogDao;
-    
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
+    private AssemblyDao assemblyDao;
     
     
 
