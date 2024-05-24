@@ -91,7 +91,7 @@
 
 
 
-            <div class="dtatable-card">
+            <div class="dtatable-card" >
 
                 <div class="tab-content">
                     
@@ -101,23 +101,19 @@
                             <div class="aset-sidebar-bx">
                                 <ul class="list-unstyled asset-side-nav">
                                     <li><a href="#" class="active">General</a></li>
-                                    <li><a href="#">Documents</a></li>
-                                    <li><a href="#">Test certification</a></li>
-                                    <li><a href="#">Images</a></li>
-                                    <li><a href="#">Asset Details 1</a></li>
-                                    <li><a href="#">Asset Details 2</a></li>
-                                    <li><a href="#">Asset Details 3</a></li>
-                                    <li><a href="#">Asset Details 4</a></li>
-                                    <li><a href="#">Asset Details 5</a></li>
-                                    <li><a href="#">Asset Details 6</a></li>
+                             <!--        <li><a href="#">Unique ID</a></li> -->
+                                    <li><a href="#">Traceability Data</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="row">
+                            
+                            
                                 <div class="col-md-12">
                                     <div class="aset-detal-bx">
-                                         <div class="aset-detal-bx">
+                                                                        
+                                       <div class="aset-detal-bx">
                                         <div class="borderbx">
                                             <div class="bx-hding">
                                                 <h4>General</h4>
@@ -127,62 +123,58 @@
                                             <div class="row mt-4 pd-bx">
                                                 <div class="col-md-12 col-lg-8 mb-3">
                                                     <div class="asset-details">
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped" >
 
                                                             <tbody>
                                                                 <tr>
                                                                     <th class="t-hding">Id</th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">1</td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getAssemblyPkid}"></td>
                                                                 </tr>
+                                                                
+                                                                 <tr>
+                                                                    <th class="t-hding"> Station Number</th>
+                                                                    <td class="t-dot">:</td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getStationNumber}"></td>
+                                                                </tr>
+                                                                
+                                                                 <tr>
+                                                                    <th class="t-hding"> Description </th>
+                                                                    <td class="t-dot">:</td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getJobDescription}"></td>
+                                                                </tr>
+                                                                
                                                                 <tr>
                                                                     <th class="t-hding">Job Number</th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">0123654</td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getJobNumber}"></td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <th class="t-hding"> Description </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription"> Lorem ipsum
-                                                                        dolor sit amet, consectetur
-                                                                        adipiscing elit.
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="t-hding">Customer Job Number
-                                                                    </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">78965412</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="t-hding"> Station Number</th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">102540</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="t-hding"> Trace Number </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">205460
-                                                                        Energy
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="t-hding">Customer
-                                                                    </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">Lorem Ipsum
-                                                                    </td>
-                                                                </tr>
+   
                                                                 <tr>
                                                                     <th class="t-hding">Location
                                                                     </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription"> Akshya Nagar
-                                                                        1st Block 1st Cross, Rammurthy
-                                                                        nagar,
-                                                                    </td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getLocation}"> </td>
                                                                 </tr>
-
+                            
+                                                                <tr>
+                                                                    <th class="t-hding">Customer
+                                                                    </th>
+                                                                    <td class="t-dot">:</td>
+                                                                    <td class="t-discription">Lorem Ipsum </td>
+                                                                </tr>
+                                                                
+                                                                 <tr>
+                                                                    <th class="t-hding">Customer Job Number </th>
+                                                                    <td class="t-dot">:</td>
+                                                                    <td class="t-discription">78965412</td>
+                                                                </tr>
+                                                                
+                                                                <tr>
+                                                                    <th class="t-hding">Fabricator </th>
+                                                                    <td class="t-dot">:</td>
+                                                                    <td class="t-discription">Lorem Ipsum  </td>
+                                                                </tr>
 
                                                             </tbody>
                                                         </table>
@@ -202,7 +194,12 @@
                                     </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 mt-4">
+                                
+                                
+                                
+     <!--  The Assembly is not tied to an asset at this time -->                           
+                                
+<!--                                 <div class="col-md-12 mt-4">
                                     <div class="aset-detal-bx">
                                         <div class="borderbx">
                                             <div class="bx-hding">
@@ -266,7 +263,11 @@
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
+                                
+                                
+
+                                
                                 <div class="col-md-12 mt-4">
                                     <div class="aset-detal-bx">
                                         <div class="borderbx">
@@ -286,41 +287,31 @@
                                                                     <td class="t-dot">:</td>
                                                                     <td class="t-discription">1</td>
                                                                 </tr>
+             
                                                                 <tr>
-                                                                    <th class="t-hding">Unique Asset ID</th>
+                                                                    <th class="t-hding"> Trace Type </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">x1.x2</td>
+                                                                    <td class="t-discription">Heat</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <th class="t-hding">Manufacturer </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">South Wire
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="t-hding">Product Type </th>
-                                                                    <td class="t-dot">:</td>
-                                                                    <td class="t-discription">Cable</td>
-                                                                </tr>
-                                                                <tr>
+                                                                                                                                
+                                                                 <tr>
                                                                     <th class="t-hding"> Trace Number </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">Serial</td>
-                                                                </tr>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getTraceNumber}"></td> 
+                                                                </tr> 
+                                                                
                                                                 <tr>
-                                                                    <th class="t-hding"> Customers </th>
+                                                                    <th class="t-hding"> Serial Number </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">Black Hills
-                                                                        Energy
-                                                                    </td>
+                                                                    <td class="t-discription">S12345</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th class="t-hding"> P Type Description
+                                                                    <th class="t-hding">Description
                                                                     </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">South Wire
-                                                                    </td>
+                                                                    <td class="t-discription"> </td>
                                                                 </tr>
+                           
 
                                                             </tbody>
                                                         </table>
