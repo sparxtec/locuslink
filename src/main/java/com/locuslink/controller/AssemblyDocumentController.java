@@ -1,17 +1,13 @@
 package com.locuslink.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -22,14 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.Tag;
 import com.locuslink.common.GenericMessageResponse;
@@ -37,10 +30,8 @@ import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.dao.AssemblyReqDocDao;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.UniqueAssetDTO;
 import com.locuslink.model.AssemblyAttachment;
 import com.locuslink.model.AssemblyReqDoc;
-import com.locuslink.model.ProductAttachment;
 /**
  * This is a Spring MVC Controller.
  *
