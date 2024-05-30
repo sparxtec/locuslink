@@ -29,7 +29,7 @@ public class AssemblyReqDoc extends Common {
     @Column(name="doc_type_pkid", nullable = false)
     private int docTypePkid;
 
-    @Column(name = "docDescription")
+    @Column(name = "doc_description")
 	private String docDescription; 
     
     

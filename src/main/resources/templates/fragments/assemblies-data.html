@@ -90,7 +90,7 @@
 			 // Button Clicks on the Data table
 	  	    $('#assemblyDataTable tbody').on('click', 'button', function (e) {
 		    	
-	  	    	console.log(this);
+	  	    	//console.log(this);
 		    	
 		    	var url='';
 		    	var whatWasClicked=$(this).attr("id").split("_")[0];
@@ -106,7 +106,7 @@
 				if(whatWasClicked==="detail") {
 
 	       			showSpinner();	
-	       			console.log("detail clicked :");
+	       			//console.log("detail clicked :");
 	     
 	       			// 5-17-2023
 					//submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       												

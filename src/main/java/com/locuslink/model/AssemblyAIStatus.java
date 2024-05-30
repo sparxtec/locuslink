@@ -26,13 +26,13 @@ public class AssemblyAIStatus extends Common {
     @Column(name="aa_pkid", nullable = false)
     private int aaPkid;
 
-    @Column(name = "statusType", nullable = false)
+    @Column(name = "status_type", nullable = false)
 	private String statusType; 
     
     @Column(name = "status", nullable = false)
 	private String status; 
     
-    @Column(name = "statusDescription", nullable = false)
+    @Column(name = "status_description", nullable = false)
 	private String statusDescription; 
     
 }

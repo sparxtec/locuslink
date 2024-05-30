@@ -70,9 +70,9 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 @Controller
 @Service
-public class AttachmentController {
+public class AssemblyAttachmentController {
 
-	private static final Logger logger = Logger.getLogger(AttachmentController.class);
+	private static final Logger logger = Logger.getLogger(AssemblyAttachmentController.class);
 
 
     @Value("${app.logout.url}")

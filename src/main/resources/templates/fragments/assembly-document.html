@@ -5,8 +5,85 @@
     <title>Assembly Document</title>
     
     <script>
-    $(document).ready(function() {	
+        
+	    var isDuplicateFileupload = false;
+	
+		Dropzone.autoDiscover = false;	
 		
+		var traceDropzoneId = $('#tracedropzone').dropzone({
+			
+		   headers:{   'X-CSRFToken' : '{{ csrf_token }}' },				
+		   acceptedFiles: '.pdf, application/pdf',			 			 		
+		   maxThumbnailFilesize: '20',
+		   dictInvalidFileType: "Incorrect File type, please upload only .PDF files",			   
+	    
+		   init: function() {
+		     this.on("addedfile", 
+		    	function(file) {	    	
+		      });
+		     
+		   this.on("success", 
+		    	function(file,response) {
+			   
+		    	  $(".dz-success-mark svg").css("background", "green");
+		    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
+		    	  //document.getElementById("continueUpload").disabled = false;	
+		    	  
+		    	  // Error Check - Duplicate Filename
+		    	  if (response.error != "0" ) {		    		  
+		    		 isDuplicateFileupload = true;		    		  
+		    	     $('#errorMessageId').show();	
+		    	     $('#errorMessageId').text(response.errorMessage);				    	      
+		    	  	 //document.getElementById("continueUpload").disabled = true;
+		    	     this.removeFile(file);
+		    	     // display red error for 5 seconds, then remove the error message
+		    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
+		    	  }
+		    	  
+		    }); 		     		  
+		
+	     	this.on("error", 
+		    	function(file) {
+	     		  $(".dz-error-mark svg").css("background", "red");
+	     		  $(".dz-success-mark").css("display", "none");	 	     		  	 	     		 
+		      }); 		
+	     	
+	     	this.on("removedfile", 
+	     		function(file) {
+	     		
+				if (isDuplicateFileupload === true) {
+				    isDuplicateFileupload = false;
+				} else {
+	         		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+	               	var innerData = {};
+	        		innerData["removeFileName"] = file.name;
+	        		innerData["deleteAllFilesWithPk"] =	"NO";
+	              	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
+	        		myData["data"] = innerData;
+	        		
+	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+	        		//if (this.files[0] == null) {
+	 		   		//	document.getElementById("continueUpload").disabled = true;
+	 		   		//}
+				}
+				
+	     	});		   
+		  }
+			
+		});
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(document).ready(function() {	
+		    	
 		$('#tabAssemblyDetailsId').click(function() {
 			showSpinner();
 			submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
@@ -37,13 +114,155 @@
 			submitFormAjaxHTML('editAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	    
+	    
+	    
+
+	    
+		// Added for Dropzone
+		window.addEventListener("dragover",function(e){
+			  e = e || event;
+			  e.preventDefault();
+			},false);
+		window.addEventListener("drop",function(e){
+		  e = e || event;
+		  e.preventDefault();
+		},false);
+		//document.getElementById("continueUpload").disabled = true;	
+		
+		$('#errorMessageId').hide();
+	   	$("#assemblyUploadId").hide();	
+	   	
+	   	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
+	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
+	    if (gotoDocumentsTab === 'yes') {
+	    	  document.getElementById("documentsTabId").click();
+	    }
+	   	
+	   	$('#gotoDocumentsTab').val();
+		
+		// Add Attachments - Drop Zone Stuff
+    	$('#docAddId').click(function() {		    		
+    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+    		pkId = $('input#uniqueAssetPkId').val();
+    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+		   	$("#assemblyUploadId").show();	
+    	});   
+	   	
+	   	
+       	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
+	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
+	    if (gotoDocumentsTab === 'yes') {
+	    	  document.getElementById("documentsTabId").click();
+	    }
+	   	
+	   	$('#gotoDocumentsTab').val();
+		
+		// Add Attachments - Drop Zone Stuff
+    	$('#addAssemblyId').click(function() {		    		
+    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+    		pkId = $('input#uniqueAssetPkId').val();
+    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+		   	$("#assemblyUploadId").show();	
+    	});   
+		
+		
+    	$('#addCancelUpload').click(function() {	
+    		
+    		// clear files from the UI
+    		traceDropzoneId[0].dropzone.removeAllFiles();
+    		    		
+    		$("#assemblyUploadId").hide();
+    		
+     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+           	var innerData = {};
+    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+    		innerData["deleteAllFilesWithPk"] =	"YES";
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+
+    	});   
+    	
+    	
+    	$('#addContinueUpload').click(function() {		    		
+    		showSpinner();	
+    		
+    		uniqueAssetPkId = $('#uniqueAssetPkId').val();
+    		//console.log ("uniqueAssetPkId ->: " + uniqueAssetPkId);
+    		
+   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#uniqueAssetDTO").serialize(), "initCommonResponse");					
+			hideSpinner();
+			$("#assemblyUploadId").hide();
+    	}); 
+    	
+ 		// Browse Files BUTTON on the Dropzone Box
+	   // $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
+		 		
+ 		
+
+ 		
+ 		
+ 		
+ 		
+ 		
+		
+		
+		
+		
+		
+	   	
+
+	    // CS 2-21-2024  Determine which Doc in the left nav was clicked
+		$("[id^='ardpkid_']").bind( "click", function(event) {			
+			event.preventDefault();
+			  
+			var tokens = ($(this).attr("id")).split("_");
+			ardPkId = tokens[1];	
+			
+			// Put the clicked document name in the upload description
+			$('#uploadDocname').text(this.text);	
+			$('#uploadDocname').append( "<span>Add</span>");
+				
+			//  Highlight the document clicked {remove hightlight from the list first}
+	        var clickedItem = $( this );				        
+	        $('[id^=ardpkid_]').each(function() {
+	            $( this ).removeClass( "active" );
+	            
+	             $(this).find("i").removeClass( "fa-circle-check" );
+	            		
+	        });
+	        clickedItem.addClass( "active" );
+	        clickedItem.find("i").addClass( "fa-circle-check" );
+	        
+	        // Add in the Check Box
+	        // <i class="fa-regular"></i>
+	        // <i class="fa-regular fa-circle-check"></i>
+	        
+	        // TODO  5-28-2024  
+	        //  the above code adds the green check box to the clicked item.
+	        // once upload is coded, the green check box should be on when a succesful upload has happened for that doc type
+	        
+		});	
+
+	    
  	});       
 
    function initCommonResponse(returnData) {	
 	   hideSpinner();
 	   $('#mainBody').html( returnData);    	 
    }
-        
+   
+   function modalResponse(returnData) {	
+ 		hideSpinner();			 		
+ 		$('#asset_ModalBody').html(returnData); 	 		 		 		
+   }   
+   
+	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
+		   $($.fn.dataTable.tables(true)).DataTable()
+		      .columns.adjust()
+		      .responsive.recalc();
+		});
+	
+	
     </script>
 </head>
 
@@ -93,160 +312,121 @@
                 <div class="tab-content">
                     				
                    <div id="Assembliesdocuments" class="tab-pane active">
-                                <div class="tab-subhding procut-tab">
-                                    <h3>Upload Assemblies Documents
-                                        <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
-                                                class="img-fluid" alt="Download" title="Download All"> Download all
-                                            Documents</a>
-                                    </h3>
-                                    
-                                    <p class="warning-msg"><span>* </span> marked fields are mandatory</p>
+                        <div class="tab-subhding procut-tab">
+                            <h3>Upload Assemblies Documents
+                                <a href="#" download> <img src="./images/downlaod-icon-primary.svg"
+                                        class="img-fluid" alt="Download" title="Download All"> Download all Documents</a>
+                            </h3>
+                            
+                            <p class="warning-msg"><span>* </span> marked fields are mandatory</p>
+                        </div>
+                                
+                        <div class="row">
+                        
+                            <div class="col-md-4 mb-4">                            
+                                <div class="aset-sidebar-bx">                                
+                                    <ul id="doclistid" class="list-unstyled asset-side-nav">
+                                                                                                            
+									    <th:block th:each="assemblyReqDoc, iStat  : ${assemblyReqDocList} ">                                                               
+									          <li>
+									          	<a th:id="ardpkid_ + ${assemblyReqDoc.getArdPkid() }" href="#" class="doc-sucess" >
+									          		<span th:text="${assemblyReqDoc.getDocDescription()}"></span>          		
+									          		<span th:if="${assemblyReqDoc.getDocTypePkid() == 60} ">*</span>
+									         		 <i class="fa-regular"></i>
+									          	</a>          
+									          </li>    
+									     </th:block> 
+									                                                                                
+                                    </ul>
                                 </div>
+                            </div>
+
+                            <div class="col-md-8">
                                 <div class="row">
-                                    <div class="col-md-4 mb-4">
-                                        <div class="aset-sidebar-bx">
-                                            <ul class="list-unstyled asset-side-nav">
-                                                <li><a href="#" class="active doc-sucess">Purchase Orders <span>*</span><i
-                                                            class="fa-regular fa-circle-check"></i> </a></li>
-                                                <li><a href="#">Fabrication Project Number and Project Details <span>*</span><i class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Welding Procedures and Stamp <span>*</span><i class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Welder Certs (OQ) <span>*</span><i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Weld Map <i class="fa-regular fa-circle"></i> </a>
-                                                </li>
-                                                <li><a href="#">Stamped Asbuilt Drawings with Bill of Materials
-                                                        included <i class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Weld inspection <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Hydrostatic Report <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Hydrostatic Chart <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Calibration Certificate/Data Sheet <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Coating Report/Stamp <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                                <li><a href="#">Equipment <i class="fa-regular fa-circle"></i>
-                                                    </a></li>
-                                                <li><a href="#">Non-destructive testing <i
-                                                            class="fa-regular fa-circle"></i> </a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="aset-detal-bx">
 
-                                    <div class="col-md-8">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="aset-detal-bx">
-
-                                                    <div class="borderbx ">
-                                                        <div class="bx-hding">
-                                                            <h4>Upload Purchase Orders Document
-                                                                <span>Add</span>
-                                                            </h4>
-                                                        </div>
-                                                        <div class="col-lg-12 col-xl-12 p-3 mt-3 uploadzone">
-                                                            <div class="importasset-page">
-                                                                <div class="uploadfile position-relative text-center">
-                                                                    <input type="file">
-                                                                    <img src="./images/export.svg" class="img-fluid"
-                                                                        alt="export" title="">
-                                                                    <h6>Drag &amp; drop files or <span>Browse</span>
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
-                                                                <button id="addCancelUpload"
-                                                                    class="js-btn-prev contine-btn" type="button"
-                                                                    title="Prev">Cancel</button>
-                                                                <button id="addContinueUpload"
-                                                                    class="js-btn-next contine-btn" type="button"
-                                                                    title="Next">Continue</button>
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
+                                            <div class="borderbx ">
+                                                <div class="bx-hding">                                  
+                                                    <h4 id="uploadDocname" >{Select Doc Type on left to upload}
+                                                    <span id="docAddId">Add</span> </h4>                                                                                            
                                                 </div>
-                                            </div>
+                                                
+                                                
+                                                
+          <div id="assemblyUploadId"  class="col-lg-12 col-xl-12 p-3 mt-3 ">
+              <div class="importasset-page">
+                  <div class="uploadfile position-relative text-center">
+                                       
+						<form id="tracedropzone" name="tracedropzone"	th:object="${dashboardFormDTO}" action="/portal/processAssemblyReqDocUpload"					
+							 class="dropzone dz-clickable"  enctype="multipart/form-data" method="POST">								
+							
+							<!-- CSRF token -->
+							<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>									
+							<input type="hidden" id="assemblyPkid" name="assemblyPkid"  />
+										
+				            <img src="./images/export.svg" class="img-fluid" alt="export" title="">
+				            <h6><a href="#"> Drag &amp; drop files or Click to Browse</a></h6>
+				                      		
+							<div class="dz-default dz-message">
+								<span>Files must be less than 20MB and a '.Pdf' file</span>
+							</div>
+							
+						    <div id="errorMessageId"  style="display:none;color:red">
+						         <span>Error Msg</span>
+				   		    </div>												       			
+						</form>                     
+                                                                  
+                  </div>
+              </div>
+              
+              <div class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
+                  <button id="addCancelUpload"    class="js-btn-prev contine-btn" type="button"   title="Prev">Cancel</button>
+                  <button id="addContinueUpload"  class="js-btn-next contine-btn" type="button"  title="Next">Continue</button>
+              </div>
 
-                                        </div>
+          </div>
+                                                
+                                                
+                                                
 
-                                        <div class="row mt-4">
-                                            <div class="col-md-6">
-                                                <div class="barcdetab document-bx">
-                                                    <div class="documentname-hdingbx">
-                                                        <div class="document-name-bx">
-                                                            <span>PDF</span>
-                                                        </div>
-                                                        <div class="document-hding">
-                                                            <h6>Document 1.pdf<span>254 kB</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="download-icon">
-                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                                            alt="Download" title="Download All">
-                                                    </div>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="barcdetab document-bx">
-                                                    <div class="documentname-hdingbx">
-                                                        <div class="document-name-bx">
-                                                            <span>XLS</span>
-                                                        </div>
-                                                        <div class="document-hding">
-                                                            <h6>Document 2.pdf<span>254 kB</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="download-icon">
-                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                                            alt="Download" title="Download All">
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="barcdetab document-bx">
-                                                    <div class="documentname-hdingbx">
-                                                        <div class="document-name-bx">
-                                                            <span>PDF</span>
-                                                        </div>
-                                                        <div class="document-hding">
-                                                            <h6>Document 3.pdf<span>254 kB</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="download-icon">
-                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                                            alt="Download" title="Download All">
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="barcdetab document-bx">
-                                                    <div class="documentname-hdingbx">
-                                                        <div class="document-name-bx">
-                                                            <span>XLS</span>
-                                                        </div>
-                                                        <div class="document-hding">
-                                                            <h6>Document 4.pdf<span>254 kB</span></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="download-icon">
-                                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                                            alt="Download" title="Download All">
-                                                    </div>
-
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
+
+                                <div class="row mt-4">
+                                
+        <!-- start loop -->       
+        
+      <th:block th:each="assemblyAttachment, iStat  : ${assemblyAttachmentList} ">
+      
+         <div class="col-md-6">
+              <div class="barcdetab document-bx">
+                  <div class="documentname-hdingbx">
+                      <div class="document-name-bx">
+                          <span>PDF</span>
+                      </div>
+                      <div class="document-hding">
+                          <h6>Document 1.pdf<span>254 kB</span></h6>
+                      </div>
+                  </div>
+                  <div class="download-icon">
+                      <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid" alt="Download" title="Download Doc">
+                  </div>
+
+              </div>
+          </div>
+       </th:block>  
+                                  
+                                                                  
+
+                                </div>
+                            </div>
+
+                        </div>
 
 
 
