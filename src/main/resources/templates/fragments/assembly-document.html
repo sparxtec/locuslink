@@ -58,10 +58,10 @@
 	               	var innerData = {};
 	        		innerData["removeFileName"] = file.name;
 	        		innerData["deleteAllFilesWithPk"] =	"NO";
-	              	innerData["uniqueAssetPkId"] = $('input#uniqueAssetPkId').val();
+	              	innerData["assemblyPkid"] = $('input#assemblyPkid').val();
 	        		myData["data"] = innerData;
 	        		
-	        		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+	        		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse");
 	        		//if (this.files[0] == null) {
 	 		   		//	document.getElementById("continueUpload").disabled = true;
 	 		   		//}
@@ -75,13 +75,7 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
+
     $(document).ready(function() {	
 		    	
 		$('#tabAssemblyDetailsId').click(function() {
@@ -135,7 +129,8 @@
 	   	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
 	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
 	    if (gotoDocumentsTab === 'yes') {
-	    	  document.getElementById("documentsTabId").click();
+	    	  //document.getElementById("documentsTabId").click();
+	    	document.getElementById("tabAssemblyDocumentId").click();
 	    }
 	   	
 	   	$('#gotoDocumentsTab').val();
@@ -143,11 +138,17 @@
 		// Add Attachments Button Clicked - Drop Zone Stuff
     	$('#uploadDocname').click(function() {		    		
     		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
-    		pkId = $('input#uniqueAssetPkId').val();
-    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+    		pkId = $('input#assemblyPkid').val();
+    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);    
+    		
+    		// 6-10-2024
+    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
+    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+    		
+    		
 		   	$("#assemblyUploadId").show();	
     	});   
-	   	
+    
 	   	
        	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
 	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
@@ -160,8 +161,13 @@
 		// Add Attachments - Drop Zone Stuff
     	$('#addAssemblyId').click(function() {		    		
     		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
-    		pkId = $('input#uniqueAssetPkId').val();
-    		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
+    		pkId = $('input#assemblyPkid').val();
+    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);  
+    		
+    		// 6-10-2024
+    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
+    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+    		
 		   	$("#assemblyUploadId").show();	
     	});   
 		
@@ -175,10 +181,10 @@
     		
      		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
            	var innerData = {};
-    		innerData["uniqueAssetPkId"] =	pkId = $('input#uniqueAssetPkId').val();
+    		innerData["assemblyPkid"] =	pkId = $('input#assemblyPkid').val();
     		innerData["deleteAllFilesWithPk"] =	"YES";
     		myData["data"] = innerData;
-    		submitFormAjaxJSON("deleteFileUpload", myData, "generalResponse");
+    		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse");
 
     	});   
     	
@@ -186,10 +192,10 @@
     	$('#addContinueUpload').click(function() {		    		
     		showSpinner();	
     		
-    		uniqueAssetPkId = $('#uniqueAssetPkId').val();
+    		assemblyPkid = $('#assemblyPkid').val();
     		//console.log ("uniqueAssetPkId ->: " + uniqueAssetPkId);
     		
-   			submitFormAjaxHTML('saveAttachmentsFromStagingToStorage', $("#uniqueAssetDTO").serialize(), "initCommonResponse");					
+   			submitFormAjaxHTML('saveAssemblyAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "initCommonResponse");					
 			hideSpinner();
 			$("#assemblyUploadId").hide();
     	}); 
@@ -199,16 +205,8 @@
 		 		
  		
 
- 		
- 		
- 		
- 		
- 		
-		
-		
-		
-		
-		
+
+	
 	   	
 
 	    // CS 2-21-2024  Determine which Doc in the left nav was clicked
@@ -217,6 +215,15 @@
 			  
 			var tokens = ($(this).attr("id")).split("_");
 			ardPkId = tokens[1];	
+			
+			// 6-10-2024
+			assemblyDocTypePkId = tokens[2];	
+						
+			//  add it to the trace form
+    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);
+    		$('input#assemblyDocTypePkId').val(assemblyDocTypePkId);
+						
+						
 			
 			// Put the clicked document name in the upload description
 			$('#uploadDocname').text(this.text);	
@@ -273,6 +280,8 @@
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
         	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
+        	<input type="hidden" id="assemblyDocTypePkId" name="assemblyDocTypePkId"   th:value="${dashboardFormDTO.getAssemblyDocTypePkId}" >
+        	<input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
         	 
             <div class="page-hding">
                 <h1>Assembly Details</h1>
@@ -329,7 +338,7 @@
                                                                                                             
 									    <th:block th:each="assemblyReqDoc, iStat  : ${assemblyReqDocList} ">                                                               
 									          <li>
-									          	<a th:id="ardpkid_ + ${assemblyReqDoc.getArdPkid() }" href="#" class="doc-sucess" >
+									          	<a th:id="'ardpkid_' + ${assemblyReqDoc.getArdPkid()} + '_' +  ${assemblyReqDoc.getDocTypePkid()} " href="#" class="doc-sucess" >
 									          		<span th:text="${assemblyReqDoc.getDocDescription()}"></span>          		
 									          		<span th:if="${assemblyReqDoc.getDocTypePkid() == 60} ">*</span>
 									         		 <i class="fa-regular"></i>
@@ -363,12 +372,14 @@
 							
 							<!-- CSRF token -->
 							<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>									
-							<input type="hidden" id="assemblyPkid" name="assemblyPkid"  />
+							<input type="hidden" id="assemblyPkid" name="assemblyPkid"  />									
+							<input type="hidden" id="assemblyDocTypePkId" name="assemblyDocTypePkId"  />
 										
-				            <img src="./images/export.svg" class="img-fluid" alt="export" title="">
-				            <h6><a href="#"> Drag &amp; drop files or Click to Browse</a></h6>
+
 				                      		
 							<div class="dz-default dz-message">
+								<img src="./images/export.svg" class="img-fluid" alt="export" title="">
+				           		 <h6><a href="#"> Drag &amp; drop files or Click to Browse</a></h6>
 								<span>Files must be less than 20MB and a '.Pdf' file</span>
 							</div>
 							

@@ -37,7 +37,15 @@
 			submitFormAjaxHTML('editAssemblyData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	
-
+	    
+	   	// C.Sparks 6-10-2024  Navigate back to the DOCUMENTS tab that was open
+	   	// when the upload doc process ran.
+	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
+	    if (gotoDocumentsTab === 'yes') {
+	    	  document.getElementById("tabAssemblyDocumentId").click();
+	    }
+	   	
+	   	$('#gotoDocumentsTab').val();
 		
  	});       
 
@@ -56,7 +64,8 @@
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
         	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
-        	            	    
+        	<input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
+ 	       	    
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">

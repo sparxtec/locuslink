@@ -8,6 +8,7 @@ public class DashboardFormDTO {
 	
 	// Assembly Data
 	private String assemblyPkid;
+	private String assemblyDocTypePkId;
 	
 	
 	
