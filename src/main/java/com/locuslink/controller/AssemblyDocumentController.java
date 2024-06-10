@@ -66,11 +66,11 @@ public class AssemblyDocumentController {
 	@Value("${aws.s3.bucketName}")
 	private String awsS3BucketName;
 							 
-	@Value("${file.attachment.staging.fullpath}")
-	private String attachmentStagingFullpath;
+	@Value("${file.assembly.staging.fullpath}")
+	private String assemblyStagingFullpath;
 	
-	@Value("${file.attachment.storage.fullpath}")
-	private String attachmentStorageFullpath;
+	@Value("${file.assembly.storage.fullpath}")
+	private String assemblyStorageFullpath;
 	
 	
 	
@@ -127,14 +127,14 @@ public class AssemblyDocumentController {
 
 			// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
 			String prefixUniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId()+ "_";	
-			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
+			String fullpathFileName_keyName = assemblyStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
 			
 						
 			// TODO 5-11-2023   Dont allow duplicate files uploaded to the same Asset.
 			if (!checkFileIsValideToUpload(prefixUniqueAssetPkId + inputfile.getOriginalFilename())) {
-				logger.debug("  ERROR duplicate file upload not allowed for the same asset. " );
+				logger.debug("  ERROR duplicate file upload not allowed for the same assembly. " );
 				response.setError(1);
-				response.setErrorMessage(" ERROR. You cannot upload duplicate file for the same asset.");				
+				response.setErrorMessage(" ERROR. You cannot upload duplicate file for the same assembly.");				
 				response.setField("uploadedFilenameInError", inputfile.getOriginalFilename());
 				return response;				
 			}
@@ -164,10 +164,10 @@ public class AssemblyDocumentController {
             	        		
 			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
 			
-			logger.debug(" Attachment Upload Worked,  size ->: " + inputfile.getSize());
+			logger.debug(" Assembly Upload Worked,  size ->: " + inputfile.getSize());
 
 		} catch (Exception e) {
-			logger.debug("  ERROR csvFileUpload failed ->: " + e.getMessage());
+			logger.debug("  ERROR Document Upload failed ->: " + e.getMessage());
 		}
 		return response;
 	}
@@ -178,39 +178,36 @@ public class AssemblyDocumentController {
 		
 		logger.debug("Starting checkFileIsValideToUpload()...");
 
-	    // Gets the list of just files, under the directory structure {tag name}
-	    ListObjectsRequest listObjectsRequest_staging = new ListObjectsRequest()
-	            .withBucketName(awsS3BucketName)
-	            .withPrefix(attachmentStagingFullpath)
-	            .withMarker(attachmentStagingFullpath);
-	    	              	
-       //Check Staging for Duplicate
-	    boolean dupFound = false;
-        ObjectListing s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging)	 ;       		
-        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {        	
-        	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
-        		logger.debug("    STAGING duplicate file found ->: " + s3ObjectSummary.getKey());	
-        		dupFound = true;   
-        		return false;
-        	} 
-
-        }
-        
-        
-        // Check Storage for Duplicate
-	    ListObjectsRequest listObjectsRequest_storage = new ListObjectsRequest()
-	            .withBucketName(awsS3BucketName)
-	            .withPrefix(attachmentStorageFullpath)
-	            .withMarker(attachmentStorageFullpath);
-
-        s3ObjectList = awsS3Client.listObjects(listObjectsRequest_storage)	 ;       		
-        for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) {        	
-        	if (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
-        		logger.debug("    STORAGE duplicate file found ->: " + s3ObjectSummary.getKey());	
-        		dupFound = true;   
-        		return false;
-        	}         	
-        }	    
+		
+		// TODO  5-30-2024
+		
+		/*
+		 * // Gets the list of just files, under the directory structure {tag name}
+		 * ListObjectsRequest listObjectsRequest_staging = new ListObjectsRequest()
+		 * .withBucketName(awsS3BucketName) .withPrefix(attachmentStagingFullpath)
+		 * .withMarker(attachmentStagingFullpath);
+		 * 
+		 * //Check Staging for Duplicate boolean dupFound = false; ObjectListing
+		 * s3ObjectList = awsS3Client.listObjects(listObjectsRequest_staging) ;
+		 * for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) { if
+		 * (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
+		 * logger.debug("    STAGING duplicate file found ->: " +
+		 * s3ObjectSummary.getKey()); dupFound = true; return false; }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * // Check Storage for Duplicate ListObjectsRequest listObjectsRequest_storage
+		 * = new ListObjectsRequest() .withBucketName(awsS3BucketName)
+		 * .withPrefix(attachmentStorageFullpath)
+		 * .withMarker(attachmentStorageFullpath);
+		 * 
+		 * s3ObjectList = awsS3Client.listObjects(listObjectsRequest_storage) ;
+		 * for(S3ObjectSummary s3ObjectSummary : s3ObjectList.getObjectSummaries()) { if
+		 * (s3ObjectSummary.getKey().contains(fullpathFileName_keyName)) {
+		 * logger.debug("    STORAGE duplicate file found ->: " +
+		 * s3ObjectSummary.getKey()); dupFound = true; return false; } }
+		 */    
 	    
 		return true;
 	}

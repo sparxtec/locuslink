@@ -140,8 +140,8 @@
 	   	
 	   	$('#gotoDocumentsTab').val();
 		
-		// Add Attachments - Drop Zone Stuff
-    	$('#docAddId').click(function() {		    		
+		// Add Attachments Button Clicked - Drop Zone Stuff
+    	$('#uploadDocname').click(function() {		    		
     		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
     		pkId = $('input#uniqueAssetPkId').val();
     		$("#tracedropzone input[name=uniqueAssetPkId]").val(pkId);    		    		
@@ -220,7 +220,7 @@
 			
 			// Put the clicked document name in the upload description
 			$('#uploadDocname').text(this.text);	
-			$('#uploadDocname').append( "<span>Add</span>");
+			$('#uploadDocname').append( "<span id='docAddId'>Add</span>");
 				
 			//  Highlight the document clicked {remove hightlight from the list first}
 	        var clickedItem = $( this );				        
