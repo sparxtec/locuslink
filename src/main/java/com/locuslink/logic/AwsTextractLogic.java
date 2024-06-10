@@ -3,9 +3,12 @@ package com.locuslink.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -21,6 +24,10 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
@@ -80,7 +87,7 @@ public class AwsTextractLogic {
 	 *   C.Sparks 4-19-2024
 	 *   	We will define the logic methods needed
 	 */
-	public boolean process_1( String assemblyPkId ) {
+	public JsonNode process_1( String assemblyPkId ) {
 		
 		logger.debug("Starting process_1() " );
 
@@ -92,12 +99,10 @@ public class AwsTextractLogic {
 		
 
 		// TODO 5-9-2024  
-		processAWSTextract();
-		
-		return true;
+		return processAWSTextract();
 	}
 
-	private String processAWSTextract () {
+	private JsonNode processAWSTextract () {
 				
 		TextractClient textractClient  = TextractClient.builder()
 				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretKey)))
@@ -111,12 +116,18 @@ public class AwsTextractLogic {
 		
 	    String jobId = startDocAnalysisS3(textractClient, awsS3BucketName, docName);
 	    System.out.println("Getting results for job " + jobId);
-	    String status = getJobResults(textractClient, jobId);
-	    System.out.println("The job status is " + status);
+	    /*
+	     * I. Summers 5/31/24
+	     * 		Changed var "status" to "results": now contains the OCR results from Textract.
+	     * 		"status" now succeeded/failed based on "results". Will change as required.
+	     */
+	    JsonNode results = getJobResults(textractClient, jobId);
+	    String status =  results.isNull() ? "failed" : "succeeded";
+	    System.out.println("The OCR job" + status);
 	    textractClient.close();
         		
         		
-	     return "";	     
+	     return results;	     
 	}
 	
 	
@@ -126,7 +137,6 @@ public class AwsTextractLogic {
         try {
             List<FeatureType> myList = new ArrayList<>();
             myList.add(FeatureType.TABLES);
-            myList.add(FeatureType.FORMS);
 
             S3Object s3Object = S3Object.builder()
                     .bucket(bucketName)
@@ -155,12 +165,13 @@ public class AwsTextractLogic {
         return "";
 	}
 
-    private static String getJobResults(TextractClient textractClient, String jobId) {
+    private static JsonNode getJobResults(TextractClient textractClient, String jobId) {
     	
         boolean finished = false;
-        boolean moreBlocks = false;
+        boolean moreBlocks;
         int index = 0;
-        String status = "";
+        String status;
+        JsonNode sortedBlocks = null;
 
         try {
             while (!finished) {
@@ -191,7 +202,9 @@ public class AwsTextractLogic {
                 	 */
             		do {
             			if (nextToken != null && nextToken != "") {
-            				nextToken = getJobResults(textractClient, jobId, nextToken);
+            				List<Object> nextJob = getJobResults(textractClient, jobId, nextToken);
+            				nextToken = (String) nextJob.get(0);
+            				blocks.addAll((List<Block>) nextJob.get(1));
             				moreBlocks = true;
             			} else {
             				System.out.println("All done! No more tokens.");
@@ -199,7 +212,7 @@ public class AwsTextractLogic {
             			}
             		} while (moreBlocks);
                 	
-                	
+                	sortedBlocks = sortBlocks(blocks);
                     finished = true;
                     
                 } else {
@@ -209,13 +222,11 @@ public class AwsTextractLogic {
                 index++;
             }
 
-            return status;
-
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        return "";
+        return sortedBlocks;
     }
     
     /*
@@ -223,12 +234,13 @@ public class AwsTextractLogic {
      * 		Created new overloaded method for getJobResults, to be used for paginated response results.
      * 		Accepts token String parameter and returns nextToken string (if applicable)  
      */
-	private static String getJobResults(TextractClient textractClient, String jobId, String token) {
+	private static List<Object> getJobResults(TextractClient textractClient, String jobId, String token) {
 	    	
 	        boolean finished = false;
 	        int index = 0;
 	        String status;
-	        String nextToken = null;
+	        String nextToken = "";
+	        ArrayList<Object> jobResults = new ArrayList<>(2);
 	
 	        try {
 	            while (!finished) {
@@ -251,6 +263,9 @@ public class AwsTextractLogic {
                     	
                     	// Set nextToken
                     	nextToken = response.nextToken();
+                    	// Add to jobResults
+                    	jobResults.add(0,  nextToken);
+                    	jobResults.add(blocks);
                     	finished = true;
 	                    
 	                } else {
@@ -260,17 +275,39 @@ public class AwsTextractLogic {
 	                index++;
 	            }
 	
-	            return nextToken;
-	
 	        } catch (InterruptedException e) {
 	            System.out.println(e.getMessage());
 	            System.exit(1);
 	        }
-	        return "";
+	        return jobResults;
 	}
 	
 	
-	
+	/*
+	 * I. Summers 5-31-24
+	 * 		Created new sortBlocks method to sort the all resulting blocks from getJobResults according to page number.
+	 * 		This will let us generate plain-text documents (utilizing AWS table data) to forward onto the Azure API 
+	 */
+	private static JsonNode sortBlocks(List<Block> blocks) {
+		
+		ObjectMapper mapper = new ObjectMapper();	// Initialize ObjectMapper for Jackson functionality
+		ObjectNode sortedBlocks = mapper.createObjectNode();	// Initialize root node -- base of JSON
+		
+		for (Block block : blocks) {
+			if (!sortedBlocks.has(String.valueOf(block.page()))) {	// If doc page number does not exist as a key:
+				
+				ArrayNode pageBlocks = mapper.createArrayNode();	// Create new array node for current page
+				pageBlocks.addPOJO(block);	// Add current Block object to array node
+				
+				sortedBlocks.set(String.valueOf(block.page()), pageBlocks);	// Set page-array<Block> as first k-v pair
+			} else {	// If doc page already exists as a key:
+				
+				((ArrayNode) sortedBlocks.get(String.valueOf(block.page()))).addPOJO(block); // Add Block value to page key
+			}
+		}
+		
+		return sortedBlocks;
+	}
 	
 	
 	
