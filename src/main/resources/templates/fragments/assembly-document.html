@@ -126,40 +126,47 @@
 		$('#errorMessageId').hide();
 	   	$("#assemblyUploadId").hide();	
 	   	
-	   	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
+/* 	   	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
 	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
 	    if (gotoDocumentsTab === 'yes') {
 	    	  //document.getElementById("documentsTabId").click();
 	    	document.getElementById("tabAssemblyDocumentId").click();
-	    }
+	    } */
 	   	
-	   	$('#gotoDocumentsTab').val();
+	  /*  	$('#gotoDocumentsTab').val(); */
 		
 		// Add Attachments Button Clicked - Drop Zone Stuff
-    	$('#uploadDocname').click(function() {		    		
-    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
-    		pkId = $('input#assemblyPkid').val();
-    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);    
+    	$('#uploadDocname').click(function() {	
     		
-    		// 6-10-2024
-    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
-    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+    		if ($('#uploadDocname').text().includes("Select Doc")  ) {
+    			alert ("Click on a Document Type from the left side list of documents, then you can add");
+    		} else {	
     		
-    		
-		   	$("#assemblyUploadId").show();	
+	    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+	    		pkId = $('input#assemblyPkid').val();
+	    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);    
+	    		
+	    		// 6-10-2024
+	    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
+	    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+	    		
+	    		
+			   	$("#assemblyUploadId").show();	
+    		}
     	});   
     
 	   	
-       	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
+/*        	// C.Sparks 1-24-2024  Navigate back to the previous tab that was open
 	   	gotoDocumentsTab = $('#gotoDocumentsTab').val();
 	    if (gotoDocumentsTab === 'yes') {
 	    	  document.getElementById("documentsTabId").click();
 	    }
 	   	
-	   	$('#gotoDocumentsTab').val();
+	   	$('#gotoDocumentsTab').val(); */
 		
 		// Add Attachments - Drop Zone Stuff
-    	$('#addAssemblyId').click(function() {		    		
+    	$('#addAssemblyId').click(function() {	
+    			    		    		
     		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
     		pkId = $('input#assemblyPkid').val();
     		$("#tracedropzone input[name=assemblyPkid]").val(pkId);  
@@ -168,7 +175,8 @@
     		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
     		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
     		
-		   	$("#assemblyUploadId").show();	
+		   	$("#assemblyUploadId").show();
+    		
     	});   
 		
 		
@@ -356,9 +364,9 @@
                                         <div class="aset-detal-bx">
 
                                             <div class="borderbx ">
-                                                <div class="bx-hding">                                  
+                                                <div class="bx-hding"  >                                  
                                                     <h4 id="uploadDocname" >{Select Doc Type on left to upload}
-                                                    <span id="docAddId">Add</span> </h4>                                                                                            
+                                                    <span id="docAddId" >Add</span> </h4>                                                                                            
                                                 </div>
                                                 
                                                 

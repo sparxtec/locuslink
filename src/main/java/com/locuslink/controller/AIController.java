@@ -3,7 +3,6 @@ package com.locuslink.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.logic.AwsTextractLogic;
-import com.locuslink.logic.AzureNerLogic;
-import com.locuslink.model.ProductAttachment;
 
 
 
@@ -42,7 +39,7 @@ public class AIController {
 	  @Autowired
       private AwsTextractLogic  awsTextractLogic;
 	  
-	  private AzureNerLogic azureNerLogic;
+	//  private AzureNerLogic azureNerLogic;
 	
 
 	/**
@@ -77,9 +74,9 @@ public class AIController {
 			String result = ocrResults.isNull() ? "failed" : "succeeded";
 			logger.debug("Result from AWSTextract processing ->: " + result);
 			
-			JSONObject nerResults = azureNerLogic.process_2(ocrResults);
-			result = nerResults == null ? "failed" : "succeeded";
-			logger.debug("Result from AzureNER processing ->: " + result);
+//			JSONObject nerResults = azureNerLogic.process_2(ocrResults);
+//			result = nerResults == null ? "failed" : "succeeded";
+//			logger.debug("Result from AzureNER processing ->: " + result);
 			
 //			boolean result = awsTextractLogic.process_2();
 //			logger.debug("Result from AWSTextract processing ->: " + result);
