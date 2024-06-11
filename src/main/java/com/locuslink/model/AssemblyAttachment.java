@@ -26,9 +26,12 @@ public class AssemblyAttachment extends Common {
     @Column(name="aa_pkid", unique=true, nullable = false)
     private Integer aaPkid;
   
+    @Column(name="ardPkid", nullable = false)
+    private Integer ardPkid;
+
     @Column(name="assembly_pkid", nullable = false)
     private int assemblyPkid;
-
+    
     @Column(name="doc_type_pkid", nullable = false)
     private int docTypePkid;
     

@@ -3,7 +3,10 @@
 
 <head>
     <title>Assembly Document</title>
-    
+    <style>
+    	.h7{ font-size: .75rem; }
+  		.h8{ font-size: .50rem; }
+    </style>
     <script>
         
 	    var isDuplicateFileupload = false;
@@ -419,7 +422,7 @@
                                 <div class="row mt-4">
                                 
         <!-- start loop -->       
-        
+        <!-- This needs to be a DTOso more dat can be displayed, like doc type desc -->
       <th:block th:each="assemblyAttachment, iStat  : ${assemblyAttachmentList} ">
       
          <div class="col-md-6">
@@ -429,7 +432,9 @@
                           <span>PDF</span>
                       </div>
                       <div class="document-hding">
-                          <h6>Document 1.pdf<span>254 kB</span></h6>
+                          <h6>Weld Report</h6>
+                          <h6 style="font-size:.80rem;" th:text="${assemblyAttachment.getFilenameFullpath()}"></h6>
+                          <h6 style="font-size:.70rem;" >Heat:123, Serial:789</h6>
                       </div>
                   </div>
                   <div class="download-icon">

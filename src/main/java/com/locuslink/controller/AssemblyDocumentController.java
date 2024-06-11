@@ -39,6 +39,7 @@ import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dao.AssemblyReqDocDao;
+import com.locuslink.dto.AssemblyAttachmentDTO;
 import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.model.AssemblyAttachment;
@@ -104,6 +105,7 @@ public class AssemblyDocumentController {
 		// TODO Get the list of upload documents for this Assembly
 		List<AssemblyAttachment> assemblyAttachmentList = assemblyAttachmentDao.getAllById(Integer.valueOf(assemblyPkid) );
 		
+		List<AssemblyAttachmentDTO> assemblyAttachmentDTOList = assemblyAttachmentDao.getAllDTObyAssemblyId(Integer.valueOf(assemblyPkid) );
 		
 		
 	 	model.addAttribute("assemblyReqDocList", assemblyReqDocList);

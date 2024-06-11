@@ -3,6 +3,7 @@ package com.locuslink.dao;
 
 import java.util.List;
 
+import com.locuslink.dto.AssemblyAttachmentDTO;
 import com.locuslink.model.AssemblyAttachment;
 
 
@@ -15,7 +16,13 @@ public interface AssemblyAttachmentDao  {
 		
 	public List<AssemblyAttachment>  getAllById(int id);
 	
-
+	
+	// 6-10-2024
+	public AssemblyAttachmentDTO getDtoById (int id);
+	
+	//public List<AssemblyAttachmentDTO>  getAllDTO ();
+	
+	public 	List<AssemblyAttachmentDTO> getAllDTObyAssemblyId(int assemblyPkid);
 	
 	
 	public void save(AssemblyAttachment assemblyAttachment);
@@ -23,5 +30,7 @@ public interface AssemblyAttachmentDao  {
 	public void saveOrUpdate(AssemblyAttachment assemblyAttachment);
 	
 	public void delete(AssemblyAttachment assemblyAttachment);
+
+
 	
 }
