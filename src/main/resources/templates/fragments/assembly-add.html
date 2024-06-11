@@ -3,18 +3,34 @@
 
 <head>
 
-    <title>Add Assembly </title>
+<title>Add Assembly </title>
+<script>	
 
-	 
+	$(document).ready(function() {	
+
+		$('#saveButtonId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('initAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		});
+			
+ 	});       
+  	
+   function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+   }
+
+</script>
+	
 </head>
+
 
 <body>
               
-              <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
-   					 <div class="page-hding">
-                   <h1>Add Assembly </h1>
-                    
-                </div>
+   <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
+ 		<div class="page-hding">
+           <h1>Add Assembly </h1>            
+        </div>
 
      <div class="dtatable-card mt-4">
      
@@ -23,8 +39,6 @@
         	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
         	
         	      <div class="adduser-form-bx addaset-formbx borderbx">
-                        <!-- <h5 class="adaset-hding">Create Assembly  Details</h5> -->
-
 
                         <div class="row">
                             <div class="col-lg-3 col-xl-2 colum-bx">
@@ -37,7 +51,7 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="password" placeholder="Enter Job Number"
+                                    <input type="text" placeholder="Enter Job Number"
                                         title="Enter Job Number" class="form-control">
                                 </div>
 
@@ -53,7 +67,7 @@
 
                             <div class="col-lg-9 col-xl-10 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="password" placeholder="Enter Description"
+                                    <input type="text" placeholder="Enter Description"
                                         title=" Enter Description" class="form-control">
                                 </div>
 
@@ -124,7 +138,7 @@
 
 
                             <div class="usrad-btn import-astbtn sve-btn justify-content-end">
-                                <a href="Assemblies-data.html">Save </a>
+                                <a id="saveButtonId"   href="#">Save </a>
                                 <!-- <a href="Assemblies-data.html" class="imprort-btn">Publish </a> -->
                             </div>
 

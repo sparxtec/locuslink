@@ -97,25 +97,16 @@ public class AssemblyDocumentController {
 
 		String assemblyPkid = dashboardFormDTO.getAssemblyPkid();
 		logger.debug("Working on Assembly id ->: " + assemblyPkid);
-		
-		
-		List<AssemblyReqDoc> assemblyReqDocList = assemblyReqDocDao.getAllById(Integer.valueOf(assemblyPkid) );
-		
-		
-		// TODO Get the list of upload documents for this Assembly
-		List<AssemblyAttachment> assemblyAttachmentList = assemblyAttachmentDao.getAllById(Integer.valueOf(assemblyPkid) );
-		
+			
+		List<AssemblyReqDoc> assemblyReqDocList = assemblyReqDocDao.getAllById(Integer.valueOf(assemblyPkid) );		
 		List<AssemblyAttachmentDTO> assemblyAttachmentDTOList = assemblyAttachmentDao.getAllDTObyAssemblyId(Integer.valueOf(assemblyPkid) );
-		
-		
+				
 	 	model.addAttribute("assemblyReqDocList", assemblyReqDocList);
-		model.addAttribute("assemblyAttachmentList", assemblyAttachmentList);
+	 	model.addAttribute("assemblyAttachmentDTOList", assemblyAttachmentDTOList);
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 	   	return "fragments/assembly-document";
 	}
-	
-	
 	
 	
 	
@@ -291,12 +282,16 @@ public class AssemblyDocumentController {
 		//String uniqueAssetPkId = request.getFieldAsString("uniqueAssetPkId");
 		int assemblyPkid = Integer.valueOf(dashboardFormDTO.getAssemblyPkid());		
 		String assemblyDocTypePkid = dashboardFormDTO.getAssemblyDocTypePkId();
+		String ardPkId = dashboardFormDTO.getArdPkId();
 		
 		if (assemblyPkid < 1) {
 			logger.debug("Error ->: missing assemblyPkid. ");
 		}
 		if (assemblyDocTypePkid == "" || assemblyDocTypePkid.equalsIgnoreCase("")) {
 			logger.debug("Error ->: missing assemblyDocTypePkid. ");
+		}
+		if (ardPkId == "" || ardPkId.equalsIgnoreCase("")) {
+			logger.debug("Error ->: missing ardPkId. ");
 		}
 		
 	    // Gets the list of just files, under the directory structure {tag name}
@@ -341,28 +336,20 @@ public class AssemblyDocumentController {
             // remove it from the staging folder
             awsS3Client.deleteObject(new DeleteObjectRequest(awsS3BucketName, sourceKey));
             logger.debug("     remove the staging file successfully.");	
-
             
             // TODO Insert to DB for a successful copy     
             logger.debug("    Insert to DB pkID ->: " + assemblyPkid );	
-            
-         	
+                     	
             AssemblyAttachment assemblyAttachment = new AssemblyAttachment();
             assemblyAttachment.setAssemblyPkid(assemblyPkid);            
             assemblyAttachment.setAddBy("assemblyUpload");      
          	
-         	// TODO maybe ADD just the filename, instead of the whole path for the UI
             assemblyAttachment.setFilenameFullpath(destinationKey);   
-         	
-         	// TODO  pkId 1 = Generic General Attachment, need to enhance this when the doctype is selected on upload.
             assemblyAttachment.setDocTypePkid(Integer.valueOf(assemblyDocTypePkid));   
-         	
-         	// 2-21-2024
-            assemblyAttachment.setFilenameFullpath(tagFileName);
-         	
+            assemblyAttachment.setArdPkid(Integer.valueOf(ardPkId));                                     
+            assemblyAttachment.setFilenameFullpath(tagFileName);         	
             assemblyAttachmentDao.save(assemblyAttachment);
-            
-            
+                        
             logger.debug("     Inrested to the database successfully.");	
         }
 

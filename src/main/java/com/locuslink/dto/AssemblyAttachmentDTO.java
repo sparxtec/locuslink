@@ -15,9 +15,9 @@ public class AssemblyAttachmentDTO {
 			int docTypePkid,
 			String filenameFullpath,
 			String attributesJson,
-			String  docTypeCode,
-			String  docTypeDesc
-			//String assemblyReqDocDesc			
+			String docTypeCode,
+			String docTypeDesc,
+			String assemblyReqDocDesc			
 		 ){
 		this.aaPkid = aaPkid;	
 		this.assemblyPkid = assemblyPkid;	
@@ -26,7 +26,7 @@ public class AssemblyAttachmentDTO {
 		this.attributesJson = attributesJson;
 		this.docTypeCode = docTypeCode;
 		this.docTypeDesc = docTypeDesc;
-		//this.assemblyReqDocDesc = assemblyReqDocDesc;
+		this.assemblyReqDocDesc = assemblyReqDocDesc;
 	}
 
 	// Assembly Attachment

@@ -9,7 +9,7 @@ public class DashboardFormDTO {
 	// Assembly Data
 	private String assemblyPkid;
 	private String assemblyDocTypePkId;
-	
+	private String ardPkId;
 	
 	
 	// Attachment Processing

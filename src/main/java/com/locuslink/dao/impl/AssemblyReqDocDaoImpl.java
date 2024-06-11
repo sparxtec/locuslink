@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.AssemblyReqDocDao;
 import com.locuslink.model.AssemblyReqDoc;
-import com.locuslink.model.UserRoleType;
 
 /**
  * This is the DAO implementation class for
@@ -63,16 +63,7 @@ public class AssemblyReqDocDaoImpl extends DaoSupport implements AssemblyReqDocD
 	}
 	
 	
-	
 
-	public  UserRoleType  getByCode (String userRoleCode)	{	
-		DetachedCriteria criteria= DetachedCriteria.forClass(UserRoleType.class, "userRoleType");  		
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
-		criteria.add(Restrictions.eq("userRoleCode", userRoleCode).ignoreCase());
-		return ( UserRoleType) ( criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).uniqueResult());		
-	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -80,7 +71,8 @@ public class AssemblyReqDocDaoImpl extends DaoSupport implements AssemblyReqDocD
 		DetachedCriteria criteria= DetachedCriteria.forClass(AssemblyReqDoc.class, "assemblyReqDoc");  		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
 		criteria.add(Restrictions.eq("assemblyPkid", assemblyPkid));
-	//	criteria.addOrder(Order.asc ("customerPkId"));
+		criteria.addOrder(Order.asc ("docTypePkid"));
+		criteria.addOrder(Order.asc ("docDescription"));
 		return (List<AssemblyReqDoc>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
 	}
 	
