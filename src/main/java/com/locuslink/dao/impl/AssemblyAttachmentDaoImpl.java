@@ -91,8 +91,8 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 				ard.docDescription	 							 				
 			)
 			from AssemblyAttachment aa			
-		    left outer join DocumentType dt on aa.docTypePkId = dt.docTypePkId	
-		         left outer join AssemblyReqDoc ard on ard.ardPkid = aa.ardPkid							 																	
+		    left outer join DocumentType dt on aa.docTypePkid = dt.docTypePkId	
+		    left outer join AssemblyReqDoc ard on ard.ardPkid = aa.ardPkid							 																	
 			where aa.aaPkid = :pkid
 									
 			""", AssemblyAttachmentDTO.class)

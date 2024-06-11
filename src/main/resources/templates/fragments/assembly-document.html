@@ -199,12 +199,9 @@
 	   // $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
 		 		
  		
-
-
-	
 	   	
 
-	    // CS 2-21-2024  Determine which Doc in the left nav was clicked
+	    // 2-21-2024  Determine which Doc in the left nav was clicked
 		$("[id^='ardpkid_']").bind( "click", function(event) {			
 			event.preventDefault();
 			  
@@ -248,6 +245,22 @@
 	        // once upload is coded, the green check box should be on when a succesful upload has happened for that doc type
 	        
 		});	
+	    
+	    
+	    
+	    // 6-11-2024  Determine which Image clicked for viewing
+		$("[id^='aapkid_']").click(function() {			
+			showSpinner();
+			
+			var tokens = ($(this).attr("id")).split("_");
+			assemblyAttachPkId = tokens[1];	
+			
+	        // set the FORM value so the controller can get it.				
+			$('#assemblyAttachPkId').val(assemblyAttachPkId).val().trim();
+			 
+   			submitFormAjaxHTML('getAttachmentForAssembly', $("#dashboardFormDTO").serialize(), "modalResponse");					
+			hideSpinner();						
+		});	
 
 	    
  	});       
@@ -259,7 +272,7 @@
    
    function modalResponse(returnData) {	
  		hideSpinner();			 		
- 		$('#asset_ModalBody').html(returnData); 	 		 		 		
+ 		$('#assembly_ModalBody').html(returnData); 	 		 		 		
    }   
    
 	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
@@ -282,7 +295,10 @@
         	<input type="hidden" id="ardPkId" name="ardPkId"   th:value="${dashboardFormDTO.getArdPkId}" >
          	<input type="hidden" id="assemblyDocTypePkId" name="assemblyDocTypePkId"   th:value="${dashboardFormDTO.getAssemblyDocTypePkId}" >
         	<input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}"> 
-        	 
+        
+           	<input type="hidden" id="assemblyAttachPkId" name="assemblyAttachPkId"   th:value="${dashboardFormDTO.getAssemblyAttachPkId}" >
+ 
+ 	 
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">
@@ -400,15 +416,14 @@
                                                 
                                                 
                                                 
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                </div>
-
-                                <div class="row mt-4">
+    <div class="row mt-4">
                                 
         <!-- start loop -->       
         <!-- This needs to be a DTOso more dat can be displayed, like doc type desc -->
@@ -426,10 +441,16 @@
                           <h6 style="font-size:.70rem;" >Heat:123, Serial:789</h6>
                       </div>
                   </div>
-                  <div class="download-icon">
-                      <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid" alt="Download" title="Download Doc">
-                  </div>
-
+  				  <div class="d-md-inline-flex" style="gap:10px">                   
+	                  <div  style="width:32px;height:32px">
+	                   	  <a th:id="aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" href="#">
+	                          <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
+	                      </a>                                                                      
+	                  </div>  	                               
+	                  <div class="download-icon">
+	                      <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid" alt="Download" title="Download Doc">
+	                  </div>
+				  </div>
               </div>
           </div>
        </th:block>  
@@ -449,7 +470,7 @@
                        
 
     <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
-    <div id="asset_ModalBody"></div>
+    <div id="assembly_ModalBody"></div>
     
 	</div>
 	</div>

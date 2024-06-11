@@ -10,6 +10,7 @@ public class DashboardFormDTO {
 	private String assemblyPkid;
 	private String assemblyDocTypePkId;
 	private String ardPkId;
+	private String assemblyAttachPkId;
 	
 	
 	// Attachment Processing
