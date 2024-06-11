@@ -1,7 +1,5 @@
 package com.locuslink.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -12,19 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.locuslink.common.GenericMessageRequest;
-import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
-import com.locuslink.dao.UniqueAssetDao;
-import com.locuslink.dao.UniversalCatalogDao;
+import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dto.DashboardFormDTO;
-import com.locuslink.dto.UniqueAssetDTO;
 /**
  * This is a Spring MVC Controller.
  *
@@ -46,17 +35,19 @@ public class AssemblyBarcodeController {
     private SecurityContextManager securityContextManager;
 
     @Autowired
-    private UniversalCatalogDao universalCatalogDao;
-    
-    @Autowired
-    private UniqueAssetDao uniqueAssetDao;
+    private AssemblyDao assemblyDao;
     
     
 
 	@PostMapping(value = "initAssemblyBarcode")
 	public String initAssemblyDetail (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		
 		logger.debug("Starting initAssemblyBarcode()...");
-
+		
+		String assemblyPkid = dashboardFormDTO.getAssemblyPkid();
+		logger.debug("Working on Assembly id ->: " + assemblyPkid);
+		
+		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 	   	return "fragments/assembly-barcode";
