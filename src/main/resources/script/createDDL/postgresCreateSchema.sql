@@ -12,7 +12,14 @@ CREATE TABLE "assembly" (
   "job_description" varchar, 
   "location" varchar,     
   "station_number" varchar, 
-  "trace_number" varchar,   
+  "trace_number" varchar,  
+  
+  "station_name" varchar,
+  "design_spec_number" varchar,
+  "drawing_number" varchar,  
+  "fabricator_company_name" varchar,
+  "customer_spec_number" varchar,
+      
   "add_by" varchar,
   "add_ts" timestamp,
   "update_by" varchar,

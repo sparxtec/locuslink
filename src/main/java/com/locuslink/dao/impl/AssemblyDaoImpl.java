@@ -74,8 +74,13 @@ public class AssemblyDaoImpl extends DaoSupport implements AssemblyDao, Applicat
 		 		a.jobDescription,
 		 		a.location,
 				a.stationNumber,
-		 		a.traceNumber
-		 				
+		 		a.traceNumber,
+		 		
+		 	    a.stationName,
+		 		a.designSpecNumber, 
+		 		a.drawingNumber, 
+		 		a.fabricatorCompanyName, 
+		 		a.customerSpecNumber		 				
 			)
 			from Assembly a
 							
@@ -94,23 +99,22 @@ public class AssemblyDaoImpl extends DaoSupport implements AssemblyDao, Applicat
 	@Override
 	public  List<AssemblyDTO>  getAllDTO() 	{	
 
-		//	left outer join AssemblyReqDoc ard on a.assemblyPkid = ard.assemblyPkid		
-				
-		// 1-11-2024
 		 List <AssemblyDTO> dtoList = entityManager.createQuery("""
-			select new com.locuslink.dto.AssemblyDTO(
-				
+			select new com.locuslink.dto.AssemblyDTO(				
 				a.assemblyPkid,
 				a.jobNumber,
 		 		a.jobDescription,
 		 		a.location,
 				a.stationNumber,
-		 		a.traceNumber	
-		 													
+		 		a.traceNumber,
+		 		
+		 	    a.stationName,
+		 		a.designSpecNumber, 
+		 		a.drawingNumber, 
+		 		a.fabricatorCompanyName, 
+		 		a.customerSpecNumber			 													
 			)
-			from Assembly a
-        
-	 																																				
+			from Assembly a               
 			""", AssemblyDTO.class)
 		.getResultList();	
 		 

@@ -10,7 +10,6 @@
 
 	$(document).ready(function() {	
 		  
-		hideSpinner();	
 	   	$("#assembly_viewer").modal('show');	
 	   	
 	 	loadEmbededPDF( $('input#b64Id').val() );     
@@ -22,6 +21,8 @@
     		node.parentNode.replaceChild(node.cloneNode(false), node);      		
     		hideSpinner();	
     	});
+    	
+    	hideSpinner();	
     	    	
 	});
 	

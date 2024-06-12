@@ -22,9 +22,9 @@ import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.AssemblyDao;
-import com.locuslink.dao.UniversalCatalogDao;
 import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.model.Assembly;
 /**
  * This is a Spring MVC Controller.
  *
@@ -107,6 +107,13 @@ public class AssemblyController {
 	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
 		logger.debug("Starting addAssembliesData()...");
 
+		Assembly assembly = new Assembly();
+		
+		
+		
+		
+		
+		
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 	   	return "fragments/assembly-add";

@@ -19,23 +19,10 @@
 				submitFormAjaxHTML('addAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 			});
 		
-/* 			$('#addAssembliesDetailId').click(function() {
-				showSpinner();
-				submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
-			}); */
-			
-			
 			
 			if( $('#assemblyDataTable').length){     			
      			var table = $('#assemblyDataTable').DataTable( {
-					 	responsive: true,
-            	//retrieve: true,
-     	 	//	searchHighlight: true,
-     	       //      	responsive: true,	10-25-2023  this has to be off, since we are using position 0 to expand for the details data             	 			        
-             	//"paging":   true,  
-            //	scrollCollapse: true,
-            // 	scrollY: 'calc(100vh - 35rem)',
-             	
+				responsive: true,             	
              	order: [1, 'asc' ],	
 
      	    	ajax: {
@@ -56,12 +43,7 @@
      	         }					       
         		},  
      
-             columns: [	                	 
-	 			// { "className": 'details-control',
- 	            //   "orderable": false,
- 	              // "data":      null,
- 	               //"defaultContent": ''
-	 	        // },	 	                       	      
+             columns: [	                	 	                       	      
 	 	         { title: "Details",
 	 	           data: null,
  	               className: "controlColumns",
@@ -69,18 +51,20 @@
                     	data ="<div class='action-buttons'>" 
                     	+"&nbsp;&nbsp;<button id='barcode_" + row.assemblyPkid+ "' class='barcode-btn'  type='button'> <i class='fa-solid fa-barcode' title='BarCode Viewer'></i></button>&nbsp;&nbsp;&nbsp;"
                     	+"<button id='detail_" + row.assemblyPkid+ "' class='eye-btn' type='button'> <i class='fa-solid fa-eye' title='Assembly Details'></i></button>&nbsp;&nbsp;&nbsp;"
-                    	//+"<button id='delete_" + row.assemblyPkid+ "' class='button button--text' type='button'> <i class='far fa-trash-alt fa-lg' title='Delete Assembly'></i></button></div>";	   
                     	+ "</div>"
 	                return data;
 	 	         }}, 
                    	         
-	             { data: "assemblyPkid" },	               
-                 { data: "jobNumber" },                   
-                 { data: "jobDescription" },                 
-                 { data: "location" },
-                 { data: "stationNumber" },
-                 { data: "traceNumber" } 
-                        
+	             { data: "assemblyPkid" },
+	             { data: "stationNumber" },
+                 { data: "stationName" },                   
+                 { data: "designSpecNumber" },                 
+                 { data: "drawingNumber" },  
+                 { data: "fabricatorCompanyName" }, 
+                 { data: "jobDescription" },                  
+                 { data: "jobNumber" },  
+                 { data: "customerSpecNumber" } 
+
             	],   
              	        		            	          	
            });
@@ -89,9 +73,6 @@
 			
 			 // Button Clicks on the Data table
 	  	    $('#assemblyDataTable tbody').on('click', 'button', function (e) {
-		    	
-	  	    	//console.log(this);
-		    	
 		    	var url='';
 		    	var whatWasClicked=$(this).attr("id").split("_")[0];
 		    	var assemblyPkid=$(this).attr("id").split("_")[1];
@@ -104,21 +85,12 @@
 				showSpinner();
 		    		   	    	    
 				if(whatWasClicked==="detail") {
-
-	       			showSpinner();	
-	       			//console.log("detail clicked :");
-	     
-	       			// 5-17-2023
-					//submitFormAjaxHTML('initAssetAttachments', $("#dashboardFormDTO").serialize(), "modalResponse");	       			       	       	       	       												
+	       			showSpinner();		         			       	       	       	       												
 		   			submitFormAjaxHTML('initAssemblyDetail', $("#dashboardFormDTO").serialize(), "initCommonResponse");		
 
 	    		} else if(whatWasClicked==="barcode") {
 
-	    			console.log("Barcode clicked :");
-	    			
-	    			// 3-21-2023
 	       			showSpinner();								
-	       			//submitFormAjaxHTML('initAssemblyBarcode', $("#dashboardFormDTO").serialize(), "modalResponse");	
 	       			submitFormAjaxHTML('initAssemblyBarcode', $("#dashboardFormDTO").serialize(), "initCommonResponse");	
 
 	    		} else if(whatWasClicked==="delete") {
@@ -132,14 +104,6 @@
 	    		$('#assemblyDataTable_filter input').keyup(function(){
 	   			table.search($(this).val()).draw() ;
 	   		}); 	
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 	 	});       
@@ -172,12 +136,18 @@
                 <thead class="thead-light">
                    <tr>
 					  <th scope="col"></th>   
-                      <th scope="col">Id</th>	                                 	                          	                                 
-                      <th scope="col">Job Number</th>
+                      <th scope="col">Id</th>                      
+                      <th scope="col">Station Number</th>
+                      <th scope="col">Station Name</th>
+                      <th scope="col">Design Number</th>
+                      <th scope="col">Drawing Number</th>
+                      <th scope="col">Fabricator Company</th>                      
                       <th scope="col">Description</th>
-                      <th scope="col" >Location</th>	
-                      <th scope="col">Station Number</th>	
-    				  <th scope="col">Trace Number</th>		                                                                     	                             	                             
+
+                      <th scope="col">Job Number</th>
+         <!--              <th scope="col">Customer Name</th> -->
+                      <th scope="col">Customer Spec Number</th>
+                                                                    	                                 	                          	                                 	                                                                     	                             	                             
                    </tr>
                 </thead>
        		 </table>  	

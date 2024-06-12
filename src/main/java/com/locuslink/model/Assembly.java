@@ -38,4 +38,28 @@ public class Assembly extends Common {
     @Column(name = "trace_number")
 	private String traceNumber; 
     
+    
+    @Column(name = "station_name")
+	private String stationName; 
+    
+    @Column(name = "design_spec_number")
+	private String designSpecNumber; 
+    
+    @Column(name = "drawing_number")
+	private String drawingNumber; 
+    
+    @Column(name = "fabricator_company_name")
+	private String fabricatorCompanyName; 
+    
+    @Column(name = "customer_spec_number")
+	private String customerSpecNumber; 
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

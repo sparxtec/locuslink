@@ -7,7 +7,7 @@
  <script>
     $(document).ready(function() {	
 		
-	    $('#saveAssembliesDetailId').click(function() {
+	    $('#updateButtonId').click(function() {
 			showSpinner();
 			submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
@@ -27,7 +27,7 @@
               
   <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
 	<div class="page-hding">
-        <h1>Edit Assembly Details </h1>          
+        <h1>Edit Assembly</h1>          
      </div>
 
      <div class="dtatable-card mt-4">
@@ -36,335 +36,128 @@
         	
         	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
         	 
-      	    <div class="adduser-form-bx addaset-formbx borderbx">
-                        <!-- <h5 class="adaset-hding">Create Assembly  Details</h5> -->
+    	      <div class="adduser-form-bx addaset-formbx borderbx">
 
-  <div class="row">
-                        <div class="col-md-4 col-xl-3 col-xxl-2">
-                            <div class="aset-sidebar-bx">
-                                <ul class="list-unstyled asset-side-nav mb-4">
-                                    <li><a href="#" class="active">General</a></li>
-<!--                                     <li><a href="#">Documents</a></li>
-                                    <li><a href="#">Test certification</a></li>
-                                    <li><a href="#">Images</a></li>
-                                    <li><a href="#">Asset Details 1</a></li>
-                                    <li><a href="#">Asset Details 2</a></li>
-                                    <li><a href="#">Asset Details 3</a></li> -->
-
-                                </ul>
+						<div class="row align-items-center">                       
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Fabricator Company</label>  </div>
                             </div>
-                        </div>
-
-                        <div class=" col-md-8 col-xl-9 col-xxl-10">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="aset-detal-input-bx">
-                                        <div class="borderbx">
-                                            <div class="bx-hding">
-                                                <h4>General</h4>
-                                            </div>
-
-                                            <div class="row mt-4 pd-bx align-items-center">
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Job Number</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch ">
-                                                        <input type="text" placeholder="Asset Details"
-                                                            title="Job Number" class="form-control">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Description</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch">
-                                                        <input type="text" placeholder="Enter Description"
-                                                            title="Enter Description" class="form-control">
-                                                    </div>
-
-
-                                                </div>
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Customer Job Number</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch ">
-                                                        <input type="text" placeholder="Enter Customer Job Number"
-                                                            title="Enter Customer Job Number" class="form-control">
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Trace Number</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch ">
-                                                        <input type="text" placeholder="Enter Trace Number"
-                                                            title="Enter Trace Number" class="form-control">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Customer</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch ">
-                                                        <input type="text" placeholder="Enter Customer"
-                                                            title="Enter Customer" class="form-control">
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-4 col-xxl-3 colum-bx">
-                                                    <div class="uplod-inputbx edit-ast-bx">
-                                                        <label>Location</label>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="col-md-8 col-xxl-9 colum-bx">
-                                                    <div class="tble-serch ">
-                                                        <input type="text" placeholder="Enter Location"
-                                                            title="Enter Location" class="form-control">
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Fabricator Company" title="Fabricator Company" class="form-control">
                                 </div>
-                                
-                                
-<!--                                 <div class="col-md-12 mt-4">
-                                    <div class="aset-detal-bx">
-                                        <div class="borderbx">
-                                            <div class="bx-hding edit-aset-subhding">
-                                                <h4>Documents</h4>
-                                                <div class="uploadfile position-relative">
-                                                    <input type="file"><span>Add Files</span>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row mt-4 pd-bx">
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>PDF</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 1.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>XLS</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 2.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>DOCX</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 3.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>PDF</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 4.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>PDF</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 5.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 col-xl-6">
-                                                    <div class="barcdetab document-bx">
-                                                        <div class="documentname-hdingbx">
-                                                            <div class="document-name-bx">
-                                                                <span>XLS</span>
-                                                            </div>
-                                                            <div class="document-hding">
-                                                                <h6>Document 6.pdf<span>254 kB</span></h6>
-                                                            </div>
-                                                        </div>
-                                                        <div class="download-delte">
-                                                            <div class="download-icon">
-                                                                <img src="./images/downlaod-icon-whitesvg.svg"
-                                                                    class="img-fluid" alt="Download"
-                                                                    title="Download All">
-
-                                                            </div>
-                                                            <div class="download-icon delte-icon">
-                                                                <img src="./images/delete-white.svg" class="img-fluid"
-                                                                    alt="Delete" title="Delete">
-
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-
-
-
-                                        </div>
-                                    </div>
-                                </div> -->
-                               
-
-                                <div class="usrad-btn import-astbtn mt-4 justify-content-end">
-                                   
-                                   
-
-                                    <a id="saveAssembliesDetailId"  href="#">Save</a>
-                                   <!--  <a href="Assemblies-details.html" class="imprort-btn">Publish</a> -->
-                                </div>
-
+                            </div>  
+  						</div>
+  						
+  						
+  						
+                        <div class="row align-items-center">                                           
+                            <div class="col-lg-3 col-xl-2 colum-bx ">
+                                <div class="uplod-inputbx  "> <label>Station Number</label>  </div>
                             </div>
+                            <div class="col-lg-9 col-xl-3 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Station Number" title="Station Number" class="form-control">
+                                </div>
+                            </div>                                                        
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Station Name</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-4 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Station Name" title="Station Name" class="form-control">
+                                </div>
+                            </div>                                                        
+						</div>
+
+
+
+						<div class="row align-items-center"> 
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Design Number</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-3 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Design Number" title="Design Number" class="form-control">
+                                </div>
+                            </div>                                                  
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Drawing Number</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-4 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Drawing Number" title="Drawing Number" class="form-control">
+                                </div>
+                            </div>   
+ 						</div>
+
+
+
+
+
+
+
+						<div class="row align-items-center">                               
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Job Number</label></div>
+                            </div>
+                            <div class="col-lg-9 col-xl-3 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Enter Job Number"  title="Enter Job Number" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"><label> Description </label> </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-4 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Enter Description"  title=" Enter Description" class="form-control">
+                                </div>
+                            </div>
+						</div>
+
+
+
+						<div class="row align-items-center"> 
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Customer </label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Enter Customer" title=" Customer" class="form-control">
+                                </div>
+                            </div>
+						</div>
+						
+						
+						
+						
+						<div class="row align-items-center"> 
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx">  <label>Customer Job Number</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-3 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Customer Job Number"  title="Customer Job Number" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Customer Spec Number </label> </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-4 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Customer Spec Number" title="Trace Location" class="form-control">
+                                </div>
+                            </div>
+                        </div>    
+                                 
+                        <div class="usrad-btn import-astbtn sve-btn justify-content-end">
+                            <a id="updateButtonId"   href="#">Update</a>
                         </div>
 
 
-
-                    </div>
-                        
                     </div>
       	 
     </form> 
