@@ -5,6 +5,72 @@
     <title>Assemblies Details</title>
     
 <script>
+
+	var isDuplicateFileupload = false;
+	
+	Dropzone.autoDiscover = false;	
+	
+	var traceDropzoneId = $('#tracedropzone').dropzone({
+		
+	   headers:{   'X-CSRFToken' : '{{ csrf_token }}' },				
+	   acceptedFiles: '.pdf, application/pdf',			 			 		
+	   maxThumbnailFilesize: '20',
+	   dictInvalidFileType: "Incorrect File type, please upload only .PDF files",			   
+	
+	   init: function() {
+	     this.on("addedfile", 
+	    	function(file) {	    	
+	      });
+	     
+	   this.on("success", 
+	    	function(file,response) {
+		   
+	    	  $(".dz-success-mark svg").css("background", "green");
+	    	  $(".dz-error-mark").css("display", "none");	 		    	 	 		    	  
+	    	  //document.getElementById("continueUpload").disabled = false;	
+	    	  
+	    	  // Error Check - Duplicate Filename
+	    	  if (response.error != "0" ) {		    		  
+	    		 isDuplicateFileupload = true;		    		  
+	    	     $('#errorMessageId').show();	
+	    	     $('#errorMessageId').text(response.errorMessage);				    	      
+	    	  	 //document.getElementById("continueUpload").disabled = true;
+	    	     this.removeFile(file);
+	    	     // display red error for 5 seconds, then remove the error message
+	    	     setTimeout(function() { $("#errorMessageId").hide(); }, 5000);
+	    	  }
+	    	  
+	    }); 		     		  
+	
+	 	this.on("error", 
+	    	function(file) {
+	 		  $(".dz-error-mark svg").css("background", "red");
+	 		  $(".dz-success-mark").css("display", "none");	 	     		  	 	     		 
+	      }); 		
+	 	
+	 	this.on("removedfile", 
+	 		function(file) {
+	 		
+			if (isDuplicateFileupload === true) {
+			    isDuplicateFileupload = false;
+			} else {
+	     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+	           	var innerData = {};
+	    		innerData["removeFileName"] = file.name;
+	    		innerData["deleteAllFilesWithPk"] =	"NO";
+	          	innerData["assemblyPkid"] = $('input#assemblyPkid').val();
+	    		myData["data"] = innerData;
+	    		
+	    		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse");
+			}
+			
+	 	});		   
+	  }	
+	   
+	});
+
+
+	
     $(document).ready(function() {	
 		
 		$('#tabAssemblyDetailsId').click(function() {
@@ -54,7 +120,102 @@
     		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");
     	});   
 	    
+    	// Added for Dropzone
+		window.addEventListener("dragover",function(e){
+			  e = e || event;
+			  e.preventDefault();
+			},false);
+		window.addEventListener("drop",function(e){
+		  e = e || event;
+		  e.preventDefault();
+		},false);
+		//document.getElementById("continueUpload").disabled = true;	
+		
+		$('#errorMessageId').hide();
+	   	$("#assemblyUploadId").hide();	
+	   	
+	
+ 		// Add Attachments Button Clicked - Drop Zone Stuff
+    	$('#docAddId').click(function() {	
+    		    		
+    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+    		pkId = $('input#assemblyPkid').val();
+    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);    
+    		
+    		// 6-10-2024
+    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
+    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+    			    		
+		   	$("#assemblyUploadId").show();	
+    	    		
+    	}); 
     
+	   		
+    	
+    	
+    	
+    	
+		// Add Attachments - Drop Zone Stuff
+    	$('#addAssemblyId').click(function() {	
+    		
+    		// temp
+    		$("#assemblyUploadId").show();
+    		
+    		// Set the pkId on the 2nd form object, that is used by Dropzone for uploading
+    		pkId = $('input#assemblyPkid').val();
+    		$("#tracedropzone input[name=assemblyPkid]").val(pkId);  
+    		
+    		// 6-10-2024
+    		assemblyDocTypePkId = $('input#assemblyDocTypePkId').val();
+    		$("#tracedropzone input[name=docTypePkId]").val(assemblyDocTypePkId);  
+    		
+		   	$("#assemblyUploadId").show();
+    		
+    	});   
+		
+		
+    	$('#addCancelUpload').click(function() {	
+    		
+    		// clear files from the UI
+    		traceDropzoneId[0].dropzone.removeAllFiles();
+    		    		
+    		$("#assemblyUploadId").hide();
+    		
+/*      		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+           	var innerData = {};
+    		innerData["assemblyPkid"] =	pkId = $('input#assemblyPkid').val();
+    		innerData["deleteAllFilesWithPk"] =	"YES";
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse"); */
+
+    	});   
+    	
+    	
+    	$('#addContinueUpload').click(function() {		    		
+    		showSpinner();	
+    		
+    		assemblyPkid = $('#assemblyPkid').val();
+    		//console.log ("uniqueAssetPkId ->: " + uniqueAssetPkId);
+    		
+   		//	submitFormAjaxHTML('saveAssemblyAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "initCommonResponse");					
+			hideSpinner();
+			$("#assemblyUploadId").hide();
+    	}); 
+    	
+    	
+	    // 6-11-2024  Determine which Image clicked for viewing
+		$("[id^='aapkid_']").click(function() {			
+			showSpinner();
+			
+			var tokens = ($(this).attr("id")).split("_");
+			assemblyAttachPkId = tokens[1];	
+			
+	        // set the FORM value so the controller can get it.				
+			$('#assemblyAttachPkId').val(assemblyAttachPkId).val().trim();
+			 
+   			submitFormAjaxHTML('getAttachmentForAssembly', $("#dashboardFormDTO").serialize(), "modalResponse");										
+		});	
+    	
  	});       
 
    function initCommonResponse(returnData) {
@@ -62,12 +223,22 @@
 	   $('#mainBody').html( returnData);    	 
    }
    
+   function modalResponse(returnData) {	
+		hideSpinner();			 		
+		$('#assembly_ModalBody').html(returnData); 	 		 		 		
+  }   
+   
    function asyncResponseCommonResponse(returnData) {	
 	   hideSpinner(); 
 	   alert ('AWS Manual Testing finished.');
    }
    
-        
+	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
+		   $($.fn.dataTable.tables(true)).DataTable()
+		      .columns.adjust()
+		      .responsive.recalc();
+	});
+	
 </script>
 </head>
 
@@ -77,8 +248,13 @@
     
    		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
         	
-            	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
-        	     
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
+        	<input type="hidden" id="ardPkId" name="ardPkId"   th:value="${dashboardFormDTO.getArdPkId}" >
+         	<input type="hidden" id="assemblyDocTypePkId" name="assemblyDocTypePkId"   th:value="${dashboardFormDTO.getAssemblyDocTypePkId}" >
+        	<input type="hidden" id="gotoDocumentsTab"  name="gotoDocumentsTab" th:value="${gotoDocumentsTab}">        
+           	<input type="hidden" id="assemblyAttachPkId" name="assemblyAttachPkId"   th:value="${dashboardFormDTO.getAssemblyAttachPkId}" >
+ 
+ 	 
             <div class="page-hding">
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">
@@ -122,9 +298,8 @@
                     <div class="tab-subhding procut-tab">
                          <div class="documn-title">
                              <h3>Upload Traceability Documents
-
                              </h3>
-                             <a href="#">Add</a>
+                             <a id="docAddId" href="#">Add</a>
                          </div>
                     </div>
                                 
@@ -134,26 +309,38 @@
                            <div class="aset-detal-bx">
 
 
-
-                               <div class="col-lg-12 col-xl-12 p-3 mt-3 borderbx uploadzone">
-                                   <div class="importasset-page">
-                                       <div class="uploadfile position-relative text-center">
-                                           <input type="file">
-                                           <img src="./images/export.svg" class="img-fluid" alt="export"
-                                               title="">
-                                           <h6>Drag &amp; drop files or <span>Browse</span>
-                                           </h6>
-                                       </div>
-                                   </div>
-                                   <div
-                                       class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
-                                       <button id="addCancelUpload" class="js-btn-prev contine-btn"
-                                           type="button" title="Prev">Cancel</button>
-                                       <button id="addContinueUpload" class="js-btn-next contine-btn"
-                                           type="button" title="Next">Continue</button>
-                                   </div>
-
-                               </div>
+       						<div id="assemblyUploadId"  class="col-lg-12 col-xl-12 p-3 mt-3 xxxxborderbx xxxxuploadzone">                
+				              <div class="importasset-page">
+				                  <div class="uploadfile position-relative text-center">
+				                                       
+										<form id="tracedropzone" name="tracedropzone"	th:object="${dashboardFormDTO}" action="/portal/processAssemblyMtrUpload"					
+											 class="dropzone dz-clickable"  enctype="multipart/form-data" method="POST">								
+											
+											<!-- CSRF token -->
+											<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>									
+											<input type="hidden" id="assemblyPkid" name="assemblyPkid"  />									
+											<input type="hidden" id="assemblyDocTypePkId" name="assemblyDocTypePkId"  />
+											<input type="hidden" id="ardPkId" name="ardPkId"  />							
+														
+								                      		
+											<div class="dz-default dz-message">
+												<img src="./images/export.svg" class="img-fluid" alt="export" title="">
+								           		 <h6><a href="#"> Drag &amp; drop files or Click to Browse</a></h6>
+												<span>Files must be less than 20MB and a '.Pdf' file</span>
+											</div>
+											
+										    <div id="errorMessageId"  style="display:none;color:red">
+										         <span>Error Msg</span>
+								   		    </div>												       			
+										</form>                     
+				                                                                  
+				                  </div>
+				              </div>
+              
+				              <div class="usrad-btn import-astbtn sve-btn d-flex justify-content-end mt-4">
+				                  <button id="addCancelUpload"    class="js-btn-prev contine-btn" type="button"   title="Prev">Cancel</button>
+				                  <button id="addContinueUpload"  class="js-btn-next contine-btn" type="button"  title="Next">Continue</button>
+				              </div>
 
                            </div>
                        </div>
@@ -165,7 +352,79 @@
 <!-- C.Sparks Testing, manual Button for calling AI code  -->
 
                     <div class="row">
+                    
+        <!-- start loop -->       
+        <!-- This needs to be a DTOso more dat can be displayed, like doc type desc -->
+      <th:block th:each="assemblyAttachmentDTO, iStat  : ${assemblyAttachmentDTOList} ">
+                           
+                    
                         <div class="col-md-6">
+                            <div class="barcdetab document-bx">
+                                <div class="documentname-hdingbx">
+                                    <div class="document-name-bx">
+                                        <span>PDF</span>
+                                    </div>
+                                    
+                      <div class="document-hding">
+                          <h6 style="white-space:nowrap" th:text="${assemblyAttachmentDTO.getAssemblyReqDocDesc()}">></h6>
+                          <h6 style="font-size:.80rem;" th:text="${assemblyAttachmentDTO.getFilenameFullpath()}"></h6>
+                          <h6 style="font-size:.70rem;" >Heat:123, Serial:789</h6>
+                      </div>
+                                </div>
+                                
+                                
+                                
+                                <div class="details-download-btn">
+
+	                  <div  style="width:32px;height:32px">
+	                   	  <a th:id="aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" href="#">
+	                          <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
+	                      </a>                                                                      
+	                  </div> 
+	                  
+                                    <div id="buttonEditMtrId" class="add-details">                                        
+                                        <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
+                                            <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
+                                        </a>                                                          
+                                    </div>
+                                    
+                                    <div id="buttonAwsId" class="add-details">                                                                               
+                                          <a href="#" data-toggle="tooltip" data-placement="top" title="Click to test the AWS OCR processing." > 
+                                              <span data-bs-toggle="modal" data-bs-target="#add-details">Aws</span>
+                                          </a>    
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        
+
+
+                    </div>
+
+              </div>
+               
+         </div>
+         
+       </div>
+                    
+
+     <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+     <div id="assembly_ModalBody"></div>
+     
+  </div>
+  </div>          
+        
+</body>
+
+</html>
+
+
+
+
+<!--                         <div class="col-md-6">
                             <div class="barcdetab document-bx">
                                 <div class="documentname-hdingbx">
                                     <div class="document-name-bx">
@@ -196,101 +455,4 @@
                                 </div>
 
                             </div>
-                        </div>
-                        
-                        
-                        
-                        
-                        <div class="col-md-6">
-                            <div class="barcdetab document-bx">
-                                <div class="documentname-hdingbx">
-                                    <div class="document-name-bx">
-                                        <span>XLS</span>
-                                    </div>
-                                    <div class="document-hding">
-                                        <h6>Document 2.pdf<span>254 kB</span></h6>
-                                    </div>
-                                </div>
-                                <div class="details-download-btn">
-                                    <div class="download-icon">
-                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                            alt="Download" title="Download All">
-                                    </div>
-                                    <div class="add-details">
-
-                                        <span data-bs-toggle="modal" data-bs-target="#add-details">add
-                                            Details</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="barcdetab document-bx">
-                                <div class="documentname-hdingbx">
-                                    <div class="document-name-bx">
-                                        <span>PDF</span>
-                                    </div>
-                                    <div class="document-hding">
-                                        <h6>Document 3.pdf<span class="doc-descrip">lla ut lorem rutrum
-                                                feugiat. Etiam sit amet metus ligula.</span></h6>
-                                        <span>254 kB</span>
-                                    </div>
-                                </div>
-                                <div class="details-download-btn">
-                                    <div class="download-icon">
-                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                            alt="Download" title="Download All">
-                                    </div>
-                                    <div class="add-details">
-
-                                        <span data-bs-toggle="modal" data-bs-target="#add-details">Edit
-                                            Details</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="barcdetab document-bx">
-                                <div class="documentname-hdingbx">
-                                    <div class="document-name-bx">
-                                        <span>XLS</span>
-                                    </div>
-                                    <div class="document-hding">
-                                        <h6>Document 4.pdf<span>254 kB</span></h6>
-                                    </div>
-                                </div>
-                                <div class="details-download-btn">
-                                    <div class="download-icon">
-                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                            alt="Download" title="Download All">
-                                    </div>
-                                    <div class="add-details">
-
-                                        <span data-bs-toggle="modal" data-bs-target="#add-details">add
-                                            Details</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-              </div>
-               
-         </div>
-         
-       </div>
-                    
-
-     <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
-     <div id="asset_ModalBody"></div>
-     
-  </div>
-  </div>          
-        
-</body>
-
-</html>
+                        </div> -->

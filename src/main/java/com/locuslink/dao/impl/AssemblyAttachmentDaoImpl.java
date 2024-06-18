@@ -102,31 +102,7 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	}
 	
 
-	
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public  List<AssemblyAttachmentDTO>  getAllDTO() 	{	
-//				
-//		 List <AssemblyAttachmentDTO> dtoList = entityManager.createQuery("""
-//			select new com.locuslink.dto.AssemblyAttachmentDTO(
-//				aa.aaPkid,
-//				aa.assemblyPkid,
-//		 		aa.docTypePkid,
-//		 		aa.filenameFullpath,
-//				aa.attributesJson,
-//				dt.docTypeCode,
-//				dt.docTypeDesc		 													
-//			)
-//			from AssemblyAttachment aa
-//	        left outer join DocumentType dt on aa.docTypePkId = dt.docTypePkId				
-//	 																																				
-//			""", AssemblyAttachmentDTO.class)
-//		.getResultList();	
-//		 
-//		 return dtoList;
-//	}
-	
-	
+
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -149,7 +125,8 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	         
 	         
 	        where aa.assemblyPkid = :assemblyPkid			
-	 																																				
+	 	      and aa.docTypePkid  in (60,61)
+	 			 																																	
 			""", AssemblyAttachmentDTO.class)
 				 .setParameter("assemblyPkid", assemblyPkid)
 				 .getResultList();	
@@ -158,6 +135,37 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	}
 
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public  List<AssemblyAttachmentDTO>  getAllDTOMtrByAssemblyId( int assemblyPkid) 	{	
+				
+		 List <AssemblyAttachmentDTO> dtoList = entityManager.createQuery("""
+			select new com.locuslink.dto.AssemblyAttachmentDTO(
+				aa.aaPkid,
+				aa.assemblyPkid,
+		 		aa.docTypePkid,
+		 		aa.filenameFullpath,
+				aa.attributesJson,
+				dt.docTypeCode,
+				dt.docTypeDesc,
+				ard.docDescription	 													
+			)
+			from AssemblyAttachment aa
+	        left outer join DocumentType dt on aa.docTypePkid = dt.docTypePkId	
+	        left outer join AssemblyReqDoc ard on ard.ardPkid = aa.ardPkid	
+	         
+	         
+	        where aa.assemblyPkid = :assemblyPkid		
+	          and aa.docTypePkid  = 62		
+	 																																				
+			""", AssemblyAttachmentDTO.class)
+				 .setParameter("assemblyPkid", assemblyPkid)
+				 .getResultList();	
+		 
+		 return dtoList;
+	}
 	
 
 	@Override

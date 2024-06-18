@@ -19,10 +19,11 @@ public interface AssemblyAttachmentDao  {
 	
 	// 6-10-2024
 	public AssemblyAttachmentDTO getDtoById (int id);
-	
-	//public List<AssemblyAttachmentDTO>  getAllDTO ();
-	
+		
 	public 	List<AssemblyAttachmentDTO> getAllDTObyAssemblyId(int assemblyPkid);
+	
+	public 	List<AssemblyAttachmentDTO> getAllDTOMtrByAssemblyId(int assemblyPkid);
+	
 	
 	
 	public void save(AssemblyAttachment assemblyAttachment);
