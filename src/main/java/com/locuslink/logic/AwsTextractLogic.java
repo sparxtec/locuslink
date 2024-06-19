@@ -1,45 +1,26 @@
 package com.locuslink.logic;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.locuslink.model.AssemblyAttachment;
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.profiles.ProfileFileSupplier;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
 import software.amazon.awssdk.services.textract.model.Block;
-import software.amazon.awssdk.services.textract.model.DetectDocumentTextRequest;
-import software.amazon.awssdk.services.textract.model.DetectDocumentTextResponse;
-import software.amazon.awssdk.services.textract.model.Document;
 import software.amazon.awssdk.services.textract.model.DocumentLocation;
 import software.amazon.awssdk.services.textract.model.DocumentMetadata;
 import software.amazon.awssdk.services.textract.model.FeatureType;
@@ -68,11 +49,9 @@ public class AwsTextractLogic {
 	@Value("${aws.s3.bucketName}")
 	private String awsS3BucketName;
 							 
-	@Value("${file.attachment.staging.fullpath}")
-	private String attachmentStagingFullpath;
 	
-	@Value("${file.attachment.storage.fullpath}")
-	private String attachmentStorageFullpath;
+	@Value("${file.assembly.storage.fullpath}")
+	private String assemblyStorageFullpath;
 	
 	@Value("${aws.accessKeyId}")
 	private String accessKeyId;
@@ -84,25 +63,9 @@ public class AwsTextractLogic {
 	private Environment env;
 	
 	/**
-	 *   C.Sparks 4-19-2024
-	 *   	We will define the logic methods needed
+	 *   6-19-2024 - Passing in the whole attachement object for now, in case we need more than just the filename.
 	 */
-	public JsonNode process_1( String assemblyPkId ) {
-		
-		logger.debug("Starting process_1() " );
-
-		// 1.) TODO get the filename from the DB when its ready, for the assembly MTR being worked on.
-//		ProductAttachment productAttachment = productAttachmentDao.getById(Integer.valueOf(uniqueAssetDTO.getProductAttachPkId()));
-//		if (productAttachment == null) {
-//			logger.debug("  Error:  Product Attachment Lookup failed...");
-//		}
-		
-
-		// TODO 5-9-2024  
-		return processAWSTextract();
-	}
-
-	private JsonNode processAWSTextract () {
+	public JsonNode process ( AssemblyAttachment assemblyAttachment) {
 				
 		TextractClient textractClient  = TextractClient.builder()
 				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretKey)))
@@ -110,24 +73,30 @@ public class AwsTextractLogic {
 				.build();
 				
 	   //  detectDocTextS3(textractClient, awsS3BucketName, "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf");
-	   //  textractClient.close();
+	   //  textractClient.close();		
+		String docName = assemblyStorageFullpath +  assemblyAttachment.getAssemblyPkid() +  "_"   +  assemblyAttachment.getFilenameFullpath();		
+	    logger.debug("Working on MTR ->: " + docName);
 		
-		String docName = "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf";
-		
-	    String jobId = startDocAnalysisS3(textractClient, awsS3BucketName, docName);
-	    System.out.println("Getting results for job " + jobId);
+	    String jobId = startDocAnalysisS3(textractClient, awsS3BucketName, docName);   
+	    logger.debug("Getting results for job " + jobId);
+
 	    /*
 	     * I. Summers 5/31/24
 	     * 		Changed var "status" to "results": now contains the OCR results from Textract.
 	     * 		"status" now succeeded/failed based on "results". Will change as required.
 	     */
-	    JsonNode results = getJobResults(textractClient, jobId);
+	    JsonNode results = null;
+		try {
+			results = getJobResults(textractClient, jobId);
+		} catch (Exception e) {
+			logger.debug("Error. AWS Document Analysis." + e);
+		} finally {
+		    textractClient.close();
+		}
 	    String status =  results.isNull() ? "failed" : "succeeded";
-	    System.out.println("The OCR job" + status);
-	    textractClient.close();
-        		
-        		
-	     return results;	     
+	    logger.debug("The OCR job" + status);
+	    	
+	    return results;	     
 	}
 	
 	
@@ -228,6 +197,8 @@ public class AwsTextractLogic {
         }
         return sortedBlocks;
     }
+    
+    
     
     /*
      * I. Summers 5-13-24

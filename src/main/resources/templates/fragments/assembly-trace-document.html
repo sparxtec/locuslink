@@ -61,7 +61,7 @@
 	          	innerData["assemblyPkid"] = $('input#assemblyPkid').val();
 	    		myData["data"] = innerData;
 	    		
-	    		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse");
+	    		submitFormAjaxJSON("deleteAssemblyMtrFileUpload", myData, "generalResponse");
 			}
 			
 	 	});		   
@@ -108,7 +108,7 @@
 	    //   This is temporary for now so we can code the AI calls, it will be automatic later, thats why that code is in a "Logic" module
 	    //   so it can be shared later.
 	    
-    	$('#buttonAwsId').click(function() {	
+/*     	$('#buttonAwsId').click(function() {	
     		    		
     		showSpinner();	
     		
@@ -118,7 +118,25 @@
     		//innerData["deleteAllFilesWithPk"] =	"YES";
     		myData["data"] = innerData;
     		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");
-    	});   
+    	});    */
+	    
+	    // 6-11-2024  Determine which Image clicked for viewing
+		$("[id^='buttonAwsId_']").click(function() {			
+			showSpinner();
+			
+			var tokens = ($(this).attr("id")).split("_");
+			assemblyAttachmentPkId = tokens[2];	
+			
+     		var myData = {version:"1.0", protocol:"json", clientId:"locuslink"};
+           	var innerData = {};
+    		innerData["assemblyAttachmentPkId"] = assemblyAttachmentPkId;
+    
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");					
+		});	
+	    
+
+	    
 	    
     	// Added for Dropzone
 		window.addEventListener("dragover",function(e){
@@ -181,12 +199,12 @@
     		    		
     		$("#assemblyUploadId").hide();
     		
-/*      		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
+     		var myData = {version:"1.0", protocol:"json", clientId:"trace"};
            	var innerData = {};
     		innerData["assemblyPkid"] =	pkId = $('input#assemblyPkid').val();
     		innerData["deleteAllFilesWithPk"] =	"YES";
     		myData["data"] = innerData;
-    		submitFormAjaxJSON("deleteAsseblyFileUpload", myData, "generalResponse"); */
+    		submitFormAjaxJSON("deleteAssemblyMtrFileUpload", myData, "generalResponse");
 
     	});   
     	
@@ -197,7 +215,7 @@
     		assemblyPkid = $('#assemblyPkid').val();
     		//console.log ("uniqueAssetPkId ->: " + uniqueAssetPkId);
     		
-   		//	submitFormAjaxHTML('saveAssemblyAttachmentsFromStagingToStorage', $("#dashboardFormDTO").serialize(), "initCommonResponse");					
+   			submitFormAjaxHTML('saveAssemblyAttachmentsMtrFromStagingToStorage', $("#dashboardFormDTO").serialize(), "initCommonResponse");					
 			hideSpinner();
 			$("#assemblyUploadId").hide();
     	}); 
@@ -351,68 +369,66 @@
 
 <!-- C.Sparks Testing, manual Button for calling AI code  -->
 
-                    <div class="row">
+    <div class="row">
                     
         <!-- start loop -->       
         <!-- This needs to be a DTOso more dat can be displayed, like doc type desc -->
       <th:block th:each="assemblyAttachmentDTO, iStat  : ${assemblyAttachmentDTOList} ">
                            
                     
-                        <div class="col-md-6">
-                            <div class="barcdetab document-bx">
-                                <div class="documentname-hdingbx">
-                                    <div class="document-name-bx">
-                                        <span>PDF</span>
-                                    </div>
+         <div class="col-md-6">
+             <div class="barcdetab document-bx">
+                 <div class="documentname-hdingbx">
+                     <div class="document-name-bx">
+                         <span>PDF</span>
+                     </div>
                                     
                       <div class="document-hding">
                           <h6 style="white-space:nowrap" th:text="${assemblyAttachmentDTO.getAssemblyReqDocDesc()}">></h6>
                           <h6 style="font-size:.80rem;" th:text="${assemblyAttachmentDTO.getFilenameFullpath()}"></h6>
-                          <h6 style="font-size:.70rem;" >Heat:123, Serial:789</h6>
+                          <h6 style="font-size:.70rem;" ><span id="aiAttributeFlagId" style="color:#B22222" title="Attributes not parsed successfully. Click the AI button to try again.">Error</span>Heat:123, Serial:789</h6>
                       </div>
-                                </div>
+                  </div>
                                 
                                 
                                 
-                                <div class="details-download-btn">
+                  <div class="details-download-btn">
 
-	                  <div  style="width:32px;height:32px">
-	                   	  <a th:id="aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" href="#">
-	                          <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
-	                      </a>                                                                      
-	                  </div> 
-	                  
-                                    <div id="buttonEditMtrId" class="add-details">                                        
-                                        <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
-                                            <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
-                                        </a>                                                          
-                                    </div>
-                                    
-                                    <div id="buttonAwsId" class="add-details">                                                                               
-                                          <a href="#" data-toggle="tooltip" data-placement="top" title="Click to test the AWS OCR processing." > 
-                                              <span data-bs-toggle="modal" data-bs-target="#add-details">Aws</span>
-                                          </a>    
-                                    </div>
-                                    
-                                </div>
-
-                            </div>
+		                <div  style="width:32px;height:32px">
+		                 	  <a th:id="aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" href="#">
+		                        <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
+		                    </a>                                                                      
+		                </div> 
+              
+                        <div id="buttonEditMtrId" class="add-details">                                        
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
+                                <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
+                            </a>                                                          
                         </div>
-                        
-                        
-
-
-                    </div>
-
-              </div>
-               
-         </div>
+                          
+                        <div th:id="buttonAwsId_aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}"  class="add-details" style="background:#B22222">                                                                               
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Click to Re-run the AI Assist OCR processing." > 
+                                 <span data-bs-toggle="modal" data-bs-target="#add-details">AI</span>
+                            </a>    
+                        </div>                                    
          
+                   </div>
+
+                 </div>
+             </div>
+                        
+                        
+         </div>
+
        </div>
+               
+     </div>
+         
+    </div>
                     
 
-     <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
-     <div id="assembly_ModalBody"></div>
+    <!-- C.Sparks This is a place holder for the Modal dialog to be created. -->
+    <div id="assembly_ModalBody"></div>
      
   </div>
   </div>          
@@ -422,37 +438,3 @@
 </html>
 
 
-
-
-<!--                         <div class="col-md-6">
-                            <div class="barcdetab document-bx">
-                                <div class="documentname-hdingbx">
-                                    <div class="document-name-bx">
-                                        <span>PDF</span>
-                                    </div>
-                                    <div class="document-hding">
-                                        <h6>MTR_sample_1.pdf<span class="doc-descrip">Sample 1 Test case for MTR processing using AWS Textract.</span></h6>
-                                        <span>254 kB</span>
-                                    </div>
-                                </div>
-                                <div class="details-download-btn">
-                                    <div class="download-icon">
-                                        <img src="./images/downlaod-icon-whitesvg.svg" class="img-fluid"
-                                            alt="Download" title="Download All">
-                                    </div>
-                                    <div id="buttonEditMtrId" class="add-details">                                        
-                                        <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
-                                            <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
-                                        </a>                                                          
-                                    </div>
-                                    
-                                    <div id="buttonAwsId" class="add-details">                                                                               
-                                          <a href="#" data-toggle="tooltip" data-placement="top" title="Click to test the AWS OCR processing." > 
-                                              <span data-bs-toggle="modal" data-bs-target="#add-details">Aws</span>
-                                          </a>    
-                                    </div>
-                                    
-                                </div>
-
-                            </div>
-                        </div> -->

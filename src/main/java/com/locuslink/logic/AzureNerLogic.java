@@ -6,12 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -22,15 +19,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dto.Textract.AwsTextractBlockDTO;
 import com.locuslink.dto.Textract.Relationship;
@@ -62,16 +56,9 @@ public class AzureNerLogic {
 	@Value("${azure.language.mtr-ner.deployedModelName}")
 	private String deployedModelName;
 	
-
-	public JSONObject process_2(JsonNode ocrResults) {
-		
-		logger.debug("Starting process_2() " );
-
-
-		return processAzureNER(ocrResults);
-	}
 	
-	private JSONObject processAzureNER(JsonNode ocrResults) {
+	public JSONObject processAzureNER(JsonNode ocrResults) {		
+		logger.debug("Starting processAzureNER() " );
 		
 		List<String> documentPages = generateDocumentPages(ocrResults);
 		System.out.printf("%d document pages generated. Submitting documents to Azure NER model...%n", documentPages.size());
@@ -83,6 +70,7 @@ public class AzureNerLogic {
 		return nerResults;
 	}
 	
+		
 	private JSONObject performNER(String projectName, String deployedModelName, List<String> textDocuments) {
 
         // Initialize HTTP client for REST operations
@@ -100,6 +88,7 @@ public class AzureNerLogic {
         // GET request
         return getNERTask(client, getRequestURL);
     }
+	
 	
 	private String postNERTask(HttpClient client, String projectName, String deployedModelName, List<String> textDocuments) {
 
@@ -142,16 +131,19 @@ public class AzureNerLogic {
                     .GET()
                     .build();
             
+            HttpResponse<String> response = null;
+            JSONObject taskStatus = null;
+            
             do {
                 // Use the client to send the request
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 responseBody = (JSONObject) parser.parse(response.body()); // Transform response body to JSON
                 status = (String) responseBody.get("status");
 
                 switch (status) {
                     case "succeeded", "completed" -> {
 
-                        JSONObject taskStatus = (JSONObject) responseBody.get("tasks");
+                        taskStatus = (JSONObject) responseBody.get("tasks");
                         if ((long) taskStatus.get("failed") > 0) {
                             System.out.println(taskStatus.get("completed") + " task(s) completed. " + taskStatus.get("failed") +
                                     "/" + taskStatus.get("total") + " tasks failed.");
@@ -188,6 +180,7 @@ public class AzureNerLogic {
         return null; // Return null if NER job failed or was canceled
     }
 	
+	@SuppressWarnings("unchecked")
 	private String generatePostRequest(String projectName, String deployedModelName, List<String> textDocuments) {
 
         if (textDocuments.isEmpty()) { // If the document list is empty
@@ -203,8 +196,9 @@ public class AzureNerLogic {
             // Initialize Document list
             JSONArray documents = new JSONArray();
 
+            JSONObject document = new JSONObject();
             for (int i = 0; i < textDocuments.size(); i++) { // Add documents to document list
-                JSONObject document = new JSONObject();
+                document = new JSONObject();
                 document.put("id", i);
                 document.put("language", languageCode);
                 document.put("text", textDocuments.get(i));
@@ -299,11 +293,12 @@ public class AzureNerLogic {
 
         ArrayNode blocksNode = (ArrayNode) textractResults.get(String.valueOf(pageNumber)); // Blocks Node
 
+        AwsTextractBlockDTO block = null;
         for (JsonNode blockNode : blocksNode) {
 
             try {
                 // Convert blockNode to AwsTextractBlockDTO object
-                AwsTextractBlockDTO block = mapper.treeToValue(blockNode, AwsTextractBlockDTO.class);
+                block = mapper.treeToValue(blockNode, AwsTextractBlockDTO.class);
 
                 switch (block.blockTypeAsString()) {
                     case "WORD" -> words.add(block);
@@ -331,10 +326,13 @@ public class AzureNerLogic {
         int lineCounter = 0;    // Initialize counter to decide how long a word should be ignored
         String lastBlockType = null;   // Initialize String for the BlockType of the last text String added to joiner
 
+        AwsTextractBlockDTO lineParent = null;
+        AwsTextractBlockDTO cellParent = null;
+        		
         for (AwsTextractBlockDTO word : words) {  // Iterate through all WORDs
 
-            AwsTextractBlockDTO lineParent = findParentBlock(word, lines);   // Initialize LINE parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
-            AwsTextractBlockDTO cellParent = findParentBlock(word, cells);   // Initialize CELL parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
+            lineParent = findParentBlock(word, lines);   // Initialize LINE parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
+            cellParent = findParentBlock(word, cells);   // Initialize CELL parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
 
             // TODO: Refactor for a faster way to iterate through LINEs, CELLs (and TABLEs?). WORD and TABLEs need to
             //  maintain order
@@ -430,16 +428,17 @@ public class AzureNerLogic {
         AwsTextractBlockDTO parentBlock = null;
 
         if (childBlock != null) {
+        	
+        	Iterator<Relationship> iterator = null;
+        	Relationship relationship = null;
+        			 
             for (AwsTextractBlockDTO block : parentList) { // Iterate through AwsTextractBlockDTO list, searching for parent AwsTextractBlockDTO
             	if (block.hasRelationships()) {
 
-	                Iterator<Relationship> iterator = block.relationships().iterator();
-	
+	                iterator = block.relationships().iterator();	
 	                while (iterator.hasNext()) {
-	                    Relationship relationship = iterator.next();
-	
-	                    if (relationship.typeAsString().equals("CHILD")) {
-	
+	                    relationship = iterator.next();
+	                    if (relationship.typeAsString().equals("CHILD")) {	
 	                        if (relationship.ids().contains(childBlock.id())) {
 	                            parentBlock = block;  // Assign lineParent to LINE that contains WORD
 	                        }

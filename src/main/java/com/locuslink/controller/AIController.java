@@ -3,6 +3,7 @@ package com.locuslink.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
+import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.logic.AwsTextractLogic;
+import com.locuslink.logic.AzureNerLogic;
+import com.locuslink.model.AssemblyAttachment;
 
 
 
@@ -35,11 +39,14 @@ public class AIController {
  
 	private static final Logger logger = Logger.getLogger(AIController.class);
 	
+    @Autowired
+    private AssemblyAttachmentDao assemblyAttachmentDao;
 	   
-	  @Autowired
-      private AwsTextractLogic  awsTextractLogic;
-	  
-	//  private AzureNerLogic azureNerLogic;
+    @Autowired
+    private AwsTextractLogic  awsTextractLogic;
+  
+    @Autowired
+    private AzureNerLogic azureNerLogic;
 	
 
 	/**
@@ -49,42 +56,59 @@ public class AIController {
 	 *  The UI needs data or a response, so its called with this method signature.
 	 */		
 	@RequestMapping(value = "/processAWSTextract", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public @ResponseBody GenericMessageResponse getSomeData(@RequestBody GenericMessageRequest request, HttpSession session)  {
+	public @ResponseBody GenericMessageResponse processAWSTextract(@RequestBody GenericMessageRequest request, HttpSession session)  {
 
 		logger.debug("In processAWSTextract()");
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "processAWSTextract");
 
-		// TODO This is hard coded as 123 for now, but oncei get the database model created an loaded, we will write SQL here to pull
-		// the assembly object
-		String assemblyPkId = request.getFieldAsString("assemblyPkId");
-		if (assemblyPkId == null || assemblyPkId.length() < 1) {
-			logger.debug("Error - assemblyPkId is missing");
+		// 6-19-2024
+		String assemblyAttachmentPkId = request.getFieldAsString("assemblyAttachmentPkId");
+		if (assemblyAttachmentPkId == null || assemblyAttachmentPkId.length() < 1) {
+			logger.debug("Error - assemblyAttachmentPkId is missing");			
+			response.setError(420);
+			response.setErrorMessage("Error. The assemblyAttachmentPkId was not found and is required.");
+			return response;						
 		} else {
-			logger.debug("  assemblyPkId ->: " + assemblyPkId);
+			logger.debug("  assemblyAttachmentPkId ->: " + assemblyAttachmentPkId);
 		}
 		
 		
+		// 6-19-2024
+		AssemblyAttachment assemblyAttachment = assemblyAttachmentDao.getById(Integer.valueOf(assemblyAttachmentPkId));
+		if (assemblyAttachment == null) {
+			logger.debug("Error - Assembly Attachment not found in the DB.");			
+			response.setError(430);
+			response.setErrorMessage("Error - Assembly Attachment not found in the DB.");
+			return response;
+		}
+		
+				
 		try {
-			// C.Sparks  04-19-2024
-			//    This is where the work will go. Below is a sample on calling the "logic" module.
-			//    small coding can go in here, but larger chunks need to be separated out into logic modules/functions so they can be shared.
+			// 6-19-2024			
+			JsonNode ocrResults = awsTextractLogic.process(assemblyAttachment);
 			
+			String result = "";
+			if (ocrResults != null) {
+				logger.debug("ocrResults ->: " + ocrResults.toPrettyString());	
+				result = ocrResults.isNull() ? "failed" : "succeeded";
+				logger.debug("Result from AWSTextract processing ->: " + result);
+			} else {
+				logger.debug("Error: Result from AWSTextract processing is null.");
+			}
 			
-			JsonNode ocrResults = awsTextractLogic.process_1(assemblyPkId);
-			String result = ocrResults.isNull() ? "failed" : "succeeded";
-			logger.debug("Result from AWSTextract processing ->: " + result);
-			
-//			JSONObject nerResults = azureNerLogic.process_2(ocrResults);
-//			result = nerResults == null ? "failed" : "succeeded";
-//			logger.debug("Result from AzureNER processing ->: " + result);
-			
-//			boolean result = awsTextractLogic.process_2();
-//			logger.debug("Result from AWSTextract processing ->: " + result);
-//			
-//			boolean result = awsTextractLogic.process_3();
-//			logger.debug("Result from AWSTextract processing ->: " + result);
-			
+			JSONObject nerResults = azureNerLogic.processAzureNER(ocrResults);
+			if (nerResults != null) {
+				logger.debug("nerResults ->: " + nerResults.toJSONString());
+				result = nerResults == null ? "failed" : "succeeded";
+				logger.debug("Result from AzureNER processing ->: " + result);	
+			} else {
+				logger.debug("Error: Result from AzureNER processing is null.");
+			}
 
+			// TODO
+			// Add in result process to the database, so the UI can display status and attributes, even for partial results.
+			
+			
 			
 			
 		} catch (Exception e) {

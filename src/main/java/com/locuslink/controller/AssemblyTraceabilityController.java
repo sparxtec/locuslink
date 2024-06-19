@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,12 +25,15 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Tag;
+import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dto.AssemblyAttachmentDTO;
+import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.logic.AwsS3AssemblyFileLogic;
 import com.locuslink.model.AssemblyReqDoc;
 /**
  * This is a Spring MVC Controller.
@@ -49,15 +55,18 @@ public class AssemblyTraceabilityController {
     @Autowired
     private SecurityContextManager securityContextManager;
 
+    
+    
     @Autowired
     private AssemblyDao assemblyDao;
     
     @Autowired
     private AssemblyAttachmentDao assemblyAttachmentDao;
     
+    @Autowired
+    private AwsS3AssemblyFileLogic awsS3AssemblyFileLogic;
     
-	@Autowired
-	private AmazonS3Client awsS3Client;
+    
 
 	@Value("${aws.s3.bucketName}")
 	private String awsS3BucketName;
@@ -98,63 +107,78 @@ public class AssemblyTraceabilityController {
 			Model model, @ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,
 			HttpSession session) {
 
-		logger.debug("Starting processAssemblyMtrUpload()..inputfile ->:" + inputfile.getOriginalFilename());
+		logger.debug("Starting processAssemblyReqDocUpload()..inputfile ->:" + inputfile.getOriginalFilename());
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "Upload");
 
-		try {			
-			if (inputfile.getOriginalFilename().contains(".pdf")) {
-				// do nothing, all good
-			} else {
-				logger.debug("  ERROR xlsFileUpload failed ->: Wrong File extension. " );
-				return response;
-			}
-
-			// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
-			String prefixAssemblytPkId = dashboardFormDTO.getAssemblyPkid()+ "_";	
-			String fullpathFileName_keyName = assemblyStagingFullpath +  prefixAssemblytPkId + inputfile.getOriginalFilename();	
-			
-						
-//			// TODO 5-11-2023   Dont allow duplicate files uploaded to the same Asset.
-//			if (!checkFileIsValideToUpload(prefixAssemblytPkId + inputfile.getOriginalFilename())) {
-//				logger.debug("  ERROR duplicate file upload not allowed for the same assembly. " );
-//				response.setError(1);
-//				response.setErrorMessage(" ERROR. You cannot upload duplicate file for the same assembly.");				
-//				response.setField("uploadedFilenameInError", inputfile.getOriginalFilename());
-//				return response;				
-//			}
-//
-//				 
-//			 
-//	        logger.debug("           Name ->: " + fullpathFileName_keyName);
-//	        logger.debug("    Content Type ->: " + inputfile.getContentType());
-//        	        
-//            final ObjectMetadata metaData = new ObjectMetadata();
-//            metaData.setContentType(inputfile.getContentType());
-//            metaData.setContentLength(inputfile.getSize());
-//            
-//            // create and call S3 request to create the new S3 object 
-//            PutObjectRequest putObjectRequest = new PutObjectRequest(
-//            	awsS3BucketName, 
-//            	fullpathFileName_keyName, // file/object name in S3
-//            	inputfile.getInputStream(), // input stream from the Multipart
-//                metaData // created above, with the only content type and size
-//            );
-//            
-//            // Tags for easier process on retrieval
-//            List<Tag> tags = new ArrayList<Tag>();
-//            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
-//            putObjectRequest.setTagging(new ObjectTagging(tags));
-//            awsS3Client.putObject(putObjectRequest);
-//            	        		
-//			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
-			
-			logger.debug(" Assembly Upload Worked,  size ->: " + inputfile.getSize());
-
-		} catch (Exception e) {
-			logger.debug("  ERROR Document Upload failed ->: " + e.getMessage());
+		
+		if (inputfile.getOriginalFilename().contains(".pdf")) {
+			// do nothing, all good
+		} else {
+			logger.debug("  ERROR xlsFileUpload failed ->: Wrong File extension. " );
+			return response;
 		}
+
+		String prefixAssemblytPkId = dashboardFormDTO.getAssemblyPkid()+ "_";	
+		
+		awsS3AssemblyFileLogic.processAssemblyAttachmentUpload( response ,inputfile, prefixAssemblytPkId);
+		       	        		
+		model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
+		
 		return response;
 	}
+	
+
+	/**
+	 * 6-10-2024  ASSEMBLY - Attachment ADD via Dropzone.
+	 *       Once an attachment is droped in dropzone buffer, it was added to AWS staging.
+	 */
+	@RequestMapping(value = "/deleteAssemblyMtrFileUpload", method=RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public @ResponseBody GenericMessageResponse deleteAssemblyFileUpload(@RequestBody GenericMessageRequest request, HttpSession session)  {
+
+		logger.debug("In deleteAssemblyFileUpload()");
+		GenericMessageResponse response = new GenericMessageResponse("1.0", "LocusView", "deleteFileUpload");
+		
+		// 6-19-2024
+		awsS3AssemblyFileLogic.processAssemblyAttachmentUploadDelete(request, response );
+								
+		return response;		
+	}
+	
+	
+	
+	
+	/**
+	 *   06-10-2024 C.Sparks
+	 *   ASSEMBLY - Attachment List has an ADD function, after Dropzone already called, and it loaded Staging,
+	 *    it calls this to move the staging files to the  the AWS S3 Storage bucket, 
+	 *    and insert into the database an attachment record with the filename and path.
+	 */
+	
+	@PostMapping(value = "/saveAssemblyAttachmentsMtrFromStagingToStorage")
+	public String saveAssemblyAttachmentsFromStagingToStorage (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+	
+		logger.debug("In saveAssemblyAttachmentsFromStagingToStorage()");
+	  		
+		int assemblyPkid = Integer.valueOf(dashboardFormDTO.getAssemblyPkid());		
+		//String assemblyDocTypePkid = dashboardFormDTO.getAssemblyDocTypePkId();
+		String assemblyDocTypePkid = "62";  //Assembly MTR's are docType1, regular MTR are 50, FYI
+		//String ardPkId = dashboardFormDTO.getArdPkId();
+		String ardPkId = "1";  //Trace Doc is 1
+			
+		awsS3AssemblyFileLogic.processAssemblyAttachmentStageToStorage( assemblyPkid , assemblyDocTypePkid, ardPkId);
+		
+
+       	// 6-10-2024 - Need this so the UI can navigate back to the TAB we want in focus
+	   	model.addAttribute("gotoDocumentsTab", "mtr");	 
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	
+	   	
+		AssemblyDTO assemblyDto = assemblyDao.getDtoById(Integer.valueOf(assemblyPkid)  );		
+	 	model.addAttribute("assemblyDto", assemblyDto);
+	   	
+	   	return "fragments/assembly-detail";	   		   	
+	 }
+		 
 	
 	
 	
