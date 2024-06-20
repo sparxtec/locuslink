@@ -89,7 +89,10 @@ public class AIController {
 			
 			String result = "";
 			if (ocrResults != null) {
-				logger.debug("ocrResults ->: " + ocrResults.toPrettyString());	
+				// 6-20-2024 I. Summers
+				// 		AWS Textract Block object does not have bean properties, so .toPrettyString() 
+				//		on following line throws InvalidDefinitionException
+				//logger.debug("ocrResults ->: " + ocrResults.toPrettyString());	
 				result = ocrResults.isNull() ? "failed" : "succeeded";
 				logger.debug("Result from AWSTextract processing ->: " + result);
 			} else {

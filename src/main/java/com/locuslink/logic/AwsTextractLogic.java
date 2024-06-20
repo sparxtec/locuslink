@@ -141,6 +141,7 @@ public class AwsTextractLogic {
         int index = 0;
         String status;
         JsonNode sortedBlocks = null;
+        ArrayList<Block> combinedBlockList = new ArrayList<>(); 
 
         try {
             while (!finished) {
@@ -156,6 +157,7 @@ public class AwsTextractLogic {
                 	// Create document metadata and blocks variables
                     DocumentMetadata responseMetadata = response.documentMetadata();
                     List<Block> blocks = response.blocks();
+                    combinedBlockList.addAll(blocks);
                     String nextToken = response.nextToken();
             		
             		// Fetch document metadata
@@ -173,7 +175,7 @@ public class AwsTextractLogic {
             			if (nextToken != null && nextToken != "") {
             				List<Object> nextJob = getJobResults(textractClient, jobId, nextToken);
             				nextToken = (String) nextJob.get(0);
-            				blocks.addAll((List<Block>) nextJob.get(1));
+            				combinedBlockList.addAll((List<Block>) nextJob.get(1));
             				moreBlocks = true;
             			} else {
             				System.out.println("All done! No more tokens.");
@@ -181,7 +183,7 @@ public class AwsTextractLogic {
             			}
             		} while (moreBlocks);
                 	
-                	sortedBlocks = sortBlocks(blocks);
+                	sortedBlocks = sortBlocks(combinedBlockList);
                     finished = true;
                     
                 } else {
@@ -212,6 +214,7 @@ public class AwsTextractLogic {
 	        String status;
 	        String nextToken = "";
 	        ArrayList<Object> jobResults = new ArrayList<>(2);
+	        ArrayList<Block> foundBlocks = new ArrayList<>();
 	
 	        try {
 	            while (!finished) {
@@ -228,6 +231,7 @@ public class AwsTextractLogic {
 	                	
             			// Create blocks list variable
                         List<Block> blocks = response.blocks();
+                        foundBlocks.addAll(blocks);
 	                    
                         // Returns List<Block> for all TEXT, TABLES, etc. found in each page of the document
                     	System.out.println("Found the following Blocks: " + blocks.toString());
@@ -236,7 +240,7 @@ public class AwsTextractLogic {
                     	nextToken = response.nextToken();
                     	// Add to jobResults
                     	jobResults.add(0,  nextToken);
-                    	jobResults.add(blocks);
+                    	jobResults.add(foundBlocks);
                     	finished = true;
 	                    
 	                } else {
