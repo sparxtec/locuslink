@@ -63,12 +63,25 @@ public class AzureNerLogic {
 	public JSONObject processAzureNER(JsonNode ocrResults) {		
 		logger.debug("Starting processAzureNER() " );
 		
-		List<String> documentPages = generateDocumentPages(ocrResults);
-		System.out.printf("%d document pages generated. Submitting documents to Azure NER model...%n", documentPages.size());
+		List<String> documentPages = new ArrayList<String>();
+		try {
+			documentPages  = generateDocumentPages(ocrResults);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		logger.debug("  Document pages generated. Submitting documents to Azure NER model.." + documentPages.size());
 		
-		JSONObject nerResults = performNER(projectName, deployedModelName, documentPages);
+		
+		JSONObject nerResults = null;
+		try {
+			nerResults = performNER(projectName, deployedModelName, documentPages);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		String status =  nerResults == null ? "failed" : "succeeded";
-		System.out.println("The NER job " + status);
+		logger.debug("The NER job " + status);
 		
 		return nerResults;
 	}
@@ -83,8 +96,7 @@ public class AzureNerLogic {
         String getRequestURL = postNERTask(client, projectName, deployedModelName, textDocuments); // returns GET URL
 
         if (getRequestURL == null) {
-
-            System.out.println("POST request failed.");
+        	logger.debug("POST request failed.");
             return null;
         }
 
@@ -109,11 +121,11 @@ public class AzureNerLogic {
             if (response.statusCode() == 202) { // If successful
                 return response.headers().firstValue("operation-location").get(); // Return GET URL
             } else { // If unsuccessful
-                System.out.println("Error: HTTP Status Code " + response.statusCode());
+            	logger.debug("Error: HTTP Status Code " + response.statusCode());
             }
         } catch (InterruptedException | IOException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
+        	logger.debug(e.getMessage());
+            //System.exit(1);
         }
         return null;
     }
@@ -148,37 +160,36 @@ public class AzureNerLogic {
 
                         taskStatus = (JSONObject) responseBody.get("tasks");
                         if ((long) taskStatus.get("failed") > 0) {
-                            System.out.println(taskStatus.get("completed") + " task(s) completed. " + taskStatus.get("failed") +
+                        	logger.debug(taskStatus.get("completed") + " task(s) completed. " + taskStatus.get("failed") +
                                     "/" + taskStatus.get("total") + " tasks failed.");
                         } else {
-                            System.out.println("All tasks completed successfully.");
+                        	logger.debug("All tasks completed successfully.");
                         }
 
                         return parseAzureResponse(responseBody); // Return NER results if successful/complete
                     }
                     case "failed" -> {
-
-                        System.out.println("Error: Job ID " + responseBody.get("jobId") + " failed.");
-                        System.out.println("Job Data: " + responseBody.get("tasks"));
+                    	logger.debug("Error: Job ID " + responseBody.get("jobId") + " failed.");
+                    	logger.debug("Job Data: " + responseBody.get("tasks"));
                         finished = true;
                     }
                     case "canceled" -> {
-
-                        System.out.println("Error: Job ID " + responseBody.get("jobId") + " was canceled.");
+                    	logger.debug("Error: Job ID " + responseBody.get("jobId") + " was canceled.");
                         finished = true;
                     }
                     default -> {
-                        System.out.println(index + " status is: " + status);
+                    	logger.debug(index + " status is: " + status);
                         Thread.sleep(3000);
                         index++;
                     }
                 }
             } while (!finished);
 
-            System.out.println("GET request failed.");
+            logger.debug("GET request failed.");
+            
         } catch (InterruptedException | IOException | ParseException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
+        	logger.debug(e.getMessage());
+            //System.exit(1);
         }
         return null; // Return null if NER job failed or was canceled
     }
@@ -187,16 +198,13 @@ public class AzureNerLogic {
 	private String generatePostRequest(String projectName, String deployedModelName, List<String> textDocuments) {
 
         if (textDocuments.isEmpty()) { // If the document list is empty
-            System.out.println("Error: Document List Is Empty");
+        	logger.debug("Error: Document List Is Empty");
             return null;
-        } else { // Otherwise
+        } else {
+        	
             // Body root
             JSONObject body = new JSONObject();
-
-            // Analysis input object
             JSONObject analysisInput = new JSONObject();
-
-            // Initialize Document list
             JSONArray documents = new JSONArray();
 
             JSONObject document = new JSONObject();
@@ -207,7 +215,6 @@ public class AzureNerLogic {
                 document.put("text", textDocuments.get(i));
                 documents.add(document);
             }
-
             analysisInput.put("documents", documents); // Add document list to analysisInput object
 
             // Task list array
@@ -276,7 +283,6 @@ public class AzureNerLogic {
         ArrayList<String> documentList = new ArrayList<>();
 
         for (int i = 1; i <= textractResults.size(); i++) {
-
             String document = processTextractToText(textractResults, i);
             documentList.add(document);
         }
@@ -286,11 +292,13 @@ public class AzureNerLogic {
 
     private static String processTextractToText(JsonNode textractResults, int pageNumber) {
 
+    	logger.debug(" Starting  processTextractToText()");
+    	
     	// C.Sparks   6-20-2024
         ObjectMapper mapper = new ObjectMapper()
         	.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-       // mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+
         
         // Initialize all BlockType lists
         ArrayList<AwsTextractBlockDTO> words = new ArrayList<>();
@@ -305,7 +313,6 @@ public class AzureNerLogic {
 
             try {
             	// C.Sparks 6-20-2024 
-            	//    For Simplicity and separation, go to Json first
             	String json  = mapper.writeValueAsString(blockNode);
             	block = mapper.readValue(json,AwsTextractBlockDTO.class );            	
 
@@ -315,9 +322,8 @@ public class AzureNerLogic {
                     case "CELL", "MERGED_CELL" -> cells.add(block);
                     case "TABLE" -> tables.add(block);
                 }
-
             } catch (JsonProcessingException e) {
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
             }
         }
 
@@ -329,6 +335,8 @@ public class AzureNerLogic {
 
     private static String generateText(List<AwsTextractBlockDTO> words, List<AwsTextractBlockDTO> lines, List<AwsTextractBlockDTO> cells, List<AwsTextractBlockDTO> tables) {
 
+    	logger.debug(" Starting  generateText()");
+    	
         StringJoiner joiner = new StringJoiner(" ");    // Initialize StringJoiner for document text
         ArrayList<String> ignoredCells = new ArrayList<>(); // Initialize ignoredCells id list
         String ignoredLine = null; // Initialize ignoredLine id String
@@ -340,6 +348,11 @@ public class AzureNerLogic {
         		
         for (AwsTextractBlockDTO word : words) {  // Iterate through all WORDs
 
+        	logger.debug(" Processing a WORD ->: " +  word.getText() );
+        	if (word.getText().equalsIgnoreCase("heat")) {
+        		logger.debug(" Has a problem  ->: " +  word.toString());
+        	}
+        	
             lineParent = findParentBlock(word, lines);   // Initialize LINE parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
             cellParent = findParentBlock(word, cells);   // Initialize CELL parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
 
@@ -413,9 +426,7 @@ public class AzureNerLogic {
 
                     while (iterator.hasNext()) {
                         Relationship relationship = iterator.next();
-
                         if (relationship.getType().equals("CHILD")) {
-
                             lineCounter = relationship.getIds().size() - 2;    // Set lineCounter to LINE size, minus 2
                         }
                     }
@@ -429,6 +440,8 @@ public class AzureNerLogic {
             }
         }
 
+        logger.debug(" Finished generateText(). ");
+        
         return joiner.toString();
     }
 
@@ -442,8 +455,8 @@ public class AzureNerLogic {
         	Relationship relationship = null;
         			 
             for (AwsTextractBlockDTO block : parentList) { // Iterate through AwsTextractBlockDTO list, searching for parent AwsTextractBlockDTO
+            	
             	if (block.hasRelationships()) {
-
 	                iterator = block.getRelationships().iterator();	
 	                while (iterator.hasNext()) {
 	                    relationship = iterator.next();
@@ -460,6 +473,7 @@ public class AzureNerLogic {
         return parentBlock;
     }
 
+    
     private static boolean cellContainsLine(AwsTextractBlockDTO cell, AwsTextractBlockDTO line) {
 
         Iterator<Relationship> iterator = cell.getRelationships().iterator();
@@ -468,20 +482,16 @@ public class AzureNerLogic {
 
         while (iterator.hasNext()) {
             Relationship relationship = iterator.next();
-
-            if (relationship.getType().equals("CHILD")) {
-
+            if (relationship.getType().equals("CHILD")) {           
                 cellIds = relationship.getIds();
             }
         }
 
         iterator = line.getRelationships().iterator();
-
         while (iterator.hasNext()) {
             Relationship relationship = iterator.next();
 
             if (relationship.getType().equals("CHILD")) {
-
                 lineIds = relationship.getIds();
             }
         }
@@ -489,7 +499,7 @@ public class AzureNerLogic {
         try {
             return cellIds.containsAll(lineIds);
         } catch (NullPointerException e) {
-            System.err.println(e.getMessage());
+        	logger.debug(e.getMessage());
             return false;
         }
     }

@@ -71,8 +71,7 @@ public class AIController {
 		} else {
 			logger.debug("  assemblyAttachmentPkId ->: " + assemblyAttachmentPkId);
 		}
-		
-		
+				
 		// 6-19-2024
 		AssemblyAttachment assemblyAttachment = assemblyAttachmentDao.getById(Integer.valueOf(assemblyAttachmentPkId));
 		if (assemblyAttachment == null) {
@@ -82,23 +81,31 @@ public class AIController {
 			return response;
 		}
 		
-				
-		try {
-			// 6-19-2024			
-			JsonNode ocrResults = awsTextractLogic.process(assemblyAttachment);
-			
-			String result = "";
+		
+		// AWS
+		JsonNode ocrResults = null;
+		String result = "";		
+		try {	
+			ocrResults = awsTextractLogic.process(assemblyAttachment);			
 			if (ocrResults != null) {
-				// 6-20-2024 I. Summers
-				// 		AWS Textract Block object does not have bean properties, so .toPrettyString() 
-				//		on following line throws InvalidDefinitionException
-				//logger.debug("ocrResults ->: " + ocrResults.toPrettyString());	
 				result = ocrResults.isNull() ? "failed" : "succeeded";
 				logger.debug("Result from AWSTextract processing ->: " + result);
 			} else {
 				logger.debug("Error: Result from AWSTextract processing is null.");
+				response.setError(710);
+				response.setErrorMessage("Error: Result from AWSTextract processing is null" );
+				return response;
 			}
-			
+		} catch (Exception e) {
+			logger.debug("  ERROR awsTextractLogic failed ->: " + e.getMessage());		
+			response.setError(720);
+			response.setErrorMessage("ERROR awsTextractLogic failed with exception ->: " + e);
+			return response;
+		}
+		
+				
+		// Azure
+		try {
 			JSONObject nerResults = azureNerLogic.processAzureNER(ocrResults);
 			if (nerResults != null) {
 				logger.debug("nerResults ->: " + nerResults.toJSONString());
@@ -106,17 +113,25 @@ public class AIController {
 				logger.debug("Result from AzureNER processing ->: " + result);	
 			} else {
 				logger.debug("Error: Result from AzureNER processing is null.");
+				response.setError(730);
+				response.setErrorMessage("\"Error: Result from AzureNER processing is null." );
+				return response;
 			}
 
 			// TODO
 			// Add in result process to the database, so the UI can display status and attributes, even for partial results.
-			
-			
+			logger.debug(" ........... TODO   Save to DB ......... ");
+			logger.debug(" ........... TODO   Save to DB ......... ");
+			logger.debug(" ........... TODO   Save to DB ......... ");
 			
 			
 		} catch (Exception e) {
-			logger.debug("  ERROR something failed ->: " + e.getMessage());
+			logger.debug("  AzureNerLogic failed ->: " + e.getMessage());
+			response.setError(740);
+			response.setErrorMessage("ERROR AzureNerLogic failed with exception ->: " + e);
+			return response;
 		}
+		
 		return response;
 	}
 	
