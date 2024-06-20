@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -32,9 +31,6 @@ import software.amazon.awssdk.services.textract.model.StartDocumentAnalysisRespo
 import software.amazon.awssdk.services.textract.model.TextractException;
 
 
-//import com.amazonaws.services.textract.model.S3Object;
-
-
 
 
 
@@ -43,12 +39,10 @@ public class AwsTextractLogic {
 		
 	private static final Logger logger = Logger.getLogger(AwsTextractLogic.class);
 	
-	@Autowired
-	private AmazonS3Client awsS3Client;
+
 
 	@Value("${aws.s3.bucketName}")
-	private String awsS3BucketName;
-							 
+	private String awsS3BucketName;							 
 	
 	@Value("${file.assembly.storage.fullpath}")
 	private String assemblyStorageFullpath;
@@ -72,8 +66,7 @@ public class AwsTextractLogic {
 				.region(Region.US_EAST_1)
 				.build();
 				
-	   //  detectDocTextS3(textractClient, awsS3BucketName, "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf");
-	   //  textractClient.close();		
+	   //  detectDocTextS3(textractClient, awsS3BucketName, "dev/files/assembly/storage/71_0123001D015_12inch_52 Pipe.pdf");	
 		String docName = assemblyStorageFullpath +  assemblyAttachment.getAssemblyPkid() +  "_"   +  assemblyAttachment.getFilenameFullpath();		
 	    logger.debug("Working on MTR ->: " + docName);
 		
@@ -134,15 +127,16 @@ public class AwsTextractLogic {
         return "";
 	}
 
-    private static JsonNode getJobResults(TextractClient textractClient, String jobId) {
+    @SuppressWarnings("unchecked")
+	private static JsonNode getJobResults(TextractClient textractClient, String jobId) {
     	
         boolean finished = false;
         boolean moreBlocks;
         int index = 0;
         String status;
         JsonNode sortedBlocks = null;
-        ArrayList<Block> combinedBlockList = new ArrayList<>(); 
-
+        ArrayList<Block> combinedBlockList = new ArrayList<Block>(); 
+        List<Block> blocks = null;
         try {
             while (!finished) {
                 GetDocumentAnalysisRequest analysisRequest = GetDocumentAnalysisRequest.builder()
@@ -156,14 +150,13 @@ public class AwsTextractLogic {
                 if (status.compareTo("SUCCEEDED") == 0) {
                 	// Create document metadata and blocks variables
                     DocumentMetadata responseMetadata = response.documentMetadata();
-                    List<Block> blocks = response.blocks();
+                    blocks = response.blocks();
                     combinedBlockList.addAll(blocks);
                     String nextToken = response.nextToken();
             		
             		// Fetch document metadata
-                    System.out.println("Document has the following metadata: " + responseMetadata.toString());
-                    // Returns List<Block> for all TEXT, TABLES, etc. found in each page of the document
-                	System.out.println("Found the following Blocks: " + blocks.toString());
+                    logger.debug("Document has the following metadata: " + responseMetadata.toString());
+                    logger.debug("Found the following Blocks size ->: " + blocks.size());
                 	
                 	/*
                 	 * I.Summers 5-13-2024
@@ -171,9 +164,10 @@ public class AwsTextractLogic {
                 	 * 		If >1000 results, the response is paginated using tokens (i.e. returns NextToken string).
                 	 * 		Implemented the nextToken method to access full Textract results.
                 	 */
+                	List<Object> nextJob = null;
             		do {
             			if (nextToken != null && nextToken != "") {
-            				List<Object> nextJob = getJobResults(textractClient, jobId, nextToken);
+            				nextJob = getJobResults(textractClient, jobId, nextToken);
             				nextToken = (String) nextJob.get(0);
             				combinedBlockList.addAll((List<Block>) nextJob.get(1));
             				moreBlocks = true;
@@ -187,14 +181,14 @@ public class AwsTextractLogic {
                     finished = true;
                     
                 } else {
-                    System.out.println(index + " status is: " + status);
+                	logger.debug(index + " status is: " + status);
                     Thread.sleep(1000);
                 }
                 index++;
             }
 
         } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+        	logger.debug(e.getMessage());
             System.exit(1);
         }
         return sortedBlocks;
@@ -216,25 +210,29 @@ public class AwsTextractLogic {
 	        ArrayList<Object> jobResults = new ArrayList<>(2);
 	        ArrayList<Block> foundBlocks = new ArrayList<>();
 	
+	        GetDocumentAnalysisRequest analysisRequest = null; 
+	        GetDocumentAnalysisResponse response = null;
+	        List<Block> blocks = null;
+	        
 	        try {
 	            while (!finished) {
-	                GetDocumentAnalysisRequest analysisRequest = GetDocumentAnalysisRequest.builder()
+	                analysisRequest = GetDocumentAnalysisRequest.builder()
 	                        .jobId(jobId)
 	                        .nextToken(token)
 	                        .maxResults(1000)
 	                        .build();
 	
-	                GetDocumentAnalysisResponse response = textractClient.getDocumentAnalysis(analysisRequest);
+	                response = textractClient.getDocumentAnalysis(analysisRequest);
 	                status = response.jobStatus().toString();
 	
 	                if (status.compareTo("SUCCEEDED") == 0) {
 	                	
             			// Create blocks list variable
-                        List<Block> blocks = response.blocks();
+                        blocks = response.blocks();
                         foundBlocks.addAll(blocks);
 	                    
                         // Returns List<Block> for all TEXT, TABLES, etc. found in each page of the document
-                    	System.out.println("Found the following Blocks: " + blocks.toString());
+                        logger.debug("Found the following Blockssize ->: " + blocks.size());
                     	
                     	// Set nextToken
                     	nextToken = response.nextToken();
@@ -244,14 +242,14 @@ public class AwsTextractLogic {
                     	finished = true;
 	                    
 	                } else {
-	                    System.out.println(index + " status is: " + status);
+	                	logger.debug(index + " status is: " + status);
 	                    Thread.sleep(1000);
 	                }
 	                index++;
 	            }
 	
 	        } catch (InterruptedException e) {
-	            System.out.println(e.getMessage());
+	        	logger.debug(e.getMessage());
 	            System.exit(1);
 	        }
 	        return jobResults;
@@ -268,6 +266,7 @@ public class AwsTextractLogic {
 		ObjectMapper mapper = new ObjectMapper();	// Initialize ObjectMapper for Jackson functionality
 		ObjectNode sortedBlocks = mapper.createObjectNode();	// Initialize root node -- base of JSON
 		
+		//ArrayNode pageBlocks = new ArrayNode(null);
 		for (Block block : blocks) {
 			if (!sortedBlocks.has(String.valueOf(block.page()))) {	// If doc page number does not exist as a key:
 				
@@ -284,44 +283,7 @@ public class AwsTextractLogic {
 		return sortedBlocks;
 	}
 	
-	
-	
-//	 public static void detectDocTextS3(TextractClient textractClient, String bucketName, String docName) {
-//		 
-//	        try {
-//	        	
-//	        	S3Object s3Object = S3Object.builder()
-//	                    .bucket(bucketName)
-//	                    .name(docName)
-//	                    .build();
-//
-//	            // Create a Document object and reference the s3Object instance.
-//	            Document myDoc = Document.builder()
-//	                    .s3Object(s3Object)
-//	                    .build();
-//
-//	            DetectDocumentTextRequest detectDocumentTextRequest = DetectDocumentTextRequest.builder()
-//	                    .document(myDoc)
-//	                    .build();
-//
-//	            // TODO 5-10-2024
-//	            // Says it can take a PDF, but throws an error
-//	            DetectDocumentTextResponse textResponse = textractClient.detectDocumentText(detectDocumentTextRequest);
-//
-//	            for (Block block : textResponse.blocks()) {
-//	                System.out.println("The block type is " + block.blockType().toString());
-//	            }
-//
-//	            DocumentMetadata documentMetadata = textResponse.documentMetadata();
-//	            System.out.println("The number of pages in the document is " + documentMetadata.pages());
-//
-//	        } catch (TextractException e) {
-//
-//	            System.err.println(e.getMessage());
-//	            System.exit(1);
-//	        }
-//	    }
-	 
+
 	
 	
 }

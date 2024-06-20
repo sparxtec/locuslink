@@ -21,7 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -283,8 +286,12 @@ public class AzureNerLogic {
 
     private static String processTextractToText(JsonNode textractResults, int pageNumber) {
 
-        ObjectMapper mapper = new ObjectMapper(); // Initialize ObjectMapper
-
+    	// C.Sparks   6-20-2024
+        ObjectMapper mapper = new ObjectMapper()
+        	.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+       // mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        
         // Initialize all BlockType lists
         ArrayList<AwsTextractBlockDTO> words = new ArrayList<>();
         ArrayList<AwsTextractBlockDTO> lines = new ArrayList<>();
@@ -297,10 +304,12 @@ public class AzureNerLogic {
         for (JsonNode blockNode : blocksNode) {
 
             try {
-                // Convert blockNode to AwsTextractBlockDTO object
-                block = mapper.treeToValue(blockNode, AwsTextractBlockDTO.class);
+            	// C.Sparks 6-20-2024 
+            	//    For Simplicity and separation, go to Json first
+            	String json  = mapper.writeValueAsString(blockNode);
+            	block = mapper.readValue(json,AwsTextractBlockDTO.class );            	
 
-                switch (block.blockTypeAsString()) {
+            	switch (block.getBlockType()) {
                     case "WORD" -> words.add(block);
                     case "LINE" -> lines.add(block);
                     case "CELL", "MERGED_CELL" -> cells.add(block);
@@ -339,7 +348,7 @@ public class AzureNerLogic {
 
             if (cellParent != null) {   // If WORD is contained in a CELL
 
-                if (!ignoredCells.contains(cellParent.id())) {
+                if (!ignoredCells.contains(cellParent.getId())) {
 
                     // Initialize TABLE number for CELL AwsTextractBlockDTO
                     int tableParent = tables.indexOf(findParentBlock(cellParent, tables)) + 1;
@@ -348,15 +357,15 @@ public class AzureNerLogic {
 
                         if (lastBlockType == null) {  // Don't insert new line
                             joiner.add("\"%s\" is found in a cell (row %d, column %d) in table %d."
-                                    .formatted(lineParent.text(),
-                                            cellParent.rowIndex(),
-                                            cellParent.columnIndex(),
+                                    .formatted(lineParent.getText(),
+                                            cellParent.getRowIndex(),
+                                            cellParent.getColumnIndex(),
                                             tableParent));
                         } else {    // Insert new line
                             joiner.add("\n\"%s\" is found in a cell (row %d, column %d) in table %d."
-                                    .formatted(lineParent.text(),
-                                            cellParent.rowIndex(),
-                                            cellParent.columnIndex(),
+                                    .formatted(lineParent.getText(),
+                                            cellParent.getRowIndex(),
+                                            cellParent.getColumnIndex(),
                                             tableParent));
                         }
 
@@ -364,28 +373,28 @@ public class AzureNerLogic {
 
                         if (lastBlockType == null) {  // Don't insert new line
                             joiner.add("\"%s\" belongs to \"%s\" and is found in a cell (row %d, column %d) in table %d."
-                                    .formatted(word.text(),
-                                            lineParent.text(),
-                                            cellParent.rowIndex(),
-                                            cellParent.columnIndex(),
+                                    .formatted(word.getText(),
+                                            lineParent.getText(),
+                                            cellParent.getRowIndex(),
+                                            cellParent.getColumnIndex(),
                                             tableParent));
                         } else {    // Insert new line
                             joiner.add("\n\"%s\" belongs to \"%s\" and is found in a cell (row %d, column %d) in table %d."
-                                    .formatted(word.text(),
-                                            lineParent.text(),
-                                            cellParent.rowIndex(),
-                                            cellParent.columnIndex(),
+                                    .formatted(word.getText(),
+                                            lineParent.getText(),
+                                            cellParent.getRowIndex(),
+                                            cellParent.getColumnIndex(),
                                             tableParent));
                         }
                     }
 
-                    ignoredCells.add(cellParent.id());  // Add cell to ignoredCells list
+                    ignoredCells.add(cellParent.getId());  // Add cell to ignoredCells list
                     lastBlockType = "cell"; // Overwrite lastBlockType String
                 }
 
             } else {    // If WORD is not contained in a CELL
 
-                if (lineParent.id().equals(ignoredLine)) {  // If LINE is the current ignored LINE
+                if (lineParent.getId().equals(ignoredLine)) {  // If LINE is the current ignored LINE
 
                     if (lineCounter > 0) {  // If there are still WORDs to iterate through
                         lineCounter--;
@@ -395,24 +404,24 @@ public class AzureNerLogic {
                 } else {    // If LINE is not the currently ignored LINE
 
                     if (matchesLastBlockType("line", lastBlockType)) {  // Don't insert new line
-                        joiner.add(lineParent.text());
+                        joiner.add(lineParent.getText());
                     } else {    // Insert new line
-                        joiner.add("\n%s".formatted(lineParent.text()));
+                        joiner.add("\n%s".formatted(lineParent.getText()));
                     }
 
-                    Iterator<Relationship> iterator = lineParent.relationships().iterator();
+                    Iterator<Relationship> iterator = lineParent.getRelationships().iterator();
 
                     while (iterator.hasNext()) {
                         Relationship relationship = iterator.next();
 
-                        if (relationship.typeAsString().equals("CHILD")) {
+                        if (relationship.getType().equals("CHILD")) {
 
-                            lineCounter = relationship.ids().size() - 2;    // Set lineCounter to LINE size, minus 2
+                            lineCounter = relationship.getIds().size() - 2;    // Set lineCounter to LINE size, minus 2
                         }
                     }
 
                     if (lineCounter > -1) {
-                        ignoredLine = lineParent.id();  // Only set ignoredLine if there are more than two words
+                        ignoredLine = lineParent.getId();  // Only set ignoredLine if there are more than two words
                     }
 
                     lastBlockType = "line"; // Overwrite lastBlockType String
@@ -435,11 +444,11 @@ public class AzureNerLogic {
             for (AwsTextractBlockDTO block : parentList) { // Iterate through AwsTextractBlockDTO list, searching for parent AwsTextractBlockDTO
             	if (block.hasRelationships()) {
 
-	                iterator = block.relationships().iterator();	
+	                iterator = block.getRelationships().iterator();	
 	                while (iterator.hasNext()) {
 	                    relationship = iterator.next();
-	                    if (relationship.typeAsString().equals("CHILD")) {	
-	                        if (relationship.ids().contains(childBlock.id())) {
+	                    if (relationship.getType().equals("CHILD")) {	
+	                        if (relationship.getIds().contains(childBlock.getId())) {
 	                            parentBlock = block;  // Assign lineParent to LINE that contains WORD
 	                        }
 	                    }
@@ -453,27 +462,27 @@ public class AzureNerLogic {
 
     private static boolean cellContainsLine(AwsTextractBlockDTO cell, AwsTextractBlockDTO line) {
 
-        Iterator<Relationship> iterator = cell.relationships().iterator();
+        Iterator<Relationship> iterator = cell.getRelationships().iterator();
         List<String> cellIds = null;
         List<String> lineIds = null;
 
         while (iterator.hasNext()) {
             Relationship relationship = iterator.next();
 
-            if (relationship.typeAsString().equals("CHILD")) {
+            if (relationship.getType().equals("CHILD")) {
 
-                cellIds = relationship.ids();
+                cellIds = relationship.getIds();
             }
         }
 
-        iterator = line.relationships().iterator();
+        iterator = line.getRelationships().iterator();
 
         while (iterator.hasNext()) {
             Relationship relationship = iterator.next();
 
-            if (relationship.typeAsString().equals("CHILD")) {
+            if (relationship.getType().equals("CHILD")) {
 
-                lineIds = relationship.ids();
+                lineIds = relationship.getIds();
             }
         }
 

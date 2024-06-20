@@ -2,39 +2,20 @@ package com.locuslink.dto.Textract;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
+
+@Data
+@Builder
+@Jacksonized
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Relationship {
 
-	private final String type;
-
-    private final List<String> ids;
-
-    @JsonCreator
-    public Relationship(@JsonProperty("Type") String type,
-                        @JsonProperty("Ids") List<String> ids) {
-        this.type = type;
-        this.ids = ids;
-    }
-
-    @JsonGetter("Type")
-    public String type() {
-        return type;
-    }
-
-    public final String typeAsString() {return type;}
+	private String type;
+    private List<String> ids;
 
     public final boolean hasIds() {return ids != null;}
-
-    @JsonGetter("Ids")
-    public List<String> ids() {
-        return ids;
-    }
-
-    @Override
-    public String toString() {
-        return "Relationship[Type: %s, Ids: %s]".formatted(typeAsString(), ids().toString());
-    }
 }
