@@ -340,18 +340,19 @@ public class AzureNerLogic {
         StringJoiner joiner = new StringJoiner(" ");    // Initialize StringJoiner for document text
         ArrayList<String> ignoredCells = new ArrayList<>(); // Initialize ignoredCells id list
         String ignoredLine = null; // Initialize ignoredLine id String
-        int lineCounter = 0;    // Initialize counter to decide how long a word should be ignored
+        int lineCounter = 0;    // Initialize counter to decide how long a LINE should be ignored
         String lastBlockType = null;   // Initialize String for the BlockType of the last text String added to joiner
 
         AwsTextractBlockDTO lineParent = null;
         AwsTextractBlockDTO cellParent = null;
+        int tableParent = 0;
+        
+        Iterator<Relationship> iterator = null;
+    	Relationship relationship = null;
         		
         for (AwsTextractBlockDTO word : words) {  // Iterate through all WORDs
 
         	logger.debug(" Processing a WORD ->: " +  word.getText() );
-        	if (word.getText().equalsIgnoreCase("heat")) {
-        		logger.debug(" Has a problem  ->: " +  word.toString());
-        	}
         	
             lineParent = findParentBlock(word, lines);   // Initialize LINE parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
             cellParent = findParentBlock(word, cells);   // Initialize CELL parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
@@ -364,7 +365,7 @@ public class AzureNerLogic {
                 if (!ignoredCells.contains(cellParent.getId())) {
 
                     // Initialize TABLE number for CELL AwsTextractBlockDTO
-                    int tableParent = tables.indexOf(findParentBlock(cellParent, tables)) + 1;
+                    tableParent = tables.indexOf(findParentBlock(cellParent, tables)) + 1;
 
                     if (cellContainsLine(cellParent, lineParent)) { // If CELL contains entire LINE
 
@@ -422,10 +423,10 @@ public class AzureNerLogic {
                         joiner.add("\n%s".formatted(lineParent.getText()));
                     }
 
-                    Iterator<Relationship> iterator = lineParent.getRelationships().iterator();
+                    iterator = lineParent.getRelationships().iterator();
 
                     while (iterator.hasNext()) {
-                        Relationship relationship = iterator.next();
+                        relationship = iterator.next();
                         if (relationship.getType().equals("CHILD")) {
                             lineCounter = relationship.getIds().size() - 2;    // Set lineCounter to LINE size, minus 2
                         }
@@ -479,9 +480,10 @@ public class AzureNerLogic {
         Iterator<Relationship> iterator = cell.getRelationships().iterator();
         List<String> cellIds = null;
         List<String> lineIds = null;
+        Relationship relationship = null;
 
         while (iterator.hasNext()) {
-            Relationship relationship = iterator.next();
+            relationship = iterator.next();
             if (relationship.getType().equals("CHILD")) {           
                 cellIds = relationship.getIds();
             }
@@ -489,7 +491,7 @@ public class AzureNerLogic {
 
         iterator = line.getRelationships().iterator();
         while (iterator.hasNext()) {
-            Relationship relationship = iterator.next();
+            relationship = iterator.next();
 
             if (relationship.getType().equals("CHILD")) {
                 lineIds = relationship.getIds();

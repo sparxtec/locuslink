@@ -15,10 +15,10 @@ public class AwsTextractBlockDTO {
 	private String confidence;
 	private String text;
 	private String textType;
-	private String rowIndex;
-    private String columnIndex;
-    private String rowSpan;
-    private String columnSpan;   
+	private Integer rowIndex;
+    private Integer columnIndex;
+    private Integer rowSpan;
+    private Integer columnSpan;   
     private String id;   
     private String selectionStatus;
     private Integer page;
