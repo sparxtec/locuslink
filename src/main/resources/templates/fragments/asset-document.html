@@ -159,8 +159,9 @@
 				$("#attachmentUploadId").hide();
 	    	}); 
 	    	
+	    	// 6-26 this info is in the html part below
 	 		// Browse Files BUTTON on the Dropzone Box
-		    $(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
+		    //$(".dz-message").html('<button type="button" class="button button--secondary mb-4" style="min-width: 20rem;">Click to browse files</button><p>Each file must be less than 20MB and a ".xls,.xlsx" file.</p>');		    		    				    
 			 		
 	 		
 	 		
@@ -304,7 +305,12 @@
 												<input type="hidden" th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>									
 												<input type="hidden" id="uniqueAssetPkId" name="uniqueAssetPkId"  />
 																	
+<!-- 											<div class="dz-default dz-message">
+													<span>Files must be less than 20MB and a '.Pdf' file</span>
+												</div> -->
 												<div class="dz-default dz-message">
+													<img src="./images/export.svg" class="img-fluid" alt="export" title="">
+				           		 					<h6><a href="#"> Drag &amp; drop files or Click to Browse</a></h6>
 													<span>Files must be less than 20MB and a '.Pdf' file</span>
 												</div>
 												
@@ -348,7 +354,8 @@
                         <div class="barcdetab document-bx">
                             <div class="documentname-hdingbx">
                                 <div class="document-name-bx" th:with="docfilename=${productAttachmentDTO.getFilename()}"  >
-                                    <span th:text="${#strings.substringAfter( docfilename ,'.')}"></span>
+                                <!--     <span th:text="${#strings.substringAfter( docfilename ,'.')}"></span> -->
+                                    <span th:text="PDF"></span>
                                 </div>
                                 <div class="document-hding">
                                     <h6 th:text="${productAttachmentDTO.getFilename()}"><span>254 kB</span></h6>

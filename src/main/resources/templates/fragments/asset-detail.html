@@ -88,8 +88,8 @@
                           <div class="aset-sidebar-bx">
                               <ul class="list-unstyled asset-side-nav">
                                   <li><a href="#" class="active">General</a></li>
-                                  <li><a href="#">Test certification</a></li>
-                                  <li><a href="#">Images</a></li>
+                                  <li><a href="#">Unique Id</a></li>
+                                  <li><a href="#">Traceability Data</a></li>
                               </ul>
                           </div>
                       </div>
@@ -109,16 +109,8 @@
                                                       <table class="table table-striped">
 
                                                           <tbody>
-                                                              <tr>
-                                                                  <th class="t-hding">Id</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription"  th:text="${uniqueAssetDTO.getUniversalCatalogId()}"></td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <th class="t-hding">Unique Asset ID</th>
-                                                                  <td class="t-dot">:</td>
-                                                                  <td class="t-discription" th:text="${uniqueAssetDTO.getUniqueAssetId()}"></td>                                                                                                                                    
-                                                              </tr>
+
+                                                              
                                                               <tr>
                                                                   <th class="t-hding">Manufacturer </th>
                                                                   <td class="t-dot">:</td>
@@ -177,11 +169,11 @@
                                                       <table class="table table-striped">
 
                                                           <tbody>
-                                                              <tr>
+<!--                                                               <tr>
                                                                   <th class="t-hding">Id</th>
                                                                   <td class="t-dot">:</td>
                                                                   <td class="t-discription" th:text="${uniqueAssetDTO.getUniversalCatalogId()}"></td>
-                                                              </tr>
+                                                              </tr> -->
                                                               <tr>
                                                                   <th class="t-hding">Unique Asset ID</th>
                                                                   <td class="t-dot">:</td>
@@ -197,11 +189,11 @@
                                                                   <td class="t-dot">:</td>
                                                                   <td class="t-discription" th:text="${uniqueAssetDTO.getProductTypeCode()}" ></td>
                                                               </tr>
-                                                              <tr>
+<!--                                                               <tr>
                                                                   <th class="t-hding"> Trace Type </th>
                                                                   <td class="t-dot">:</td>
                                                                   <td class="t-discription" th:text="${uniqueAssetDTO.getTraceTypeCode()}"  ></td>
-                                                              </tr>
+                                                              </tr> -->
                                                             
                                                               <tr>
                                                                   <th class="t-hding"> Customers </th>
@@ -256,12 +248,12 @@
                                                                   <td class="t-discription" th:text="${uniqueAssetDTO.getTraceCode()}"  ></td>
                                                               </tr>                                                                
       
-                                                              <tr>
+<!--                                                               <tr>
                                                                   <th class="t-hding"> P Type Description
                                                                   </th>
                                                                   <td class="t-dot">:</td>
                                                                   <td class="t-discription"  th:text="${uniqueAssetDTO.getProductTypeDesc()}"> </td>
-                                                              </tr>
+                                                              </tr> -->
 
                                                           </tbody>
                                                       </table>
