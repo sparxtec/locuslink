@@ -289,21 +289,30 @@ public class AssetAttachmentController {
 		logger.debug("Starting processAttachmentUpload()..inputfile ->:" + inputfile.getOriginalFilename());
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "trace - processXlsFileUpload");
 
-		try {			
+		try {	
+			String formattedFileName = "";
 			if (inputfile.getOriginalFilename().contains(".pdf")) {
 				// do nothing, all good
+				if (inputfile.getOriginalFilename().contains("")) {
+					logger.debug("Need to format the filename and remove invalid chars, converted from ->: " + inputfile.getOriginalFilename());
+					logger.debug(" converted from ->: " + inputfile.getOriginalFilename());
+					formattedFileName = inputfile.getOriginalFilename().replace(" ","_").replace("(", "").replace(")", "");
+					logger.debug("              to->: " + formattedFileName);
+				}
+				
 			} else {
 				logger.debug("  ERROR xlsFileUpload failed ->: Wrong File extension. " );
 				return response;
 			}
 
-			// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
+			// 6-26-2024 PRefix with the uniqueAssetPkID to avoid collisions
 			String prefixUniqueAssetPkId = dashboardFormDTO.getUniqueAssetPkId()+ "_";	
-			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
+			//String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + inputfile.getOriginalFilename();	
+			String fullpathFileName_keyName = attachmentStagingFullpath +  prefixUniqueAssetPkId + formattedFileName;	
 			
 						
 			// TODO 5-11-2023   Dont allow duplicate files uploaded to the same Asset.
-			if (!checkFileIsValideToUpload(prefixUniqueAssetPkId + inputfile.getOriginalFilename())) {
+			if (!checkFileIsValideToUpload(prefixUniqueAssetPkId + formattedFileName)) {
 				logger.debug("  ERROR duplicate file upload not allowed for the same asset. " );
 				response.setError(1);
 				response.setErrorMessage(" ERROR. You cannot upload duplicate file for the same asset.");				
@@ -330,11 +339,12 @@ public class AssetAttachmentController {
             
             // Tags for easier process on retrieval
             List<Tag> tags = new ArrayList<Tag>();
-            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+           // tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+            tags.add(new Tag("filename", formattedFileName ));
             putObjectRequest.setTagging(new ObjectTagging(tags));
             awsS3Client.putObject(putObjectRequest);
             	        		
-			model.addAttribute("message", "You successfully uploaded " + inputfile.getOriginalFilename() + "!");
+			model.addAttribute("message", "You successfully uploaded " + formattedFileName + "!");
 			
 			logger.debug(" Attachment Upload Worked,  size ->: " + inputfile.getSize());
 
