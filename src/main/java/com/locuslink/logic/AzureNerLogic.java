@@ -352,7 +352,7 @@ public class AzureNerLogic {
         		
         for (AwsTextractBlockDTO word : words) {  // Iterate through all WORDs
 
-        	logger.debug(" Processing a WORD ->: " +  word.getText() );
+        	//logger.debug(" Processing a WORD ->: " +  word.getText() );
         	
             lineParent = findParentBlock(word, lines);   // Initialize LINE parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO
             cellParent = findParentBlock(word, cells);   // Initialize CELL parent AwsTextractBlockDTO for WORD AwsTextractBlockDTO

@@ -1,5 +1,8 @@
 package com.locuslink.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -12,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.dao.AssemblyAttachmentDao;
+import com.locuslink.dto.AssemblyAzureMtrDto;
+import com.locuslink.dto.Azure.Entity;
 import com.locuslink.logic.AwsTextractLogic;
 import com.locuslink.logic.AzureNerLogic;
 import com.locuslink.model.AssemblyAttachment;
@@ -105,8 +113,9 @@ public class AIController {
 		
 				
 		// Azure
+		JSONObject nerResults = null;
 		try {
-			JSONObject nerResults = azureNerLogic.processAzureNER(ocrResults);
+			nerResults = azureNerLogic.processAzureNER(ocrResults);
 			if (nerResults != null) {
 				logger.debug("nerResults ->: " + nerResults.toJSONString());
 				result = nerResults == null ? "failed" : "succeeded";
@@ -118,13 +127,8 @@ public class AIController {
 				return response;
 			}
 
-			// TODO
-			// Add in result process to the database, so the UI can display status and attributes, even for partial results.
-			logger.debug(" ........... TODO   Save to DB ......... ");
-			logger.debug(" ........... TODO   Save to DB ......... ");
-			logger.debug(" ........... TODO   Save to DB ......... ");
-			
-			
+				
+					
 		} catch (Exception e) {
 			logger.debug("  AzureNerLogic failed ->: " + e.getMessage());
 			response.setError(740);
@@ -132,8 +136,88 @@ public class AIController {
 			return response;
 		}
 		
+		
+		if (processResults(nerResults)) {
+			logger.debug("  Success, MTR attributes found.");
+		} else {
+			logger.error("  Error ->: Processing parsing the MTR data from the Azure NER result");
+			response.setError(750);
+			response.setErrorMessage("ERROR  Processing parsing the MTR data from the Azure NER result");
+		}
+						
 		return response;
 	}
 	
+	
+	
+	
+	/**
+	 *  C.Sparks - 7-1-2024
+	 *  	Parse the Azure results into something the application can display, and store in the database for the Assembly
+	 *      being processed.
+	 */
+	private boolean processResults( JSONObject nerResults) {
+		
+		// Build Pojo - the ugly way for now
+		List <AssemblyAzureMtrDto> assemblyAzureMtrDtoList = new ArrayList<AssemblyAzureMtrDto>();
+		AssemblyAzureMtrDto assemblyAzureMtrDto = null;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = null;
+		try {
+			root = mapper.readTree(nerResults.toJSONString());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}		
+		
+		JsonNode documentsNode =   root.get("documents");	
+		if (documentsNode.isArray()) {				
+           for (JsonNode entitiesNode : documentsNode ) {	        	           		  
+    		   for (JsonNode entitiesArray : entitiesNode ) {	        			  
+    			  if (entitiesArray.isArray()) {   
+    				  for (JsonNode dataNode :entitiesArray ) {   
+    					  
+//    					  if ( (dataNode.path("category").asText()).equalsIgnoreCase("Heat_Number")) {
+//    						 logger.debug("debug line");    						     						
+//    						 logger.debug("category :" + dataNode.path("category").asText());
+//    						 logger.debug("confidenceScore " + dataNode.path("confidenceScore").asText());
+//    						 logger.debug("length :" + dataNode.path("length").asText());
+//    						 logger.debug("offset :" + dataNode.path("offset").asText());
+//    						 logger.debug("text :"+ dataNode.path("text").asText());
+//    					  }
+		                 assemblyAzureMtrDto = new AssemblyAzureMtrDto();
+		                 assemblyAzureMtrDto.setCategory(dataNode.path("category").asText());
+		                 assemblyAzureMtrDto.setConfidenceScore(dataNode.path("confidenceScore").asText()) ; 
+		                 assemblyAzureMtrDto.setLength(dataNode.path("length").asText()) ;   
+		                 assemblyAzureMtrDto.setOffset(dataNode.path("offset").asText()) ;   
+		                 assemblyAzureMtrDto.setText(dataNode.path("text").asText()) ;
+		                 assemblyAzureMtrDtoList.add(assemblyAzureMtrDto);
+    				  }
+    			  }	        			                      
+    		   }                  
+            }				 
+		}
+		
+        // TODO C.Sparks 7-1-2024 Do the Work
+        for (AssemblyAzureMtrDto wrkDto : assemblyAzureMtrDtoList) {
+        	logger.debug(".");
+        	if ( wrkDto.getCategory().equalsIgnoreCase("Heat_Number")) {
+            	logger.debug("Category ->: " + wrkDto.getCategory() + "  value :" + wrkDto.getText());
+        	}
+        	logger.debug(".");
+        	
+        	// TODO Capture the Attributes we care about
+        }
+		
+        
+		// Add in result process to the database, so the UI can display status and attributes, even for partial results.
+		logger.debug(" ........... TODO   Save to DB ......... ");
+		logger.debug(" ........... TODO   Save to DB ......... ");
+		logger.debug(" ........... TODO   Save to DB ......... ");
+		
+		return true;
+	}
 	
 }
