@@ -248,7 +248,8 @@
    
    function asyncResponseCommonResponse(returnData) {	
 	   hideSpinner(); 
-	   alert ('AWS Manual Testing finished.');
+	   console.log(returnData);
+	   alert ('AWS Manual Testing finished.' );
    }
    
 	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){

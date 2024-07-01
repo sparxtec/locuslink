@@ -137,7 +137,7 @@ public class AIController {
 		}
 		
 		
-		if (processResults(nerResults)) {
+		if (processResults(assemblyAttachment, nerResults, response)) {
 			logger.debug("  Success, MTR attributes found.");
 		} else {
 			logger.error("  Error ->: Processing parsing the MTR data from the Azure NER result");
@@ -156,7 +156,7 @@ public class AIController {
 	 *  	Parse the Azure results into something the application can display, and store in the database for the Assembly
 	 *      being processed.
 	 */
-	private boolean processResults( JSONObject nerResults) {
+	private boolean processResults( AssemblyAttachment assemblyAttachment, JSONObject nerResults, GenericMessageResponse response) {
 		
 		// Build Pojo - the ugly way for now
 		List <AssemblyAzureMtrDto> assemblyAzureMtrDtoList = new ArrayList<AssemblyAzureMtrDto>();
@@ -178,44 +178,65 @@ public class AIController {
     		   for (JsonNode entitiesArray : entitiesNode ) {	        			  
     			  if (entitiesArray.isArray()) {   
     				  for (JsonNode dataNode :entitiesArray ) {   
-    					  
-//    					  if ( (dataNode.path("category").asText()).equalsIgnoreCase("Heat_Number")) {
-//    						 logger.debug("debug line");    						     						
-//    						 logger.debug("category :" + dataNode.path("category").asText());
-//    						 logger.debug("confidenceScore " + dataNode.path("confidenceScore").asText());
-//    						 logger.debug("length :" + dataNode.path("length").asText());
-//    						 logger.debug("offset :" + dataNode.path("offset").asText());
-//    						 logger.debug("text :"+ dataNode.path("text").asText());
-//    					  }
-		                 assemblyAzureMtrDto = new AssemblyAzureMtrDto();
-		                 assemblyAzureMtrDto.setCategory(dataNode.path("category").asText());
-		                 assemblyAzureMtrDto.setConfidenceScore(dataNode.path("confidenceScore").asText()) ; 
-		                 assemblyAzureMtrDto.setLength(dataNode.path("length").asText()) ;   
-		                 assemblyAzureMtrDto.setOffset(dataNode.path("offset").asText()) ;   
-		                 assemblyAzureMtrDto.setText(dataNode.path("text").asText()) ;
-		                 assemblyAzureMtrDtoList.add(assemblyAzureMtrDto);
+    					      					  
+    					 // C.Sparks 7-1-2024 for now, until i get more requirements, we can select the attributes here
+    					 // that the DB and the UI are interested in, from the MTR.
+    					 if ( (dataNode.path("category").asText()).equalsIgnoreCase("Heat_Number")) {
+			                 assemblyAzureMtrDto = new AssemblyAzureMtrDto();
+			                 assemblyAzureMtrDto.setCategory(dataNode.path("category").asText());
+			                 assemblyAzureMtrDto.setConfidenceScore(dataNode.path("confidenceScore").asText()) ; 
+			                 assemblyAzureMtrDto.setLength(dataNode.path("length").asText()) ;   
+			                 assemblyAzureMtrDto.setOffset(dataNode.path("offset").asText()) ;   
+			                 assemblyAzureMtrDto.setText(dataNode.path("text").asText()) ;
+			                 assemblyAzureMtrDtoList.add(assemblyAzureMtrDto);
+    					 }
     				  }
     			  }	        			                      
     		   }                  
             }				 
 		}
 		
-        // TODO C.Sparks 7-1-2024 Do the Work
+        // TODO C.Sparks 7-1-2024  DEBUG info only
         for (AssemblyAzureMtrDto wrkDto : assemblyAzureMtrDtoList) {
-        	logger.debug(".");
-        	if ( wrkDto.getCategory().equalsIgnoreCase("Heat_Number")) {
-            	logger.debug("Category ->: " + wrkDto.getCategory() + "  value :" + wrkDto.getText());
-        	}
-        	logger.debug(".");
-        	
-        	// TODO Capture the Attributes we care about
+            logger.debug("Category ->: " + wrkDto.getCategory() + "  value :" + wrkDto.getText());
+            
+            // TODO alter the data
+            // from
+            //json ->: [{"category":"Heat_Number","confidenceScore":"0.99","length":"7","offset":"2327","text":"1184780"},{"category":"Heat_Number","confidenceScore":"0.71","length":"7","offset":"7091","text":"1184781"},{"category":"Heat_Number","confidenceScore":"0.83","length":"7","offset":"12676","text":"1184782"},{"category":"Heat_Number","confidenceScore":"1.0","length":"7","offset":"16762","text":"1184783"},{"category":"Heat_Number","confidenceScore":"0.99","length":"7","offset":"1043","text":"1184780"},{"category":"Heat_Number","confidenceScore":"0.9","length":"7","offset":"1688","text":"1184781"},{"category":"Heat_Number","confidenceScore":"0.93","length":"7","offset":"2334","text":"1184782"},{"category":"Heat_Number","confidenceScore":"0.97","length":"7","offset":"3566","text":"1184783"}]
+
+            // to  Heat_Number:22222  to make it easy for the UI
         }
 		
         
-		// Add in result process to the database, so the UI can display status and attributes, even for partial results.
+        // TODO update the assembly attachment with the JSON from the above object
+		mapper = new ObjectMapper();		
+		String json = "";			
+		try {
+			json = mapper.writeValueAsString(assemblyAzureMtrDtoList);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        
+        // TODO Return the above object, as json, to the UI so it can display attributes on the "UI File Card"
+		logger.debug("json ->: " + json);		
+		response.setField("assemblyAzureMtrDtoList",  json);
+		
+        
+        // TODO Need an over all Green/Red flag, to indicate that UI Card is done, or in error and then eligible for a rerun
+		response.setField("mtrAttributeErrorFlag",  "true");
+		
+		
+		
+        
+		// TODO Add in result process to the database, so the UI can display status and attributes, even for partial results.
 		logger.debug(" ........... TODO   Save to DB ......... ");
 		logger.debug(" ........... TODO   Save to DB ......... ");
 		logger.debug(" ........... TODO   Save to DB ......... ");
+		
+		assemblyAttachment.setAttributesJson(json);		
+		assemblyAttachmentDao.saveOrUpdate(assemblyAttachment);
+		logger.debug("Success DB Update.   assemblyAttachment jsonAttributes() ");	
 		
 		return true;
 	}
