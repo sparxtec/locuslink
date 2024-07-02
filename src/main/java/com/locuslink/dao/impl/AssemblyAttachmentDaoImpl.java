@@ -85,6 +85,7 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 		 		aa.docTypePkid,
 		 		aa.filenameFullpath,
 				aa.attributesJson,
+			    aa.attrFlag,
 				dt.docTypeCode,
 				dt.docTypeDesc,
 				ard.docDescription	 							 				
@@ -113,6 +114,7 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 		 		aa.docTypePkid,
 		 		aa.filenameFullpath,
 				aa.attributesJson,
+				aa.attrFlag,
 				dt.docTypeCode,
 				dt.docTypeDesc,
 				ard.docDescription	 													
