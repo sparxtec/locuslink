@@ -146,28 +146,23 @@ public class AIController {
 		}
 				
 		
-		// Create DTO for the Application
-		List<String> heatList = new ArrayList<String>();
-        for (MtrDocumentDTO wrkDto : mtrDocumentDTOList) {
-    		heatList.addAll(wrkDto.getHeatNumber());        	
-        }
+		// Add in result process to the database, so the UI can display status and attributes, even for partial results.	
 		ObjectMapper mapper = new ObjectMapper();		
 		String json = "";			
 		try {
-			json = mapper.writeValueAsString(heatList);			
+			json = mapper.writeValueAsString(mtrDocumentDTOList);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}           		
-		logger.debug("HeatNumber List ->: " + json);		
-		response.setField("mtrHeatNumberList",  json);
+	
+		assemblyAttachment.setAttributesJson(json);	
 		
-		
-        // Need an over all Green/Red flag
-		response.setField("mtrAttributeErrorFlag",  "true");
-		
-		
-		// Add in result process to the database, so the UI can display status and attributes, even for partial results.		
-		assemblyAttachment.setAttributesJson(json);		
+		if (response.getError() > 0) {
+			assemblyAttachment.setAttrFlag("Error.");
+		} else {
+			assemblyAttachment.setAttrFlag("Success.");
+		}
+
 		assemblyAttachmentDao.saveOrUpdate(assemblyAttachment);
 		logger.debug("Success DB Update.   assemblyAttachment jsonAttributes() ");	
 		

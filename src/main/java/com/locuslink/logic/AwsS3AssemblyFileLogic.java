@@ -233,7 +233,11 @@ public class AwsS3AssemblyFileLogic {
             assemblyAttachment.setFilenameFullpath(destinationKey);   
             assemblyAttachment.setDocTypePkid(Integer.valueOf(assemblyDocTypePkid));   
             assemblyAttachment.setArdPkid(Integer.valueOf(ardPkId));                                     
-            assemblyAttachment.setFilenameFullpath(tagFileName);         	
+            assemblyAttachment.setFilenameFullpath(tagFileName);     
+            
+            // 7-2-2024
+            assemblyAttachment.setAttrFlag("Not Processed.");
+            
             assemblyAttachmentDao.save(assemblyAttachment);
                         
             logger.debug("     Inserted to the database successfully.");	

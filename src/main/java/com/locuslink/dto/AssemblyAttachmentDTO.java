@@ -15,6 +15,7 @@ public class AssemblyAttachmentDTO {
 			int docTypePkid,
 			String filenameFullpath,
 			String attributesJson,
+			String attrFlag,
 			String docTypeCode,
 			String docTypeDesc,
 			String assemblyReqDocDesc			
@@ -24,6 +25,7 @@ public class AssemblyAttachmentDTO {
 		this.docTypePkid = docTypePkid;	
 		this.filenameFullpath = filenameFullpath;
 		this.attributesJson = attributesJson;
+		this.attrFlag = attrFlag;
 		this.docTypeCode = docTypeCode;
 		this.docTypeDesc = docTypeDesc;
 		this.assemblyReqDocDesc = assemblyReqDocDesc;
@@ -35,6 +37,7 @@ public class AssemblyAttachmentDTO {
 	private int docTypePkid;
 	private String filenameFullpath;
 	private String attributesJson; 
+	private String attrFlag; 
 	
 	// Doc Type
 	private String docTypeCode;	

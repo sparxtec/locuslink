@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.dto.AssemblyAttachmentDTO;
-import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.model.AssemblyAttachment;
 
 /**
@@ -103,8 +102,7 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	
 
 
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public  List<AssemblyAttachmentDTO>  getAllDTObyAssemblyId( int assemblyPkid) 	{	
 				
@@ -137,7 +135,6 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public  List<AssemblyAttachmentDTO>  getAllDTOMtrByAssemblyId( int assemblyPkid) 	{	
 				
@@ -148,6 +145,7 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 		 		aa.docTypePkid,
 		 		aa.filenameFullpath,
 				aa.attributesJson,
+				aa.attrFlag,
 				dt.docTypeCode,
 				dt.docTypeDesc,
 				ard.docDescription	 													

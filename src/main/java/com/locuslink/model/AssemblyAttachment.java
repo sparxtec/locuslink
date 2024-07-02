@@ -41,6 +41,7 @@ public class AssemblyAttachment extends Common {
     @Column(name = "attributes_json")
 	private String attributesJson; 
     
-    
+    @Column(name = "attr_flag")
+	private String attrFlag; 
     
 }

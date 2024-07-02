@@ -72,7 +72,7 @@
 
 	
     $(document).ready(function() {	
-		
+ 
 		$('#tabAssemblyDetailsId').click(function() {
 			showSpinner();
 			submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
@@ -233,10 +233,21 @@
    
    function asyncResponseCommonResponse(returnData) {	
 	   hideSpinner(); 
-	   console.log("returnedData:");
-	   console.log(returnData);	   
-	  // console.log("Stringify:");
-	  // console.log(JSON.stringify( returnData ));
+	   //console.log("returnedData:");
+	   //console.log(returnData);	   
+
+	   if (returnData.error == 0) {
+		   // update the UI		   
+		   $("#aiAttributeFlagId").text("Success.");		   
+		   //$("#aiAttributesId").text("HeatNumber,CertNumber,...");
+		   		   
+	   } else {
+		   // There was an error message to display
+		   alert("Procesing Error");
+		   $("#aiAttributeFlagId").text("Error.");
+		   //$("#aiAttributesId").text(" ");
+	   }
+	   
    }
    
 	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
@@ -374,7 +385,11 @@
                       <div class="document-hding">
                           <h6 style="white-space:nowrap" th:text="${assemblyAttachmentDTO.getAssemblyReqDocDesc()}">></h6>
                           <h6 style="font-size:.80rem;" th:text="${assemblyAttachmentDTO.getFilenameFullpath()}"></h6>
-                          <h6 style="font-size:.70rem;" ><span id="aiAttributeFlagId" style="color:#B22222" title="Attributes not parsed successfully. Click the AI button to try again.">Error</span>Heat:123, Serial:789</h6>
+                          <h6 id="aiAttributesId" style="font-size:.70rem;" >
+                             <span id="aiAttributeFlagId" style="color:#B22222" 
+                                 title="Attributes not parsed successfully. Click the AI button to try again."
+                                 th:text="${assemblyAttachmentDTO.getAttrFlag()}" >Not Processed</span>
+                           </h6>
                       </div>
                   </div>
                                 

@@ -46,7 +46,10 @@ CREATE TABLE "assembly_attachment" (
   
   "doc_type_pkid" int,  
   "filename_fullpath" varchar,
+  "attr_flag" varchar,
   "attributes_json" varchar,
+  
+  
   "add_by" varchar,
   "add_ts" timestamp,
   "update_by" varchar,
