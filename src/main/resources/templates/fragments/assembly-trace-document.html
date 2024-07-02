@@ -103,40 +103,7 @@
 			submitFormAjaxHTML('editAssemblyData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	    
-	    
-	    // TODO Sparks 5-9-2024 Navigation from the Document Cards - AI processing
-	    //   This is temporary for now so we can code the AI calls, it will be automatic later, thats why that code is in a "Logic" module
-	    //   so it can be shared later.
-	    
-/*     	$('#buttonAwsId').click(function() {	
-    		    		
-    		showSpinner();	
-    		
-     		var myData = {version:"1.0", protocol:"json", clientId:"locuslink"};
-           	var innerData = {};
-    		innerData["assemblyPkId"] =	pkId = $('input#assemblyPkId').val();
-    		//innerData["deleteAllFilesWithPk"] =	"YES";
-    		myData["data"] = innerData;
-    		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");
-    	});    */
-	    
-	    // 6-11-2024  Determine which Image clicked for viewing
-		$("[id^='buttonAwsId_']").click(function() {			
-			showSpinner();
-			
-			var tokens = ($(this).attr("id")).split("_");
-			assemblyAttachmentPkId = tokens[2];	
-			
-     		var myData = {version:"1.0", protocol:"json", clientId:"locuslink"};
-           	var innerData = {};
-    		innerData["assemblyAttachmentPkId"] = assemblyAttachmentPkId;
-    
-    		myData["data"] = innerData;
-    		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");					
-		});	
-	    
 
-	    
 	    
     	// Added for Dropzone
 		window.addEventListener("dragover",function(e){
@@ -224,7 +191,7 @@
 	    // 6-11-2024  Determine which Image clicked for viewing
 		$("[id^='aapkid_']").click(function() {			
 			showSpinner();
-			
+						
 			var tokens = ($(this).attr("id")).split("_");
 			assemblyAttachPkId = tokens[1];	
 			
@@ -233,6 +200,24 @@
 			 
    			submitFormAjaxHTML('getAttachmentForAssembly', $("#dashboardFormDTO").serialize(), "modalResponse");										
 		});	
+	    
+	    
+	    
+	    // 6-11-2024  Determine which Image clicked for AI PRocessing for MTR attribute parsing
+		$("[id^='buttonAwsId_']").click(function() {					
+			showSpinner(); 
+			
+			var tokens = ($(this).attr("id")).split("_");
+			assemblyAttachmentPkId = tokens[2];	
+
+     		var myData = {version:"1.0", protocol:"json", clientId:"locuslink"};
+           	var innerData = {};
+    		innerData["assemblyAttachmentPkId"] = assemblyAttachmentPkId;
+    	
+    		myData["data"] = innerData;
+    		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");    		
+		});	
+	    
     	
  	});       
 
@@ -248,8 +233,10 @@
    
    function asyncResponseCommonResponse(returnData) {	
 	   hideSpinner(); 
-	   console.log(returnData);
-	   alert ('AWS Manual Testing finished.' );
+	   console.log("returnedData:");
+	   console.log(returnData);	   
+	  // console.log("Stringify:");
+	  // console.log(JSON.stringify( returnData ));
    }
    
 	$('a[data-bs-toggle="tab"]').on('resize, shown.bs.tab', function(e){
@@ -409,7 +396,7 @@
                           
                         <div th:id="buttonAwsId_aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}"  class="add-details" style="background:#B22222">                                                                               
                             <a href="#" data-toggle="tooltip" data-placement="top" title="Click to Re-run the AI Assist OCR processing." > 
-                                 <span data-bs-toggle="modal" data-bs-target="#add-details">AI</span>
+                                 <span  data-bs-target="#add-details">AI</span>
                             </a>    
                         </div>                                    
          

@@ -1,5 +1,4 @@
 
-
 function showSpinner() {
     $('.modal-backdrop').css('opacity', '0.2');
     document.querySelector("#spinnerModal").style.display = "none";
