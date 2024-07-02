@@ -24,6 +24,7 @@ import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.dao.AssemblyAttachmentDao;
 import com.locuslink.dto.AssemblyAzureMtrDto;
 import com.locuslink.dto.Azure.Entity;
+import com.locuslink.dto.Azure.MtrDocumentDTO;
 import com.locuslink.logic.AwsTextractLogic;
 import com.locuslink.logic.AzureNerLogic;
 import com.locuslink.model.AssemblyAttachment;
@@ -156,11 +157,22 @@ public class AIController {
 	 *  	Parse the Azure results into something the application can display, and store in the database for the Assembly
 	 *      being processed.
 	 */
+	
+	/*
+	 * I. Summers - 7-2-2024
+	 * 		Refactored processResults() to better access Azure response and cast data to MtrDocumentDTO
+	 */
 	private boolean processResults( AssemblyAttachment assemblyAttachment, JSONObject nerResults, GenericMessageResponse response) {
 		
 		// Build Pojo - the ugly way for now
 		List <AssemblyAzureMtrDto> assemblyAzureMtrDtoList = new ArrayList<AssemblyAzureMtrDto>();
 		AssemblyAzureMtrDto assemblyAzureMtrDto = null;
+		List<MtrDocumentDTO> mtrDocumentDTOList = new ArrayList<MtrDocumentDTO>();
+		MtrDocumentDTO mtrDocumentDTO = null;
+		List<Entity> entityList = new ArrayList<Entity>();
+		Entity entity = null;
+		List<String> warnings = new ArrayList<String>();
+		String id = null;
 		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
@@ -172,39 +184,78 @@ public class AIController {
 			e.printStackTrace();
 		}		
 		
-		JsonNode documentsNode =   root.get("documents");	
+		JsonNode documentsNode =   root.get("documents");
+		JsonNode entitiesArray = null;
 		if (documentsNode.isArray()) {				
-           for (JsonNode entitiesNode : documentsNode ) {	        	           		  
-    		   for (JsonNode entitiesArray : entitiesNode ) {	        			  
-    			  if (entitiesArray.isArray()) {   
-    				  for (JsonNode dataNode :entitiesArray ) {   
-    					      					  
-    					 // C.Sparks 7-1-2024 for now, until i get more requirements, we can select the attributes here
-    					 // that the DB and the UI are interested in, from the MTR.
-    					 if ( (dataNode.path("category").asText()).equalsIgnoreCase("Heat_Number")) {
-			                 assemblyAzureMtrDto = new AssemblyAzureMtrDto();
-			                 assemblyAzureMtrDto.setCategory(dataNode.path("category").asText());
-			                 assemblyAzureMtrDto.setConfidenceScore(dataNode.path("confidenceScore").asText()) ; 
-			                 assemblyAzureMtrDto.setLength(dataNode.path("length").asText()) ;   
-			                 assemblyAzureMtrDto.setOffset(dataNode.path("offset").asText()) ;   
-			                 assemblyAzureMtrDto.setText(dataNode.path("text").asText()) ;
-			                 assemblyAzureMtrDtoList.add(assemblyAzureMtrDto);
-    					 }
-    				  }
-    			  }	        			                      
-    		   }                  
+
+//           for (JsonNode entitiesNode : documentsNode ) {	        	           		  
+//    		   for (JsonNode entitiesArray : entitiesNode ) {	        			  
+//    			  if (entitiesArray.isArray()) {   
+//    				  for (JsonNode dataNode :entitiesArray ) {   
+//    					      					  
+//    					 // C.Sparks 7-1-2024 for now, until i get more requirements, we can select the attributes here
+//    					 // that the DB and the UI are interested in, from the MTR.
+//    					 if ( (dataNode.path("category").asText()).equalsIgnoreCase("Heat_Number")) {
+//			                 assemblyAzureMtrDto = new AssemblyAzureMtrDto();
+//			                 assemblyAzureMtrDto.setCategory(dataNode.path("category").asText());
+//			                 assemblyAzureMtrDto.setConfidenceScore(dataNode.path("confidenceScore").asText()) ; 
+//			                 assemblyAzureMtrDto.setLength(dataNode.path("length").asText()) ;   
+//			                 assemblyAzureMtrDto.setOffset(dataNode.path("offset").asText()) ;   
+//			                 assemblyAzureMtrDto.setText(dataNode.path("text").asText()) ;
+//			                 assemblyAzureMtrDtoList.add(assemblyAzureMtrDto);
+//   					 }
+//    				  }
+//    			  }	        			                      
+//    		   }                  
+
+			for (JsonNode documentNode : documentsNode ) {
+				// Set document id and warnings list
+				id = documentNode.path("id").asText();
+				if (documentNode.path("warnings").isArray()) {
+					for (JsonNode warning : documentNode.path("warnings")) {
+						warnings.add(warning.asText());
+					}
+				}
+        	   
+				// Access entities node
+				entitiesArray = documentNode.get("entities");
+				if (entitiesArray.isArray()) {   
+					for (JsonNode dataNode :entitiesArray ) {   
+						// Fetch each entity
+						entity = Entity.builder()
+								.category(dataNode.path("category").asText())
+								.confidenceScore(dataNode.path("confidenceScore").floatValue())
+								.length(dataNode.path("length").asInt())
+								.offset(dataNode.path("offset").asInt())
+								.text(dataNode.path("text").asText())
+								.build();
+    					  
+						entityList.add(entity);	// Add entity to list
+					}	        			                      
+				}
+				
+				mtrDocumentDTO = new MtrDocumentDTO(id, entityList, warnings);
+				mtrDocumentDTOList.add(mtrDocumentDTO);
             }				 
 		}
 		
         // TODO C.Sparks 7-1-2024  DEBUG info only
-        for (AssemblyAzureMtrDto wrkDto : assemblyAzureMtrDtoList) {
-            logger.debug("Category ->: " + wrkDto.getCategory() + "  value :" + wrkDto.getText());
-            
-            // TODO alter the data
-            // from
+//        for (AssemblyAzureMtrDto wrkDto : assemblyAzureMtrDtoList) {
+//            logger.debug("Category ->: " + wrkDto.getCategory() + "  value :" + wrkDto.getText());
+//            
+//            // TODO alter the data
+//            // from
             //json ->: [{"category":"Heat_Number","confidenceScore":"0.99","length":"7","offset":"2327","text":"1184780"},{"category":"Heat_Number","confidenceScore":"0.71","length":"7","offset":"7091","text":"1184781"},{"category":"Heat_Number","confidenceScore":"0.83","length":"7","offset":"12676","text":"1184782"},{"category":"Heat_Number","confidenceScore":"1.0","length":"7","offset":"16762","text":"1184783"},{"category":"Heat_Number","confidenceScore":"0.99","length":"7","offset":"1043","text":"1184780"},{"category":"Heat_Number","confidenceScore":"0.9","length":"7","offset":"1688","text":"1184781"},{"category":"Heat_Number","confidenceScore":"0.93","length":"7","offset":"2334","text":"1184782"},{"category":"Heat_Number","confidenceScore":"0.97","length":"7","offset":"3566","text":"1184783"}]
 
             // to  Heat_Number:22222  to make it easy for the UI
+		
+		for (MtrDocumentDTO wrkDto : mtrDocumentDTOList) {
+			logger.debug(".");
+			logger.debug(wrkDto.getHeatNumber().toString());
+			logger.debug(".");
+        	
+        	// TODO Capture the Attributes we care about
+
         }
 		
         
