@@ -1,0 +1,138 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>	 	
+</head>
+
+
+<script>	
+
+	$(document).ready(function() {	
+		  
+	   	$("#assembly_viewer").modal('show');	
+	   	
+     	$('#assemblyMtrBackButtonId').click(function() {	    		
+    		showSpinner();			
+    		$('.modal-backdrop').remove();    		
+    		var node = document.getElementById("assembly_ModalBody");    		
+    		node.parentNode.replaceChild(node.cloneNode(false), node);      		
+    		hideSpinner();	
+    	}); 
+    	
+     	$('#assemblyMtrUpdateButtonId').click(function() {	    		
+    		showSpinner();			
+    		$('.modal-backdrop').remove();    		
+    		var node = document.getElementById("assembly_ModalBody");    		
+    		node.parentNode.replaceChild(node.cloneNode(false), node);      		
+    		hideSpinner();	
+    	}); 
+     	
+    	hideSpinner();	
+    	    	
+	});
+	
+    
+ 	function commonResponse(returnData) {	
+		hideSpinner();
+		$('#mainBody').html(returnData); 
+		hideSpinner();			 
+    }	  
+	 
+</script>
+	
+<body>
+ 
+	<div th:fragment="messageLogModal">
+		
+		 <div th:id="assembly_viewer" class="modal " tabindex="-1" role="dialog" aria-labelledby="classInfo"  data-keyboard="false" data-backdrop="static">		  
+		  
+		  <div class="modal-dialog modal-xl" >
+		    
+		    <div class="modal-content ">
+		      
+		      <div class="modal-header ">      
+			      <h1 class="modal-title w-100 text-center"><strong>Mtr Attribute Viewer</strong></h1>
+			      <button type="button" id="assemblyMtrBackButtonId" class="button button--continue ml-3" data-dismiss="modal" >Back</button>			       			        
+		      </div>
+		      
+		      
+		      <div class="modal-body " >      
+		       	
+   				<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+        	
+    	     		 <div class="adduser-form-bx addaset-formbx borderbx">
+
+  				        <div class="row align-items-center">                       
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Facility Name for Pipe Manufacturer</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Facility Name" class="form-control" th:value="${assemblyAttachmentDTO.getAssemblyReqDocDesc()}">
+                                </div>
+                            </div>  
+  						</div>
+  						
+  						
+
+  						
+  						<div class="row align-items-center">                       
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Certification Dates</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Certificates" class="form-control" th:value="${mtrDocumentDTO.getDateOfCertification()}">
+                                </div>
+                            </div>  
+  						</div>
+  						
+                        <div class="row align-items-center">                       
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>Heat Numbers</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <input type="text" placeholder="Heat Numbers" class="form-control" th:value="${mtrDocumentDTO.getHeatNumber()}">
+                                </div>
+                            </div>  
+  						</div>
+  						
+  			           <div class="row align-items-center">                       
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"> <label>All Data</label>  </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-9 colum-bx">
+                                <div class="tble-serch ">
+                                    <textarea  rows="15" cols="80" placeholder="Chemistry Tests" class="xxxform-control" th:text="${mtrDocumentDTO.toString()}">
+                                    </textarea>
+                                </div>
+                            </div>  
+  						</div>
+  						
+  						
+
+
+
+                    </div>
+      	 
+   				 </form> 
+  		        
+		      </div>
+		      
+		      
+		      <div class="modal-footer">
+		      </div>
+		      
+		      
+		    </div>
+		  </div>
+		</div> 
+	</div>  
+	
+
+	
+<!-- </form> -->
+</body>
+</html>

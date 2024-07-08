@@ -218,6 +218,21 @@
     		submitFormAjaxJSON("processAWSTextract", myData, "asyncResponseCommonResponse");    		
 		});	
 	    
+
+		
+	    // 6-11-2024  Determine which Image clicked for viewing
+		$("[id^='buttonEditMtr_aapkid_']").click(function() {			
+			showSpinner();
+						
+			var tokens = ($(this).attr("id")).split("_");
+			assemblyAttachPkId = tokens[2];	
+
+	        // set the FORM value so the controller can get it.				
+			$('#assemblyAttachPkId').val(assemblyAttachPkId).val().trim();
+	        
+			 
+   			submitFormAjaxHTML('editAssemblyMtr', $("#dashboardFormDTO").serialize(), "modalResponse");										
+		});	
     	
  	});       
 
@@ -403,9 +418,9 @@
 		                    </a>                                                                      
 		                </div> 
               
-                        <div id="buttonEditMtrId" class="add-details">                                        
+                        <div th:id="buttonEditMtr_aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" class="add-details">                                        
                             <a href="#" data-toggle="tooltip" data-placement="top" title="Edit the MTR Attribute data" > 
-                                <span data-bs-toggle="modal" data-bs-target="#add-details">Edit</span>
+                                <span  data-bs-target="#add-details">Edit</span>
                             </a>                                                          
                         </div>
                           

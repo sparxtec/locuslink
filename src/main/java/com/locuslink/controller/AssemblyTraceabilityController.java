@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.ObjectTagging;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.Tag;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locuslink.common.GenericMessageRequest;
 import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
@@ -33,8 +32,10 @@ import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dto.AssemblyAttachmentDTO;
 import com.locuslink.dto.AssemblyDTO;
 import com.locuslink.dto.DashboardFormDTO;
+import com.locuslink.dto.Azure.Entity;
+import com.locuslink.dto.Azure.MtrDocumentDTO;
 import com.locuslink.logic.AwsS3AssemblyFileLogic;
-import com.locuslink.model.AssemblyReqDoc;
+import com.locuslink.model.AssemblyAttachment;
 /**
  * This is a Spring MVC Controller.
  *
@@ -179,7 +180,80 @@ public class AssemblyTraceabilityController {
 	   	return "fragments/assembly-detail";	   		   	
 	 }
 		 
-	
+	/**
+	 *  C.Sparks 7-3-2024
+	 *     Edit the Mtr Attribute Data returned from Azure AI Ner results
+	 */
+	@PostMapping(value = "/editAssemblyMtr")
+	public String editAssemblyMtr (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting editAssemblyMtr()...");
+
+		int assemblyAtachmentPkid = Integer.valueOf(dashboardFormDTO.getAssemblyAttachPkId());	
+		AssemblyAttachment assemblyAttachment = assemblyAttachmentDao.getById(assemblyAtachmentPkid);		
+		if (assemblyAttachment == null) {
+			logger.debug("Error. looking up the Mtr Attackment  id ->: " +dashboardFormDTO.getAssemblyAttachPkId() );
+		}
+		AssemblyAttachmentDTO assemblyAttachmentDTO = assemblyAttachmentDao.getDtoById(assemblyAtachmentPkid);
+		if (assemblyAttachmentDTO == null) {
+			logger.debug("Error. looking up the AssemblyAttachmentDTO  id ->: " +dashboardFormDTO.getAssemblyAttachPkId() );
+		}
+		
+		// get the json out of the attachment, send to the MtrDocumentDTO to the UI
+
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode entitiesArray = null;
+		try {
+			entitiesArray = mapper.readTree(assemblyAttachment.getAttributesJson());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+
+		MtrDocumentDTO mtrDocumentDTO = null;
+		List<Entity> entityList = new ArrayList<Entity>();
+		Entity entity = null;
+		List<String> warnings = null;				
+		JsonNode entities = null;
+		String id = "0";
+		
+		for (JsonNode wrk :entitiesArray ) { 
+			
+			entities = wrk.path("entities");
+			if (wrk.path("warnings").isArray()) {
+				warnings = new ArrayList<String>();
+				for (JsonNode warning : wrk.path("warnings")) {
+					warnings.add(warning.asText());
+				}
+			}
+						
+			for (JsonNode dataNode :entities) {					
+				entity = Entity.builder()
+						.category(dataNode.path("category").asText())
+						.confidenceScore(dataNode.path("confidenceScore").floatValue())
+						.length(dataNode.path("length").asInt())
+						.offset(dataNode.path("offset").asInt())
+						.text(dataNode.path("text").asText())
+						.build();				  
+				entityList.add(entity);	// Add entity to list
+			}
+		}			                      		
+		mtrDocumentDTO = new MtrDocumentDTO(id, entityList, warnings);
+
+
+	    model.addAttribute("mtrDocumentDTO", mtrDocumentDTO);
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+	   	model.addAttribute("assemblyAttachmentDTO", assemblyAttachmentDTO);
+	   	
+	   	logger.debug("mtrDocumentDTO HEat ->: " + mtrDocumentDTO.getHeatNumber());
+	   	logger.debug("mtrDocumentDTO Chemestry ->: " + mtrDocumentDTO.getChemistryTestType());
+	   	
+	  	logger.debug("mtrDocumentDTO Chemestry ->: " + mtrDocumentDTO.toString());
+
+	   	return "fragments/assembly-trace-mtr-edit";
+	}
 	
 	
 }
