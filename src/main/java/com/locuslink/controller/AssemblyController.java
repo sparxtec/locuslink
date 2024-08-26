@@ -23,6 +23,7 @@ import com.locuslink.common.GenericMessageResponse;
 import com.locuslink.common.SecurityContextManager;
 import com.locuslink.dao.AssemblyDao;
 import com.locuslink.dto.AssemblyDTO;
+import com.locuslink.dto.AssemblyFormDTO;
 import com.locuslink.dto.DashboardFormDTO;
 import com.locuslink.model.Assembly;
 /**
@@ -103,17 +104,12 @@ public class AssemblyController {
 	 *   The Create Assembly Button on the Assemblies Main page UI
 	 * 
 	 */
-	@PostMapping(value = "addAssembliesData")
-	public String addAssembliesData (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
-		logger.debug("Starting addAssembliesData()...");
+	@PostMapping(value = "initAddAssembly")
+	public String initAddAssembly (@ModelAttribute(name = "dashboardFormDTO") DashboardFormDTO dashboardFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting initAddAssembly()...");
 
-		Assembly assembly = new Assembly();
-		
-		
-		
-		
-		
-		
+		//Assembly assembly = new Assembly();
+				
 	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
 	   	return "fragments/assembly-add";
@@ -121,7 +117,34 @@ public class AssemblyController {
 	
 	
 	
+	/**
+	 *   The Create Assembly Button on the Assemblies Main page UI
+	 * 
+	 */
+	@PostMapping(value = "addAssembly")
+	public String addAssembly (@ModelAttribute(name = "assemblyFormDTO") AssemblyFormDTO assemblyFormDTO,	Model model, HttpSession session) {
+		logger.debug("Starting addAssembly()...");
 
+		Assembly assembly = new Assembly();
+		assembly.setCustomerSpecNumber(assemblyFormDTO.getCustomerSpecNumber());
+		assembly.setDesignSpecNumber(assemblyFormDTO.getDesignSpecNumber());
+		assembly.setDrawingNumber(assemblyFormDTO.getDrawingNumber());
+		assembly.setFabricatorCompanyName(assemblyFormDTO.getFabricatorCompanyName());
+		assembly.setJobDescription(assemblyFormDTO.getJobDescription());
+		assembly.setJobNumber(assemblyFormDTO.getJobNumber());
+		assembly.setLocation(assemblyFormDTO.getLocation());
+		assembly.setStationName(assemblyFormDTO.getStationName());
+		assembly.setStationNumber(assemblyFormDTO.getStationNumber());
+		assembly.setTraceNumber(assemblyFormDTO.getTraceNumber());
+		
+		assemblyDao.save(assembly);	
+		logger.debug("Added new Assembly Station..");
+		
+		DashboardFormDTO dashboardFormDTO = new DashboardFormDTO();		
+	   	model.addAttribute("dashboardFormDTO", dashboardFormDTO);
+
+	 	return "fragments/assemblies-data";
+	}
 	
 	
 }

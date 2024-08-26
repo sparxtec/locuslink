@@ -2,6 +2,8 @@ package com.locuslink.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,6 +22,7 @@ public class Assembly extends Common {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="assembly_pkid", unique=true, nullable = false)
     private Integer assemblyPkid;
   

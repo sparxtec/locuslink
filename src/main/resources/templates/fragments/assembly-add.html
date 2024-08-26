@@ -10,7 +10,7 @@
 
 		$('#saveButtonId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssembliesData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('addAssembly', $( "#assemblyFormDTO" ).serialize(), "initCommonResponse");
 		});
 			
  	});       
@@ -46,7 +46,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-9 colum-bx">
                                 <div class="tble-serch ">
-                                    <input id="fabricatorCompanyName" name="fabricatorCompanyName"  type="text" placeholder="Fabricator Company" title="Fabricator Company" class="form-control">
+                                    <input id="fabricatorCompanyName" name="fabricatorCompanyName" type="text" placeholder="Fabricator Company" title="Fabricator Company" class="form-control">
                                 </div>
                             </div>  
   						</div>
