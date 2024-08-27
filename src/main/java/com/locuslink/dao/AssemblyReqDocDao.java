@@ -13,7 +13,9 @@ public interface AssemblyReqDocDao  {
 	
 	public AssemblyReqDoc getById (int id);
 		
-	public List<AssemblyReqDoc>  getAllById(int id);
+	//public List<AssemblyReqDoc>  getAllById(int id);
+	
+	public List<AssemblyReqDoc>  getAll();
 	
 
 	

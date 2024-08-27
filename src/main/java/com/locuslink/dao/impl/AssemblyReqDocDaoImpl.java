@@ -65,17 +65,26 @@ public class AssemblyReqDocDaoImpl extends DaoSupport implements AssemblyReqDocD
 	
 
 
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public  List<AssemblyReqDoc>  getAllById( int assemblyPkid ) {					
+//		DetachedCriteria criteria= DetachedCriteria.forClass(AssemblyReqDoc.class, "assemblyReqDoc");  		
+//		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
+//		criteria.add(Restrictions.eq("assemblyPkid", assemblyPkid));
+//		criteria.addOrder(Order.asc ("docTypePkid"));
+//		criteria.addOrder(Order.asc ("docDescription"));
+//		return (List<AssemblyReqDoc>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
+//	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public  List<AssemblyReqDoc>  getAllById( int assemblyPkid ) {					
+	public  List<AssemblyReqDoc>  getAll( ) {					
 		DetachedCriteria criteria= DetachedCriteria.forClass(AssemblyReqDoc.class, "assemblyReqDoc");  		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); 
-		criteria.add(Restrictions.eq("assemblyPkid", assemblyPkid));
 		criteria.addOrder(Order.asc ("docTypePkid"));
 		criteria.addOrder(Order.asc ("docDescription"));
 		return (List<AssemblyReqDoc>) criteria.getExecutableCriteria(this.sessionFactory.getCurrentSession()).list();				
 	}
-	
 
 	@Override
 	public void saveOrUpdate(AssemblyReqDoc sssemblyReqDoc) {

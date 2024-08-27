@@ -102,7 +102,10 @@ public class AssemblyDocumentController {
 		String assemblyPkid = dashboardFormDTO.getAssemblyPkid();
 		logger.debug("Working on Assembly id ->: " + assemblyPkid);
 			
-		List<AssemblyReqDoc> assemblyReqDocList = assemblyReqDocDao.getAllById(Integer.valueOf(assemblyPkid) );		
+	//	List<AssemblyReqDoc> assemblyReqDocList = assemblyReqDocDao.getAllById(Integer.valueOf(assemblyPkid) );			
+		List<AssemblyReqDoc> assemblyReqDocList = assemblyReqDocDao.getAll( );	
+		
+		
 		List<AssemblyAttachmentDTO> assemblyAttachmentDTOList = assemblyAttachmentDao.getAllDTObyAssemblyId(Integer.valueOf(assemblyPkid) );
 				
 	 	model.addAttribute("assemblyReqDocList", assemblyReqDocList);
