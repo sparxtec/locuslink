@@ -69,10 +69,17 @@ public class AwsS3AssemblyFileLogic {
 	
 	public boolean processAssemblyAttachmentUpload(GenericMessageResponse response, MultipartFile inputfile, String prefixAssemblytPkId ) {
 
+		
+
 		// 5-19-2023 PRefix with the uniqueAssetPkID to avoid collisions
 		//String prefixAssemblytPkId = dashboardFormDTO.getAssemblyPkid()+ "_";	
-		String fullpathFileName_keyName = assemblyStagingFullpath +  prefixAssemblytPkId + inputfile.getOriginalFilename();	
-        logger.debug("           Name ->: " + fullpathFileName_keyName);
+		//String fullpathFileName_keyName = assemblyStagingFullpath +  prefixAssemblytPkId + inputfile.getOriginalFilename();	
+       
+		// 9-10-2024 need to scrub the file name first.
+		String formattedFileName = inputfile.getOriginalFilename().replace(" ","_").replace("(", "").replace(")", "");			
+		String fullpathFileName_keyName = assemblyStagingFullpath +  prefixAssemblytPkId + formattedFileName;
+		 
+		logger.debug("           Name ->: " + fullpathFileName_keyName);
         logger.debug("    Content Type ->: " + inputfile.getContentType());
                 
 		
@@ -100,7 +107,8 @@ public class AwsS3AssemblyFileLogic {
             
             // Tags for easier process on retrieval
             List<Tag> tags = new ArrayList<Tag>();
-            tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+           // tags.add(new Tag("filename", inputfile.getOriginalFilename()));
+            tags.add(new Tag("filename", formattedFileName));
             putObjectRequest.setTagging(new ObjectTagging(tags));
             awsS3Client.putObject(putObjectRequest);
             	        		

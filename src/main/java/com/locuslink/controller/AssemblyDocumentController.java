@@ -130,9 +130,9 @@ public class AssemblyDocumentController {
 		logger.debug("Starting processAssemblyReqDocUpload()..inputfile ->:" + inputfile.getOriginalFilename());
 		GenericMessageResponse response = new GenericMessageResponse("1.0", "json", "Upload");
 
-		
+		String formattedFileName = "";
 		if (inputfile.getOriginalFilename().contains(".pdf")) {
-			// do nothing, all good
+			// do nothing, all good			
 		} else {
 			logger.debug("  ERROR xlsFileUpload failed ->: Wrong File extension. " );
 			return response;
