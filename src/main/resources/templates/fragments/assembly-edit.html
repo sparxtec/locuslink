@@ -9,7 +9,7 @@
 		
 	    $('#updateButtonId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('initAssemblyDetail', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('editAssembly', $( "#assemblyFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 			
  	});       
@@ -32,11 +32,11 @@
 
      <div class="dtatable-card mt-4">
      
-   		<form id="dashboardFormDTO" name="dashboardFormDTO"  th:object="${dashboardFormDTO}" >  
+   		<form id="assemblyFormDTO" name="assemblyFormDTO"  th:object="${assemblyFormDTO}" >  
         	
-        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${dashboardFormDTO.getAssemblyPkid}" >
-        	 
-    	      <div class="adduser-form-bx addaset-formbx borderbx">
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${assemblyFormDTO.getAssemblyPkid}" >
+        	
+    	         <div class="adduser-form-bx addaset-formbx borderbx">
 
 						<div class="row align-items-center">                       
                             <div class="col-lg-3 col-xl-2 colum-bx">
@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-9 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Fabricator Company" title="Fabricator Company" class="form-control">
+                                    <input id="fabricatorCompanyName" name="fabricatorCompanyName" th:value="${assemblyFormDTO.fabricatorCompanyName}" type="text" placeholder="Fabricator Company" title="Fabricator Company" class="form-control">
                                 </div>
                             </div>  
   						</div>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-3 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Station Number" title="Station Number" class="form-control">
+                                    <input id="stationNumber" name="stationNumber" th:value="${assemblyFormDTO.stationNumber}"  type="text" placeholder="Station Number" title="Station Number" class="form-control">
                                 </div>
                             </div>                                                        
                             <div class="col-lg-3 col-xl-2 colum-bx">
@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-4 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Station Name" title="Station Name" class="form-control">
+                                    <input id="stationName" name="stationName" th:value="${assemblyFormDTO.stationName}" type="text" placeholder="Station Name" title="Station Name" class="form-control">
                                 </div>
                             </div>                                                        
 						</div>
@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-3 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Design Number" title="Design Number" class="form-control">
+                                    <input  id="designSpecNumber" name="designSpecNumber" th:value="${assemblyFormDTO.designSpecNumber}" type="text" placeholder="Design Number" title="Design Number" class="form-control">
                                 </div>
                             </div>                                                  
                             <div class="col-lg-3 col-xl-2 colum-bx">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-4 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Drawing Number" title="Drawing Number" class="form-control">
+                                    <input id="drawingNumber" name="drawingNumber" th:value="${assemblyFormDTO.drawingNumber}" type="text" placeholder="Drawing Number" title="Drawing Number" class="form-control">
                                 </div>
                             </div>   
  						</div>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="col-lg-9 col-xl-3 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter Job Number"  title="Enter Job Number" class="form-control">
+                                    <input id="jobNumber" name="jobNumber" th:value="${assemblyFormDTO.jobNumber}" type="text" placeholder="Enter Job Number"  title="Enter Job Number" class="form-control">
                                 </div>
                             </div>
                             
@@ -112,45 +112,33 @@
                             </div>
                             <div class="col-lg-9 col-xl-4 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter Description"  title=" Enter Description" class="form-control">
+                                    <input id="jobDescription" name="jobDescription"  th:value="${assemblyFormDTO.jobDescription}"  type="text"  placeholder="Enter Description"  title=" Enter Description" class="form-control">
                                 </div>
                             </div>
 						</div>
 
 
-
-						<div class="row align-items-center"> 
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx"> <label>Customer </label>  </div>
-                            </div>
-                            <div class="col-lg-9 col-xl-9 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" placeholder="Enter Customer" title=" Customer" class="form-control">
-                                </div>
-                            </div>
-						</div>
-						
-						
-						
 						
 						<div class="row align-items-center"> 
-                            <div class="col-lg-3 col-xl-2 colum-bx">
-                                <div class="uplod-inputbx">  <label>Customer Job Number</label>  </div>
-                            </div>
-                            <div class="col-lg-9 col-xl-3 colum-bx">
-                                <div class="tble-serch ">
-                                    <input type="text" placeholder="Customer Job Number"  title="Customer Job Number" class="form-control">
-                                </div>
-                            </div>
 
                             <div class="col-lg-3 col-xl-2 colum-bx">
                                 <div class="uplod-inputbx"> <label>Customer Spec Number </label> </div>
                             </div>
-                            <div class="col-lg-9 col-xl-4 colum-bx">
+                            <div class="col-lg-9 col-xl-3 colum-bx">
                                 <div class="tble-serch ">
-                                    <input type="text" placeholder="Customer Spec Number" title="Trace Location" class="form-control">
+                                    <input id="customerSpecNumber" name="customerSpecNumber" th:value="${assemblyFormDTO.customerSpecNumber}" type="text"  placeholder="Customer Spec Number" title="Trace Location" class="form-control">
                                 </div>
                             </div>
+                            
+                            <div class="col-lg-3 col-xl-2 colum-bx">
+                                <div class="uplod-inputbx"><label> Customer Location </label> </div>
+                            </div>
+                            <div class="col-lg-9 col-xl-4 colum-bx">
+                                <div class="tble-serch ">
+                                    <input id="location" name="location" th:value="${assemblyFormDTO.location}"  type="text"  placeholder="Enter Location"  title=" Enter Location" class="form-control">
+                                </div>
+                            </div>
+                            
                         </div>    
                                  
                         <div class="usrad-btn import-astbtn sve-btn justify-content-end">
@@ -159,9 +147,9 @@
 
 
                     </div>
-      	 
+                		      
     </form> 
-                    
+    	                     
    </div>
    </div> 
    	</body>

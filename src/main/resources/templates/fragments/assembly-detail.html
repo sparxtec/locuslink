@@ -34,7 +34,7 @@
 		
 	    $('#editAssembliesDataId').click(function() {
 			showSpinner();
-			submitFormAjaxHTML('editAssemblyData', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+			submitFormAjaxHTML('initEditAssembly', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	
 	    
@@ -178,13 +178,13 @@
                                                                  <tr>
                                                                     <th class="t-hding">Customer Job Number </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">78965412</td>
+                                                                    <td class="t-discription" >78965412</td>
                                                                 </tr>
                                                                 
                                                                 <tr>
                                                                     <th class="t-hding">Fabricator </th>
                                                                     <td class="t-dot">:</td>
-                                                                    <td class="t-discription">Lorem Ipsum  </td>
+                                                                    <td class="t-discription" th:text="${assemblyDto.getFabricatorCompanyName}"></td>
                                                                 </tr>
 
                                                             </tbody>
