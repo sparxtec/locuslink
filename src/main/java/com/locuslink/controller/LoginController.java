@@ -53,18 +53,29 @@ public class LoginController {
 		//logger.debug("Starting loginPost()..." + headers);
 		logger.debug("Starting loginPost()...");
 	  
-		// Common Routine
-		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
-			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
-		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
-			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
+//		// Common Routine
+//		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
+//			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
+//		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
+//			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
+//		} else {
+//			return "login";
+//		}
+		
+		// 10-7-2024		
+		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());		
+		if (userLocuslink != null) {			
+			if (userLocuslink.getUserTypeCode() != null && !userLocuslink.getUserTypeCode().equals("")) {
+				securityContextManager.processSecurityContext( session , userLocuslink.getLoginName().trim(), userLocuslink.getUserTypeCode().trim(), appLogoutUrl);										
+			} else {
+				logger.debug("This user does not have a define ROLE, defaulting to VIEW.");
+				securityContextManager.processSecurityContext( session , userLocuslink.getLoginName().trim(), "view", appLogoutUrl);						
+			}						
 		} else {
 			return "login";
 		}
 		
-		
-		// 2-23-2024		
-		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());
+
 		
 		session.setAttribute("userLocuslink",userLocuslink ); 
 		logger.debug(" Setting User for the Session ->: " + userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
@@ -80,18 +91,31 @@ public class LoginController {
 		//logger.debug("Starting loginGet()..." + headers);
 		logger.debug("Starting loginGet()...");
 	  
-		// Common Routine
-		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
-			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
-		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
-			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
+//		// Common Routine
+//		if (loginFormDTO.getUsername().equalsIgnoreCase("admin")) {
+//			securityContextManager.processSecurityContext( session , "Admin", "locuslink-admin", appLogoutUrl);
+//		} else if (loginFormDTO.getUsername().equalsIgnoreCase("view")) {
+//			securityContextManager.processSecurityContext( session , "View", "locuslink-user", appLogoutUrl);	
+//		} else {
+//			return "login";
+//		}
+		
+		// 10-7-2024		
+		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());		
+		if (userLocuslink != null) {			
+			if (userLocuslink.getUserTypeCode() != null && !userLocuslink.getUserTypeCode().equals("")) {
+				securityContextManager.processSecurityContext( session , userLocuslink.getLoginName().trim(), userLocuslink.getUserTypeCode().trim(), appLogoutUrl);		
+								
+			} else {
+				logger.debug("This user does not have a define ROLE, defaulting to VIEW.");
+				securityContextManager.processSecurityContext( session , userLocuslink.getLoginName().trim(), "view", appLogoutUrl);						
+			}						
 		} else {
 			return "login";
 		}
 		
-		// 2-23-2024		
-		UserLocuslink userLocuslink = userLocuslinkDao.getUserByLanId(loginFormDTO.getUsername().toLowerCase());
-		//String displayName	= 	userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName();
+		
+		
 		session.setAttribute("userLocuslink",userLocuslink ); 
 		logger.debug(" Setting User for the Session ->: " + userLocuslink.getFirstName() + " " + userLocuslink.getLastNameBusName());
 		

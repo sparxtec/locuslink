@@ -39,7 +39,8 @@ public class SecurityContextManager {
 	    }
 
 	    String credentials = sc.getAuthentication().getCredentials().toString() ;
-		if (credentials.contains("med-admin") || credentials.contains("MED-ADMIN")) {
+		//if (credentials.contains("med-admin") || credentials.contains("MED-ADMIN")) {
+	    if (credentials.toUpperCase().startsWith("LOCUSLINK-")) {
 			// all good
 		} else {
 			logger.debug("  User came her in an un authenticated way. Calling app will decide what to do.");
@@ -62,7 +63,7 @@ public class SecurityContextManager {
 	    }
 
 	    String credentials = sc.getAuthentication().getCredentials().toString() ;
-		if (credentials.startsWith("locuslink-") || credentials.startsWith("LOCUSLINK-")) {
+		if (credentials.toUpperCase().startsWith("LOCUSLINK_")) {
 			// all good
 		} else {
 			logger.debug("  User came her in an un authenticated way, returngin to login.   credentials ->: " + credentials);
@@ -77,37 +78,38 @@ public class SecurityContextManager {
 	/**
 	 *   Called from Login Controller to establish the Security Context passed to the UI pages on the front.
 	 */
-	public boolean processSecurityContext(HttpSession session, String jwtUid, String jwtCmsRoles, String appLogoutUrl ) {
+	public boolean processSecurityContext(HttpSession session, String jwtUid, String jwtRole, String appLogoutUrl ) {
 
 		logger.debug(" in processSpringSecurityContext () " );
-
-		// 7-11-2022
-		//  The user can have multiple roles, from other systems, as well as multiple roles from within the application.
-		//   we need to parse out just the LOCUSLINK roles
-		//   then we need to take the lowest role found.
-
-		StringTokenizer st = new StringTokenizer(jwtCmsRoles.toUpperCase(),",");
-		String wrkRole = "";
-		String locuslinkRoleWeWantToUse="";
-	     while (st.hasMoreTokens()) {
-	    	 wrkRole = st.nextToken().trim();
-	    	 if (wrkRole.equals("LOCUSLINK-USER")) {
-	    		 locuslinkRoleWeWantToUse = wrkRole;	    	
-	    	 } else if (wrkRole.equals("LOCUSLINK-ADMIN")) {
-	    		 if (locuslinkRoleWeWantToUse.equals("")) {
-	    			 locuslinkRoleWeWantToUse = wrkRole;
-	    		 }
-	    	 }
-	     }
+ 
+//		10-7-2024
+//		// 7-11-2022
+//		//  The user can have multiple roles, from other systems, as well as multiple roles from within the application.
+//		//   we need to parse out just the LOCUSLINK roles
+//		//   then we need to take the lowest role found.
+//
+//		StringTokenizer st = new StringTokenizer(jwtCmsRoles.toUpperCase(),",");
+//		String wrkRole = "";
+//		String locuslinkRoleWeWantToUse="";
+//	     while (st.hasMoreTokens()) {
+//	    	 wrkRole = st.nextToken().trim();
+//	    	 if (wrkRole.equals("LOCUSLINK-USER")) {
+//	    		 locuslinkRoleWeWantToUse = wrkRole;	    	
+//	    	 } else if (wrkRole.equals("LOCUSLINK-ADMIN")) {
+//	    		 if (locuslinkRoleWeWantToUse.equals("")) {
+//	    			 locuslinkRoleWeWantToUse = wrkRole;
+//	    		 }
+//	    	 }
+//	     }
 
        // UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, jwtCmsRoles,AuthorityUtils.createAuthorityList("ROLE_"+jwtCmsRoles.toUpperCase()));
-	    UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, locuslinkRoleWeWantToUse,AuthorityUtils.createAuthorityList("ROLE_"+locuslinkRoleWeWantToUse.toUpperCase()));
+	    UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(jwtUid, "LOCUSLINK_"+jwtRole, AuthorityUtils.createAuthorityList("ROLE_"+jwtRole.toUpperCase()));
         SecurityContext sc = SecurityContextHolder.getContext();
 
-        sc.setAuthentication(authReq);
+        sc.setAuthentication(authReq);      
         session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
 		session.setAttribute("locuslinkUser", jwtUid);
-		session.setAttribute("locuslinkRole", locuslinkRoleWeWantToUse.toUpperCase());
+		session.setAttribute("locuslinkRole", "ROLE_"+jwtUid );
 		session.setAttribute("appLogoutUrl", appLogoutUrl);
 
 		return true;
