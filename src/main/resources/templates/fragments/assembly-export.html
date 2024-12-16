@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Create Assembly</title>
+	 
+ <script>
+    $(document).ready(function() {	
+		
+	    $('#exportButtonId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('exportAssembly', $( "#assemblyFormDTO" ).serialize(), "initCommonResponse");
+		}); 
+			
+ 	});       
+
+   function initCommonResponse(returnData) {	
+	   hideSpinner();
+	   $('#mainBody').html( returnData);    	 
+   }
+        
+    </script>	 
+	 
+</head>
+
+<body>
+              
+  <div class="mangeuser-page assetdta-page ad-Assemblies-page"> 
+	<div class="page-hding">
+        <h1>Export Assembly</h1>          
+     </div>
+
+     <div class="dtatable-card mt-4">
+     
+   		<form id="assemblyFormDTO" name="assemblyFormDTO"  th:object="${assemblyFormDTO}" >          	
+        	<input type="hidden" id="assemblyPkid" name="assemblyPkid"  th:value="${assemblyFormDTO.getAssemblyPkid}" >        	
+   	        <div class="adduser-form-bx addaset-formbx borderbx">
+                 <div class="usrad-btn import-astbtn sve-btn justify-content-end">
+                     <a id="exportButtonId"   href="#">Create Export File</a>
+                 </div>
+            </div>                		      
+    	</form> 
+    
+    	<div class="row">
+                   
+        <th:block th:each="assemblyAttachmentDTO, iStat  : ${assemblyAttachmentDTOList} ">
+                                              
+         <div class="col-md-6">
+             <div class="barcdetab document-bx">
+                 <div class="documentname-hdingbx">
+                     <div class="document-name-bx">
+                         <span>PDF</span>
+                     </div>
+                                    
+                      <div class="document-hding">
+                          <h6 style="white-space:nowrap" th:text="${assemblyAttachmentDTO.getAssemblyReqDocDesc()}">></h6>
+                          <h6 style="font-size:.80rem;" th:text="${assemblyAttachmentDTO.getFilenameFullpath()}"></h6>
+                          <h6 id="aiAttributesId" style="font-size:.70rem;" >
+                             <span id="aiAttributeFlagId" style="color:#B22222" 
+                                 title="Attributes not parsed successfully. Click the AI button to try again."
+                                 th:text="${assemblyAttachmentDTO.getAttrFlag()}" >Not Processed</span>
+                           </h6>
+                      </div>
+                  </div>
+                                                                                               
+                  <div class="details-download-btn">
+		                <div  style="width:32px;height:32px">
+		                 	  <a th:id="aapkid_ + ${assemblyAttachmentDTO.getAaPkid()}" href="#">
+		                        <img src="./images/viewer.png" class="img-fluid"  alt="View" title="View Document" >  
+		                    </a>                                                                      
+		                </div>                                                         
+                   </div>
+
+                 </div>
+             </div>                                               
+         </div>
+
+
+    	                     
+   </div>
+   </div> 
+   	</body>
+
+</html>

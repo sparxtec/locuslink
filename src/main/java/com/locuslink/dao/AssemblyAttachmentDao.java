@@ -16,6 +16,9 @@ public interface AssemblyAttachmentDao  {
 		
 	public List<AssemblyAttachment>  getAllById(int id);
 	
+	// 12-16-2024
+	public 	List<AssemblyAttachmentDTO> getAllDTOExportbyAssemblyId(int assemblyPkid);
+	
 	
 	// 6-10-2024
 	public AssemblyAttachmentDTO getDtoById (int id);

@@ -102,7 +102,36 @@ public class AssemblyAttachmentDaoImpl extends DaoSupport implements AssemblyAtt
 	}
 	
 
-
+	@Override
+	public  List<AssemblyAttachmentDTO>  getAllDTOExportbyAssemblyId( int assemblyPkid) 	{	
+				
+		 List <AssemblyAttachmentDTO> dtoList = entityManager.createQuery("""
+			select new com.locuslink.dto.AssemblyAttachmentDTO(
+				aa.aaPkid,
+				aa.assemblyPkid,
+		 		aa.docTypePkid,
+		 		aa.filenameFullpath,
+				aa.attributesJson,
+				aa.attrFlag,
+				dt.docTypeCode,
+				dt.docTypeDesc,
+				ard.docDescription	 													
+			)
+			from AssemblyAttachment aa
+	        left outer join DocumentType dt on aa.docTypePkid = dt.docTypePkId	
+	        left outer join AssemblyReqDoc ard on ard.ardPkid = aa.ardPkid	
+	         
+	         
+	        where aa.assemblyPkid = :assemblyPkid			
+	 	      and aa.docTypePkid  in (60,61,62)
+	 			 																																	
+			""", AssemblyAttachmentDTO.class)
+				 .setParameter("assemblyPkid", assemblyPkid)
+				 .getResultList();	
+		 
+		 return dtoList;
+	}
+	
 
 	@Override
 	public  List<AssemblyAttachmentDTO>  getAllDTObyAssemblyId( int assemblyPkid) 	{	

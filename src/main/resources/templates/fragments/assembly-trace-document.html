@@ -103,6 +103,11 @@
 			submitFormAjaxHTML('initEditAssembly', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
 		}); 
 	    
+	    // 12-16-2024
+	    $('#exportAssemblyId').click(function() {
+			showSpinner();
+			submitFormAjaxHTML('initExportAssembly', $( "#dashboardFormDTO" ).serialize(), "initCommonResponse");
+		}); 
 
 	    
     	// Added for Dropzone
@@ -291,8 +296,7 @@
                 <h1>Assembly Details</h1>
                 <div class="usrad-btn import-astbtn">
                     <a id="editAssembliesDataId" href="#">Edit Assembly </a>
-                    <a href="#" class="imprort-btn">Export Assembly </a>
-
+                    <a id="exportAssemblyId" href="#" class="imprort-btn">Export Assembly </a>
                 </div>
             </div>
         </form>
