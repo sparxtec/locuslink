@@ -93,24 +93,21 @@ public class AssemblyExportController {
 		
 	  	model.addAttribute("assemblyFormDTO", assemblyFormDTO);
 	  	
-	  	
-		
-	//	List<AssemblyAttachmentDTO> assemblyAttachmentDTOList = assemblyAttachmentDao.getAllDTOMtrByAssemblyId(Integer.valueOf(assemblyPkid) );
-			
-		
+	  	// 12-17-2024 get all documents
 	    List<AssemblyAttachmentDTO> assemblyAttachmentDTOList = assemblyAttachmentDao.getAllDTOExportbyAssemblyId(Integer.valueOf(assemblyPkid) );
 		
 		model.addAttribute("assemblyAttachmentDTOList", assemblyAttachmentDTOList);
 		model.addAttribute("dashboardFormDTO", dashboardFormDTO);
 
-
-
 	   	return "fragments/assembly-export";
 	}
 	
 
+	
 	/**
-	 *   The Edit Assembly UPDATE Button was clicked
+	 *   The Export Assembly Button was clicked
+	 *    1.) This routine needs to pull all the documents from AWS and create a ZIP file that can be downloaded to the user machine.
+	 *    2.) Return to the History UI and show an export "event"
 	 * 
 	 */
 	@PostMapping(value = "exportAssembly")
@@ -121,6 +118,32 @@ public class AssemblyExportController {
 	
 		int assemblyPkid = assemblyFormDTO.getAssemblyPkid();
 		logger.debug("Exporting Assembly id ->: " + assemblyPkid);
+		
+		
+		
+		// 12-18-2024
+		
+		// 1.) Read the document list from the DB
+		
+		
+		
+		// 2.) Pull the documents from AWS
+		
+		
+		
+		// 3.) Create a ZIP file  package of all documents
+		
+		
+		
+		//4.) Allow the user to download the ZIP to their local machine.
+		
+		
+		// 5.) Create an "Export Event" in the DB
+		
+		
+		
+		// 6.) Return to the History page and show all events, with this latest one on top
+		
 		
 		
 		// Now reread from the DB to get this DTO for the details page		
