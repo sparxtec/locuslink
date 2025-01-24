@@ -1,0 +1,75 @@
+# This workflow will:
+#        - pull the Docker Image in the GHCR Git Hub Container Registry, using the build number provided as a parameter  xxxxxxxxxx.dev.4 
+#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.4.latest  {for reference for redeploy, backout, etc} 
+#        - push the Docker Image in the GHCR Git Hub Container Registry, xxxxxxxxxx.dev.latest   {used by the ECS container}
+#        - update the AWS Cluster & Service, AWS will repull the Docker Inmage by name convention, xxxxxxxxx.dev.latest
+
+name: Deploy AWS Dev
+
+on: 
+  workflow_dispatch:
+    inputs:
+      buildnumber_to_deploy:
+        description: 'Build Number to Deploy'
+        required: true
+    
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
+  VERSION: dev
+     
+  ECS_CLUSTER: sparks-default-cluster   
+  ECS_SERVICE: container-sparks-service                          
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Pull and Re-Store the Docker Image as the LATEST for this environment
+      run: |      
+        IMAGE_ID=ghcr.io/$IMAGE_NAME
+              
+        echo IMAGE_ID=$IMAGE_ID               
+        echo BUILD_NUMBER_TO_DEPLOY=$BUILD_NUMBER_TO_DEPLOY
+        
+        # pull the one we want to deploy
+        echo Image to pull from ghcr ->: $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}           
+        docker pull $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}     
+        
+        # push the build number as build.latest for reference and DR, and redeploy
+        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest        
+        docker tag $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest  
+        docker push $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}.latest
+ 
+        # push as latest for AWS ECS configuration
+        echo Image to push to ghcr ->: $IMAGE_ID:$VERSION.latest
+        docker tag $IMAGE_ID:$VERSION.${BUILD_NUMBER_TO_DEPLOY}  $IMAGE_ID:$VERSION.latest          
+        docker push $IMAGE_ID:$VERSION.latest
+
+
+    - name: AWS Dev Deploy - Update Service with latest Image
+      run: |
+          aws ecs update-service --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} --force-new-deployment
+          
+          echo Service Update Completed, Waiting for the deployment to Finish ....
+          aws ecs wait services-stable --cluster ${ECS_CLUSTER}  --service ${ECS_SERVICE} 
+          
+      env:
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          AWS_ACCESS_KEY_ID: AKIA5MSVXCMP6ZLVCRGZ
+          AWS_SECRET_ACCESS_KEY: 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            
+          AWS_DEFAULT_REGION: us-east-1 
