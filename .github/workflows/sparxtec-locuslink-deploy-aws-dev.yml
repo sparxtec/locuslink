@@ -19,8 +19,8 @@ env:
   BUILD_NUMBER_TO_DEPLOY :  ${{ inputs.buildnumber_to_deploy }}
   VERSION: dev
      
-  ECS_CLUSTER: sparks-default-cluster   
-  ECS_SERVICE: container-sparks-service                          
+  ECS_CLUSTER: cluster-aivery-dev   
+  ECS_SERVICE: service-aivery-dev                          
     
 jobs:
   build:
